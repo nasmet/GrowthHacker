@@ -53,5 +53,9 @@
     "react/jsx-no-bind": 0,
     "no-mixed-operators": 0,
     "global-require": 0
-  }
+  },
+  "globals": {
+    "utils": true,
+    "api": true,
+  },
 }

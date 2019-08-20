@@ -22,7 +22,6 @@ import {
 } from '@icedesign/form-binder';
 import IceIcon from '@icedesign/foundation-symbol';
 import styles from './index.module.scss';
-import * as api from '../../api';
 import * as config from '../../config';
 
 function UserLogin({

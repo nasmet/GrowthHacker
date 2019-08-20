@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import '@alifd/next/reset.scss';
 import router from './router';
 import utils from './utils/index';
+import * as api from './api/index';
 
 const ICE_CONTAINER = document.getElementById('ice-container');
 
@@ -11,5 +12,6 @@ if (!ICE_CONTAINER) {
 }
 
 window.utils = utils;
+window.api = api;
 
 ReactDOM.render(router, ICE_CONTAINER);

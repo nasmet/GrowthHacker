@@ -1,5 +1,5 @@
 import axios from 'axios';
-import * as config from './config';
+import * as config from '../config';
 
 // axios 配置
 axios.defaults.timeout = config.TIMEOUT;
@@ -50,7 +50,7 @@ axios.interceptors.response.use((response) => {
  * @param params
  * @returns {Promise}
  */
-function get(url, params = {}) {
+export function get(url, params = {}) {
   return new Promise((resolve, reject) => {
     axios.get(url, {
       params,
@@ -68,7 +68,7 @@ function get(url, params = {}) {
  * @param data
  * @returns {Promise}
  */
-function post(url, data = {}) {
+export function post(url, data = {}) {
   return new Promise((resolve, reject) => {
     axios.post(url, data).then((response) => {
       resolve(response.data);
@@ -84,7 +84,7 @@ function post(url, data = {}) {
  * @param data
  * @returns {Promise}
  */
-function put(url, data = {}) {
+export function put(url, data = {}) {
   return new Promise((resolve, reject) => {
     axios.put(url, data).then((response) => {
       resolve(response.data);
