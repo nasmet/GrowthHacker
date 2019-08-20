@@ -5,6 +5,7 @@ import {
   Tab,
 } from '@alifd/next';
 import findConfig from './findConfig';
+import styles from './index.module.scss';
 
 const {
   Item,
@@ -19,7 +20,9 @@ export default function Find() {
           key={item.key}
           title={item.tab}
         >
-          <Content />
+          <div className={styles.marginTop10}>
+            <Content />
+          </div>
         </Item>
       );
     });
