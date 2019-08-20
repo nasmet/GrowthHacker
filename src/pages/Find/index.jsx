@@ -2,70 +2,34 @@ import React, {
   Component,
 } from 'react';
 import {
-  Switch,
-  Route,
-  withRouter,
-  Redirect,
-} from 'react-router-dom';
-import {
   Tab,
 } from '@alifd/next';
 import findConfig from './findConfig';
-import NotFound from '../../components/NotFound';
-import styles from './index.module.scss';
 
 const {
   Item,
 } = Tab;
 
-function Find({
-  location,
-  history,
-}) {
-  const {
-    pathname,
-  } = location;
-
-  const tabChange = (e) => {
-    console.log(e);
-    history.push(e);
-  };
-
+export default function Find() {
   const rendTab = () => {
     return findConfig.map((item) => {
+      const Content = item.component;
       return (
         <Item
-          key={item.path}
+          key={item.key}
           title={item.tab}
-        />
-      );
-    });
-  };
-
-  const renderRoute = () => {
-    return findConfig.map((item) => {
-      return (
-        <Route
-          key={item.path}
-          path={item.path}
-          component={item.component}
-        />
+        >
+          <Content />
+        </Item>
       );
     });
   };
 
   return (
     <div>
-      <Tab className={styles.marginBottom10} activeKey={pathname} defaultActiveKey="hot" onChange={tabChange} >
+      <Tab defaultActiveKey="hot">
         {rendTab()}
       </Tab>
-      <Switch>
-        {renderRoute()}
-        <Redirect from="/find" to="/find/hot" />
-        <Route component={NotFound} />
-      </Switch>
     </div>
   );
 }
-
-export default withRouter(Find);
