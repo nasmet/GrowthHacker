@@ -13,7 +13,6 @@ import {
 } from 'react-router-dom';
 import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
-import Filter from './components/Filter';
 
 const getData = () => {
   return [{
@@ -22,8 +21,17 @@ const getData = () => {
     word: '123',
     zan: 5,
     forward: 10,
-    comment: '123',
+    comment: 12,
     time: '2017-7',
+    source: '123',
+  }, {
+    id: 2,
+    content: '456',
+    word: '456',
+    zan: 6,
+    forward: 12,
+    comment: 125,
+    time: '2018-7',
     source: '123',
   }];
 };
@@ -37,10 +45,7 @@ function WeiboHot() {
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState([]);
   const [count, setCount] = useState(0);
-  const filterValue = {
-    orderBy: 1,
-    order: 'desc',
-  };
+  const [sort, setSort] = useState({});
   let cancelTask = false; // 防止内存泄露
 
   useEffect(() => {
@@ -79,20 +84,32 @@ function WeiboHot() {
     );
   };
 
+  const onSort = (dataIndex, order) => {
+    setData((prevData) => {
+      return prevData.sort((a, b) => {
+        if (dataIndex === 'time') {
+          const t1 = utils.dateMap(a[dataIndex]).ms;
+          const t2 = utils.dateMap(b[dataIndex]).ms;
+          return order === 'asc' ? t1 - t2 : t2 - t1;
+        }
+        return order === 'asc' ? a[dataIndex] - b[dataIndex] : b[dataIndex] - a[dataIndex];
+      });
+    });
+    setSort({
+      [dataIndex]: order,
+    });
+  };
+
   return (
     <div>
       <IceContainer>
-        <Filter value={filterValue} />
-      </IceContainer>
-
-      <IceContainer>
-        <Table loading={loading} dataSource={data} hasBorder={false}>
+        <Table loading={loading} dataSource={data} hasBorder={false} onSort={onSort} sort={sort}>
           <Column title="热门内容" dataIndex="content" />
           <Column title="热门词" dataIndex="word" />
-          <Column title="点赞" dataIndex="zan" />
-          <Column title="转发" dataIndex="forward" />
-          <Column title="评论" dataIndex="comment" />
-          <Column title="发布时间" dataIndex="time" />
+          <Column title="点赞" dataIndex="zan" sortable />
+          <Column title="转发" dataIndex="forward" sortable />
+          <Column title="评论" dataIndex="comment" sortable />
+          <Column title="发布时间" dataIndex="time" sortable />
           <Column title="来源" dataIndex="source" />
           <Column title="操作" cell={renderCover} />
         </Table>

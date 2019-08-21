@@ -8,13 +8,29 @@ export function formatTime({
   from = 'm',
   to = 's',
 }) {
-  if (!timeType[from] || !timeType[to]) {
-    throw new Error('传入的参数有误');
-  }
   const diff = timeType[to] - timeType[from];
   return time / Math.pow(60, diff);
 }
 
+export const getDate = (arg) => {
+  if (arg) {
+    return new Date(arg);
+  }
+  return new Date();
+};
+
+export const dateMap = (arg) => {
+  const date = getDate(arg);
+  return {
+    Y: date.getFullYear(),
+    M: date.getMonth() + 1,
+    D: date.getDate(),
+    h: date.getHours(),
+    m: date.getMinutes(),
+    s: date.getSeconds(),
+    ms: date.getTime(),
+  };
+};
 /**
  * 时间戳格式化
  * @date   2019-07-04
@@ -26,20 +42,7 @@ export function formatUnix({
   unix,
   fmt,
 }) {
-  if (!isString(fmt)) {
-    throw new Error('传入的参数有误');
-  }
-
-  const date = new Date(unix * 1000);
-  const map = {
-    Y: date.getFullYear(),
-    M: date.getMonth() + 1,
-    D: date.getDate(),
-    h: date.getHours(),
-    m: date.getMinutes(),
-    s: date.getSeconds(),
-  };
-
+  const map = dateMap(unix * 1000);
   Object.keys(map).forEach((k) => {
     if (new RegExp(`(${k})`).test(fmt)) {
       fmt = fmt.replace(RegExp.$1, addZero(map[k]));

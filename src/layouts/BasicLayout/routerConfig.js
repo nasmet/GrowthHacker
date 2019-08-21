@@ -1,19 +1,15 @@
-import System from '../../pages/System';
 import Find from '../../pages/Find';
 import Monitor from '../../pages/Monitor';
 import Analysis from '../../pages/Analysis';
 
 const routerConfig = [{
-  path: '/system',
-  component: System,
-}, {
-  path: '/find',
+  path: '/system/find',
   component: Find,
 }, {
-  path: '/monitor',
+  path: '/system/monitor',
   component: Monitor,
 }, {
-  path: '/analysis',
+  path: '/system/analysis',
   component: Analysis,
 }];
 

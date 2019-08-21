@@ -29,7 +29,7 @@ export default function MainRoutes() {
       {renderRouter()}
 
       {/* 根路由默认重定向到 /tasks */}
-      <Redirect from="/" to="/find" />
+      <Redirect from="/" to="/system/find" />
 
       {/* 未匹配到的路由重定向到 NotFound */}
       <Route component={NotFound} />

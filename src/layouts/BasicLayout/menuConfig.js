@@ -16,18 +16,16 @@ const asideMenuConfig = [{
   name: '热点系统',
   path: '/system',
   icon: 'publish',
-}, {
-  name: '热点发现',
-  path: '/find',
-  icon: 'publish',
-}, {
-  name: '热点监控',
-  path: '/monitor',
-  icon: 'publish',
-}, {
-  name: '热点分析',
-  path: '/analysis',
-  icon: 'publish',
+  sub: [{
+    name: '热点发现',
+    path: '/system/find',
+  }, {
+    name: '热点监控',
+    path: '/system/monitor',
+  }, {
+    name: '热点分析',
+    path: '/system/analysis',
+  }],
 }];
 
 export {

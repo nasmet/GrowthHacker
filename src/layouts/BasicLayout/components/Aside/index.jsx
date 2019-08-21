@@ -18,7 +18,40 @@ import './Aside.scss';
 
 const {
   Item,
+  SubNav,
 } = Nav;
+
+const word = (name) => {
+  return (
+    <span className="ice-menu-item-text">
+      {name}
+    </span>
+  );
+};
+
+const icon = (url) => {
+  return (
+    url ? <FoundationSymbol size="small" type={url} /> : null
+  );
+};
+
+const traversing = (nav) => {
+  if (nav.sub && utils.isArray(nav.sub)) {
+    return (
+      <SubNav key={nav.path} label={word(nav.name)} icon={icon(nav.icon)}>
+        {nav.sub.map(traversing)}
+      </SubNav>
+    );
+  }
+  return (
+    <Item key={nav.path}>
+      <Link to={nav.path} className="ice-menu-link">
+        {icon(nav.icon)}
+        {word(nav.name)}
+      </Link>
+    </Item>
+  );
+};
 
 function Aside({
   location,
@@ -31,23 +64,12 @@ function Aside({
     <div className="aside-custom-menu">
       <Logo text="云图互娱平台" />
       <Nav
+        openMode="single"
         selectedKeys={[pathname]}
         className="ice-menu-custom"
         activeDirection="right"
       >
-        {
-          asideMenuConfig.map((nav) => {
-            return (
-              <Item key={nav.path}>
-                <Link to={nav.path} className="ice-menu-link">
-                  {nav.icon ? (
-                    <FoundationSymbol size="small" type={nav.icon} />
-                  ) : null}
-                  <span className="ice-menu-item-text">{nav.name}</span>
-                </Link>
-              </Item>
-            );
-          })}
+        {asideMenuConfig.map(traversing)}
       </Nav>
     </div>
   );

@@ -2,6 +2,7 @@ const types = {
   1: '[object Object]',
   2: '[object Number]',
   3: '[object String]',
+  4: '[object Array]',
 };
 
 function TypeJudgment({
@@ -28,5 +29,12 @@ export function isString(arg) {
   return TypeJudgment({
     arg,
     type: 3,
+  });
+}
+
+export function isArray(arg) {
+  return TypeJudgment({
+    arg,
+    type: 4,
   });
 }
