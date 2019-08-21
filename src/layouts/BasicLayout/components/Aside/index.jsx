@@ -68,6 +68,7 @@ function Aside({
         selectedKeys={[pathname]}
         className="ice-menu-custom"
         activeDirection="right"
+        defaultOpenKeys={['/system']}
       >
         {asideMenuConfig.map(traversing)}
       </Nav>
