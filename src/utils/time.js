@@ -38,10 +38,7 @@ export const dateMap = (arg) => {
  * @param  {[type]}   fmt  时间格式  Y-M-D h:m:s
  * @return {string}
  */
-export function formatUnix({
-  unix,
-  fmt,
-}) {
+export function formatUnix(unix, fmt) {
   const map = dateMap(unix * 1000);
   Object.keys(map).forEach((k) => {
     if (new RegExp(`(${k})`).test(fmt)) {

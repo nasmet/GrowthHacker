@@ -7,7 +7,6 @@ import {
   Table,
   Pagination,
   Button,
-  Message,
 } from '@alifd/next';
 import {
   withRouter,
@@ -21,20 +20,18 @@ const getData = (data) => {
       id,
       context,
       keyword,
-      like,
-      retweet,
-      comment,
-      publish_unix,
+      trend_index,
+      total_threads,
       source_platform,
       source_url,
+      publish_unix,
     } = item;
     return {
       id,
       context,
       keyword,
-      like,
-      retweet,
-      comment,
+      trend_index,
+      total_threads,
       publish_unix: utils.formatUnix(publish_unix, 'Y-M-D'),
       source: `${source_platform}\n${source_url}`,
     };
@@ -46,7 +43,7 @@ const {
 } = Table;
 const limit = 10;
 
-function WeiboHot({
+function WeiboSpot({
   type,
 }) {
   const [curPage, setCurPage] = useState(1);
@@ -126,9 +123,8 @@ function WeiboHot({
         <Table loading={loading} dataSource={data} hasBorder={false} onSort={onSort} sort={sort}>
           <Column title="热门内容" dataIndex="context" />
           <Column title="热门词" dataIndex="keyword" />
-          <Column title="点赞" dataIndex="like" sortable />
-          <Column title="转发" dataIndex="retweet" sortable />
-          <Column title="评论" dataIndex="comment" sortable />
+          <Column title="热度指数" dataIndex="trend_index" sortable />
+          <Column title="全网信息" dataIndex="total_threads" sortable />
           <Column title="发布时间" dataIndex="publish_unix" sortable />
           <Column title="来源" dataIndex="source" />
           <Column title="操作" cell={renderCover} />
@@ -145,4 +141,4 @@ function WeiboHot({
   );
 }
 
-export default withRouter(WeiboHot);
+export default withRouter(WeiboSpot);
