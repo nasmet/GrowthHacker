@@ -1,0 +1,12 @@
+.pagination {
+  margin-top: 10px;
+  text-align: right;
+};
+.btn{
+	margin-right: 10px;
+}
+@media screen and (max-width: 1200px){
+	.btn{
+		margin-bottom: 10px;
+	}
+}

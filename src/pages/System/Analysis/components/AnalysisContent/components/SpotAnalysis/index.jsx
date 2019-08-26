@@ -2,7 +2,7 @@ import React, {
 	Component,
 } from 'react';
 import styles from './index.module.scss';
-import BasicPolyline from '../../../../../../components/BasicPolyline'
+import BasicPolyline from '../../../../../../../components/BasicPolyline';
 
 const data = [{
 	name: '一月',

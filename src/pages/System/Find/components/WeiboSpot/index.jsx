@@ -7,6 +7,7 @@ import {
   Table,
   Pagination,
   Button,
+  Message,
 } from '@alifd/next';
 import {
   withRouter,
@@ -32,7 +33,7 @@ const getData = (data) => {
       keyword,
       trend_index,
       total_threads,
-      publish_unix: utils.formatUnix(publish_unix, 'Y-M-D'),
+      publish_unix: utils.formatUnix(publish_unix, 'Y-M-D h:m:s'),
       source: `${source_platform}\n${source_url}`,
     };
   });

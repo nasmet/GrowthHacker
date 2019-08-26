@@ -9,8 +9,8 @@ import {
 } from '@alifd/next';
 import styles from './index.module.scss';
 import graphAnalysisConfig from './graphAnalysisConfig';
-import BasicPolyline from '../../../../../../components/BasicPolyline';
-import BasicSector from '../../../../../../components/BasicSector';
+import BasicPolyline from '../../../../../../../components/BasicPolyline';
+import BasicSector from '../../../../../../../components/BasicSector';
 
 const {
 	Item,
@@ -93,7 +93,7 @@ export default function GraphAnalysis() {
 			<Loading visible={loading} style={{display: 'block'}}>
 	      <div className={styles.TabWrap}>
 	      	<span className={styles.name}>信息走势图</span>
-	      	<Tab defaultActiveKey="1" shape="capsule" onChange={tabChange}>
+	      	<Tab defaultActiveKey="1" shape="capsule" size="small" onChange={tabChange}>
 	      		{renderTab()}
 	      	</Tab>
 	      </div>	

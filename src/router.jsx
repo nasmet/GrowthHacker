@@ -6,13 +6,10 @@ import {
   BrowserRouter,
   Switch,
   Route,
+  Router,
 } from 'react-router-dom';
 import routerConfig from './routerConfig';
-
-const getConfirmation = (message, callback) => {
-  const allowTransition = window.confirm(message);
-  callback(allowTransition);
-};
+import model from './model/index';
 
 const renderRouter = () => {
   return routerConfig.map((item) => {
@@ -27,11 +24,11 @@ const renderRouter = () => {
 // BasicLayout 对应的路由：/xxx
 const router = () => {
   return (
-    <BrowserRouter getUserConfirmation={getConfirmation} >
+    <Router history={model.history}>
       <Switch>
         {renderRouter()}
       </Switch>
-    </BrowserRouter>
+    </Router>
   );
 };
 

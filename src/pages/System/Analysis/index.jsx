@@ -8,24 +8,24 @@ import {
 	Loading,
 } from '@alifd/next';
 import styles from './index.module.scss';
-import MonitorContent from './components/MonitorContent';
+import AnalysisContent from './components/AnalysisContent';
 
 const {
 	Item,
 } = Tab;
 
-const creatMonitorConfig = (keys) => {
+const creatAnalysisConfig = (keys) => {
 	return keys.map((item, index) => {
 		return {
 			key: index + '',
 			tab: item,
-			component: MonitorContent,
+			component: AnalysisContent,
 		}
 	});
 }
 
 export default function Monitor() {
-	const [monitorConfig, setMonitorConfig] = useState([]);
+	const [analysisConfig, setAnalysisConfig] = useState([]);
 	const [loading, setLoading] = useState(false);
 
 	let cancelTask = false; // 防止内存泄露
@@ -36,7 +36,7 @@ export default function Monitor() {
 			if (cancelTask) {
 				return;
 			}
-			setMonitorConfig(creatMonitorConfig(['长安十二时辰', '陈情令', '复仇者联盟']));
+			setAnalysisConfig(creatAnalysisConfig(['长安十二时辰', '陈情令', '复仇者联盟']));
 			setLoading(false);
 		}, 500);
 		return () => {
@@ -45,7 +45,7 @@ export default function Monitor() {
 	}, []);
 
 	const rendTab = () => {
-		return monitorConfig.map((item) => {
+		return analysisConfig.map((item) => {
 			const Content = item.component;
 			return (
 				<Item
@@ -53,7 +53,7 @@ export default function Monitor() {
           title={item.tab}
         >
           <div className={styles.margin}>
-            <MonitorContent />
+            <AnalysisContent />
           </div>
         </Item>
 			);
@@ -62,7 +62,7 @@ export default function Monitor() {
 
 	return (
 		<div>
-		 	<Loading visible={loading} style={{display: 'block'}}>
+		 	<Loading visible={loading} inline={false}>
 	      <Tab defaultActiveKey="0">
 	        {rendTab()}
 	      </Tab>

@@ -21,22 +21,11 @@ axios.interceptors.request.use((configs) => {
   return Promise.reject(err);
 });
 
-const tokenInvalid = '该账号在另一台设备上登陆,请重新登陆';
-
-function jumpLogin() {
-  if (global.jumpLogin) {
-    global.jumpLogin();
-  }
-}
-
 // http response 拦截器（所有接收到的请求都要从这儿过一次）
 axios.interceptors.response.use((response) => {
   switch (response.data.code) {
     case 0:
       return response.data;
-    case 20103:
-      jumpLogin();
-      return Promise.reject(tokenInvalid);
     default:
       return Promise.reject(response.data.message);
   }

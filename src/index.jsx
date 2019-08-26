@@ -4,14 +4,16 @@ import '@alifd/next/reset.scss';
 import router from './router';
 import utils from './utils/index';
 import * as api from './api/index';
+import model from './model/index';
 
 const ICE_CONTAINER = document.getElementById('ice-container');
 
 if (!ICE_CONTAINER) {
-  throw new Error('当前页面不存在 <div id="ice-container"></div> 节点.');
+	throw new Error('当前页面不存在 <div id="ice-container"></div> 节点.');
 }
 
 window.utils = utils;
 window.api = api;
+window.model = model;
 
 ReactDOM.render(router, ICE_CONTAINER);

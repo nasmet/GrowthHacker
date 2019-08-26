@@ -5,11 +5,11 @@ import UserLayout from './layouts/UserLayout';
 import BasicLayout from './layouts/BasicLayout';
 
 const routerConfig = [{
-  path: '/',
-  component: BasicLayout,
+	path: '/',
+	component: BasicLayout,
 }, {
-  path: '/user',
-  component: UserLayout,
+	path: '/user',
+	component: UserLayout,
 }];
 
 export default routerConfig;

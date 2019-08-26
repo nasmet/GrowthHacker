@@ -9,8 +9,8 @@ import {
 } from '@alifd/next';
 import styles from './index.module.scss';
 import exponentAnalysisConfig from './exponentAnalysisConfig';
-import Basiccolumn from '../../../../../../components/Basiccolumn'
-import BasicPolyline from '../../../../../../components/BasicPolyline'
+import BasicColumn from '../../../../../../../components/BasicColumn'
+import BasicPolyline from '../../../../../../../components/BasicPolyline';
 
 const {
   Item,
@@ -120,16 +120,16 @@ export default function ExponentAnalysis() {
                 <div className={styles.content}>
                   <div className={styles.item1}>
                     <span className={styles.title}>年龄分布:</span>
-                    <Basiccolumn data={attrData} cols={cols} />
+                    <BasicColumn data={attrData} cols={cols} />
                   </div>
                   <div className={styles.item1}>
                     <span className={styles.title}>性别分布:</span>
-                    <Basiccolumn data={genderData} cols={cols} />
+                    <BasicColumn data={genderData} cols={cols} />
                   </div>
                 </div>
               </Item>
               <Item key="2" title="地域属性">
-                <Basiccolumn data={areaData} cols={cols} forceFit />
+                <BasicColumn data={areaData} cols={cols} forceFit />
               </Item>
             </Tab>
           </div>

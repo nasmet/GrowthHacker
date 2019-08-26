@@ -26,6 +26,20 @@ const asideMenuConfig = [{
     name: '热点分析',
     path: '/system/analysis',
   }],
+}, {
+  name: '微博运营',
+  path: '/operation',
+  icon: 'publish',
+  sub: [{
+    name: '微博列表',
+    path: '/operation/list',
+  }, {
+    name: '微博状态',
+    path: '/operation/status',
+  }, {
+    name: '微博互动',
+    path: '/operation/Interactive',
+  }],
 }];
 
 export {

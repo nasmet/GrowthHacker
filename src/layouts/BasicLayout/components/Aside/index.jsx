@@ -35,11 +35,11 @@ const icon = (url) => {
   );
 };
 
-const traversing = (nav) => {
+const traversing = function fn(nav) {
   if (nav.sub && utils.isArray(nav.sub)) {
     return (
       <SubNav key={nav.path} label={word(nav.name)} icon={icon(nav.icon)}>
-        {nav.sub.map(traversing)}
+        {nav.sub.map(fn)}
       </SubNav>
     );
   }
@@ -59,6 +59,9 @@ function Aside({
   const {
     pathname,
   } = location;
+  const regex = /^\/[a-zA-Z]+/;
+  const value = regex.exec(pathname);
+  const path = value ? value[0] : '/system';
 
   return (
     <div className="aside-custom-menu">
@@ -68,7 +71,7 @@ function Aside({
         selectedKeys={[pathname]}
         className="ice-menu-custom"
         activeDirection="right"
-        defaultOpenKeys={['/system']}
+        defaultOpenKeys={[path]}
       >
         {asideMenuConfig.map(traversing)}
       </Nav>

@@ -8,7 +8,7 @@ import {
   Tooltip,
 } from "bizcharts";
 
-export default function Basiccolumn({
+export default function BasicColumn({
   data,
   forceFit = false,
   cols = {},

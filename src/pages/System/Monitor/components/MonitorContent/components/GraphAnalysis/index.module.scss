@@ -3,10 +3,12 @@
 	.TabWrap{
 		display: flex;
 		flex-direction: row;
+		align-items: center;
 		$height: 41px;
 		.name{
 			min-width: 100px;
 			height: $height;
+			margin-right: 10px;
 			border: 1px solid #e6e6e6;
 			background: #fff;
 			display: flex;

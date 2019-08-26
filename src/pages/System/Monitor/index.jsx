@@ -8,24 +8,24 @@ import {
 	Loading,
 } from '@alifd/next';
 import styles from './index.module.scss';
-import AnalysisContent from './components/AnalysisContent';
+import MonitorContent from './components/MonitorContent';
 
 const {
 	Item,
 } = Tab;
 
-const creatAnalysisConfig = (keys) => {
+const creatMonitorConfig = (keys) => {
 	return keys.map((item, index) => {
 		return {
-			key: index + '',
+			key: `${index}`,
 			tab: item,
-			component: AnalysisContent,
+			component: MonitorContent,
 		}
 	});
 }
 
 export default function Monitor() {
-	const [analysisConfig, setAnalysisConfig] = useState([]);
+	const [monitorConfig, setMonitorConfig] = useState([]);
 	const [loading, setLoading] = useState(false);
 
 	let cancelTask = false; // 防止内存泄露
@@ -36,7 +36,7 @@ export default function Monitor() {
 			if (cancelTask) {
 				return;
 			}
-			setAnalysisConfig(creatAnalysisConfig(['长安十二时辰', '陈情令', '复仇者联盟']));
+			setMonitorConfig(creatMonitorConfig(['长安十二时辰', '陈情令', '复仇者联盟']));
 			setLoading(false);
 		}, 500);
 		return () => {
@@ -45,7 +45,7 @@ export default function Monitor() {
 	}, []);
 
 	const rendTab = () => {
-		return analysisConfig.map((item) => {
+		return monitorConfig.map((item) => {
 			const Content = item.component;
 			return (
 				<Item
@@ -53,7 +53,7 @@ export default function Monitor() {
           title={item.tab}
         >
           <div className={styles.margin}>
-            <AnalysisContent />
+            <MonitorContent />
           </div>
         </Item>
 			);
@@ -62,7 +62,7 @@ export default function Monitor() {
 
 	return (
 		<div>
-		 	<Loading visible={loading} style={{display: 'block'}}>
+		 	<Loading visible={loading} inline={false}>
 	      <Tab defaultActiveKey="0">
 	        {rendTab()}
 	      </Tab>

@@ -35,7 +35,7 @@ const getData = (data) => {
       like,
       retweet,
       comment,
-      publish_unix: utils.formatUnix(publish_unix, 'Y-M-D'),
+      publish_unix: utils.formatUnix(publish_unix, 'Y-M-D h:m:s'),
       source: `${source_platform}\n${source_url}`,
     };
   });
