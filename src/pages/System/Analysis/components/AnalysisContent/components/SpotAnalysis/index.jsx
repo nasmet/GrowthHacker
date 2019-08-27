@@ -2,7 +2,6 @@ import React, {
 	Component,
 } from 'react';
 import styles from './index.module.scss';
-import BasicPolyline from '../../../../../../../components/BasicPolyline';
 
 const data = [{
 	name: '一月',
@@ -20,7 +19,7 @@ const data = [{
 export default function SpotAnalysis() {
 	return (
 		<div className={styles.wrap}>
-			<BasicPolyline data={data} forceFit />
+			<Components.BasicPolyline data={data} forceFit />
     </div>
 	);
 }

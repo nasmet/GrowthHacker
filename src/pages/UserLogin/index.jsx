@@ -1,4 +1,3 @@
-/* eslint react/no-string-refs:0 */
 import React, {
   Component,
   useEffect,
@@ -22,7 +21,6 @@ import {
 } from '@icedesign/form-binder';
 import IceIcon from '@icedesign/foundation-symbol';
 import styles from './index.module.scss';
-import * as config from '../../config';
 
 function UserLogin({
   history,

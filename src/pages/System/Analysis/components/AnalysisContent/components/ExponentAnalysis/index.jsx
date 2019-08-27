@@ -9,8 +9,6 @@ import {
 } from '@alifd/next';
 import styles from './index.module.scss';
 import exponentAnalysisConfig from './exponentAnalysisConfig';
-import BasicColumn from '../../../../../../../components/BasicColumn'
-import BasicPolyline from '../../../../../../../components/BasicPolyline';
 
 const {
   Item,
@@ -110,7 +108,7 @@ export default function ExponentAnalysis() {
           <div className={styles.first}>
             <Tab shape="capsule" defaultActiveKey="1" >
               <Item key="1" title="趋势属性">
-                <BasicPolyline data={data} forceFit />
+                <Components.BasicPolyline data={data} forceFit />
               </Item>
             </Tab>
           </div>
@@ -120,16 +118,16 @@ export default function ExponentAnalysis() {
                 <div className={styles.content}>
                   <div className={styles.item1}>
                     <span className={styles.title}>年龄分布:</span>
-                    <BasicColumn data={attrData} cols={cols} />
+                    <Components.BasicColumn data={attrData} cols={cols} />
                   </div>
                   <div className={styles.item1}>
                     <span className={styles.title}>性别分布:</span>
-                    <BasicColumn data={genderData} cols={cols} />
+                    <Components.BasicColumn data={genderData} cols={cols} />
                   </div>
                 </div>
               </Item>
               <Item key="2" title="地域属性">
-                <BasicColumn data={areaData} cols={cols} forceFit />
+                <Components.BasicColumn data={areaData} cols={cols} forceFit />
               </Item>
             </Tab>
           </div>

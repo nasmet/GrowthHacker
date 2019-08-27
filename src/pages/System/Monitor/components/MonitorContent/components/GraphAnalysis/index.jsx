@@ -9,8 +9,6 @@ import {
 } from '@alifd/next';
 import styles from './index.module.scss';
 import graphAnalysisConfig from './graphAnalysisConfig';
-import BasicPolyline from '../../../../../../../components/BasicPolyline';
-import BasicSector from '../../../../../../../components/BasicSector';
 
 const {
 	Item,
@@ -97,15 +95,15 @@ export default function GraphAnalysis() {
 	      		{renderTab()}
 	      	</Tab>
 	      </div>	
-				<BasicPolyline data={data} forceFit />
+				<Components.BasicPolyline data={data} forceFit />
 	      <div className={styles.graphWrap}>
 					<div className={styles.graph}>
 						<span className={styles.name}>信息来源图</span>
-						<BasicSector data={theta} />
+						<Components.BasicSector data={theta} />
 					</div>
 					<div className={styles.graph}>
 						<span className={styles.name}>媒体来源占比图</span>
-						<BasicSector data={theta} />
+						<Components.BasicSector data={theta} />
 					</div>
 	      </div>
 	    </Loading>
