@@ -2,14 +2,13 @@
 import ReactDOM from 'react-dom';
 import '@alifd/next/reset.scss';
 import router from './router';
-import utils from './utils/index';
-import * as api from './api/index';
-import model from './model/index';
-import * as config from './config';
-import Components from './components/index';
+import utils from './common/utils/index';
+import * as api from './common/api/index';
+import model from './common/model/index';
+import * as config from './common/config';
+import Components from './common/components/index';
 
 const ICE_CONTAINER = document.getElementById('ice-container');
-
 if (!ICE_CONTAINER) {
 	throw new Error('当前页面不存在 <div id="ice-container"></div> 节点.');
 }

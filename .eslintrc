@@ -57,6 +57,9 @@
   "globals": {
     "utils": true,
     "api": true,
+    "model": true,
+    "config": true,
+    "Components": true,
   },
   "no-unused-vars": [2, {"vars": "all", "args": "after-used"}],
 }

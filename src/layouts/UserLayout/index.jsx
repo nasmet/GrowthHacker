@@ -10,7 +10,6 @@ import {
   Grid,
 } from '@alifd/next';
 import styles from './index.module.scss';
-import NotFound from '../../components/NotFound';
 
 const {
   Row,
@@ -27,7 +26,7 @@ export default function UserLayout() {
               <Redirect from="/user" to="/user/login" />
 
               {/* 未匹配到的路由重定向到 NotFound */}
-              <Route component={NotFound} />
+              <Route component={Components.NotFound} />
             </Switch>
           </div>
         </Col>

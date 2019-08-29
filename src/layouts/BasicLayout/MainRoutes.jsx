@@ -6,7 +6,6 @@ import {
   Route,
   Redirect,
 } from 'react-router-dom';
-import NotFound from '../../components/NotFound';
 import routerConfig from './routerConfig';
 
 export default function MainRoutes() {
@@ -32,7 +31,7 @@ export default function MainRoutes() {
       <Redirect from="/" to="/system/find" />
 
       {/* 未匹配到的路由重定向到 NotFound */}
-      <Route component={NotFound} />
+      <Route component={Components.NotFound} />
     </Switch>
   );
 }

@@ -9,7 +9,7 @@ import {
   Router,
 } from 'react-router-dom';
 import routerConfig from './routerConfig';
-import model from './model/index';
+import model from './common/model/index';
 
 const renderRouter = () => {
   return routerConfig.map((item) => {
