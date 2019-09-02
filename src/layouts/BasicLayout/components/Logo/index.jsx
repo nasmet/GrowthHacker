@@ -1,14 +1,14 @@
 import React, {
-  Component,
+	Component,
 } from 'react';
 import styles from './index.module.scss';
 
 export default function Logo({
-  text,
+	text,
 }) {
-  return (
-    <div className={styles.container}>
-      <span className={styles.logoText}>{text}</span>
-    </div>
-  );
+	return (
+		<div className={styles.container}>
+      		<span className={styles.logoText}>{text}</span>
+   		</div>
+	);
 }

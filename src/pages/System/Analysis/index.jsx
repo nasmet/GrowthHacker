@@ -48,14 +48,11 @@ export default function Monitor() {
 		return analysisConfig.map((item) => {
 			const Content = item.component;
 			return (
-				<Item
-          key={item.key}
-          title={item.tab}
-        >
-          <div className={styles.margin}>
-            <AnalysisContent />
-          </div>
-        </Item>
+				<Item key={item.key} title={item.tab} >
+          			<div className={styles.margin}>
+            			<AnalysisContent />
+          			</div>
+        		</Item>
 			);
 		});
 	};
@@ -63,10 +60,10 @@ export default function Monitor() {
 	return (
 		<div>
 		 	<Loading visible={loading} inline={false}>
-	      <Tab defaultActiveKey="0">
-	        {rendTab()}
-	      </Tab>
-      </Loading>
-    </div>
+		      	<Tab defaultActiveKey="0">
+		        	{rendTab()}
+		      	</Tab>
+     		</Loading>
+   		</div>
 	);
 }

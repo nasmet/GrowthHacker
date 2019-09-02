@@ -9,7 +9,7 @@ import styles from './index.module.scss';
 export default function Interactive() {
   return (
     <div>
-      互动
+    	互动
     </div>
   );
 }

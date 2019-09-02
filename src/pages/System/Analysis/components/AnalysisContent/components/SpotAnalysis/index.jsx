@@ -20,6 +20,6 @@ export default function SpotAnalysis() {
 	return (
 		<div className={styles.wrap}>
 			<Components.BasicPolyline data={data} forceFit />
-    </div>
+    	</div>
 	);
 }

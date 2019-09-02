@@ -1,38 +1,31 @@
 import React, {
-  Component,
+	Component,
 } from 'react';
 import {
-  Tab,
+	Tab,
 } from '@alifd/next';
 import styles from './index.module.scss';
 import monitorContentConfig from './monitorContentConfig';
 
 const {
-  Item,
+	Item,
 } = Tab;
 
 export default function MonitorContent() {
-  const rendTab = () => {
-    return monitorContentConfig.map((item) => {
-      const Content = item.component;
-      return (
-        <Item
-          key={item.key}
-          title={item.tab}
-        >
-          <div>
-            <Content />
-          </div>
-        </Item>
-      );
-    });
-  };
+	const rendTab = () => {
+		return monitorContentConfig.map((item) => {
+			const Content = item.component;
+			return (
+				<Item key={item.key} title={item.tab} >
+            		<Content />
+        		</Item>
+			);
+		});
+	};
 
-  return (
-    <div>
-      <Tab defaultActiveKey="GA">
-        {rendTab()}
-      </Tab>
-    </div>
-  );
+	return (
+      	<Tab defaultActiveKey="GA">
+        	{rendTab()}
+      	</Tab>
+	);
 }

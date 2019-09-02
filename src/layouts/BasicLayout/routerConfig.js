@@ -4,6 +4,11 @@ import Analysis from '../../pages/System/Analysis';
 import List from '../../pages/WeiboOperation/List';
 import Status from '../../pages/WeiboOperation/Status';
 import Interactive from '../../pages/WeiboOperation/Interactive';
+import ProductAnalysis from '../../pages/GrowthHacker/ProductAnalysis';
+import UserAnalysis from '../../pages/GrowthHacker/UserAnalysis';
+import CustomerAnalysis from '../../pages/GrowthHacker/CustomerAnalysis';
+import DataCenter from '../../pages/GrowthHacker/DataCenter';
+import DataBoard from '../../pages/GrowthHacker/DataBoard';
 
 const routerConfig = [{
 	path: '/system/find',
@@ -28,6 +33,26 @@ const routerConfig = [{
 }, {
 	path: '/operation/Interactive',
 	component: Interactive,
+	exact: true,
+}, {
+	path: '/growthhacker/productanalysis',
+	component: ProductAnalysis,
+	exact: true,
+}, {
+	path: '/growthhacker/useranalysis',
+	component: UserAnalysis,
+	exact: true,
+}, {
+	path: '/growthhacker/customeranalysis',
+	component: CustomerAnalysis,
+	exact: true,
+}, {
+	path: '/growthhacker/datacenter',
+	component: DataCenter,
+	exact: true,
+}, {
+	path: '/growthhacker/databoard',
+	component: DataBoard,
 	exact: true,
 }];
 

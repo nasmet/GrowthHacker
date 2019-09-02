@@ -5,9 +5,9 @@
  * @return {Boolean}    [description]
  */
 export function checkPasswd(s) {
-  const patrn = /^(\w){8,32}$/;
-  if (!patrn.exec(s)) return false;
-  return true;
+	const patrn = /^(\w){8,32}$/;
+	if (!patrn.exec(s)) return false;
+	return true;
 }
 
 /**
@@ -16,10 +16,10 @@ export function checkPasswd(s) {
  * @return {[type]}   [description]
  */
 export function checkPhone(value) {
-  if (!(/^1[3456789]\d{9}$/.test(value))) {
-    return false;
-  }
-  return true;
+	if (!(/^1[3456789]\d{9}$/.test(value))) {
+		return false;
+	}
+	return true;
 }
 
 /**
@@ -28,8 +28,8 @@ export function checkPhone(value) {
  * @return {[type]}   [description]
  */
 export function checkUsername(value) {
-  if (!(/^[a-zA-Z0-9_-]{1,32}$/.test(value))) {
-    return false;
-  }
-  return true;
+	if (!(/^[a-zA-Z0-9_-]{1,32}$/.test(value))) {
+		return false;
+	}
+	return true;
 }

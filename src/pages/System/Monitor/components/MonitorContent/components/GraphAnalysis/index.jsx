@@ -89,14 +89,14 @@ export default function GraphAnalysis() {
 	return (
 		<div className={styles.wrap}>
 			<Loading visible={loading} style={{display: 'block'}}>
-	      <div className={styles.TabWrap}>
-	      	<span className={styles.name}>信息走势图</span>
-	      	<Tab defaultActiveKey="1" shape="capsule" size="small" onChange={tabChange}>
-	      		{renderTab()}
-	      	</Tab>
-	      </div>	
+		      	<div className={styles.TabWrap}>
+		      		<span className={styles.name}>信息走势图</span>
+		      		<Tab defaultActiveKey="1" shape="capsule" size="small" onChange={tabChange}>
+		      		{renderTab()}
+		      		</Tab>
+		      	</div>	
 				<Components.BasicPolyline data={data} forceFit />
-	      <div className={styles.graphWrap}>
+	     		<div className={styles.graphWrap}>
 					<div className={styles.graph}>
 						<span className={styles.name}>信息来源图</span>
 						<Components.BasicSector data={theta} />
@@ -105,8 +105,8 @@ export default function GraphAnalysis() {
 						<span className={styles.name}>媒体来源占比图</span>
 						<Components.BasicSector data={theta} />
 					</div>
-	      </div>
-	    </Loading>
+      			</div>
+	    	</Loading>
 		</div>
 	);
 }

@@ -9,7 +9,7 @@ import styles from './index.module.scss';
 export default function Status() {
 	return (
 		<div>
-      状态
-    </div>
+      		状态
+    	</div>
 	);
 }

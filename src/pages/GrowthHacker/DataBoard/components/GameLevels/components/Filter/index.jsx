@@ -1,0 +1,81 @@
+import React, {
+	Component,
+	useState,
+	useEffect,
+	useRef,
+	useContext,
+	useCallback,
+	useMemo,
+} from 'react';
+import {
+	Input,
+	Button,
+	Tab,
+	Table,
+	Message,
+	Loading,
+	Pagination,
+} from '@alifd/next';
+import {
+	withRouter,
+} from 'react-router-dom';
+import {
+	Grid,
+	Select,
+} from '@alifd/next';
+import {
+	FormBinderWrapper as IceFormBinderWrapper,
+	FormBinder as IceFormBinder,
+} from '@icedesign/form-binder';
+import IceContainer from '@icedesign/container';
+import styles from './index.module.scss';
+
+const {
+	Row,
+	Col,
+} = Grid;
+
+const {
+	Option,
+} = Select;
+
+export default function Filter({
+	values,
+	filterChange,
+}) {
+	const formChange = () => {
+		filterChange();
+	};
+
+	return (
+		<IceFormBinderWrapper
+        	value={values}
+        	onChange={formChange}
+      	>
+	        <Row wrap gutter="20" className={styles.formRow}>
+	          	<Col l="6">
+		            <div className={styles.formItem}>
+		              	<span className={styles.formLabel}>类别：</span>
+		              	<IceFormBinder triggerType="onBlur" name="category">
+			                <Select style={{ width: '200px' }}>
+			                  	<Option value={0}>游戏关卡</Option>
+			                  	<Option value={1}>用户等级</Option>
+			                </Select>
+		              	</IceFormBinder>
+		            </div>
+	          	</Col>
+	          	<Col l="6">
+		            <div className={styles.formItem}>
+		              	<span className={styles.formLabel}>域名：</span>
+		              	<IceFormBinder triggerType="onBlur" name="domain">
+			                <Select style={{ width: '200px' }}>
+			                  	<Option value={0}>www.ss.com</Option>
+			                  	<Option value={1}>www.dd.com</Option>
+			                </Select>
+		              	</IceFormBinder>
+		            </div>
+	          	</Col>
+	        </Row>
+     	</IceFormBinderWrapper>
+	);
+}
