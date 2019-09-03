@@ -14,15 +14,18 @@ export default function BasicPolyline({
 	forceFit = false,
 	cols = {},
 	height = 400,
+	x = 'name',
+	y = 'value',
 }) {
+	const pos = `${x}*${y}`;
 	return (
 		<div>
       		<Chart height={height} data={data} scale={cols} forceFit>
-	        	<Axis name="name" />
-	        	<Axis name="value" />
+	        	<Axis name={x} />
+	        	<Axis name={y} />
 	        	<Tooltip />
-	        	<Geom type="line" position="name*value" size={2} />
-	        	<Geom type="point" position="name*value" size={4} />
+	        	<Geom type="line" position={pos} size={2} />
+	        	<Geom type="point" position={pos} size={4} />
       		</Chart>
     	</div>
 	);

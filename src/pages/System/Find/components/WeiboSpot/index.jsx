@@ -34,7 +34,8 @@ const getData = (data) => {
 			trend_index,
 			total_threads,
 			publish_unix: utils.formatUnix(publish_unix, 'Y-M-D h:m:s'),
-			source: `${source_platform}\n${source_url}`,
+			source_platform,
+			source_url,
 		};
 	});
 };
@@ -106,6 +107,19 @@ function WeiboSpot({
 		);
 	};
 
+	const renderSource = (value, index, record) => {
+		const {
+			source_platform,
+			source_url,
+		} = record;
+		return (
+			<div className={styles.source}>
+				<span>{source_platform}</span>
+				<span>{source_url}</span>
+			</div>
+		);
+	};
+
 	const onSort = (dataIndex, order) => {
 		setSort({
 			[dataIndex]: order,
@@ -127,7 +141,7 @@ function WeiboSpot({
 		          	<Column title="热度指数" dataIndex="trend_index" sortable />
 		          	<Column title="全网信息" dataIndex="total_threads" sortable />
 		          	<Column title="发布时间" dataIndex="publish_unix" sortable />
-		          	<Column title="来源" dataIndex="source" />
+		            <Column title="来源" cell={renderSource} />
 		          	<Column title="操作" cell={renderCover} />
 	        	</Table>
 

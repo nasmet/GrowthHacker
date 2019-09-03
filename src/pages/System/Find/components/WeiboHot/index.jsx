@@ -36,7 +36,8 @@ const getData = (data) => {
 			retweet,
 			comment,
 			publish_unix: utils.formatUnix(publish_unix, 'Y-M-D h:m:s'),
-			source: `${source_platform}\n${source_url}`,
+			source_platform,
+			source_url,
 		};
 	});
 };
@@ -74,6 +75,7 @@ function WeiboHot({
 				setCount(total);
 				setData(getData(trends));
 			}).catch((e) => {
+				console.log(e);
 				Message.success(e.toString());
 			}).finally(() => {
 				if (cancelTask) {
@@ -108,6 +110,19 @@ function WeiboHot({
 		);
 	};
 
+	const renderSource = (value, index, record) => {
+		const {
+			source_platform,
+			source_url,
+		} = record;
+		return (
+			<div className={styles.source}>
+				<span>{source_platform}</span>
+				<span>{source_url}</span>
+			</div>
+		);
+	};
+
 	const onSort = (dataIndex, order) => {
 		setSort({
 			[dataIndex]: order,
@@ -130,7 +145,7 @@ function WeiboHot({
 		          	<Column title="转发" dataIndex="retweet" sortable />
 		          	<Column title="评论" dataIndex="comment" sortable />
 		          	<Column title="发布时间" dataIndex="publish_unix" sortable />
-		          	<Column title="来源" dataIndex="source" />
+		          	<Column title="来源" cell={renderSource} />
 		          	<Column title="操作" cell={renderCover} />
 		        </Table>
 

@@ -40,47 +40,8 @@ export default function BasicSector({
 		<div>
       		<Chart height={height} data={dv} scale={scale} forceFit={forceFit} >
         		<Coord type="theta" innerRadius={0.3} radius={1} />
-        		<Tooltip
-          			showTitle={false}
-          			itemTpl="<li data-index={index}><span style=&quot;color:{color}&quot;>{name}:</span>{value}</li>"
-        		/>
-        		<Legend
-          			useHtml={true}
-          			position="left"
-          			containerTpl="<div class=&quot;g2-legend&quot;><table class=&quot;g2-legend-list&quot; style=&quot;list-style-type:none;margin:0;padding:0;&quot;></table></div>"
-          			itemTpl={(value, color, checked, index) => {
-            			const obj = dv.rows[index];
-            			checked = checked ? "checked" : "unChecked";
-			            return (
-			              	'<tr class="g2-legend-list-item item-' +
-			              	index +
-			              	" " +
-			              	checked +
-			              	'" data-value="' +
-			              	value +
-			              	'" data-color=' +
-			              	color +
-			              	' style="cursor: pointer;font-size: 14px;">' +
-			              	'<td width=150 style="border: none;padding:0;"><i class="g2-legend-marker" style="width:10px;height:10px;display:inline-block;margin-right:10px;background-color:' +
-			              	color +
-			              	';"></i>' +
-			              	'<span class="g2-legend-text">' +
-			              	value +
-			              	"</span></td>" +
-			              	'<td style="text-align: right;border: none;padding:0;">' +
-			              	obj.value +
-			              	"</td>" +
-			              	"</tr>"
-			            );
-			        }}
-          			g2-legend={{
-            			marginLeft: "100px",
-            			marginTop: "-107px"
-          			}}
-          			g2-legend-list={{
-            			border: "none"
-          			}}
-        		/>
+        		<Tooltip showTitle={false} />
+        		<Legend />
 		        <Geom
 		          	type="intervalStack"
 		          	position="percent"

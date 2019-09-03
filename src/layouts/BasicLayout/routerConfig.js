@@ -9,6 +9,7 @@ import UserAnalysis from '../../pages/GrowthHacker/UserAnalysis';
 import CustomerAnalysis from '../../pages/GrowthHacker/CustomerAnalysis';
 import DataCenter from '../../pages/GrowthHacker/DataCenter';
 import DataBoard from '../../pages/GrowthHacker/DataBoard';
+import EventAnalysis from '../../pages/GrowthHacker/EventAnalysis';
 
 const routerConfig = [{
 	path: '/system/find',
@@ -53,6 +54,10 @@ const routerConfig = [{
 }, {
 	path: '/growthhacker/databoard',
 	component: DataBoard,
+	exact: true,
+}, {
+	path: '/growthhacker/eventanalysis',
+	component: EventAnalysis,
 	exact: true,
 }];
 

@@ -6,22 +6,23 @@ import {
 	Geom,
 	Axis,
 	Tooltip,
+	Coord,
 } from "bizcharts";
 
 export default function BasicColumn({
 	data,
 	forceFit = false,
-	cols = {},
+	cols = {}, // 设置变量的别名
 	height = 400,
+	transpose = false, // fasle 纵向柱图 true 横向柱图
 }) {
 	return (
-		<div>
-      		<Chart height={height} data={data} scale={cols} forceFit={forceFit}>
-        		<Axis name="name" />
-        		<Axis name="value" />
-        		<Tooltip />
-        		<Geom type="interval" position="name*value" />
-      		</Chart>
-    	</div>
+		<Chart height={height} data={data} scale={cols} forceFit={forceFit}>
+  			<Coord transpose={transpose} />
+    		<Axis name="name" />
+    		<Axis name="value" />
+    		<Tooltip />
+    		<Geom type="interval" position="name*value" />
+  		</Chart>
 	);
 }
