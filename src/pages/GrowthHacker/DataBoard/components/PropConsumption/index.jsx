@@ -23,19 +23,6 @@ import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
 import Filter from './components/Filter';
 
-const getData = (data) => {
-	return [{
-		id: 1,
-		levels: 0,
-		sd: 1000,
-		xf: 2000,
-	}, {
-		id: 2,
-		levels: 1,
-		sd: 2000,
-		xf: 3000,
-	}];
-};
 const {
 	Column,
 } = Table;
@@ -57,31 +44,27 @@ function PropConsumption({
 	useEffect(() => {
 		function fetchData() {
 			setLoading(true);
-			// api.find({
-			//  limit,
-			//  offset: (curPage - 1) * limit,
-			// }).then((res) => {
-			//  if (cancelTask) {
-			//    return;
-			//  }
-			//  const {
-			//    total,
-			//    trends,
-			//  } = res;
-			//  setCount(total);
-			//  setData(getData(trends));
-			// }).catch((e) => {
-			//  Message.success(e.toString());
-			// }).finally(() => {
-			//  if (cancelTask) {
-			//    return;
-			//  }
-			//  setLoading(false);
-			// });
-			setTimeout(() => {
-				setData(getData());
+			api.getProp({
+				limit,
+				offset: (curPage - 1) * limit,
+			}).then((res) => {
+				if (cancelTask) {
+					return;
+				}
+				const {
+					total,
+					list,
+				} = res;
+				setCount(total);
+				setData(list);
+			}).catch((e) => {
+				Message.success(e.toString());
+			}).finally(() => {
+				if (cancelTask) {
+					return;
+				}
 				setLoading(false);
-			}, 500);
+			});
 		}
 
 		if (curPage > 0) {
@@ -114,7 +97,6 @@ function PropConsumption({
 	}
 
 	const filterChange = () => {
-		console.log(filter);
 		setSort({});
 		resetPage();
 	};

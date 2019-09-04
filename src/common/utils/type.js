@@ -38,3 +38,7 @@ export function isArray(arg) {
 		type: 4,
 	});
 }
+
+export function isEmptyObject(arg) {
+	return Object.keys(arg).length === 0 ? true : false;
+}

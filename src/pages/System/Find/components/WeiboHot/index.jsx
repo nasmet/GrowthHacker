@@ -8,6 +8,7 @@ import {
 	Pagination,
 	Button,
 	Message,
+	Dialog,
 } from '@alifd/next';
 import {
 	withRouter,
@@ -99,7 +100,9 @@ function WeiboHot({
 	};
 
 	const handle = (e) => {
-		console.log(e);
+		Dialog.alert({
+			title: '暂不支持',
+		});
 	};
 
 	const renderCover = (value, index, record) => {

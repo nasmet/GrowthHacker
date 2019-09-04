@@ -15,10 +15,14 @@ const {
 } = Tab;
 
 const creatMonitorConfig = (keys) => {
-	return keys.map((item, index) => {
+	return keys.map((item) => {
+		const {
+			id,
+			name,
+		} = item;
 		return {
-			key: `${index}`,
-			tab: item,
+			key: id,
+			tab: name,
 			component: MonitorContent,
 		}
 	});
@@ -27,21 +31,31 @@ const creatMonitorConfig = (keys) => {
 export default function Monitor() {
 	const [monitorConfig, setMonitorConfig] = useState([]);
 	const [loading, setLoading] = useState(false);
-
 	let cancelTask = false; // 防止内存泄露
 
 	useEffect(() => {
 		setLoading(true);
-		setTimeout(() => {
+		api.getMonitor().then((res) => {
 			if (cancelTask) {
 				return;
 			}
-			setMonitorConfig(creatMonitorConfig(['长安十二时辰', '陈情令', '复仇者联盟']));
+
+			const {
+				tab,
+			} = res;
+			setMonitorConfig(creatMonitorConfig(tab));
+		}).catch((e) => {
+			Message.success(e.toString());
+		}).finally(() => {
+			if (cancelTask) {
+				return;
+			}
 			setLoading(false);
-		}, 500);
+		});
+
 		return () => {
 			cancelTask = true;
-		}
+		};
 	}, []);
 
 	const rendTab = () => {
@@ -60,7 +74,7 @@ export default function Monitor() {
 	return (
 		<div>
 		 	<Loading visible={loading} inline={false}>
-	      		<Tab defaultActiveKey="0">
+	      		<Tab defaultActiveKey="1">
 	        		{rendTab()}
 	      		</Tab>
       		</Loading>

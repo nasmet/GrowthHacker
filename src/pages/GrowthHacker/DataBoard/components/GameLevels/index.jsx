@@ -24,21 +24,6 @@ import styles from './index.module.scss';
 import Filter from './components/Filter';
 import * as gameLevelsConfig from './gameLevelsConfig';
 
-const getData = (data) => {
-	return [{
-		id: 1,
-		levels: 0,
-		start: 2000,
-		complete: 1500,
-		fail: 500,
-	}, {
-		id: 2,
-		levels: 1,
-		start: 2000,
-		complete: 1200,
-		fail: 800,
-	}];
-};
 const {
 	Column,
 } = Table;
@@ -63,31 +48,27 @@ function GameLevels() {
 	useEffect(() => {
 		function fetchData() {
 			setLoading(true);
-			// api.find({
-			//  limit,
-			//  offset: (curPage - 1) * limit,
-			// }).then((res) => {
-			//  if (cancelTask) {
-			//    return;
-			//  }
-			//  const {
-			//    total,
-			//    trends,
-			//  } = res;
-			//  setCount(total);
-			//  setData(getData(trends));
-			// }).catch((e) => {
-			//  Message.success(e.toString());
-			// }).finally(() => {
-			//  if (cancelTask) {
-			//    return;
-			//  }
-			//  setLoading(false);
-			// });
-			setTimeout(() => {
-				setData(getData());
+			api.getGameLevels({
+				limit,
+				offset: (curPage - 1) * limit,
+			}).then((res) => {
+				if (cancelTask) {
+					return;
+				}
+				const {
+					total,
+					list,
+				} = res;
+				setCount(total);
+				setData(list);
+			}).catch((e) => {
+				Message.success(e.toString());
+			}).finally(() => {
+				if (cancelTask) {
+					return;
+				}
 				setLoading(false);
-			}, 500);
+			});
 		}
 
 		if (curPage > 0) {
@@ -120,7 +101,6 @@ function GameLevels() {
 	};
 
 	const filterChange = () => {
-		console.log(filter);
 		const value = categorys[filter.category];
 		setSort({});
 		setCategory(value);

@@ -1,25 +1,49 @@
 import React, {
 	Component,
+	useEffect,
+	useState,
 } from 'react';
+import {
+	Loading,
+	Message,
+} from '@alifd/next';
 import styles from './index.module.scss';
 
-const data = [{
-	name: '一月',
-	value: 2000,
-}, {
-	name: '二月',
-	value: 3000,
-}, {
-	name: '三月',
-	value: 2800,
-}, {
-	name: '四月',
-	value: 4000,
-}];
 export default function SpotAnalysis() {
+	const [loading, setLoading] = useState(false);
+	const [spots, setSpots] = useState([]);
+	let cancelTask = false; // 防止内存泄露
+
+	useEffect(() => {
+		setLoading(true);
+		api.getSpotAnalysis().then((res) => {
+			if (cancelTask) {
+				return;
+			}
+
+			const {
+				spots,
+			} = res;
+			setSpots(spots);
+		}).catch((e) => {
+			Message.success(e.toString());
+		}).finally(() => {
+			if (cancelTask) {
+				return;
+			}
+			setLoading(false);
+		});
+
+		return () => {
+			cancelTask = true;
+		};
+	}, []);
+
 	return (
-		<div className={styles.wrap}>
-			<Components.BasicPolyline data={data} forceFit />
-    	</div>
+		<Loading visible={loading} inline={false}>
+			<div className={styles.wrap}>
+				<Components.BasicPolyline data={spots} forceFit />
+	    	</div>
+    	</Loading>
 	);
 }

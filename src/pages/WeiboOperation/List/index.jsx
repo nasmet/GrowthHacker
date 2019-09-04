@@ -18,30 +18,6 @@ import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
 import Modify from './components/Modify';
 
-const getData = (data) => {
-	return [{
-		id: 1,
-		name: 'wjh',
-		ip: '127.0.0.1',
-		port: 5555,
-		group: 'aaa',
-		user: 'aaa',
-		password: '123456',
-		status: '正常',
-		time: utils.formatUnix(utils.getDate() / 1000, 'Y-M-D h:m:s'),
-	}, {
-		id: 2,
-		name: 'qwe',
-		ip: '127.0.0.2',
-		port: 8888,
-		group: 'bbb',
-		user: 'bbb',
-		password: '123456',
-		status: '正常',
-		time: utils.formatUnix(utils.getDate() / 1000, 'Y-M-D h:m:s'),
-	}];
-};
-
 const {
 	Column,
 } = Table;
@@ -62,31 +38,27 @@ function List({
 	useEffect(() => {
 		function fetchData() {
 			setLoading(true);
-			// api.find({
-			// 	limit,
-			// 	offset: (curPage - 1) * limit,
-			// }).then((res) => {
-			// 	if (cancelTask) {
-			// 		return;
-			// 	}
-			// 	const {
-			// 		total,
-			// 		trends,
-			// 	} = res;
-			// 	setCount(total);
-			// 	setData(getData(trends));
-			// }).catch((e) => {
-			// 	Message.success(e.toString());
-			// }).finally(() => {
-			// 	if (cancelTask) {
-			// 		return;
-			// 	}
-			// 	setLoading(false);
-			// });
-			setTimeout(() => {
-				setData(getData());
+			api.getWeiboList({
+				limit,
+				offset: (curPage - 1) * limit,
+			}).then((res) => {
+				if (cancelTask) {
+					return;
+				}
+				const {
+					total,
+					list,
+				} = res;
+				setCount(total);
+				setData(list);
+			}).catch((e) => {
+				Message.success(e.toString());
+			}).finally(() => {
+				if (cancelTask) {
+					return;
+				}
 				setLoading(false);
-			}, 500);
+			});
 		}
 
 		if (curPage > 0) {

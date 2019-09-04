@@ -13,63 +13,6 @@ import exponentAnalysisConfig from './exponentAnalysisConfig';
 const {
 	Item,
 } = Tab;
-
-const data = [{
-	name: '一月',
-	value: 2000,
-}, {
-	name: '二月',
-	value: 3000,
-}, {
-	name: '三月',
-	value: 2800,
-}, {
-	name: '四月',
-	value: 4000,
-}];
-
-const attrData = [{
-	name: '≤19',
-	value: 0.50,
-}, {
-	name: '20-29',
-	value: 0.20,
-}, {
-	name: '30-39',
-	value: 0.14,
-}, {
-	name: '40-49',
-	value: 0.10,
-}, {
-	name: '≥50',
-	value: 0.06,
-}];
-
-const areaData = [{
-	name: '广东省',
-	value: 0.50,
-}, {
-	name: '江苏省',
-	value: 0.20,
-}, {
-	name: '上海市',
-	value: 0.14,
-}, {
-	name: '北京市',
-	value: 0.10,
-}, {
-	name: '其他',
-	value: 0.06,
-}];
-
-const genderData = [{
-	name: '男生',
-	value: 0.30,
-}, {
-	name: '女生',
-	value: 0.70,
-}];
-
 const cols = {
 	value: {
 		formatter: val => {
@@ -80,20 +23,45 @@ const cols = {
 
 export default function ExponentAnalysis() {
 	const [loading, setLoading] = useState(false);
-
+	const [trends, setTrends] = useState([]);
+	const [ages, setAges] = useState([]);
+	const [genders, setGenders] = useState([]);
+	const [areas, setAreas] = useState([]);
 	let cancelTask = false; // 防止内存泄露
-	useEffect(() => {
+
+	function fecth() {
 		setLoading(true);
-		setTimeout(() => {
+		api.getExponentAnalysis().then((res) => {
+			if (cancelTask) {
+				return;
+			}
+
+			const {
+				trends,
+				ages,
+				genders,
+				areas,
+			} = res;
+			setTrends(trends);
+			setAges(ages);
+			setGenders(genders);
+			setAreas(areas);
+		}).catch((e) => {
+			Message.success(e.toString());
+		}).finally(() => {
 			if (cancelTask) {
 				return;
 			}
 			setLoading(false);
-		}, 500);
+		});
 
 		return () => {
 			cancelTask = true;
-		}
+		};
+	}
+
+	useEffect(() => {
+		fecth();
 	}, []);
 
 	const renderExponentTab = () => {
@@ -103,7 +71,7 @@ export default function ExponentAnalysis() {
           			<div className={styles.first}>
             			<Tab shape="capsule" defaultActiveKey="1" >
              				<Item key="1" title="趋势属性">
-                				<Components.BasicPolyline data={data} forceFit />
+                				<Components.BasicPolyline data={trends} forceFit />
               				</Item>
             			</Tab>
           			</div>
@@ -114,17 +82,17 @@ export default function ExponentAnalysis() {
                 				<div className={styles.content}>
                   					<div className={styles.item1}>
                     					<span className={styles.title}>年龄分布:</span>
-                    					<Components.BasicColumn data={attrData} cols={cols} />
+                    					<Components.BasicColumn data={ages} cols={cols} />
                   					</div>
                   					<div className={styles.item1}>
                     					<span className={styles.title}>性别分布:</span>
-                    					<Components.BasicColumn data={genderData} cols={cols} />
+                    					<Components.BasicColumn data={genders} cols={cols} />
                   					</div>
                 				</div>
               				</Item>
 
               				<Item key="2" title="地域属性">
-                				<Components.BasicColumn data={areaData} cols={cols} forceFit />
+                				<Components.BasicColumn data={areas} cols={cols} forceFit />
               				</Item>
             			</Tab>
          			</div>
@@ -134,7 +102,7 @@ export default function ExponentAnalysis() {
 	};
 
 	const exponentTabChange = (e) => {
-		console.log(e);
+		fecth();
 	};
 
 	const attrTabChange = (e) => {
@@ -142,12 +110,12 @@ export default function ExponentAnalysis() {
 	};
 
 	return (
-		<div className={styles.wrap}>
-      		<Loading visible={loading} style={{display: 'block'}}>
-	  			<Tab size="small" shape="capsule" defaultActiveKey="1" onChange={exponentTabChange} >
-	      			{renderExponentTab()}
-	      		</Tab>
-      		</Loading>
-		</div>
+		<Loading visible={loading}>
+			<div className={styles.wrap}>
+				<Tab size="small" shape="capsule" defaultActiveKey="1" onChange={exponentTabChange} >
+		  			{renderExponentTab()}
+		  		</Tab>
+			</div>
+		</Loading>
 	);
 }

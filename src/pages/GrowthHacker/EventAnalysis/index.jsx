@@ -23,18 +23,15 @@ const {
 function EventAnalysis({
 	location,
 }) {
-	const arr = location.search.split('?');
-	const {
-		name,
-		event,
-		type,
-	} = JSON.parse(decodeURIComponent(arr[1]));
-	
+	const arr = decodeURIComponent(location.search).split(/\?|\=|\&/);
+	const name = arr[2];
+	const event = arr[4];
+	const type = arr[6];
 	const cols = {
 		value: {
 			alias: name,
 		}
-	};
+	};	
 
 	const [loading, setLoading] = useState(false);
 	const [data, setData] = useState([]);
@@ -71,22 +68,21 @@ function EventAnalysis({
 		if (e.length === 2 && e[1]) {
 			getData();
 		}
-		// console.log(utils.dateMap(e[0]._d));
 	};
 
 	return (
 		<div>
       		<div className={styles.item}>
       			<span className={styles.name}>名称：</span>
-      			<span>{name}</span>
+      			<span className={styles.value}>{name}</span>
       		</div>
       		<div className={styles.item}>
       			<span className={styles.name}>事件名：</span>
-      			<span>{event}</span>
+      			<span className={styles.value}>{event}</span>
       		</div>
       		<div className={styles.item}>
       			<span className={styles.name}>类型：</span>
-      			<span>{type}</span>
+      			<span className={styles.value}>{type}</span>
       		</div>
       		<div className={styles.item}>
       			<span className={styles.name}>统计趋势：</span>

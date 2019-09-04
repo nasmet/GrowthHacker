@@ -6,6 +6,7 @@ import React, {
 import {
 	Tab,
 	Loading,
+	Message,
 } from '@alifd/next';
 import styles from './index.module.scss';
 import AnalysisContent from './components/AnalysisContent';
@@ -15,10 +16,14 @@ const {
 } = Tab;
 
 const creatAnalysisConfig = (keys) => {
-	return keys.map((item, index) => {
+	return keys.map((item) => {
+		const {
+			id,
+			name,
+		} = item;
 		return {
-			key: index + '',
-			tab: item,
+			key: id,
+			tab: name,
 			component: AnalysisContent,
 		}
 	});
@@ -27,21 +32,31 @@ const creatAnalysisConfig = (keys) => {
 export default function Monitor() {
 	const [analysisConfig, setAnalysisConfig] = useState([]);
 	const [loading, setLoading] = useState(false);
-
 	let cancelTask = false; // 防止内存泄露
 
 	useEffect(() => {
 		setLoading(true);
-		setTimeout(() => {
+		api.getMonitor().then((res) => {
 			if (cancelTask) {
 				return;
 			}
-			setAnalysisConfig(creatAnalysisConfig(['长安十二时辰', '陈情令', '复仇者联盟']));
+
+			const {
+				tab,
+			} = res;
+			setAnalysisConfig(creatAnalysisConfig(tab));
+		}).catch((e) => {
+			Message.success(e.toString());
+		}).finally(() => {
+			if (cancelTask) {
+				return;
+			}
 			setLoading(false);
-		}, 500);
+		});
+
 		return () => {
 			cancelTask = true;
-		}
+		};
 	}, []);
 
 	const rendTab = () => {
@@ -60,7 +75,7 @@ export default function Monitor() {
 	return (
 		<div>
 		 	<Loading visible={loading} inline={false}>
-		      	<Tab defaultActiveKey="0">
+		      	<Tab defaultActiveKey="1">
 		        	{rendTab()}
 		      	</Tab>
      		</Loading>

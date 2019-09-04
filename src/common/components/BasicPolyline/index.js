@@ -25,7 +25,7 @@ export default function BasicPolyline({
 	        	<Axis name={y} />
 	        	<Tooltip />
 	        	<Geom type="line" position={pos} size={2} />
-	        	<Geom type="point" position={pos} size={4} />
+	        	<Geom type="point" position={pos} size={4} color={x} />
       		</Chart>
     	</div>
 	);

@@ -7,6 +7,7 @@ import {
 	Axis,
 	Tooltip,
 	Coord,
+	Legend,
 } from "bizcharts";
 
 export default function BasicColumn({
@@ -21,8 +22,9 @@ export default function BasicColumn({
   			<Coord transpose={transpose} />
     		<Axis name="name" />
     		<Axis name="value" />
+    		<Legend />
     		<Tooltip />
-    		<Geom type="interval" position="name*value" />
+    		<Geom type="interval" position="name*value" color="name"/>
   		</Chart>
 	);
 }

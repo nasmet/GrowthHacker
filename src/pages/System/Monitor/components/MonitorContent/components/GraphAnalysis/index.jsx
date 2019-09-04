@@ -14,76 +14,57 @@ const {
 	Item,
 } = Tab;
 
-const data = [{
-	name: '一月',
-	value: 2000,
-}, {
-	name: '二月',
-	value: 3000,
-}, {
-	name: '三月',
-	value: 2800,
-}, {
-	name: '四月',
-	value: 4000,
-}];
-
-const theta = [{
-	name: '微博',
-	value: 38,
-	color: 'blue',
-}, {
-	name: '抖音',
-	value: 52,
-	color: 'yellow',
-}, {
-	name: '快手',
-	value: 61,
-	color: 'green',
-}];
-
-let cache = ['1'];
-
 export default function GraphAnalysis() {
 	const [loading, setLoading] = useState(false);
+	const [cache, setCache] = useState(['1']);
+	const [trends, setTrends] = useState([]);
+	const [sources, setSources] = useState([]);
 	let cancelTask = false; // 防止内存泄露
 
-	const fetch = () => {
+	function fetch() {
 		setLoading(true);
-		setTimeout(() => {
+		api.getMonitorAnalysis().then((res) => {
+			if (cancelTask) {
+				return;
+			}
+
+			const {
+				trends,
+				sources,
+			} = res;
+			setTrends(trends);
+			setSources(sources);
+		}).catch((e) => {
+			Message.success(e.toString());
+		}).finally(() => {
 			if (cancelTask) {
 				return;
 			}
 			setLoading(false);
-		}, 500);
-	};
+		});
+	}
 
 	useEffect(() => {
-
 		fetch();
-
+		
 		return () => {
 			cancelTask = true;
-			cache = ['1'];
-		}
+		};
 	}, []);
 
 	const renderTab = () => {
 		return graphAnalysisConfig.map((item) => {
 			return (
-				<Item
-          key={item.key}
-          title={item.name}
-        />
+				<Item 
+					key={item.key}
+          			title={item.name}
+        		/>
 			);
 		});
 	};
 
 	const tabChange = (e) => {
-		if (!cache.includes(e)) {
-			cache.push(e);
-			fetch();
-		}
+		fetch();
 	};
 
 	return (
@@ -92,18 +73,18 @@ export default function GraphAnalysis() {
 		      	<div className={styles.TabWrap}>
 		      		<span className={styles.name}>信息走势图</span>
 		      		<Tab defaultActiveKey="1" shape="capsule" size="small" onChange={tabChange}>
-		      		{renderTab()}
+		      			{renderTab()}
 		      		</Tab>
 		      	</div>	
-				<Components.BasicPolyline data={data} forceFit />
+				<Components.BasicPolyline data={trends} forceFit />
 	     		<div className={styles.graphWrap}>
 					<div className={styles.graph}>
 						<span className={styles.name}>信息来源图</span>
-						<Components.BasicSector data={theta} />
+						<Components.BasicSector data={sources} />
 					</div>
 					<div className={styles.graph}>
 						<span className={styles.name}>媒体来源占比图</span>
-						<Components.BasicSector data={theta} />
+						<Components.BasicSector data={sources} />
 					</div>
       			</div>
 	    	</Loading>
