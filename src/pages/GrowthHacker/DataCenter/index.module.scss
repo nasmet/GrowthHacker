@@ -3,11 +3,15 @@
   	text-align: right;
 };
 .btnWrap{
+	width: 100%;
 	margin-bottom: 10px;
 	display: flex;
 	flex-direction: row;
 	align-items: center;
 	.btn{
 		margin-right: 10px;
+	}
+	.input{
+		margin-left: auto;
 	}
 }

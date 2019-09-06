@@ -15,6 +15,9 @@ import {
 	Message,
 	Loading,
 	Pagination,
+	Icon,
+	Balloon,
+	Select,
 } from '@alifd/next';
 import {
 	withRouter,
@@ -39,6 +42,7 @@ function PropConsumption({
 	const [filter, setfilter] = useState({
 		domain: 0,
 	});
+	const [titles, setTitles] = useState([]);
 
 	let cancelTask = false; // 防止内存泄露
 	useEffect(() => {
@@ -101,6 +105,18 @@ function PropConsumption({
 		resetPage();
 	};
 
+	const onAddTitle = () => {
+		setTitles((pre) => {
+			pre.push(pre.length);
+			return [...pre];
+		})
+	};
+
+	const addTitle = () => {
+		return titles.map((item) => {
+			return <Column key={item} title="最后时间" dataIndex="time" sortable />;
+		});
+	};
 
 	return (
 		<div>
@@ -108,13 +124,20 @@ function PropConsumption({
 				<Filter values={filter} filterChange={filterChange} />
 			</IceContainer>
 
+ 			<Balloon type="primary" autoFocus trigger={<span>增加标签</span>} closable={false} triggerType="click">
+            	<Select dataSource={['apple', 'banana', 'orange']} followTrigger />
+        	</Balloon>
+
 			<IceContainer>
 	          	<Table loading={loading} dataSource={data} hasBorder={false} onSort={onSort} sort={sort} >
-	            	<Column title="游戏关卡" dataIndex="levels" sortable />
-	            	<Column title="闪电增加_次" dataIndex="sd" sortable />
-	            	<Column title="旋风增加_次" dataIndex="xf" sortable />
+	            	<Column title="游戏关卡" dataIndex="game_level_var" sortable />
+	            	<Column title="道具名字" dataIndex="props_name_var" />
+	            	<Column title="增加_次" dataIndex="props_add_count" sortable />
+	            	<Column title="消耗_次" dataIndex="props_reduce_count" sortable />
+	            	{addTitle()}
+	            	<Column title={<div><span>增加标签</span><Icon size='small' style={{marginLeft:'4px'}} type="add" onClick={onAddTitle} /></div>} />
 	          	</Table>
-
+				
 	          	<Pagination
 	           		className={styles.pagination}
 	            	current={curPage}

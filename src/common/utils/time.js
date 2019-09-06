@@ -1,17 +1,3 @@
-const timeType = {
-	s: 1,
-	m: 2,
-	h: 3,
-};
-export function formatTime({
-	time,
-	from = 'm',
-	to = 's',
-}) {
-	const diff = timeType[to] - timeType[from];
-	return time / Math.pow(60, diff);
-}
-
 export const getDate = (arg) => {
 	if (arg) {
 		return new Date(arg);
@@ -31,6 +17,7 @@ export const dateMap = (arg) => {
 		ms: date.getTime(),
 	};
 };
+
 /**
  * 时间戳格式化
  * @date   2019-07-04

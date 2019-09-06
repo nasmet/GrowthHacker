@@ -17,11 +17,15 @@ export function getDataCenter(data) {
 }
 
 export function getGameLevels(data) {
-	return get('/gamelevels', data);
+	return get('/dashboards/gamelevel', data);
+}
+
+export function getUserLevels(data) {
+	return get('/dashboards/userlevel', data);
 }
 
 export function getProp(data) {
-	return get('/prop', data);
+	return get('/dashboards/item', data);
 }
 
 export function getWeiboList(data) {

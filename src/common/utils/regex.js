@@ -1,3 +1,22 @@
+const regex = {
+	pw: /^(\w){8,32}$/,
+	phone: /^1[3456789]\d{9}$/,
+	mark: /^[a-zA-Z_][a-zA-Z0-9_]{1,31}$/,
+}
+
+const {
+	pw,
+	phone,
+	mark,
+} = regex;
+
+function check(type, value) {
+	if (type.test(value)) {
+		return true;
+	}
+	return false;
+}
+
 /**
  * 密码验证,只能输入8-32个字母、数字、下划线
  * @date   2019-07-02
@@ -5,9 +24,7 @@
  * @return {Boolean}    [description]
  */
 export function checkPasswd(s) {
-	const patrn = /^(\w){8,32}$/;
-	if (!patrn.exec(s)) return false;
-	return true;
+	return check(pw, value);
 }
 
 /**
@@ -16,20 +33,18 @@ export function checkPasswd(s) {
  * @return {[type]}   [description]
  */
 export function checkPhone(value) {
-	if (!(/^1[3456789]\d{9}$/.test(value))) {
-		return false;
-	}
-	return true;
+	return check(phone, value);
 }
 
 /**
- * 用户名验证
+ * 标识符验证
  * @date   2019-07-02
  * @return {[type]}   [description]
  */
+export function checkMark(value) {
+	return check(mark, value);
+}
+
 export function checkUsername(value) {
-	if (!(/^[a-zA-Z0-9_-]{1,32}$/.test(value))) {
-		return false;
-	}
-	return true;
+	return check(username, value);
 }

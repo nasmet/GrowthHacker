@@ -7,6 +7,7 @@ import {
 	Axis,
 	Tooltip,
 	Coord,
+	Legend,
 } from "bizcharts";
 
 export default function BasicPolyline({
@@ -23,9 +24,10 @@ export default function BasicPolyline({
       		<Chart height={height} data={data} scale={cols} forceFit>
 	        	<Axis name={x} />
 	        	<Axis name={y} />
+	        	<Legend />
 	        	<Tooltip />
 	        	<Geom type="line" position={pos} size={2} />
-	        	<Geom type="point" position={pos} size={4} color={x} />
+	        	<Geom type="point" shape={'circle'} position={pos} size={4} color={x} />
       		</Chart>
     	</div>
 	);

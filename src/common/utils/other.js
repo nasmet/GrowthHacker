@@ -1,22 +1,27 @@
-/**
- * 将分格式化元
- * @date   2019-07-01
- * @return {[type]}   [description]
- */
-const moneyType = {
-	minute: 1,
-	yuan: 3,
-};
-
-export function formatMoney({
-	money,
-	from = 'minute',
-	to = 'yuan',
-}) {
-	if (!moneyType[from] || !moneyType[to]) {
-		throw new Error('传入的参数有误');
+export function debounce(fn, wait) {
+	let timeout = null;
+	return function(e) {
+		if (timeout !== null) {
+			clearTimeout(timeout);
+		}
+		timeout = setTimeout(fn.bind(this, e), wait);
 	}
+}
 
-	const diff = moneyType[to] - moneyType[from];
-	return +(money / Math.pow(10, diff)).toFixed(1);
+export function throttle(func, delay) {
+	let timer = null;
+	let startTime = Date.now();
+	return function() {
+		const curTime = Date.now();
+		const remaining = delay - (curTime - startTime);
+		const context = this;
+		const args = arguments;
+		clearTimeout(timer);
+		if (remaining <= 0) {
+			func.apply(context, args);
+			startTime = Date.now();
+		} else {
+			timer = setTimeout(func, remaining);
+		}
+	}
 }

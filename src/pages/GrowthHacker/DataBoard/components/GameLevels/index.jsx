@@ -46,9 +46,9 @@ function GameLevels() {
 
 	let cancelTask = false; // 防止内存泄露
 	useEffect(() => {
-		function fetchData() {
+		function fetchData(fn) {
 			setLoading(true);
-			api.getGameLevels({
+			fn({
 				limit,
 				offset: (curPage - 1) * limit,
 			}).then((res) => {
@@ -72,7 +72,11 @@ function GameLevels() {
 		}
 
 		if (curPage > 0) {
-			fetchData();
+			if (filter.category === 0) {
+				fetchData(api.getGameLevels);
+			} else {
+				fetchData(api.getUserLevels);
+			}
 		}
 
 		return () => {

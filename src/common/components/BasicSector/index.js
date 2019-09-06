@@ -36,6 +36,7 @@ export default function BasicSector({
 		},
 		nice: false
 	};
+
 	return (
 		<div>
       		<Chart height={height} data={dv} scale={scale} forceFit={forceFit} >
@@ -51,12 +52,12 @@ export default function BasicSector({
 		            	stroke: "#fff"
 		          	}}
 		        >
-	          	<Label
-	            	content="percent"
-	            	formatter={(val, item) => {
-	              		return item.point.name + ": " + val;
-	            	}}
-	          	/>
+		          	<Label
+		            	content="percent"
+		            	formatter={(val, item) => {
+		              		return item.point.name + ": " + val;
+		            	}}
+		          	/>
         		</Geom>
       		</Chart>
     	</div>

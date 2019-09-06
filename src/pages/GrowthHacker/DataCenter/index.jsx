@@ -47,8 +47,9 @@ function DataCenter() {
 		selectedRowKeys: [],
 		onChange: onRowSelectionChange,
 	});
+	const [totalData, setTotalData] = useState([]);
 	let cancelTask = false; // 防止内存泄露
-	
+
 	useEffect(() => {
 		function fetchData() {
 			setLoading(true);
@@ -65,6 +66,7 @@ function DataCenter() {
 				} = res;
 				setCount(total);
 				setData(list);
+				setTotalData(list);
 			}).catch((e) => {
 				Message.success(e.toString());
 			}).finally(() => {
@@ -90,17 +92,12 @@ function DataCenter() {
 
 	const renderCover = (value, index, record) => {
 		const {
-			name,
-			event,
-			type,
+			id,
 		} = record;
 		return (
-			<Link style={{ textDecoration: 'none' }} target="_blank" to={{
-         		pathname: "/growthhacker/eventanalysis",
-         		search: `name=${name}&event=${event}&type=${type}`,
-        	}}>
-      			事件分析
-      		</Link>
+			<Button type='primary' onClick={onAnalysisBuriedPoint.bind(this,[id])}> 
+				事件分析
+			</Button>
 		);
 	};
 
@@ -171,17 +168,37 @@ function DataCenter() {
 			});
 			return [...pre];
 		});
+		setTotalData(data);
 		resetRowSelection();
 	};
 
+	const onAnalysisBuriedPoint = (e) => {
+		window.open(`/growthhacker/eventanalysis?id=${e.join(',')}`);
+	};
+
 	function resetRowSelection() {
-		setBtnShow(false);	
+		setBtnShow(false);
 		setRowSelection((pre) => {
 			pre.selectedRowKeys = [];
 			return { ...pre
 			};
 		});
 	}
+
+	const onInputChange = (e) => {
+		if (totalData.length === 0) {
+			return;
+		}
+		if (!e) {
+			setData([...totalData]);
+		} else {
+			setData(() => {
+				return [...totalData].filter((item) => {
+					return item.event.indexOf(e) !== -1;
+				});
+			});
+		}
+	};
 
 	return (
 		<div>
@@ -190,14 +207,20 @@ function DataCenter() {
 			</IceContainer>
 
 			<IceContainer>
+
 				<div className={styles.btnWrap}>
 					<Button className={styles.btn} type="secondary" onClick={onCreateBuriedPoint}> 
 						创建埋点事件
 					</Button>
 					<Button className={styles.btn} disabled={!showDeleteBtn} type="secondary" onClick={onDeleteBuriedPoint}> 
-						删除埋点事件
+						一键删除埋点事件
 					</Button>
+					<Button className={styles.btn} disabled={!showAnalysisBtn} type="secondary" onClick={onAnalysisBuriedPoint.bind(this,rowSelection.selectedRowKeys)}> 
+						一键分析埋点事件
+					</Button>
+					<Input className={styles.input} hasClear hint='search' placeholder="请输入事件名" onChange={utils.debounce(onInputChange, 500)}/>
 				</div>
+
 	          	<Table 
 	          		loading={loading} 
 	          		dataSource={data} 
@@ -221,6 +244,7 @@ function DataCenter() {
 	            	onChange={pageChange}
 	          	/>
 		    </IceContainer>
+
 		   	<Dialog 
 		   		autoFocus
 		      	visible={show} 
