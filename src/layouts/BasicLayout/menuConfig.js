@@ -3,13 +3,20 @@
 // asideMenuConfig：侧边导航配置
 
 const headerMenuConfig = [{
+	name: '自定义sql查询',
+	path: '/sql',
+}, {
 	name: '帮助文档',
+	path: '',
 }, {
 	name: '通知',
+	path: '',
 }, {
 	name: '用户',
+	path: '',
 }, {
 	name: '语言',
+	path: '',
 }];
 
 const asideMenuConfig = [{

@@ -6,7 +6,7 @@ import {
 	Route,
 	Redirect,
 } from 'react-router-dom';
-import routerConfig from './routerConfig';
+import routerConfig from '../../routerConfig';
 
 export default function MainRoutes() {
 	//  渲染路由组件
@@ -27,7 +27,6 @@ export default function MainRoutes() {
 	      	{/* 渲染路由表 */}
 	      	{renderRouter()}
 
-	      	{/* 根路由默认重定向到 /tasks */}
 	      	<Redirect from="/" to="/growthhacker/datacenter" />
 
 	      	{/* 未匹配到的路由重定向到 NotFound */}

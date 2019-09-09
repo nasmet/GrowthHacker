@@ -10,11 +10,17 @@ import {
 } from 'react-router-dom';
 import routerConfig from './routerConfig';
 import model from './common/model/index';
+import BasicLayout from './layouts/BasicLayout';
+import SqlLayout from './layouts/SqlLayout';
 
 const renderRouter = () => {
 	return routerConfig.map((item) => {
+		const {
+			path,
+			component,
+		} = item;
 		return (
-			<Route key={item.path} path={item.path} component={item.component} />
+			<Route key={path} path={path} component={component} />
 		);
 	});
 };
@@ -26,7 +32,8 @@ const router = () => {
 	return (
 		<Router history={model.history}>
       		<Switch>
-        		{renderRouter()}
+        		<Route path="/sql" component={SqlLayout} />
+        		<Route path="/" component={BasicLayout} />
       		</Switch>
     	</Router>
 	);

@@ -9,20 +9,20 @@ import './index.scss';
 
 export default function BasicLayout() {
 	return (
-		<Layout className="ice-design-layout" fixable >
-      		<Layout.Aside width={240}>
-        		<Aside />
-     		</Layout.Aside>
-     		<Layout.Section>
-       	 		<Layout.Main scrollable>
-          			<Layout.Header>
-            			<Header />
-          			</Layout.Header>
-         	 		<div className="main-container">
-            			<MainRoutes />
-          			</div>
-        		</Layout.Main>
-      		</Layout.Section>
+		<Layout className="ice-design-layout" fixable>
+	      	<Layout.Aside width={240}>
+	        	<Aside />
+	     	</Layout.Aside>
+	 		<Layout.Section>
+	 			<Layout.Header>
+	        		<Header />
+	      		</Layout.Header>
+	   	 		<Layout.Main scrollable>
+	     	 		<div className="main-container">
+	        			<MainRoutes />
+	      			</div>
+	    		</Layout.Main>
+	  		</Layout.Section>
     	</Layout>
 	);
 }

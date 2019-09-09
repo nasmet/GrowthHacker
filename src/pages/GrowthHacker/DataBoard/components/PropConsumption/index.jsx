@@ -17,7 +17,7 @@ import {
 	Pagination,
 	Icon,
 	Balloon,
-	Select,
+	Checkbox,
 } from '@alifd/next';
 import {
 	withRouter,
@@ -25,6 +25,7 @@ import {
 import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
 import Filter from './components/Filter';
+import * as propConfig from './propConfig';
 
 const {
 	Column,
@@ -42,7 +43,9 @@ function PropConsumption({
 	const [filter, setfilter] = useState({
 		domain: 0,
 	});
-	const [titles, setTitles] = useState([]);
+	const [extraTitles, setExtraTitles] = useState([]);
+	const [titles, setTitles] = useState(propConfig.titles);
+	const [selectedTitle,setSelectedTitle] = useState([]);
 
 	let cancelTask = false; // 防止内存泄露
 	useEffect(() => {
@@ -105,17 +108,42 @@ function PropConsumption({
 		resetPage();
 	};
 
-	const onAddTitle = () => {
-		setTitles((pre) => {
-			pre.push(pre.length);
-			return [...pre];
-		})
+	const addTitle = () => {
+		return extraTitles.map((item) => {
+			return <Column key={item} title={propConfig.titleMap[item]} dataIndex={item} sortable />;
+		});
 	};
 
-	const addTitle = () => {
-		return titles.map((item) => {
-			return <Column key={item} title="最后时间" dataIndex="time" sortable />;
-		});
+	function renderIcon() {
+		return (
+			<Icon 
+				size='small' 
+				style={{marginLeft:'4px'}} 
+				type="add" 
+			/>
+		);
+	}
+
+	const onTitleChange = (e) => {
+		setExtraTitles(e);
+		setSelectedTitle(e);
+	};
+
+	const renderAddTitle = () => {
+		return (
+			<div>
+				<span>增加标签</span>
+				<Balloon 
+					type="primary" 
+					autoFocus 
+					trigger={renderIcon()} 
+					closable={false} 
+					triggerType="click"
+				>
+				 	<Checkbox.Group itemDirection="ver" dataSource={titles} value={selectedTitle} onChange={onTitleChange} />
+				</Balloon>
+	    	</div>
+		);
 	};
 
 	return (
@@ -124,10 +152,6 @@ function PropConsumption({
 				<Filter values={filter} filterChange={filterChange} />
 			</IceContainer>
 
- 			<Balloon type="primary" autoFocus trigger={<span>增加标签</span>} closable={false} triggerType="click">
-            	<Select dataSource={['apple', 'banana', 'orange']} followTrigger />
-        	</Balloon>
-
 			<IceContainer>
 	          	<Table loading={loading} dataSource={data} hasBorder={false} onSort={onSort} sort={sort} >
 	            	<Column title="游戏关卡" dataIndex="game_level_var" sortable />
@@ -135,7 +159,7 @@ function PropConsumption({
 	            	<Column title="增加_次" dataIndex="props_add_count" sortable />
 	            	<Column title="消耗_次" dataIndex="props_reduce_count" sortable />
 	            	{addTitle()}
-	            	<Column title={<div><span>增加标签</span><Icon size='small' style={{marginLeft:'4px'}} type="add" onClick={onAddTitle} /></div>} />
+	            	<Column title={renderAddTitle()} />
 	          	</Table>
 				
 	          	<Pagination

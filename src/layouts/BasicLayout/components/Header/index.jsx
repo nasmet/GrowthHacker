@@ -2,6 +2,10 @@ import React, {
 	Component,
 } from 'react';
 import {
+	withRouter,
+	Link,
+} from 'react-router-dom';
+import {
 	Nav,
 } from '@alifd/next';
 import './index.scss';
@@ -13,7 +17,16 @@ const {
 	Item,
 } = Nav;
 
-export default function Header() {
+function Header({
+	history,
+}) {
+	const handle = (e) => {
+		if(!e){
+			return;
+		}
+		window.open(e);
+	};
+
 	return (
 		<div className="header-container">
       		<div className="header-navbar">
@@ -25,8 +38,8 @@ export default function Header() {
           			{
             			headerMenuConfig.map((nav, index) => {
               				return (
-                				<Item key={index}>
-                  					<span>{nav.name}</span>
+                				<Item key={index} onClick={handle.bind(this,nav.path)}>
+						        	<span>{nav.name}</span>
                 				</Item>
               				);
             			})
@@ -36,3 +49,5 @@ export default function Header() {
     	</div>
 	);
 }
+
+export default withRouter(Header);
