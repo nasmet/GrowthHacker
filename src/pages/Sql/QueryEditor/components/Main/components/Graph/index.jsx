@@ -24,8 +24,8 @@ import styles from './index.module.scss';
 
 export default function Graph() {
 	return (
-		<div>
-      		图表
-    	</div>
+		<IceContainer>
+			<div>图表</div>
+    	</IceContainer>
 	);
 }

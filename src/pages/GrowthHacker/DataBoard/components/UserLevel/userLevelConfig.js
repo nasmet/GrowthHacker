@@ -1,6 +1,6 @@
 export const titles = [{
-	label: "游戏关卡",
-	value: "game_level_var",
+	label: "用户等级",
+	value: "user_level_var",
 	disabled: true,
 	sortable: true,
 }, {
@@ -18,4 +18,4 @@ export const titles = [{
 	value: "game_failure_count",
 	disabled: false,
 	sortable: true,
-}];
+}]

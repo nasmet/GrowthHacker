@@ -24,8 +24,8 @@ import styles from './index.module.scss';
 
 export default function Column() {
 	return (
-		<div>
-      		列
-    	</div>
+		<IceContainer>
+			<div>列</div>
+    	</IceContainer>
 	);
 }

@@ -27,19 +27,17 @@ const {
 } = Table;
 const limit = 10;
 
-export default function RecentQuery({
-	sql,
-}) {
+export default function RecentlyRunQuery() {
 	const [curPage, setCurPage] = useState(1);
 	const [loading, setLoading] = useState(false);
 	const [data, setData] = useState([]);
 	const [count, setCount] = useState(0);
 	const [sort, setSort] = useState({});
+	const [rowSelection, setRowSelection] = useState({
+		selectedRowKeys: [],
+		onChange: onRowSelectionChange,
+	});
 	let cancelTask = false; // 防止内存泄露
-
-	useEffect(() => {
-		setData(sql);
-	}, [sql]);
 
 	useEffect(() => {
 		function fetchData() {
@@ -62,6 +60,14 @@ export default function RecentQuery({
 		setCurPage(e);
 	};
 
+	function onRowSelectionChange(e) {
+		setRowSelection((pre) => {
+			pre.selectedRowKeys = e;
+			return { ...pre
+			};
+		});;
+	}
+
 	function resetPage() {
 		if (curPage === 1) {
 			setCurPage(0);
@@ -78,16 +84,8 @@ export default function RecentQuery({
 		resetPage();
 	};
 
-	const onViewResult = (e, index) => {
+	const onRowClick = (e) => {
 		console.log(e);
-	};
-
-	const renderCover = (value, index, record) => {
-		return (
-			<Button type="primary" onClick={onViewResult.bind(this, record, index)}>
-        		查看结果
-      		</Button>
-		);
 	};
 
 	return (
@@ -98,10 +96,13 @@ export default function RecentQuery({
           		hasBorder={false} 
           		onSort={onSort} 
           		sort={sort}
+          		rowSelection={rowSelection}
+          		onRowClick={onRowClick}
           	>
+            	<Column title="名称" dataIndex="name" sortable />
             	<Column title="查询" dataIndex="query" sortable />
+            	<Column title="状态" dataIndex="status" sortable />
             	<Column title="时间" dataIndex="time" sortable />
-            	<Column title="结果" cell={renderCover} />
           	</Table>
 
           	<Pagination

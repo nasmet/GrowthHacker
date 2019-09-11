@@ -24,8 +24,8 @@ import styles from './index.module.scss';
 
 export default function Log() {
 	return (
-		<div>
-      		新页面
-    	</div>
+		<IceContainer>
+			<div>当前没有可视化的日志</div>
+    	</IceContainer>
 	);
 }

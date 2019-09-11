@@ -1,25 +1,34 @@
 import React, {
-	Component,
+  Component,
 } from 'react';
 import {
-	withRouter,
-	Link,
+  withRouter,
+  Link,
 } from 'react-router-dom';
 import {
-	Nav,
+  Nav,
 } from '@alifd/next';
 import styles from './index.module.scss';
 import {
-	headerMenuConfig,
+  headerMenuConfig,
 } from '../../menuConfig';
 
 const {
-	Item,
+  Item,
 } = Nav;
 
-function Header() {
-	return (
-		<div className={styles.container}>
+function Header({
+  location,
+}) {
+  let {
+    pathname,
+  } = location;
+  if (pathname === '/sql') {
+    pathname = '/sql/queryeditor';
+  }
+
+  return (
+    <div className={styles.container}>
         	<div className={styles.title}>SQL Query</div>
 
       		<div className={styles.navbar}>
@@ -27,7 +36,7 @@ function Header() {
           			className={styles.menu}
           			direction="hoz"
           			type="line"
-          			defaultSelectedKeys="/sql/queryeditor"
+          			defaultSelectedKeys={pathname}
         		>
           			{
             			headerMenuConfig.map((nav, index) => {
@@ -43,7 +52,7 @@ function Header() {
         		</Nav>
       		</div>
     	</div>
-	);
+  );
 }
 
 export default withRouter(Header);

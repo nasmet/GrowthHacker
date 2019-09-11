@@ -29,7 +29,7 @@ export default function DataBoard() {
 			return (
 				<Item key={item.key} title={item.tab} >
           			<div className={styles.marginTop10}>
-            			<Content type={item.type} />
+            			<Content />
           			</div>
         		</Item>
 			);

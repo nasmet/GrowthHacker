@@ -24,8 +24,8 @@ import styles from './index.module.scss';
 
 export default function Result() {
 	return (
-		<div>
-      		结果
-    	</div>
+		<IceContainer>
+			<div>结果</div>
+    	</IceContainer>
 	);
 }

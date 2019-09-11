@@ -50,15 +50,30 @@ const menuConfig = [{
 	}, {
 		name: 'user_id',
 	}],
+}, {
+	name: 'users',
+	sub: [{
+		name: 'id',
+	}, {
+		name: 'first_id',
+	}],
 }];
 
-export default function Aside() {
+export default function Aside({
+	menuSelect,
+}) {
+	const [total, setTotal] = useState(menuConfig);
+	const [data, setData] = useState(menuConfig);
+
 	const onInputChange = (e) => {
-		console.log(e);
+		const filterData = total.filter((item) => {
+			return item['name'].indexOf(e) !== -1;
+		});
+		setData(filterData);
 	};
 
 	const onMenuSelect = (e) => {
-		console.log(e);
+		menuSelect(e);
 	}
 
 	return (
@@ -68,7 +83,7 @@ export default function Aside() {
       			<div className={styles.title}>数据表</div>
       			<Input className={styles.input} hasClear hint='search' placeholder="请输入表名" onChange={utils.debounce(onInputChange, 500)}/>
   			    <Menu openMode="single" selectMode="single" onSelect={onMenuSelect}>
-  			    	{menuConfig.map(traversing)}
+  			    	{data.map(traversing)}
 			    </Menu>
       		</div>
     	</div>

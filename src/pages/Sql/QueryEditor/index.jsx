@@ -21,20 +21,26 @@ import {
 } from 'react-router-dom';
 import Layout from '@icedesign/layout';
 import IceContainer from '@icedesign/container';
-import './index.scss';
+import styles from './index.module.scss';
 import Aside from './components/Aside';
 import Main from './components/Main';
 
 export default function QueryEditor() {
+	const [query, setQuery] = useState("");
+	
+	const menuSelect = (e) => {
+		setQuery(e[0]);
+	};
+
 	return (
 		<Layout fixable>
      		<Layout.Section>
      			<Layout.Aside scrollable width={300}>
-	        		<Aside />
+	        		<Aside menuSelect={menuSelect} />
 	     		</Layout.Aside>
        	 		<Layout.Main scrollable>
-          			<div className="main-container">
-            			<Main />
+          			<div className={styles.container}>
+            			<Main query={query} />
           			</div>
         		</Layout.Main>
       		</Layout.Section>

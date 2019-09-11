@@ -22,10 +22,12 @@ import {
 import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
 
-export default function Query() {
+export default function Query({
+	sql,
+}) {
 	return (
-		<div>
-      		查询
-    	</div>
+		<IceContainer>
+			<div>{sql?sql:'暂无查询对象'}</div>
+    	</IceContainer>
 	);
 }
