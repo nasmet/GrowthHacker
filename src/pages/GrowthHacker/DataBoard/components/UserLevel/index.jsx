@@ -26,6 +26,6 @@ import Template from '../Template';
 
 export default function UserLevel() {
 	return (
-		<Template titleConfig={userLevelConfig.titles} request={api.getUserLevels} />
+		<Template type={'2'} />
 	);
 }

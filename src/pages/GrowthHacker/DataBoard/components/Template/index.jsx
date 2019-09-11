@@ -18,48 +18,50 @@ import {
 	Icon,
 	Balloon,
 	Checkbox,
+	DatePicker,
 } from '@alifd/next';
 import {
 	withRouter,
 } from 'react-router-dom';
 import IceContainer from '@icedesign/container';
+import moment from 'moment';
 import styles from './index.module.scss';
 import Filter from './components/Filter';
+import templateConfig from './templateConfig';
 
+moment.locale('zh-cn');
+const {
+	RangePicker,
+} = DatePicker;
 const {
 	Column,
 } = Table;
 const limit = 10;
+const {
+	Item,
+} = Tab;
 
 function Template({
-	titleConfig,
-	request,
+	type,
 }) {
 	const [curPage, setCurPage] = useState(1);
 	const [loading, setLoading] = useState(false);
 	const [data, setData] = useState([]);
 	const [count, setCount] = useState(0);
 	const [sort, setSort] = useState({});
-	const [filter, setfilter] = useState({
-		domain: 0,
-	});
-	const [total, setTotal] = useState(titleConfig);
-	const [titles, setTitles] = useState(titleConfig);
-	const [selectedTitle, setSelectedTitle] = useState(() => {
-		const arr = [];
-		titleConfig.forEach((item) => {
-			if (!item.disabled) {
-				arr.push(item.value);
-			}
-		});
-		return arr;
-	});
-
+	const [filter, setfilter] = useState({});
+	const [titles, setTitles] = useState([]);
+	const [showType, setShowType] = useState('0');
+	const [chartData, setChartData] = useState([]);
+	const [chartStyle, setChartStyle] = useState({});
+	
 	let cancelTask = false; // 防止内存泄露
 	useEffect(() => {
-		function fetchData(fn) {
+		function fetchData() {
 			setLoading(true);
-			request({
+			api.getDataBoard({
+				project_id: '1',
+				chart_id: type,
 				limit,
 				offset: (curPage - 1) * limit,
 			}).then((res) => {
@@ -67,11 +69,21 @@ function Template({
 					return;
 				}
 				const {
+					meta,
+					data,
 					total,
-					list,
 				} = res;
 				setCount(total);
-				setData(list);
+				setTitles(meta);
+				setData(data);
+				if (type !== '3') {
+					setChartStyle({
+						x: meta[0].key,
+						y: 'count',
+						color: 'event',
+					})
+					setChartData(assemblingChartData(data, meta));
+				}
 			}).catch((e) => {
 				Message.success(e.toString());
 			}).finally(() => {
@@ -90,6 +102,25 @@ function Template({
 			cancelTask = true;
 		};
 	}, [curPage]);
+
+	function assemblingChartData(arg, meta) {
+		const arr = [];
+		arg.forEach((item) => {
+			const value = item[0];
+			const name = meta[0].name;
+			const key = meta[0].key;
+			item.forEach((v, index) => {
+				if (index !== 0) {
+					arr.push({
+						[key]: `${name}${value}`,
+						event: meta[index].name,
+						count: v,
+					})
+				}
+			})
+		});
+		return arr;
+	}
 
 	const onSort = (dataIndex, order) => {
 		setSort({
@@ -112,6 +143,7 @@ function Template({
 	};
 
 	const filterChange = () => {
+		console.log(filter);
 		setSort({});
 		resetPage();
 	};
@@ -119,53 +151,63 @@ function Template({
 	const renderTitle = () => {
 		return titles.map((item, index) => {
 			const {
-				label,
-				value,
-				sortable,
+				id,
+				name,
+				key,
 			} = item;
-			return <Column key={value} title={label} dataIndex={value} sortable={sortable} />
+			return <Column key={id} title={name} dataIndex={index.toString()} sortable={true} />
 		})
 	};
 
-	function renderIcon() {
-		return (
-			<Icon 
-				size='small' 
-				style={{marginLeft:'4px'}} 
-				type="add" 
-			/>
-		);
-	}
-
-	const onTitleChange = (e) => {
-		setSelectedTitle(e);
-	};
-
-	const onClose = () => {
-		const filterData = total.filter((item) => {
-			return selectedTitle.includes(item.value) || item.disabled;
+	const renderTab = () => {
+		return templateConfig.map((item) => {
+			const {
+				name,
+				key,
+			} = item;
+			const disabled = (type === '3' && key !== '0') ? true : false;
+			return (
+				<Item 
+					key={key}
+          			title={name}
+          			disabled={disabled}
+        		/>
+			);
 		});
-		setTitles(filterData);
 	};
 
-	const renderCustomTitle = () => {
+	const tabChange = (e) => {
+		setShowType(e);
+	};
+
+	const onDateChange = (e) => {
+		if (e.length === 2 && e[1]) {
+
+		}
+	};
+
+	const renderTable = () => {
 		return (
-			<div>
-				<span>业务标签</span>
-				<Balloon 
-					className={styles.select}
-					type="primary" 
-					autoFocus 
-					trigger={renderIcon()} 
-					triggerType="click"
-					onClose={onClose}
-					needAdjust={true}
-					offset={[-100, -100 ]}
-				>	
-				 	<Checkbox.Group itemDirection="ver" dataSource={total} value={selectedTitle} onChange={onTitleChange} />
-				</Balloon>
-	    	</div>
+			<Table dataSource={data} hasBorder={false} onSort={onSort} sort={sort}>
+			    {renderTitle()}       		
+			</Table>
 		);
+	};
+
+	const rendShowType = () => {
+		switch (showType) {
+			case '0':
+				return renderTable();
+			case '1':
+				return <Components.BasicPolyline data={chartData} forceFit {...chartStyle} />
+			case '2':
+				return <Components.BasicColumn data={chartData} forceFit {...chartStyle} />
+			case '3':
+				return <Components.BasicColumn data={chartData} forceFit transpose {...chartStyle} />
+			default:
+				return null;
+		};
+
 	};
 
 	return (
@@ -174,25 +216,32 @@ function Template({
 				<Filter values={filter} filterChange={filterChange} />
 			</IceContainer>
 			<IceContainer>
-	         	<Table 
-		            loading={loading} 
-		            dataSource={data} 
-		            hasBorder={false} 
-		            onSort={onSort} 
-		            sort={sort}
-	          	>
-	          		{
-	          			renderTitle()	
-	          		}
-	          		<Column title={renderCustomTitle()} />
-	          	</Table>
+			    <div className={styles.item}>
+	      			<RangePicker 
+	      				defaultValue={[moment(),moment()]}
+	      				onChange={onDateChange}
+	      			/>
+	      			<Tab 
+	      				className={styles.tabWrap}
+	      				defaultActiveKey="0" 
+	      				shape="capsule" 
+	      				size="small" 
+	      				onChange={tabChange}
+	      			>
+			      		{renderTab()}
+			      	</Tab>
+	      		</div>
 
-	            <Pagination
+	      		<Loading visible={loading} inline={false}>
+	      			{rendShowType()}
+	      		</Loading>
+
+	      		<Pagination
 	            	className={styles.pagination}
 	           		current={curPage}
 	            	total={count}
 	            	onChange={pageChange}
-	         	/>
+			    />
 	    	</IceContainer>
     	</div>
 	);

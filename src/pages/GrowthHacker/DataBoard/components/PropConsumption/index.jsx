@@ -29,7 +29,7 @@ import Template from '../Template';
 
 function PropConsumption() {
 	return (
-		<Template titleConfig={propConfig.titles} request={api.getProp} />
+		<Template type={'3'} />
 	);
 }
 

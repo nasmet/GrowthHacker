@@ -23,7 +23,7 @@ import {
 } from 'react-router-dom';
 import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
-import Filter from './components/Filter';
+// import Filter from './components/Filter';
 import CreateBuriedPoint from './components/CreateBuriedPoint';
 
 const {
@@ -37,9 +37,9 @@ function DataCenter() {
 	const [data, setData] = useState([]);
 	const [count, setCount] = useState(0);
 	const [sort, setSort] = useState({});
-	const [filter, setfilter] = useState({
-		domain: 0,
-	});
+	// const [filter, setfilter] = useState({
+	// 	domain: 0,
+	// });
 	const [show, setShow] = useState(false);
 	const [showAnalysisBtn, setShowAnalysisBtn] = useState(false);
 	const [showDeleteBtn, setShowDeleteBtn] = useState(false);
@@ -110,11 +110,11 @@ function DataCenter() {
 		});
 	}
 
-	const filterChange = () => {
-		resetRowSelection();
-		setSort({});
-		resetPage();
-	};
+	// const filterChange = () => {
+	// 	resetRowSelection();
+	// 	setSort({});
+	// 	resetPage();
+	// };
 
 	const onSort = (dataIndex, order) => {
 		setSort({
@@ -202,9 +202,11 @@ function DataCenter() {
 
 	return (
 		<div>
+			{/*
 			<IceContainer>
 				<Filter values={filter} filterChange={filterChange} />
 			</IceContainer>
+			*/}
 
 			<IceContainer>
 

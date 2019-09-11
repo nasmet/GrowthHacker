@@ -16,6 +16,8 @@ export default function BasicSector({
 	data,
 	height = 300,
 	forceFit = false,
+	x = 'name',
+	y = 'value',
 }) {
 	const ds = new DataSet();
 	const dv = ds
@@ -23,8 +25,8 @@ export default function BasicSector({
 		.source(data)
 		.transform({
 			type: "percent",
-			field: "value",
-			dimension: "name",
+			field: x,
+			dimension: y,
 			as: "percent"
 		});
 	const scale = {
@@ -38,28 +40,27 @@ export default function BasicSector({
 	};
 
 	return (
-		<div>
-      		<Chart height={height} data={dv} scale={scale} forceFit={forceFit} >
-        		<Coord type="theta" innerRadius={0.3} radius={1} />
-        		<Tooltip showTitle={false} />
-        		<Legend />
-		        <Geom
-		          	type="intervalStack"
-		          	position="percent"
-		          	color="name"
-		          	style={{
-		            	lineWidth: 2,
-		            	stroke: "#fff"
-		          	}}
-		        >
-		          	<Label
-		            	content="percent"
-		            	formatter={(val, item) => {
-		              		return item.point.name + ": " + val;
-		            	}}
-		          	/>
-        		</Geom>
-      		</Chart>
-    	</div>
+		data.length !== 0 ?
+		<Chart height={height} data={dv} scale={scale} forceFit={forceFit} >
+    		<Coord type="theta" innerRadius={0.3} radius={1} />
+    		<Tooltip showTitle={false} />
+    		<Legend />
+	        <Geom
+	          	type="intervalStack"
+	          	position="percent"
+	          	color={x}
+	          	style={{
+	            	lineWidth: 2,
+	            	stroke: "#fff"
+	          	}}
+	        >
+	          	<Label
+	            	content="percent"
+	            	formatter={(val, item) => {
+	              		return item.point[{x}] + ": " + val;
+	            	}}
+	          	/>
+    		</Geom>
+  		</Chart> : <div style={{textAlign:'center',color: '#A0A2AD'}}>没有数据</div>
 	);
 }

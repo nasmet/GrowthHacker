@@ -2,7 +2,7 @@ import GameLevels from './components/GameLevels';
 import PropConsumption from './components/PropConsumption';
 import UserLevel from './components/UserLevel';
 
-const routers = [{
+export default [{
 	key: 'gl',
 	tab: '游戏关卡',
 	component: GameLevels,
@@ -15,5 +15,3 @@ const routers = [{
 	tab: '道具消耗',
 	component: PropConsumption,
 }, ];
-
-export default routers;

@@ -1,15 +1,14 @@
 // 以下文件格式为描述路由的协议格式
 // 你可以调整 routerConfig 里的内容
 // 变量名 routerConfig 为 iceworks 检测关键字，请不要修改名称
-// import BasicLayout from './layouts/BasicLayout';
-// import SqlLayout from './layouts/SqlLayout';
-
 import Find from './pages/System/Find';
 import Monitor from './pages/System/Monitor';
 import Analysis from './pages/System/Analysis';
+
 import List from './pages/WeiboOperation/List';
 import Status from './pages/WeiboOperation/Status';
 import Interactive from './pages/WeiboOperation/Interactive';
+
 import ProductAnalysis from './pages/GrowthHacker/ProductAnalysis';
 import UserAnalysis from './pages/GrowthHacker/UserAnalysis';
 import CustomerAnalysis from './pages/GrowthHacker/CustomerAnalysis';

@@ -116,7 +116,6 @@ function EventAnalysis({
       			<RangePicker 
       				defaultValue={[moment(),moment()]}
       				onChange={onDateChange}
-      				popupTriggerType="hover"
       			/>
       			<Tab 
       				className={styles.tabWrap}

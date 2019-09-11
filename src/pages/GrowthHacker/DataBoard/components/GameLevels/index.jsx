@@ -29,7 +29,7 @@ import Template from '../Template';
 
 function GameLevels() {
 	return (
-		<Template titleConfig={gameLevelsConfig.titles} request={api.getGameLevels} />
+		<Template type={'1'} />
 	);
 }
 

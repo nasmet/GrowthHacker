@@ -1,0 +1,9 @@
+.contain{
+	display: flex;
+	flex-direction: column;
+	.name{
+		margin-bottom: 10px;
+		font-size: 12px;
+		font-weight: bold;
+	}
+}

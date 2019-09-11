@@ -16,7 +16,7 @@ import {
 	Loading,
 } from '@alifd/next';
 import styles from './index.module.scss';
-import dataBoardConfig from './dataBoardConfig';
+import  dataBoardConfig from './dataBoardConfig';
 
 const {
 	Item,

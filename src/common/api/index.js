@@ -16,16 +16,13 @@ export function getDataCenter(data) {
 	return get('/datacenter', data);
 }
 
-export function getGameLevels(data) {
-	return get('/dashboards/gamelevel', data);
-}
+export function getDataBoard(data) {
+	const {
+		project_id,
+		chart_id,
+	} = data;
 
-export function getUserLevels(data) {
-	return get('/dashboards/userlevel', data);
-}
-
-export function getProp(data) {
-	return get('/dashboards/item', data);
+	return post(`/projects/${project_id}/charts/${chart_id}/chartdata`, data);
 }
 
 export function getWeiboList(data) {

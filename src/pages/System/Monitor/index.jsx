@@ -6,6 +6,7 @@ import React, {
 import {
 	Tab,
 	Loading,
+	Message,
 } from '@alifd/next';
 import styles from './index.module.scss';
 import MonitorContent from './components/MonitorContent';
