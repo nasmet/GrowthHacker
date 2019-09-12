@@ -82,3 +82,21 @@ export function put(url, data = {}) {
 		});
 	});
 }
+
+/**
+ * delete 方法封装
+ * @param url
+ * @param data
+ * @returns {Promise}
+ */
+export function del(url, params = {}) {
+	return new Promise((resolve, reject) => {
+		axios.delete(url, {
+			params,
+		}).then((response) => {
+			resolve(response.data);
+		}, (err) => {
+			reject(err);
+		});
+	});
+}

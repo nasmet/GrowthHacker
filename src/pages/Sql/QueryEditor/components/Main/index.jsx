@@ -36,9 +36,13 @@ export default function Main({
 	const [queryData, setQueryData] = useState("");
 	const [logData, setLogData] = useState([]);
 	const [columnData, setColumnData] = useState([]);
-	const [resultData, setResultData] = useState([]);
+	const [resultData, setResultData] = useState({
+		titles: [],
+		data: [],
+	});
 	const [graphData, setGraphData] = useState([]);
 
+	let cancelTask = false; // 防止内存泄露
 	useEffect(() => {
 		setValue((pre) => {
 			if (pre) {
@@ -58,16 +62,38 @@ export default function Main({
 			return;
 		}
 		setLoading(true);
-		setTimeout(() => {
+		api.getSqlData({
+			query: value,
+		}).then((res) => {
+			if (cancelTask) {
+				return;
+			}
+			console.log(res);
+			const {
+				columns,
+				data,
+			} = res;
 			setRecentQueryData((pre) => {
 				return [{
-					time: utils.formatUnix(Date.now() / 1000, 'Y-M-D h:m:s'),
+					id: pre.length + '',
 					query: value,
+					time: utils.formatUnix(Date.now() / 1000, 'Y-M-D h:m:s'),
 				}, ...pre];
 			});
+			setResultData({
+				titles: columns,
+				data,
+			});
 			setQueryData(value);
+			setColumnData(columns);
+		}).catch((e) => {
+			Message.success(e.toString());
+		}).finally(() => {
+			if (cancelTask) {
+				return;
+			}
 			setLoading(false);
-		}, 1000);
+		});
 	};
 
 	const transferData = (key) => {

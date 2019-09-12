@@ -25,7 +25,7 @@ import styles from './index.module.scss';
 export default function Graph() {
 	return (
 		<IceContainer>
-			<div>图表</div>
+			<div>当前没有可视化的图表</div>
     	</IceContainer>
 	);
 }

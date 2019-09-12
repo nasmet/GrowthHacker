@@ -23,7 +23,6 @@ import {
 } from 'react-router-dom';
 import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
-// import Filter from './components/Filter';
 import CreateBuriedPoint from './components/CreateBuriedPoint';
 
 const {
@@ -37,9 +36,6 @@ function DataCenter() {
 	const [data, setData] = useState([]);
 	const [count, setCount] = useState(0);
 	const [sort, setSort] = useState({});
-	// const [filter, setfilter] = useState({
-	// 	domain: 0,
-	// });
 	const [show, setShow] = useState(false);
 	const [showAnalysisBtn, setShowAnalysisBtn] = useState(false);
 	const [showDeleteBtn, setShowDeleteBtn] = useState(false);
@@ -62,11 +58,11 @@ function DataCenter() {
 				}
 				const {
 					total,
-					list,
+					event_entities,
 				} = res;
 				setCount(total);
-				setData(list);
-				setTotalData(list);
+				setData(event_entities);
+				setTotalData(event_entities);
 			}).catch((e) => {
 				Message.success(e.toString());
 			}).finally(() => {
@@ -90,14 +86,43 @@ function DataCenter() {
 		setCurPage(e);
 	};
 
+	const onDeleteBuriedPoint = (id, index) => {
+		setLoading(true);
+		api.deleteEvent({
+			id,
+		}).then((res) => {
+			if (cancelTask) {
+				return;
+			}
+			setData((pre) => {
+				pre.splice(index, 1);
+				return [...pre];
+			});
+			Message.success('删除成功');
+		}).catch((e) => {
+			Message.success(e.toString());
+		}).finally(() => {
+			if (cancelTask) {
+				return;
+			}
+			setLoading(false);
+		});
+	};
+
 	const renderCover = (value, index, record) => {
 		const {
 			id,
 		} = record;
 		return (
-			<Button type='primary' onClick={onAnalysisBuriedPoint.bind(this,[id])}> 
-				事件分析
-			</Button>
+			<div>
+				{/*<Button style={{marginRight:'10px'}} type='primary' onClick={onAnalysisBuriedPoint.bind(this,[id])}> 
+					事件分析
+				</Button>
+				*/}
+				<Button type='primary' onClick={onDeleteBuriedPoint.bind(this, id, index)}> 
+					删除事件
+				</Button>
+			</div>
 		);
 	};
 
@@ -110,12 +135,6 @@ function DataCenter() {
 		});
 	}
 
-	// const filterChange = () => {
-	// 	resetRowSelection();
-	// 	setSort({});
-	// 	resetPage();
-	// };
-
 	const onSort = (dataIndex, order) => {
 		setSort({
 			[dataIndex]: order,
@@ -127,14 +146,22 @@ function DataCenter() {
 		setShow(true);
 	};
 
-	const onOk = (values) => {
-		setShow(false);
-		setData((pre) => {
-			values.id = pre.length + 1;
-			values.createTime = '2019-9-4';
-			values.lastUpdateTime = '2019-9-4';
-			return [values, ...pre];
-		})
+	const onOk = (values, cb) => {
+		console.log(values);
+		api.createEvent(values).then((res) => {
+			if (cancelTask) {
+				return;
+			}
+			setData((pre) => {
+				pre.splice(0, 0, res.event_entity);
+				return [...pre];
+			});
+			setShow(false);
+			Message.success('创建成功');
+		}).catch((e) => {
+			cb();
+			Message.success(e.toString());
+		});
 	};
 
 	const onClose = () => {
@@ -155,7 +182,7 @@ function DataCenter() {
 		setShowDeleteBtn(value);
 	}
 
-	const onDeleteBuriedPoint = () => {
+	const onKeyDeleteBuriedPoint = () => {
 		setData((pre) => {
 			const deletData = [];
 			rowSelection.selectedRowKeys.forEach((item) => {
@@ -194,7 +221,7 @@ function DataCenter() {
 		} else {
 			setData(() => {
 				return [...totalData].filter((item) => {
-					return item.event.indexOf(e) !== -1;
+					return item.entity_key.indexOf(e) !== -1;
 				});
 			});
 		}
@@ -202,25 +229,22 @@ function DataCenter() {
 
 	return (
 		<div>
-			{/*
 			<IceContainer>
-				<Filter values={filter} filterChange={filterChange} />
-			</IceContainer>
-			*/}
-
-			<IceContainer>
-
 				<div className={styles.btnWrap}>
 					<Button className={styles.btn} type="secondary" onClick={onCreateBuriedPoint}> 
 						创建埋点事件
 					</Button>
-					<Button className={styles.btn} disabled={!showDeleteBtn} type="secondary" onClick={onDeleteBuriedPoint}> 
+					{/*
+					<Button className={styles.btn} disabled={!showDeleteBtn} type="secondary" onClick={onKeyDeleteBuriedPoint}> 
 						一键删除埋点事件
 					</Button>
+					*/}
+					{/*
 					<Button className={styles.btn} disabled={!showAnalysisBtn} type="secondary" onClick={onAnalysisBuriedPoint.bind(this,rowSelection.selectedRowKeys)}> 
 						一键分析埋点事件
 					</Button>
-					<Input className={styles.input} hasClear hint='search' placeholder="请输入事件名" onChange={utils.debounce(onInputChange, 500)}/>
+					*/}
+					<Input className={styles.input} hasClear hint='search' placeholder="请输入标识符" onChange={utils.debounce(onInputChange, 500)}/>
 				</div>
 
 	          	<Table 
@@ -230,12 +254,14 @@ function DataCenter() {
 	          		onSort={onSort} 
 	          		sort={sort}
 	          		rowSelection={rowSelection}
-	          	>
+	          	>	
+	          		<Column title="id" dataIndex="id" />
 	            	<Column title="名称" dataIndex="name" />
-	            	<Column title="事件名" dataIndex="event" />
-	            	<Column title="类型" dataIndex="type" />
-	            	<Column title="创建时间" dataIndex="createTime" sortable />
-	            	<Column title="最后更新时间" dataIndex="lastUpdateTime" sortable />
+	            	<Column title="标识符" dataIndex="entity_key" />
+	            	<Column title="实体类型" dataIndex="type" />
+	            	<Column title="事件类型" dataIndex="value_type" />m
+	            	<Column title="变量值的类型" dataIndex="variable_type" />
+	            	<Column title="描述" dataIndex="desc" />
 	            	<Column title="操作" cell={renderCover} />
 	          	</Table>
 
@@ -253,7 +279,7 @@ function DataCenter() {
 		      	onClose={onClose}
 		      	footer={false}
 		    >
-				<CreateBuriedPoint  onOk={onOk} />
+				<CreateBuriedPoint onOk={onOk} />
 			</Dialog>
 	    </div>
 	);

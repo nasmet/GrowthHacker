@@ -2,27 +2,11 @@ import {
 	get,
 	post,
 	put,
+	del,
 } from './base';
 
 export function find(data) {
 	return get('/trends', data);
-}
-
-export function getEventAnalysis(data) {
-	return get('/eventanalysis', data);
-}
-
-export function getDataCenter(data) {
-	return get('/datacenter', data);
-}
-
-export function getDataBoard(data) {
-	const {
-		project_id,
-		chart_id,
-	} = data;
-
-	return post(`/projects/${project_id}/charts/${chart_id}/chartdata`, data);
 }
 
 export function getWeiboList(data) {
@@ -47,4 +31,39 @@ export function getSpotAnalysis(data) {
 
 export function getExponentAnalysis(data) {
 	return get('/exponentanalysis', data);
+}
+
+export function getDataBoard(data) {
+	const {
+		project_id,
+		chart_id,
+	} = data;
+	return post(`/projects/${project_id}/charts/${chart_id}/chartdata`, data);
+}
+
+export function getDataCenter(data) {
+	return get('/event_entities', data);
+}
+
+export function getEventAnalysis(data) {
+	return get('/eventanalysis', data);
+}
+
+export function deleteEvent(data) {
+	const {
+		id,
+	} = data;
+	return del(`/event_entities/${id}`, data);
+}
+
+export function createEvent(data) {
+	return post('/event_entities', data);
+}
+
+export function getSqlTable(data) {
+	return get('/sql/tables', data);
+}
+
+export function getSqlData(data) {
+	return post('/sql/query', data);
 }

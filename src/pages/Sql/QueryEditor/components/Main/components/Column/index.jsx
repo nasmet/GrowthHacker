@@ -22,10 +22,14 @@ import {
 import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
 
-export default function Column() {
+export default function Column({
+	sql,
+}) {
 	return (
 		<IceContainer>
-			<div>列</div>
+			<div className={styles.wrap}>
+				{sql.map(item=> <span className={styles.name} key={item}>{item}</span>)}
+			</div>
     	</IceContainer>
 	);
 }

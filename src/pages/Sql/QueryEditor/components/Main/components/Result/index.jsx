@@ -22,10 +22,28 @@ import {
 import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
 
-export default function Result() {
+const {
+	Column,
+} = Table;
+
+export default function Result({
+	sql,
+}) {
+	const {
+		titles,
+		data,
+	} = sql;
+	const renderTitle = () => {
+		return titles.map((item, index) => {
+			return <Column key={index} title={item} dataIndex={index.toString()} />
+		})
+	};
+
 	return (
 		<IceContainer>
-			<div>结果</div>
+			<Table dataSource={data} hasBorder={false}>
+			    {renderTitle()}       		
+			</Table>
     	</IceContainer>
 	);
 }

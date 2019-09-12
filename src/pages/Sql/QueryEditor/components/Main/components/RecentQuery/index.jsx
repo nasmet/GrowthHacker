@@ -98,7 +98,7 @@ export default function RecentQuery({
           		hasBorder={false} 
           		onSort={onSort} 
           		sort={sort}
-          	>
+          	>	
             	<Column title="查询" dataIndex="query" sortable />
             	<Column title="时间" dataIndex="time" sortable />
             	<Column title="结果" cell={renderCover} />

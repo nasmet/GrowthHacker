@@ -10,6 +10,7 @@ import {
 	Input,
 	Loading,
 	Message,
+	Select,
 } from '@alifd/next';
 import {
 	FormBinderWrapper as IceFormBinderWrapper,
@@ -18,22 +19,27 @@ import {
 } from '@icedesign/form-binder';
 import styles from './index.module.scss';
 
+const {
+	Option,
+} = Select;
+
 export default function CreateBuriedPoint({
 	onOk,
 }) {
 	const form = useRef(null);
 	const [show, setShow] = useState(false);
-	const [values, setValues] = useState(null);
+	const [values, setValues] = useState({});
+	const [entityType, setEntityType] = useState('');
 
 	const validateAllFormField = () => {
 		form.current.validateAll((errors, values) => {
 			if (errors) {
 				return;
 			}
-			setTimeout(() => {
-				setShow(true);
-				onOk(values);
-			}, 500);
+			setShow(true);
+			onOk(values, () => {
+				setShow(false);
+			});
 		});
 	};
 
@@ -41,10 +47,14 @@ export default function CreateBuriedPoint({
 		setValues({});
 	};
 
+	const onChange = (e) => {
+		setEntityType(e.entity_type);
+	};
+
 	return (
 		<Loading visible={show} inline={false}>
       		<div className={styles.wrap}>
-	        	<IceFormBinderWrapper value={values} ref={form}>
+	        	<IceFormBinderWrapper onChange={onChange} value={values} ref={form}>
 	          		<div className={styles.formItem}>
 	            		<div className={styles.formLabel}>名称：</div>
 	            		<div className={styles.content}>
@@ -60,40 +70,72 @@ export default function CreateBuriedPoint({
 	            		</div>
 	          		</div>
 
-		          	<div className={styles.formItem}>
-		            	<div className={styles.formLabel}>标识符：</div>
-		            	<div className={styles.content}>
-			            	<IceFormBinder name="event" required message="必填">
+	          		<div className={styles.formItem}>
+		           		<div className={styles.formLabel}>标识符：</div>
+		           		<div className={styles.content}>
+			            	<IceFormBinder name="key" required message="必填">
 			              		<Input 
 			              			className={styles.input} 
-			              			placeholder='仅允许大小写英文字母、数字、下划线，并且不能以数字开头' 
+			              			placeholder='请输入标识符'
 			              		/>
 			            	</IceFormBinder>
 			            	<div className={styles.formError}>
-			              		<IceFormError name="event" />
+			              		<IceFormError name="key" />
+			            	</div>
+		            	</div>
+		          	</div>
+		
+		          	<div className={styles.formItem}>
+		            	<div className={styles.formLabel}>类别：</div>
+		            	<div className={styles.content}>
+			            	<IceFormBinder name="entity_type" required message="必填">
+								<Select className={styles.input} >
+								    <Option value="event">事件</Option>
+								    <Option value="variable">变量</Option>
+								</Select>
+			            	</IceFormBinder>
+			            	<div className={styles.formError}>
+			              		<IceFormError name="entity_type" />
 			            	</div>
 		            	</div>
 		          	</div>
 
+					{entityType=='event'?
 		          	<div className={styles.formItem}>
-		           		<div className={styles.formLabel}>类型：</div>
+		           		<div className={styles.formLabel}>事件类型：</div>
 		           		<div className={styles.content}>
-			            	<IceFormBinder name="type" required message="必填">
-			              		<Input 
-			              			className={styles.input} 
-			              			placeholder='请输入类型'
-			              		/>
+			            	<IceFormBinder name="value_type" required message="必填">
+								<Select className={styles.input} >
+								    <Option value="counter">计数器</Option>
+								</Select>
 			            	</IceFormBinder>
 			            	<div className={styles.formError}>
-			              		<IceFormError name="type" />
+			              		<IceFormError name="value_type" />
 			            	</div>
 		            	</div>
-		          	</div>
+		          	</div>:null}
+			
+					{entityType=='variable'?
+		         	<div className={styles.formItem}>
+		           		<div className={styles.formLabel}>事件变量类型：</div>
+		           		<div className={styles.content}>
+			            	<IceFormBinder name="variable_type" required message="必填">
+								<Select className={styles.input} >
+								    <Option value="integer">整形</Option>
+								    <Option value="float">浮点型</Option>
+								    <Option value="string">字符串</Option>
+								</Select>
+			            	</IceFormBinder>
+			            	<div className={styles.formError}>
+			              		<IceFormError name="variable_type" />
+			            	</div>
+		            	</div>
+		          	</div>:null}
 
 		          	<div className={styles.formItem}>
 		            	<div className={styles.formLabel}>描述：</div>
 		            	<div className={styles.content}>
-			            	<IceFormBinder name="description">
+			            	<IceFormBinder name="desc">
 			              		<Input 
 			              			className={styles.input} 
 			              		/>
@@ -102,18 +144,6 @@ export default function CreateBuriedPoint({
 		              			(选填)
 		            		</div>
 	            		</div>
-		          	</div>
-
-		          	<div className={styles.formItem}>
-		            	<div className={styles.formLabel}>关联事件级变量：</div>
-		            	<div className={styles.content}>
-			            	<IceFormBinder name="link">
-			              		<Input className={styles.input} />
-			            	</IceFormBinder>
-			            	<div className={styles.formError}>
-			              		(选填)
-			            	</div>
-		            	</div>
 		          	</div>
 					
 					<div className={styles.btnWrap}>

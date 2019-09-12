@@ -28,42 +28,36 @@ const {
 	Item
 } = Menu;
 
-const traversing = function fn(nav) {
-	if (nav.sub && utils.isArray(nav.sub)) {
-		return (
-			<SubMenu key={nav.name} label={nav.name}>
-        		{nav.sub.map(fn)}
-      		</SubMenu>
-		);
-	}
-	return (
-		<Item key={nav.name}>
-			{nav.name}
-   		</Item>
-	);
-};
-
-const menuConfig = [{
-	name: 'events',
-	sub: [{
-		name: 'event',
-	}, {
-		name: 'user_id',
-	}],
-}, {
-	name: 'users',
-	sub: [{
-		name: 'id',
-	}, {
-		name: 'first_id',
-	}],
-}];
-
 export default function Aside({
 	menuSelect,
 }) {
-	const [total, setTotal] = useState(menuConfig);
-	const [data, setData] = useState(menuConfig);
+
+	const [total, setTotal] = useState([]);
+	const [data, setData] = useState([]);
+	const [loading, setLoading] = useState(false);
+	let cancelTask = false; // 防止内存泄露
+
+	useEffect(() => {
+		setLoading(true);
+		api.getSqlTable().then((res) => {
+			if (cancelTask) {
+				return;
+			}
+			const {
+				tables,
+			} = res;
+			setData(tables);
+			setTotal(tables);
+			console.log(res);
+		}).catch((e) => {
+			Message.success(e.toString());
+		}).finally(() => {
+			if (cancelTask) {
+				return;
+			}
+			setLoading(false);
+		});
+	}, []);
 
 	const onInputChange = (e) => {
 		const filterData = total.filter((item) => {
@@ -76,16 +70,39 @@ export default function Aside({
 		menuSelect(e);
 	}
 
+	const renderMenu = () => {
+		return data.map((nav) => {
+			if (nav.columns && utils.isArray(nav.columns)) {
+				return (
+					<SubMenu key={nav.name} label={nav.name}>	
+        				{nav.columns.map((item, index) =>
+        					<Item key={nav.name + '' + item[0]}>
+								{item[0]} ({item[1]})
+			   				</Item>
+        				)}
+      				</SubMenu>
+				);
+			}
+			return (
+				<Item key={nav}>
+					{nav.name}
+				</Item>
+			);
+		})
+	};
+
 	return (
-		<div className={styles.wrap}>
-      		<div className={styles.title}>辅助</div>
-      		<div className={styles.content}>
-      			<div className={styles.title}>数据表</div>
-      			<Input className={styles.input} hasClear hint='search' placeholder="请输入表名" onChange={utils.debounce(onInputChange, 500)}/>
-  			    <Menu openMode="single" selectMode="single" onSelect={onMenuSelect}>
-  			    	{data.map(traversing)}
-			    </Menu>
-      		</div>
-    	</div>
+		<Loading visible={loading} inline={false}>
+			<div className={styles.wrap}>
+	      		<div className={styles.title}>辅助</div>
+	      		<div className={styles.content}>
+	      			<div className={styles.title}>数据表</div>
+	      			<Input className={styles.input} hasClear hint='search' placeholder="请输入表名" onChange={utils.debounce(onInputChange, 500)}/>
+	  			    <Menu openMode="single" selectMode="single" onSelect={onMenuSelect}>
+	  			    	{renderMenu()}
+				    </Menu>
+	      		</div>
+	    	</div>
+    	</Loading>
 	);
 }
