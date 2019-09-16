@@ -27,7 +27,7 @@ export default function MainRoutes() {
 	      	{/* 渲染路由表 */}
 	      	{renderRouter()}
 
-	      	<Redirect from="/" to="/growthhacker/datacenter" />
+	      	<Redirect from="/" to="/growthhacker/projectlist" />
 
 	      	{/* 未匹配到的路由重定向到 NotFound */}
 	      	<Route component={Components.NotFound} />

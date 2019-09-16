@@ -30,7 +30,9 @@ const {
 } = Table;
 const limit = 10;
 
-function DataCenter() {
+function DataCenter({
+	projectId,
+}) {
 	const [curPage, setCurPage] = useState(1);
 	const [loading, setLoading] = useState(false);
 	const [data, setData] = useState([]);
@@ -259,7 +261,7 @@ function DataCenter() {
 	            	<Column title="名称" dataIndex="name" />
 	            	<Column title="标识符" dataIndex="entity_key" />
 	            	<Column title="实体类型" dataIndex="type" />
-	            	<Column title="事件类型" dataIndex="value_type" />m
+	            	<Column title="事件类型" dataIndex="value_type" />
 	            	<Column title="变量值的类型" dataIndex="variable_type" />
 	            	<Column title="描述" dataIndex="desc" />
 	            	<Column title="操作" cell={renderCover} />

@@ -17,10 +17,12 @@ import {
 } from '@alifd/next';
 import styles from './index.module.scss';
 
-export default function UserAnalysis() {
+export default function Page({
+	projectId,
+}) {
 	return (
 		<div>
-      		用户分析
+      		获客分析
     	</div>
 	);
 }

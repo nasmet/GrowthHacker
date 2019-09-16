@@ -52,20 +52,11 @@ const asideMenuConfig = [{
 	path: '/growthhacker',
 	icon: 'publish',
 	sub: [{
-		name: '产品分析',
-		path: '/growthhacker/productanalysis',
+		name: '项目列表',
+		path: '/growthhacker/projectlist',
 	}, {
-		name: '用户分析',
-		path: '/growthhacker/useranalysis',
-	}, {
-		name: '获客分析',
-		path: '/growthhacker/customeranalysis',
-	}, {
-		name: '数据中心',
-		path: '/growthhacker/datacenter',
-	}, {
-		name: '数据看板',
-		path: '/growthhacker/databoard',
+		name: '项目数据',
+		path: '/growthhacker/projectdata',
 	}],
 }];
 

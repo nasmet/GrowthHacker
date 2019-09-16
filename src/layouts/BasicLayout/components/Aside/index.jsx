@@ -61,7 +61,7 @@ function Aside({
 	} = location;
 	const regex = /^\/[a-zA-Z]+/;
 	const value = regex.exec(pathname);
-	const path = value ? value[0] : '/system';
+	const path = value ? value[0] : '/growthhacker';
 
 	return (
 		<div className="aside-custom-menu">

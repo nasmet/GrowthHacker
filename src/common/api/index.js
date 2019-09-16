@@ -67,3 +67,19 @@ export function getSqlTable(data) {
 export function getSqlData(data) {
 	return post('/sql/query', data);
 }
+
+export function getProjects(data) {
+	return get('/projects', data);
+}
+
+export function createProject(data) {
+	return post('/projects', data);
+}
+
+export function createBoard(data) {
+	const {
+		id,
+		trend,
+	} = data;
+	return post(`/projects/${id}`, trend);
+}

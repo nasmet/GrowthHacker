@@ -17,7 +17,9 @@ import {
 } from '@alifd/next';
 import styles from './index.module.scss';
 
-export default function ProductAnalysis() {
+export default function ProductAnalysis({
+	projectId,
+}) {
 	return (
 		<div>
       		产品分析

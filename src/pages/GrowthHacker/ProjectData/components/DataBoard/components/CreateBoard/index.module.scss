@@ -1,0 +1,36 @@
+.wrap{
+	margin: 20px; 
+	display: flex;
+	flex-direction: column;
+	.formItem {
+		margin-bottom: 20px;
+	  	display: flex;
+		flex-direction: column;
+		.content{
+			display: flex;
+			flex-direction: row;
+		}
+	 	.formLabel {
+			min-width: 150px;
+			max-width: 200px;
+		  	font-weight: bold;
+		}
+		.formError {
+		  	margin-top: 10px;
+		  	color: gray;
+		}
+		.input{
+			width: 400px;
+		}
+	}
+	.btnWrap{
+		align-self: center;
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		.btn{
+			width: 100px;
+			margin: 0 10px;
+		}
+	}
+}

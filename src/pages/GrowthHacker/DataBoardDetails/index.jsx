@@ -14,17 +14,29 @@ import {
 	Table,
 	Message,
 	Loading,
+	Icon,
 } from '@alifd/next';
+import {
+	withRouter,
+} from 'react-router-dom';
+import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
-import  dataBoardConfig from './dataBoardConfig';
+import dataBoardDetailsConfig from './dataBoardDetailsConfig';
 
 const {
 	Item,
 } = Tab;
 
-export default function DataBoard() {
+function DataBoardDetails({
+	location,
+}) {
+	const {
+		state,
+	} = location;
+	console.log(state);
+
 	const rendTab = () => {
-		return dataBoardConfig.map((item) => {
+		return dataBoardDetailsConfig.map((item) => {
 			const Content = item.component;
 			return (
 				<Item key={item.key} title={item.tab} >
@@ -37,10 +49,10 @@ export default function DataBoard() {
 	};
 
 	return (
-		<div>
-      		<Tab defaultActiveKey="gl">
-        		{rendTab()}
-      		</Tab>
-    	</div>
+		<Tab defaultActiveKey="gl">
+    		{rendTab()}
+  		</Tab>
 	);
 }
+
+export default withRouter(DataBoardDetails);

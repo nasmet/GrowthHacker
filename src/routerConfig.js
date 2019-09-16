@@ -9,11 +9,9 @@ import List from './pages/WeiboOperation/List';
 import Status from './pages/WeiboOperation/Status';
 import Interactive from './pages/WeiboOperation/Interactive';
 
-import ProductAnalysis from './pages/GrowthHacker/ProductAnalysis';
-import UserAnalysis from './pages/GrowthHacker/UserAnalysis';
-import CustomerAnalysis from './pages/GrowthHacker/CustomerAnalysis';
-import DataCenter from './pages/GrowthHacker/DataCenter';
-import DataBoard from './pages/GrowthHacker/DataBoard';
+import ProjectList from './pages/GrowthHacker/ProjectList';
+import ProjectData from './pages/GrowthHacker/ProjectData';
+import DataBoardDetails from './pages/GrowthHacker/DataBoardDetails';
 import EventAnalysis from './pages/GrowthHacker/EventAnalysis';
 
 import QueryEditor from './pages/Sql/QueryEditor';
@@ -21,7 +19,7 @@ import MyQuery from './pages/Sql/MyQuery';
 import SaveQuery from './pages/Sql/SaveQuery';
 import HistoryRecord from './pages/Sql/HistoryRecord';
 
-const routerConfig = [{
+const system = [{
 	path: '/system/find',
 	component: Find,
 	exact: true,
@@ -33,7 +31,9 @@ const routerConfig = [{
 	path: '/system/analysis',
 	component: Analysis,
 	exact: true,
-}, {
+}];
+
+const weibo = [{
 	path: '/operation/list',
 	component: List,
 	exact: true,
@@ -45,31 +45,27 @@ const routerConfig = [{
 	path: '/operation/Interactive',
 	component: Interactive,
 	exact: true,
-}, {
-	path: '/growthhacker/productanalysis',
-	component: ProductAnalysis,
+}];
+
+const growthhacker = [{
+	path: '/growthhacker/projectlist',
+	component: ProjectList,
 	exact: true,
 }, {
-	path: '/growthhacker/useranalysis',
-	component: UserAnalysis,
+	path: '/growthhacker/projectdata',
+	component: ProjectData,
 	exact: true,
 }, {
-	path: '/growthhacker/customeranalysis',
-	component: CustomerAnalysis,
-	exact: true,
-}, {
-	path: '/growthhacker/datacenter',
-	component: DataCenter,
-	exact: true,
-}, {
-	path: '/growthhacker/databoard',
-	component: DataBoard,
+	path: '/growthhacker/databoarddetails',
+	component: DataBoardDetails,
 	exact: true,
 }, {
 	path: '/growthhacker/eventanalysis',
 	component: EventAnalysis,
 	exact: true,
-}, {
+}];
+
+const sql = [{
 	path: '/sql/queryeditor',
 	component: QueryEditor,
 	exact: true,
@@ -86,5 +82,7 @@ const routerConfig = [{
 	component: HistoryRecord,
 	exact: true,
 }];
+
+const routerConfig = [...system, ...weibo, ...growthhacker, ...sql];
 
 export default routerConfig;

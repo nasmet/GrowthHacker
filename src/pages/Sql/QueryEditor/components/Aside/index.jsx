@@ -60,6 +60,9 @@ export default function Aside({
 	}, []);
 
 	const onInputChange = (e) => {
+		if (!e) {
+			return;
+		}
 		const filterData = total.filter((item) => {
 			return item['name'].indexOf(e) !== -1;
 		});
