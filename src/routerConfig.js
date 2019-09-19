@@ -12,7 +12,6 @@ import Interactive from './pages/WeiboOperation/Interactive';
 import ProjectList from './pages/GrowthHacker/ProjectList';
 import ProjectData from './pages/GrowthHacker/ProjectData';
 import DataBoardDetails from './pages/GrowthHacker/DataBoardDetails';
-import EventAnalysis from './pages/GrowthHacker/EventAnalysis';
 
 import QueryEditor from './pages/Sql/QueryEditor';
 import MyQuery from './pages/Sql/MyQuery';
@@ -58,10 +57,6 @@ const growthhacker = [{
 }, {
 	path: '/growthhacker/databoarddetails',
 	component: DataBoardDetails,
-	exact: true,
-}, {
-	path: '/growthhacker/eventanalysis',
-	component: EventAnalysis,
 	exact: true,
 }];
 

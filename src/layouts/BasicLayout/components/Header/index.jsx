@@ -24,7 +24,7 @@ function Header({
 		if(!e){
 			return;
 		}
-		window.open(e);
+		history.push(e);
 	};
 
 	return (

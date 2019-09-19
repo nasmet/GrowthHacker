@@ -70,8 +70,10 @@ export default function Aside({
 	};
 
 	const onMenuSelect = (e) => {
-		menuSelect(e);
-	}
+		const values = e[0].split(',');
+		const sql = `select ${values[1]} from ${values[0]}`;
+		menuSelect(sql);
+	};
 
 	const renderMenu = () => {
 		return data.map((nav) => {
@@ -79,7 +81,7 @@ export default function Aside({
 				return (
 					<SubMenu key={nav.name} label={nav.name}>	
         				{nav.columns.map((item, index) =>
-        					<Item key={nav.name + '' + item[0]}>
+        					<Item key={nav.name + ',' + item[0]}>
 								{item[0]} ({item[1]})
 			   				</Item>
         				)}

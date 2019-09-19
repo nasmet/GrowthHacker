@@ -89,25 +89,30 @@ function DataCenter({
 	};
 
 	const onDeleteBuriedPoint = (id, index) => {
-		setLoading(true);
-		api.deleteEvent({
-			id,
-		}).then((res) => {
-			if (cancelTask) {
-				return;
-			}
-			setData((pre) => {
-				pre.splice(index, 1);
-				return [...pre];
-			});
-			Message.success('删除成功');
-		}).catch((e) => {
-			Message.success(e.toString());
-		}).finally(() => {
-			if (cancelTask) {
-				return;
-			}
-			setLoading(false);
+		Dialog.confirm({
+			content: '确定删除吗？',
+			onOk: () => {
+				setLoading(true);
+				api.deleteEvent({
+					id,
+				}).then((res) => {
+					if (cancelTask) {
+						return;
+					}
+					setData((pre) => {
+						pre.splice(index, 1);
+						return [...pre];
+					});
+					Message.success('删除成功');
+				}).catch((e) => {
+					Message.success(e.toString());
+				}).finally(() => {
+					if (cancelTask) {
+						return;
+					}
+					setLoading(false);
+				});
+			},
 		});
 	};
 

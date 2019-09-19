@@ -81,5 +81,12 @@ export function createBoard(data) {
 		id,
 		trend,
 	} = data;
-	return post(`/projects/${id}`, trend);
+	return post(`/projects/${id}/charts`, trend);
+}
+
+export function getBoards(data) {
+	const {
+		id,
+	} = data;
+	return get(`/projects/${id}/charts`);
 }

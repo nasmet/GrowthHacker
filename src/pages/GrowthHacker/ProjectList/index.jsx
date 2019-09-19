@@ -36,10 +36,7 @@ function ProjectList({
 	let cancelTask = false; // 防止内存泄漏
 	useEffect(() => {
 		setLoading(true);
-		api.getProjects({
-			limit: 5,
-			offset: 0,
-		}).then((res) => {
+		api.getProjects().then((res) => {
 			if (cancelTask) {
 				return;
 			}
@@ -49,10 +46,7 @@ function ProjectList({
 			setData(projects);
 			setLoading(false);
 			if (projects.length > 0) {
-				sessionStorage.setItem('projectinfo', JSON.stringify({
-					id: projects[0].id,
-					name: projects[0].name,
-				}));
+				sessionStorage.setItem('projectinfo', JSON.stringify(projects[0]));
 			}
 		}).catch((e) => {
 			Message.success(e.toString());
@@ -64,23 +58,53 @@ function ProjectList({
 		});
 	}, []);
 
-	const jumpProjectData = (id, name) => {
-		sessionStorage.setItem('projectinfo', JSON.stringify({
+	const jumpProjectData = (e) => {
+		sessionStorage.setItem('projectinfo', JSON.stringify(e));
+		history.push('/growthhacker/projectdata');
+	};
+
+	const constructNewItem = (item) => {
+		const {
 			id,
 			name,
-		}));
-		history.push('/growthhacker/projectdata');
+			domain_name,
+			type,
+			desc,
+		} = item;
+		return [{
+			name: '名称：',
+			value: name,
+		}, {
+			name: '域名：',
+			value: domain_name,
+		}, {
+			name: '类型：',
+			value: type,
+		}, {
+			name: '描述：',
+			value: desc,
+		}];
 	};
 
 	const renderList = () => {
 		return data.map((item) => {
-			const {
-				id,
-				name,
-			} = item;
+			const newItem = constructNewItem(item);
 			return (
-				<Button className={styles.item} key={id} onClick={jumpProjectData.bind(this,id,name)}>
-					<span className={styles.name}>{name}</span>
+				<Button className={styles.item} key={item.id} onClick={jumpProjectData.bind(this,item)}>
+					{	
+						newItem.map((item,index)=>{
+							const{
+								name,
+								value,
+							} = item;
+							return (
+								<div key={index} className={styles.itemChild}>
+									<span className={styles.name}>{name}</span>
+									<span className={styles.value}>{value}</span>
+								</div>
+							);
+						})
+					}
 				</Button>
 			);
 		});
@@ -121,9 +145,11 @@ function ProjectList({
 		<Loading visible={loading} inline={false}>
 			<div className={styles.wrap}>
 	      		{renderList()}
-	      		<Button className={styles.item} onClick={onCreateProject}>
-	      			<Icon type='add' />
-	      			<span className={styles.name}>新建项目</span>
+	      		<Button className={`${styles.item} ${styles.create}`} onClick={onCreateProject}>
+	      			<div className={styles.itemChild}>
+	      				<Icon type='add' className={styles.icon} />
+	      				<span>新建项目</span>
+	      			</div>
 	      		</Button>		
 	      		<Dialog 
 			   		autoFocus

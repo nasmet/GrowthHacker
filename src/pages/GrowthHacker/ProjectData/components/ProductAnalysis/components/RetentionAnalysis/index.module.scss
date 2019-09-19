@@ -1,0 +1,19 @@
+.pagination {
+  	margin-top: 10px;
+  	text-align: right;
+};
+.footer{
+	margin: 10px;
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	.item{
+		margin: 0 10px 10px 0;
+		padding: 2px 4px;
+		border-radius: 4px;
+		background: #e6e6e6;
+		&:hover{
+			background: #44BBA3;
+		}
+	}
+}

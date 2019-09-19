@@ -21,7 +21,7 @@ import {
 } from 'react-router-dom';
 import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
-import dataBoardDetailsConfig from './dataBoardDetailsConfig';
+import Template from './components/Template';
 
 const {
 	Item,
@@ -31,27 +31,47 @@ function DataBoardDetails({
 	location,
 }) {
 	const {
-		state,
-	} = location;
-	console.log(state);
+		projectId,
+		boardInfo,
+	} = location.state;
+	const {
+		id,
+		name,
+		desc,
+	} = boardInfo;
+	const info = [{
+		id: 0,
+		name: '看板名称',
+		value: name,
+	}, {
+		id: 1,
+		name: '看板描述',
+		value: desc,
+	}];
 
-	const rendTab = () => {
-		return dataBoardDetailsConfig.map((item) => {
-			const Content = item.component;
+	const renderInfo = () => {
+		return info.map((item) => {
+			const {
+				id,
+				name,
+				value,
+			} = item;
 			return (
-				<Item key={item.key} title={item.tab} >
-          			<div className={styles.marginTop10}>
-            			<Content />
-          			</div>
-        		</Item>
+				<div key={id} className={styles.item}>
+					<span>{name}：</span>
+					<span className={styles.value}>{value}</span>
+				</div>
 			);
 		});
 	};
 
 	return (
-		<Tab defaultActiveKey="gl">
-    		{rendTab()}
-  		</Tab>
+		<div>
+			<IceContainer>
+				{renderInfo()}
+			</IceContainer>
+			<Template projectId={projectId} boardId={id} />
+		</div>
 	);
 }
 

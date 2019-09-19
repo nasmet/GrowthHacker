@@ -24,9 +24,15 @@ import {
 	withRouter,
 } from 'react-router-dom';
 import IceContainer from '@icedesign/container';
+import moment from 'moment';
 import styles from './index.module.scss';
-import * as templateConfig from './templateConfig';
+import * as eventAnalysisConfig from './eventAnalysisConfig';
+import Filter from './components/Filter';
 
+moment.locale('zh-cn');
+const {
+	RangePicker,
+} = DatePicker;
 const {
 	Column,
 } = Table;
@@ -35,9 +41,8 @@ const {
 	Item,
 } = Tab;
 
-function Template({
+function EventAnalysis({
 	projectId,
-	boardId,
 }) {
 	const [curPage, setCurPage] = useState(1);
 	const [loading, setLoading] = useState(false);
@@ -51,45 +56,6 @@ function Template({
 
 	let cancelTask = false; // 防止内存泄露
 	useEffect(() => {
-		function fetchData() {
-			setLoading(true);
-			api.getDataBoard({
-				project_id: projectId,
-				chart_id: boardId,
-				limit,
-				offset: (curPage - 1) * limit,
-			}).then((res) => {
-				if (cancelTask) {
-					return;
-				}
-				const {
-					meta,
-					data,
-					total,
-				} = res;
-				setCount(total);
-				setTitles(meta);
-				setData(data);
-				setChartStyle({
-					x: meta[0].key,
-					y: 'count',
-					color: 'event',
-				})
-				setChartData(assemblingChartData(data, meta));
-			}).catch((e) => {
-				Message.success(e ? e.toString() : '网络繁忙');
-			}).finally(() => {
-				if (cancelTask) {
-					return;
-				}
-				setLoading(false);
-			});
-		}
-
-		if (curPage > 0) {
-			fetchData();
-		}
-
 		return () => {
 			cancelTask = true;
 		};
@@ -148,7 +114,7 @@ function Template({
 	};
 
 	const renderTab = () => {
-		return templateConfig.chartTypes.map((item) => {
+		return eventAnalysisConfig.chartTypes.map((item) => {
 			const {
 				name,
 				key,
@@ -195,30 +161,51 @@ function Template({
 
 	};
 
+	const onDateChange = (e) => {
+		if (e.length === 2 && e[1]) {
+
+		}
+	};
+
+	const filterChange = (e) => {
+		console.log(e);
+	};
+
 	return (
-		<IceContainer>
-			<Tab 
-				className={styles.tabWrap}
-				defaultActiveKey="0" 
-				shape="capsule" 
-				size="small" 
-				onChange={tabChange}
-			>
-	      		{renderTab()}
-	      	</Tab>
+		<div>
+			<IceContainer>
+				<Filter filterChange={filterChange} />
+			</IceContainer>
+			<IceContainer>
+		      	<div className={styles.item}>
+	      			<RangePicker 
+	      				defaultValue={[moment(),moment()]}
+	      				onChange={onDateChange}
+	      			/>
+	      			<Tab 
+	      				className={styles.tabWrap}
+	      				defaultActiveKey="0" 
+	      				shape="capsule" 
+	      				size="small" 
+	      				onChange={tabChange}
+	      			>
+			      		{renderTab()}
+			      	</Tab>
+	      		</div>
 
-      		<Loading visible={loading} inline={false}>
-      			{rendShowType()}
-      		</Loading>
+	      		<Loading visible={loading} inline={false}>
+	      			{rendShowType()}
+	      		</Loading>
 
-      		<Pagination
-            	className={styles.pagination}
-           		current={curPage}
-            	total={count}
-            	onChange={pageChange}
-		    />
-    	</IceContainer>
+	      		<Pagination
+	            	className={styles.pagination}
+	           		current={curPage}
+	            	total={count}
+	            	onChange={pageChange}
+			    />
+	    	</IceContainer>
+    	</div>
 	);
 }
 
-export default withRouter(Template);
+export default withRouter(EventAnalysis);

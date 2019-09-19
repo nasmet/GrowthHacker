@@ -1,4 +1,7 @@
-export default [{
+export const chartTypes = [{
+	key: '0',
+	name: '表格'
+}, {
 	key: '1',
 	name: '折线图'
 }, {
@@ -7,4 +10,4 @@ export default [{
 }, {
 	key: '3',
 	name: '横向柱图',
-}]
+}];

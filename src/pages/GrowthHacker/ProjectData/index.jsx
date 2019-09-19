@@ -16,6 +16,7 @@ import {
 	Loading,
 	Pagination,
 	Icon,
+	Grid,
 } from '@alifd/next';
 import {
 	withRouter,
@@ -27,6 +28,10 @@ import projectDataConfig from './projectDataConfig';
 const {
 	Item,
 } = Tab;
+const {
+	Row,
+	Col,
+} = Grid;
 
 function ProjectData({
 	location,
@@ -35,17 +40,43 @@ function ProjectData({
 	if (projectInfo) {
 		projectInfo = JSON.parse(projectInfo);
 	} else {
-		projectInfo = {
-			id: 1,
-			name: '灵蛇',
-		}
+		projectInfo = {};
 	}
 	const {
-		name,
 		id,
+		name,
+		domain_name,
+		type,
+		desc,
 	} = projectInfo;
 
-	const rendTab = () => {
+	const info = [{
+		id: 0,
+		name: '项目名称',
+		value: name,
+	}, {
+		id: 1,
+		name: '项目介绍',
+		value: desc,
+	}];
+
+	const renderInfo = () => {
+		return info.map((item) => {
+			const {
+				id,
+				name,
+				value,
+			} = item;
+			return (
+				<div key={id} className={styles.item}>
+					<span>{name}：</span>
+					<span className={styles.name}>{value}</span>
+				</div>
+			)
+		});
+	};
+
+	const renderTab = () => {
 		return projectDataConfig.map((item) => {
 			const Content = item.component;
 			return (
@@ -58,20 +89,13 @@ function ProjectData({
 		});
 	};
 
-	return ( 
+	return (
 		<div>
 			<IceContainer>
-				<div className={styles.item1}>
-					<span>项目名称：</span>
-					<div className={styles.name}>{name}</div>
-				</div>
-				<div className={styles.item2}>
-					<span>项目介绍：</span>
-					<div className={styles.name}>暂无</div>
-				</div>
+ 				{renderInfo()}
 			</IceContainer>
 			<Tab defaultActiveKey="db">
-        		{rendTab()}
+        		{renderTab()}
       		</Tab>
     	</div>
 	);

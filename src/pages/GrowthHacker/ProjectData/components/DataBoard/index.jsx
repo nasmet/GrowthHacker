@@ -25,39 +25,68 @@ import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
 import CreateBoard from './components/CreateBoard';
 
-const projectListConfig = [{
-	id: 1,
-	name: '实时在线人数',
-}, {
-	id: 2,
-	name: '关卡通关率',
-}];
-
 function DataBoard({
 	history,
 	projectId,
 }) {
+	const [loading, setLoading] = useState(false);
 	const [showDialog, setShowDialog] = useState(false);
+	const [data, setData] = useState([]);
+	let cancelTask = false;
 
-	const jumpDataBoardDetails = (id) => {
+	useEffect(() => {
+		setLoading(true);
+		api.getBoards({
+			id: projectId,
+		}).then((res) => {
+			if (cancelTask) {
+				return;
+			}
+			setData(res.charts);
+		}).catch((e) => {
+			Message.success(e.toString());
+		}).finally(() => {
+			if (cancelTask) {
+				return;
+			}
+			setLoading(false);
+		});
+	}, []);
+
+	const jumpDataBoardDetails = (item) => {
 		history.push({
 			pathname: '/growthhacker/databoarddetails',
 			state: {
 				projectId,
-				boardId: id,
+				boardInfo: item,
 			},
 		});
 	};
 
+	const getItem = (name, value) => {
+		return (
+			<div className={styles.itemChild}>
+				<span className={styles.name}>{name}：</span>
+				<span className={styles.value}>{value}</span>
+			</div>
+		)
+	};
+
 	const renderList = () => {
-		return projectListConfig.map((item) => {
+		return data.map((item) => {
 			const {
 				id,
 				name,
+				desc,
 			} = item;
 			return (
-				<Button className={styles.item} key={id} onClick={jumpDataBoardDetails.bind(this,id)}>
-					<span className={styles.name}>{name}</span>
+				<Button className={styles.item} key={id} onClick={jumpDataBoardDetails.bind(this,item)}>
+					{
+						getItem('名称',name)
+					}
+					{
+						getItem('描述',desc)
+					}			
 				</Button>
 			);
 		});
@@ -72,20 +101,24 @@ function DataBoard({
 	};
 
 	const onOk = (values, cb) => {
-		api.createBoard(values).then((res) => {
+		console.log(values);
+		api.createBoard({
+			id: projectId,
+			trend: values
+		}).then((res) => {
 			if (cancelTask) {
 				return;
 			}
 			const {
 				id,
 			} = res;
-			// setData((pre) => {
-			// 	pre.splice(0, 0, {
-			// 		id,
-			// 		...values,
-			// 	});
-			// 	return [...pre];
-			// });
+			setData((pre) => {
+				pre.splice(0, 0, {
+					id,
+					...values,
+				});
+				return [...pre];
+			});
 			setShowDialog(false);
 			Message.success('创建成功');
 		}).catch((e) => {
@@ -95,21 +128,25 @@ function DataBoard({
 	};
 
 	return (
-		<div className={styles.wrap}>
-      		{renderList()}
-      		<Button className={styles.item} onClick={onCreateBoard}>
-      			<Icon type='add' />
-      			<span className={styles.name}>新建看板</span>
-      		</Button>
-  			<Dialog 
-		   		autoFocus
-		      	visible={showDialog} 
-		      	onClose={onClose}
-		      	footer={false}
-		    >	
-				<CreateBoard onOk={onOk} />
-			</Dialog>		
-    	</div>
+		<Loading visible={loading} inline={false}>
+			<div className={styles.wrap}>
+	      		{renderList()}
+	      		<Button className={`${styles.item} ${styles.create}`} onClick={onCreateBoard}>
+	      			<div className={styles.itemChild}>
+		      			<Icon type='add' className={styles.icon} />
+		      			<span >新建看板</span>
+		      		</div>
+	      		</Button>
+	  			<Dialog 
+			   		autoFocus
+			      	visible={showDialog} 
+			      	onClose={onClose}
+			      	footer={false}
+			    >	
+					<CreateBoard onOk={onOk} />
+				</Dialog>		
+	    	</div>
+    	</Loading>
 	);
 }
 

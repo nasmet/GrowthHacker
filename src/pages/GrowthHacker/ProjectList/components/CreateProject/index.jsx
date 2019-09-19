@@ -76,7 +76,6 @@ export default function CreateProject({
 	            		</div>
 	          		</div>
 
-
 		          	<div className={styles.formItem}>
 		            	<div className={styles.formLabel}>应用类型：</div>
 		            	<div className={styles.content}>

@@ -29,7 +29,7 @@ export default function QueryEditor() {
 	const [query, setQuery] = useState("");
 	
 	const menuSelect = (e) => {
-		setQuery(e[0]);
+		setQuery(e);
 	};
 
 	return (

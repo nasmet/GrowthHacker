@@ -1,20 +1,44 @@
 .wrap{
-	margin:20px;
+	margin: 20px;
 	display: flex;
 	flex-direction: row;
 	flex-wrap: wrap;
 	.item{
 		width: 200px;
-		height: 200px;
-		margin: 0 20px 20px 0;
+		height: 100px;
+		margin: 0 10px 10px 0;
+		padding: 10px;
 		border: 1px solid #e6e6e6;
 		border-radius: 10px;
 		background: #fff;
 		display: flex;
+		flex-direction: column;
 		justify-content: center;
-		align-items: center;
-		.name{
-			font-size: 20px;
+		overflow: hidden;
+		&.create{
+			align-items: center;
+		}
+		.itemChild{
+			display: flex;
+			align-items: center;
+			.name{
+				font-size: 12px;
+			}
+			.value{
+				font-size: 12px;
+				font-weight: bold;
+	       		text-overflow: ellipsis; 
+		        white-space: pre-wrap;
+		        display: -webkit-box;
+				-webkit-box-orient: vertical;
+				-webkit-line-clamp: 3;
+				overflow: hidden;
+				line-height: 1;
+			}
+			.icon{
+				margin-right: 4px;
+			}
 		}
 	}
+
 }

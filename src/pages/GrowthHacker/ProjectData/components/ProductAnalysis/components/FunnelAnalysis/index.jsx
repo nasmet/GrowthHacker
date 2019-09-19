@@ -15,17 +15,20 @@ import {
 	Message,
 	Loading,
 	Pagination,
+	Icon,
+	Dialog,
+	Select,
 } from '@alifd/next';
 import {
 	withRouter,
 } from 'react-router-dom';
 import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
-import * as userLevelConfig from './userLevelConfig';
-import Template from '../Template';
 
-export default function UserLevel() {
+export default function FunnelAnalysis() {
 	return (
-		<Template type={'2'} />
+		<div>
+      		漏斗分析
+    	</div>
 	);
 }

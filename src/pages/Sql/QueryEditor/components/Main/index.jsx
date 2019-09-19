@@ -46,7 +46,7 @@ export default function Main({
 	useEffect(() => {
 		setValue((pre) => {
 			if (pre) {
-				return `${pre}, ${query}`;
+				return `${pre}; ${query}`;
 			}
 			return `${query}`;
 		})
@@ -132,12 +132,19 @@ export default function Main({
 		});
 	};
 
+	const resetSql=()=>{
+		setValue('');
+	};
+
 	return (
 		<Loading visible={loading} inline={false}>
 			<div className={styles.wrap}>
 				<div className={styles.head}>
 	      			<Input.TextArea className={styles.input} onChange={onChange} value={value} placeholder="请输入sql语句" aria-label="TextArea" />
-	      			<Button className={styles.btn} type='primary' onClick={handleSql}>执行</Button>
+	      			<div>
+	      				<Button className={styles.btn} type='primary' onClick={handleSql}>执行</Button>
+	      				<Button className={styles.btn} type='primary' onClick={resetSql}>重置</Button>
+	      			</div>
 	      		</div>
 				
 				<div className={styles.middle}>
