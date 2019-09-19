@@ -141,15 +141,15 @@ function WeiboHot({
 	return (
 		<div>
 	       	<IceContainer>
-		        <Table loading={loading} dataSource={data} hasBorder={false} onSort={onSort} sort={sort}>
-		          	<Column title="热门内容" dataIndex="context" />
+		        <Table stickyHeader loading={loading} dataSource={data} hasBorder={false} onSort={onSort} sort={sort}>
+		          	<Column title="热门内容" dataIndex="context" width={800} lock='left'/>
 		          	<Column title="热门词" dataIndex="keyword" />
 		          	<Column title="点赞" dataIndex="like" sortable />
 		          	<Column title="转发" dataIndex="retweet" sortable />
 		          	<Column title="评论" dataIndex="comment" sortable />
-		          	<Column title="发布时间" dataIndex="publish_unix" sortable />
+		          	<Column title="发布时间" dataIndex="publish_unix" sortable width={200} lock  />
 		          	<Column title="来源" cell={renderSource} />
-		          	<Column title="操作" cell={renderCover} />
+		          	<Column title="操作" cell={renderCover}  width={200} lock="right" />
 		        </Table>
 
 		        <Pagination

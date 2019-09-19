@@ -1,0 +1,42 @@
+.container{
+	margin-bottom: 10px;
+	padding: 10px 10px;
+}
+.item{
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+}
+.name{
+	margin-right: 10px;
+	font-weight: bold;
+}
+.select{
+	width: 200px;
+	margin-right: 10px;
+}
+.filter{
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	margin-right: 10px;
+	&:hover{
+		background: #e6e6e6;
+	}
+	.icon{
+		margin-right: 4px;
+	}
+}
+.filterCondition{
+	margin: 10px 0 0 20px;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+}
+.pagination {
+  	margin-top: 10px;
+  	text-align: right;
+};
+.title{
+	border:1px solid #e6e6e6;
+}

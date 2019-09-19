@@ -14,36 +14,48 @@ import {
 	Table,
 	Message,
 	Loading,
-	Pagination,
 	Icon,
-	Balloon,
-	Checkbox,
-	DatePicker,
+	Pagination,
 } from '@alifd/next';
 import {
 	withRouter,
 } from 'react-router-dom';
 import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
-import * as templateConfig from './templateConfig';
+import * as retentionDetailsConfig from './retentionDetailsConfig';
 
 const {
 	Column,
 } = Table;
-const limit = 10;
+const limit = 20;
 const {
 	Item,
 } = Tab;
 
-function Template({
-	projectId,
-	boardId,
+function RetentionDetails({
+	location,
 }) {
-	const [curPage, setCurPage] = useState(1);
+	const {
+		projectId,
+		boardInfo,
+	} = location.state;
+	const {
+		id,
+		name,
+		desc,
+	} = boardInfo;
+	const info = [{
+		id: 0,
+		name: '看板名称',
+		value: name,
+	}, {
+		id: 1,
+		name: '看板描述',
+		value: desc,
+	}];
+
 	const [loading, setLoading] = useState(false);
 	const [data, setData] = useState([]);
-	const [count, setCount] = useState(0);
-	const [sort, setSort] = useState({});
 	const [titles, setTitles] = useState([]);
 	const [showType, setShowType] = useState('0');
 	const [chartData, setChartData] = useState([]);
@@ -55,9 +67,9 @@ function Template({
 			setLoading(true);
 			api.getDataBoard({
 				project_id: projectId,
-				chart_id: boardId,
+				chart_id: id,
 				limit,
-				offset: (curPage - 1) * limit,
+				offset: 0,
 			}).then((res) => {
 				if (cancelTask) {
 					return;
@@ -65,16 +77,10 @@ function Template({
 				const {
 					meta,
 					data,
-					total,
 				} = res;
-				setCount(total);
 				setTitles(meta);
 				setData(data);
-				setChartStyle({
-					x: meta[0].key,
-					y: 'count',
-					color: 'event',
-				})
+				setChartStyle(assemblingChartStyle(meta));
 				setChartData(assemblingChartData(data, meta));
 			}).catch((e) => {
 				Message.success(e ? e.toString() : '网络繁忙');
@@ -86,28 +92,36 @@ function Template({
 			});
 		}
 
-		if (curPage > 0) {
-			fetchData();
-		}
+		fetchData();
 
 		return () => {
 			cancelTask = true;
 		};
-	}, [curPage]);
+	}, []);
+
+	function assemblingChartStyle(meta) {
+		return {
+			x: meta[0],
+			y: 'count',
+			color: 'event',
+			cols: {
+				[meta[0]]: {
+					type: 'timeCat',
+				}
+			}
+		}
+	}
 
 	function assemblingChartData(arg, meta) {
 		const arr = [];
 		arg.forEach((item) => {
 			const value = item[0];
-			const {
-				name,
-				key,
-			} = meta[0];
+			const name = meta[0];
 			item.forEach((v, index) => {
 				if (index !== 0 && meta[index]) {
 					arr.push({
-						[key]: `${name}${value}`,
-						event: meta[index].name,
+						[name]: value,
+						event: meta[index],
 						count: v,
 					})
 				}
@@ -116,54 +130,22 @@ function Template({
 		return arr;
 	}
 
-	const onSort = (dataIndex, order) => {
-		setSort({
-			[dataIndex]: order,
-		});
-		// resetPage();
-	};
-
-	function resetPage() {
-		if (curPage === 1) {
-			setCurPage(0);
-		}
-		setTimeout(() => {
-			setCurPage(1);
-		});
+	const renderColumn = (item, value, index, record) => {
+		return (
+			<div className={styles.source}>
+				<span>{record[item]}</span>
+				<span style={{color:'#0AA372'}}>{(record[item]/record[1]*100).toFixed(2)}%</span>
+			</div>
+		);
 	}
-
-	const pageChange = (e) => {
-		setCurPage(e);
-	};
 
 	const renderTitle = () => {
 		return titles.map((item, index) => {
-			const {
-				id,
-				name,
-				key,
-			} = item;
-			return <Column key={id} title={name} dataIndex={index.toString()} sortable={true} />
-		})
-	};
-
-	const renderTab = () => {
-		return templateConfig.chartTypes.map((item) => {
-			const {
-				name,
-				key,
-			} = item;
-			return (
-				<Item 
-					key={key}
-          			title={name}
-        		/>
-			);
+			if (index > 1) {
+				return <Column key={index} title={item} cell={renderColumn.bind(this, index)} />
+			}
+			return <Column key={index} title={item} dataIndex={index.toString()} />
 		});
-	};
-
-	const tabChange = (e) => {
-		setShowType(e);
 	};
 
 	const renderTable = () => {
@@ -171,16 +153,14 @@ function Template({
 			<Table 
 				dataSource={data} 
 				hasBorder={false} 
-				onSort={onSort} 
-				sort={sort}
 			>
-			    {renderTitle()}       		
+			   	{renderTitle()}     		
 			</Table>
 		);
 	};
 
-	const rendShowType = () => {
-		switch (showType) {
+	const rendTabComponent = (key) => {
+		switch (key) {
 			case '0':
 				return renderTable();
 			case '1':
@@ -195,30 +175,35 @@ function Template({
 
 	};
 
+	const renderTab = () => {
+		return retentionDetailsConfig.chartTypes.map((item) => {
+			const {
+				name,
+				key,
+			} = item;
+			return (
+				<Item 
+					key={key}
+          			title={name}
+        		>
+	        		<Loading visible={loading} inline={false}>
+	        			<IceContainer>
+							{rendTabComponent(key)}
+						</IceContainer>  
+					</Loading>
+        		</Item>
+			);
+		});
+	};
+
 	return (
-		<IceContainer>
-			<Tab 
-				className={styles.tabWrap}
-				defaultActiveKey="0" 
-				shape="capsule" 
-				size="small" 
-				onChange={tabChange}
-			>
+		<div>
+			<Components.Introduction info={info} />
+			<Tab defaultActiveKey="0">
 	      		{renderTab()}
 	      	</Tab>
-
-      		<Loading visible={loading} inline={false}>
-      			{rendShowType()}
-      		</Loading>
-
-      		<Pagination
-            	className={styles.pagination}
-           		current={curPage}
-            	total={count}
-            	onChange={pageChange}
-		    />
-    	</IceContainer>
+		</div>
 	);
 }
 
-export default withRouter(Template);
+export default withRouter(RetentionDetails);

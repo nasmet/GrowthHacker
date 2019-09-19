@@ -54,8 +54,23 @@ function DataBoard({
 	}, []);
 
 	const jumpDataBoardDetails = (item) => {
+		const {
+			type,
+		} = item;
+		let pathname = '';
+		switch (type) {
+			case 'board':
+				pathname = '/growthhacker/databoarddetails';
+				break;
+			case 'retention':
+				pathname = '/growthhacker/retentiondetails';
+				break;
+			case 'funnel':
+				pathname = '/growthhacker/funneldetails';
+				break;
+		}
 		history.push({
-			pathname: '/growthhacker/databoarddetails',
+			pathname,
 			state: {
 				projectId,
 				boardInfo: item,

@@ -60,22 +60,6 @@ function ProjectData({
 		value: desc,
 	}];
 
-	const renderInfo = () => {
-		return info.map((item) => {
-			const {
-				id,
-				name,
-				value,
-			} = item;
-			return (
-				<div key={id} className={styles.item}>
-					<span>{name}：</span>
-					<span className={styles.name}>{value}</span>
-				</div>
-			)
-		});
-	};
-
 	const renderTab = () => {
 		return projectDataConfig.map((item) => {
 			const Content = item.component;
@@ -91,9 +75,7 @@ function ProjectData({
 
 	return (
 		<div>
-			<IceContainer>
- 				{renderInfo()}
-			</IceContainer>
+			<Components.Introduction info={info} />
 			<Tab defaultActiveKey="db">
         		{renderTab()}
       		</Tab>
