@@ -11,9 +11,9 @@ import Interactive from './pages/WeiboOperation/Interactive';
 
 import ProjectList from './pages/GrowthHacker/ProjectList';
 import ProjectData from './pages/GrowthHacker/ProjectData';
-import DataBoardDetails from './pages/GrowthHacker/DataBoardDetails';
 import RetentionDetails from './pages/GrowthHacker/RetentionDetails';
 import FunnelDetails from './pages/GrowthHacker/FunnelDetails';
+import DistributeDetails from './pages/GrowthHacker/DistributeDetails';
 
 import QueryEditor from './pages/Sql/QueryEditor';
 import MyQuery from './pages/Sql/MyQuery';
@@ -57,16 +57,16 @@ const growthhacker = [{
 	component: ProjectData,
 	exact: true,
 }, {
-	path: '/growthhacker/databoarddetails',
-	component: DataBoardDetails,
-	exact: true,
-}, {
 	path: '/growthhacker/retentiondetails',
 	component: RetentionDetails,
 	exact: true,
 }, {
 	path: '/growthhacker/funneldetails',
 	component: FunnelDetails,
+	exact: true,
+}, {
+	path: '/growthhacker/distributedetails',
+	component: DistributeDetails,
 	exact: true,
 }];
 

@@ -1,6 +1,6 @@
 ## 使用
 - 启动调试服务: `npm start`
-- 构建 dist: `npm run build`
+- 构建 build: `npm run build`
 
 ## 目录结构
 - 入口文件: `src/index.js`

@@ -2,15 +2,14 @@ import React, {
 	Component,
 	useEffect,
 	useState,
-	useRef,
+	useRef
 } from 'react';
 import {
-	Dialog,
 	Button,
 	Input,
 	Loading,
 	Message,
-	Select,
+	Select
 } from '@alifd/next';
 import {
 	FormBinderWrapper as IceFormBinderWrapper,
@@ -20,11 +19,11 @@ import {
 import styles from './index.module.scss';
 
 const {
-	Option,
+	Option
 } = Select;
 
 export default function CreateBuriedPoint({
-	onOk,
+	onOk
 }) {
 	const form = useRef(null);
 	const [show, setShow] = useState(false);

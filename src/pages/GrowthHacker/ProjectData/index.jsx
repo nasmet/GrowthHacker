@@ -1,40 +1,24 @@
 import React, {
 	Component,
 	useState,
-	useEffect,
-	useRef,
-	useContext,
-	useCallback,
-	useMemo,
+	useEffect
 } from 'react';
 import {
-	Input,
-	Button,
-	Tab,
-	Table,
-	Message,
-	Loading,
-	Pagination,
-	Icon,
-	Grid,
+	Tab
 } from '@alifd/next';
 import {
-	withRouter,
+	withRouter
 } from 'react-router-dom';
 import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
 import projectDataConfig from './projectDataConfig';
 
 const {
-	Item,
+	Item
 } = Tab;
-const {
-	Row,
-	Col,
-} = Grid;
 
 function ProjectData({
-	location,
+	location
 }) {
 	let projectInfo = sessionStorage.getItem('projectinfo');
 	if (projectInfo) {
@@ -47,21 +31,20 @@ function ProjectData({
 		name,
 		domain_name,
 		type,
-		desc,
+		desc
 	} = projectInfo;
-
 	const info = [{
 		id: 0,
 		name: '项目名称',
-		value: name,
+		value: name
 	}, {
 		id: 1,
 		name: '项目介绍',
-		value: desc,
-	}];
+		value: desc
+	}, ];
 
 	const renderTab = () => {
-		return projectDataConfig.map((item) => {
+		return projectDataConfig.map(item => {
 			const Content = item.component;
 			return (
 				<Item key={item.key} title={item.tab} >
@@ -69,7 +52,7 @@ function ProjectData({
             			<Content projectId={id} />
           			</div>
         		</Item>
-			);
+			)
 		});
 	};
 
@@ -77,7 +60,7 @@ function ProjectData({
 		<div>
 			<Components.Introduction info={info} />
 			<Tab defaultActiveKey="db">
-        		{renderTab()}
+				{ renderTab() }
       		</Tab>
     	</div>
 	);

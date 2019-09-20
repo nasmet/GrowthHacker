@@ -1,24 +1,12 @@
 import React, {
 	Component,
 	useState,
-	useEffect,
-	useRef,
-	useContext,
-	useCallback,
-	useMemo,
+	useEffect
 } from 'react';
-import {
-	Input,
-	Button,
-	Tab,
-	Table,
-	Message,
-	Loading,
-} from '@alifd/next';
 import styles from './index.module.scss';
 
 export default function Page({
-	projectId,
+	projectId
 }) {
 	return (
 		<div>

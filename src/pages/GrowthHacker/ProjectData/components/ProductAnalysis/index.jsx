@@ -1,23 +1,9 @@
 import React, {
 	Component,
-	useState,
-	useEffect,
-	useRef,
-	useContext,
-	useCallback,
-	useMemo,
 } from 'react';
 import {
-	Input,
-	Button,
 	Tab,
-	Table,
-	Message,
-	Loading,
 } from '@alifd/next';
-import {
-	withRouter,
-} from 'react-router-dom';
 import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
 import productAnalysisConfig from './productAnalysisConfig';
@@ -26,9 +12,8 @@ const {
 	Item,
 } = Tab;
 
-function ProductAnalysis({
+export default function ProductAnalysis({
 	projectId,
-	history,
 }) {
 	const renderTab = () => {
 		return productAnalysisConfig.map((item) => {
@@ -51,5 +36,3 @@ function ProductAnalysis({
 	  	</div>
 	);
 }
-
-export default withRouter(ProductAnalysis);

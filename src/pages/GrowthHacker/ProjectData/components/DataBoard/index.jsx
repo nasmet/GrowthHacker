@@ -1,25 +1,17 @@
 import React, {
 	Component,
 	useState,
-	useEffect,
-	useRef,
-	useContext,
-	useCallback,
-	useMemo,
+	useEffect
 } from 'react';
 import {
-	Input,
 	Button,
-	Tab,
-	Table,
 	Message,
 	Loading,
-	Pagination,
 	Icon,
-	Dialog,
+	Dialog
 } from '@alifd/next';
 import {
-	withRouter,
+	withRouter
 } from 'react-router-dom';
 import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
@@ -37,11 +29,12 @@ function DataBoard({
 	useEffect(() => {
 		setLoading(true);
 		api.getBoards({
-			id: projectId,
+			id: projectId
 		}).then((res) => {
 			if (cancelTask) {
 				return;
 			}
+			console.log(res.charts);
 			setData(res.charts);
 		}).catch((e) => {
 			Message.success(e.toString());
@@ -59,8 +52,8 @@ function DataBoard({
 		} = item;
 		let pathname = '';
 		switch (type) {
-			case 'board':
-				pathname = '/growthhacker/databoarddetails';
+			case 'distribute':
+				pathname = '/growthhacker/distributedetails';
 				break;
 			case 'retention':
 				pathname = '/growthhacker/retentiondetails';
@@ -69,6 +62,7 @@ function DataBoard({
 				pathname = '/growthhacker/funneldetails';
 				break;
 		}
+
 		history.push({
 			pathname,
 			state: {
@@ -81,10 +75,10 @@ function DataBoard({
 	const getItem = (name, value) => {
 		return (
 			<div className={styles.itemChild}>
-				<span className={styles.name}>{name}：</span>
-				<span className={styles.value}>{value}</span>
+				<p className={styles.name}>{name}：</p>
+				<p className={styles.value}>{value}</p>
 			</div>
-		)
+		);
 	};
 
 	const renderList = () => {
@@ -116,7 +110,6 @@ function DataBoard({
 	};
 
 	const onOk = (values, cb) => {
-		console.log(values);
 		api.createBoard({
 			id: projectId,
 			trend: values
@@ -151,16 +144,12 @@ function DataBoard({
 		      			<Icon type='add' className={styles.icon} />
 		      			<span >新建看板</span>
 		      		</div>
-	      		</Button>
-	  			<Dialog 
-			   		autoFocus
-			      	visible={showDialog} 
-			      	onClose={onClose}
-			      	footer={false}
-			    >	
-					<CreateBoard onOk={onOk} />
-				</Dialog>		
+	      		</Button>	
 	    	</div>
+
+	    	<Dialog autoFocus visible={showDialog} onClose={onClose} footer={false}>	
+				<CreateBoard onOk={onOk} />
+			</Dialog>	
     	</Loading>
 	);
 }

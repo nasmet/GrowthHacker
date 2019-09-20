@@ -2,28 +2,7 @@ import React, {
 	Component,
 	useState,
 	useEffect,
-	useRef,
-	useContext,
-	useCallback,
-	useMemo,
 } from 'react';
-import {
-	Input,
-	Button,
-	Tab,
-	Table,
-	Message,
-	Loading,
-	Pagination,
-	Icon,
-	Dialog,
-	Select,
-	Grid,
-	DatePicker,
-} from '@alifd/next';
-import {
-	withRouter,
-} from 'react-router-dom';
 import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
 
@@ -31,8 +10,6 @@ export default function Step({
 	steps,
 	totalRate,
 }) {
-	const fill = '#EAEFF4';
-	
 	const renderStep = () => {
 		const maxIndex = steps.length - 1;
 		return steps.map((item, index) => {
@@ -55,7 +32,7 @@ export default function Step({
 							<svg data-step="1" width="100" height="44" xmlns="http://www.w3.org/2000/svg">
 						      <g>
 						        <g fill="none" fillRule="evenodd">
-						          <g fill={fill} >
+						          <g fill='#EAEFF4' >
 						            <polygon points="18,0 82,0 82,20 100,20 50,44 0,20 18,20 " style={{strokeWidth: 1, stroke: 'rgba(0,0,0,0.12)'}}></polygon>
 						          </g>
 						        </g>

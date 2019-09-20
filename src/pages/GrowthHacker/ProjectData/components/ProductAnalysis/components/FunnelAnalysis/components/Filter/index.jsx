@@ -59,6 +59,11 @@ export default function Filter({
 		});
 	};
 
+	const onResetStep = () => {
+		setSteps([]);
+		setValues({});
+	};
+
 	const onAddFilter = (stepIndex) => {
 		setSteps((pre) => {
 			const filters = pre[stepIndex].filters;
@@ -192,8 +197,9 @@ export default function Filter({
 						漏斗步骤
 					</div>
 					{renderStep()}
-					<div>
-						<Button type='primary' onClick={onAddStep}>增加步骤</Button>
+					<div className={styles.btnWrap}>
+						<Button className={styles.btn} type='primary' onClick={onAddStep}>增加步骤</Button>
+						<Button type='primary' onClick={onResetStep}>重置步骤</Button>
 					</div>
 				</IceContainer>
 			</IceFormBinderWrapper>

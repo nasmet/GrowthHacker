@@ -9,5 +9,5 @@ export const chartTypes = [{
 	name: '纵向柱图'
 }, {
 	key: '3',
-	name: '横向柱图',
+	name: '横向柱图'
 }];

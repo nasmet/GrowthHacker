@@ -39,8 +39,8 @@ export default function Introduction({
 			} = item;
 			return (
 				<div key={id} className={styles.item}>
-					<span>{name}：</span>
-					<span className={styles.value}>{value}</span>
+					<p>{name}：</p>
+					<p className={styles.value}>{value}</p>
 				</div>
 			);
 		});

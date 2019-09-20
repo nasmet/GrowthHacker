@@ -1,51 +1,51 @@
 import React, {
 	Component,
 	useState,
-	useEffect,
+	useEffect
 } from 'react';
 import {
 	Tab,
 	Table,
 	Message,
 	Loading,
-	Pagination,
+	Pagination
 } from '@alifd/next';
 import {
-	withRouter,
+	withRouter
 } from 'react-router-dom';
 import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
-import * as dbDetailsConfig from './dbDetailsConfig';
+import * as distributeDetailsConfig from './distributeDetailsConfig';
 
 const {
-	Column,
+	Column
 } = Table;
 const limit = 10;
 const {
-	Item,
+	Item
 } = Tab;
 
-function DataBoardDetails({
-	location,
+function DistributeDetails({
+	location
 }) {
 	const {
 		projectId,
-		boardInfo,
+		boardInfo
 	} = location.state;
 	const {
 		id,
 		name,
-		desc,
+		desc
 	} = boardInfo;
 	const info = [{
 		id: 0,
 		name: '看板名称',
-		value: name,
+		value: name
 	}, {
 		id: 1,
 		name: '看板描述',
-		value: desc,
-	}];
+		value: desc
+	}, ];
 
 	const [curPage, setCurPage] = useState(1);
 	const [loading, setLoading] = useState(false);
@@ -56,8 +56,8 @@ function DataBoardDetails({
 	const [showType, setShowType] = useState('0');
 	const [chartData, setChartData] = useState([]);
 	const [chartStyle, setChartStyle] = useState({});
-
 	let cancelTask = false; // 防止内存泄露
+
 	useEffect(() => {
 		function fetchData() {
 			setLoading(true);
@@ -67,14 +67,11 @@ function DataBoardDetails({
 				limit,
 				offset: (curPage - 1) * limit,
 			}).then((res) => {
-				if (cancelTask) {
-					return;
-				}
-				console.log(res);
+				if (cancelTask) return;
 				const {
 					meta,
 					data,
-					total,
+					total
 				} = res;
 				setCount(total);
 				setTitles(meta);
@@ -84,9 +81,7 @@ function DataBoardDetails({
 			}).catch((e) => {
 				Message.success(e ? e.toString() : '网络繁忙');
 			}).finally(() => {
-				if (cancelTask) {
-					return;
-				}
+				if (cancelTask) return;
 				setLoading(false);
 			});
 		}
@@ -104,8 +99,8 @@ function DataBoardDetails({
 		return {
 			x: meta[0].key,
 			y: 'count',
-			color: 'event',
-		}
+			color: 'event'
+		};
 	}
 
 	function assemblingChartData(arg, meta) {
@@ -114,7 +109,7 @@ function DataBoardDetails({
 			const value = item[0];
 			const {
 				name,
-				key,
+				key
 			} = meta[0];
 			item.forEach((v, index) => {
 				if (index !== 0 && meta[index]) {
@@ -122,7 +117,7 @@ function DataBoardDetails({
 						[key]: `${name}${value}`,
 						event: meta[index].name,
 						count: v,
-					})
+					});
 				}
 			})
 		});
@@ -131,7 +126,7 @@ function DataBoardDetails({
 
 	const onSort = (dataIndex, order) => {
 		setSort({
-			[dataIndex]: order,
+			[dataIndex]: order
 		});
 		// resetPage();
 	};
@@ -154,7 +149,7 @@ function DataBoardDetails({
 			const {
 				id,
 				name,
-				key,
+				key
 			} = item;
 			return <Column key={id} title={name} dataIndex={index.toString()} sortable={true} />
 		});
@@ -162,12 +157,7 @@ function DataBoardDetails({
 
 	const renderTable = () => {
 		return (
-			<Table 
-				dataSource={data} 
-				hasBorder={false} 
-				onSort={onSort} 
-				sort={sort}
-			>
+			<Table dataSource={data} hasBorder={false} onSort={onSort} sort={sort}>
 			   	{renderTitle()}     		
 			</Table>
 		);
@@ -186,24 +176,18 @@ function DataBoardDetails({
 			default:
 				return null;
 		};
-
 	};
 
 	const renderTab = () => {
-		return dbDetailsConfig.chartTypes.map((item) => {
+		return distributeDetailsConfig.chartTypes.map((item) => {
 			const {
 				name,
-				key,
+				key
 			} = item;
 			return (
-				<Item 
-					key={key}
-          			title={name}
-        		>
+				<Item key={key} title={name}>
 	        		<Loading visible={loading} inline={false}>
-	        			<IceContainer>
-							{rendTabComponent(key)}
-						</IceContainer>  
+	        			<IceContainer>{rendTabComponent(key)}</IceContainer>  
 					</Loading>
         		</Item>
 			);
@@ -213,12 +197,10 @@ function DataBoardDetails({
 	return (
 		<div>
 			<Components.Introduction info={info} />
-			<Tab defaultActiveKey="0">
-	      		{renderTab()}
-	      	</Tab>
-      		<Pagination
-            	className={styles.pagination}
-           		current={curPage}
+			<Tab defaultActiveKey="0">{renderTab()}</Tab>
+      		<Pagination 
+      			className={styles.pagination} 
+      			current={curPage}
             	total={count}
             	onChange={pageChange}
 		    />
@@ -226,4 +208,4 @@ function DataBoardDetails({
 	);
 }
 
-export default withRouter(DataBoardDetails);
+export default withRouter(DistributeDetails);

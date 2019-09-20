@@ -4,3 +4,4 @@ export const EXAMPLE_BASEURL = 'https://easy-mock.com/mock/5d6c8c8b3e22ce7b50bba
 export const BASEURL = `${HOST}/v1`;
 export const TIMEOUT = 5000;
 export const TOKENKEY = 'Token';
+export const LIMIT = 10;

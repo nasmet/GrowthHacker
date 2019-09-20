@@ -1,37 +1,30 @@
 import React, {
 	Component,
 	useState,
-	useEffect,
-	useRef,
-	useContext,
-	useCallback,
-	useMemo,
+	useEffect
 } from 'react';
 import {
 	Input,
 	Button,
-	Tab,
 	Table,
 	Message,
 	Loading,
 	Pagination,
-	Dialog,
+	Dialog
 } from '@alifd/next';
 import {
-	withRouter,
-	Link,
+	withRouter
 } from 'react-router-dom';
 import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
 import CreateBuriedPoint from './components/CreateBuriedPoint';
 
 const {
-	Column,
+	Column
 } = Table;
-const limit = 10;
 
 function DataCenter({
-	projectId,
+	projectId
 }) {
 	const [curPage, setCurPage] = useState(1);
 	const [loading, setLoading] = useState(false);
@@ -39,7 +32,6 @@ function DataCenter({
 	const [count, setCount] = useState(0);
 	const [sort, setSort] = useState({});
 	const [show, setShow] = useState(false);
-	const [showAnalysisBtn, setShowAnalysisBtn] = useState(false);
 	const [showDeleteBtn, setShowDeleteBtn] = useState(false);
 	const [rowSelection, setRowSelection] = useState({
 		selectedRowKeys: [],
@@ -52,15 +44,13 @@ function DataCenter({
 		function fetchData() {
 			setLoading(true);
 			api.getDataCenter({
-				limit,
-				offset: (curPage - 1) * limit,
+				limit: config.LIMIT,
+				offset: (curPage - 1) * config.LIMIT,
 			}).then((res) => {
-				if (cancelTask) {
-					return;
-				}
+				if (cancelTask) return;
 				const {
 					total,
-					event_entities,
+					event_entities
 				} = res;
 				setCount(total);
 				setData(event_entities);
@@ -68,9 +58,7 @@ function DataCenter({
 			}).catch((e) => {
 				Message.success(e.toString());
 			}).finally(() => {
-				if (cancelTask) {
-					return;
-				}
+				if (cancelTask) return;
 				setLoading(false);
 			});
 		}
@@ -94,11 +82,9 @@ function DataCenter({
 			onOk: () => {
 				setLoading(true);
 				api.deleteEvent({
-					id,
+					id
 				}).then((res) => {
-					if (cancelTask) {
-						return;
-					}
+					if (cancelTask) return;
 					setData((pre) => {
 						pre.splice(index, 1);
 						return [...pre];
@@ -107,9 +93,7 @@ function DataCenter({
 				}).catch((e) => {
 					Message.success(e.toString());
 				}).finally(() => {
-					if (cancelTask) {
-						return;
-					}
+					if (cancelTask) return;
 					setLoading(false);
 				});
 			},
@@ -118,18 +102,12 @@ function DataCenter({
 
 	const renderCover = (value, index, record) => {
 		const {
-			id,
+			id
 		} = record;
 		return (
-			<div>
-				{/*<Button style={{marginRight:'10px'}} type='primary' onClick={onAnalysisBuriedPoint.bind(this,[id])}> 
-					事件分析
-				</Button>
-				*/}
-				<Button type='primary' onClick={onDeleteBuriedPoint.bind(this, id, index)}> 
-					删除事件
-				</Button>
-			</div>
+			<Button type='primary' onClick={onDeleteBuriedPoint.bind(this, id, index)}> 
+				删除事件
+			</Button>
 		);
 	};
 
@@ -185,7 +163,6 @@ function DataCenter({
 	}
 
 	function setBtnShow(value) {
-		setShowAnalysisBtn(value);
 		setShowDeleteBtn(value);
 	}
 
@@ -204,10 +181,6 @@ function DataCenter({
 		});
 		setTotalData(data);
 		resetRowSelection();
-	};
-
-	const onAnalysisBuriedPoint = (e) => {
-		window.open(`/growthhacker/eventanalysis?id=${e.join(',')}`);
 	};
 
 	function resetRowSelection() {
@@ -244,11 +217,6 @@ function DataCenter({
 					{/*
 					<Button className={styles.btn} disabled={!showDeleteBtn} type="secondary" onClick={onKeyDeleteBuriedPoint}> 
 						一键删除埋点事件
-					</Button>
-					*/}
-					{/*
-					<Button className={styles.btn} disabled={!showAnalysisBtn} type="secondary" onClick={onAnalysisBuriedPoint.bind(this,rowSelection.selectedRowKeys)}> 
-						一键分析埋点事件
 					</Button>
 					*/}
 					<Input className={styles.input} hasClear hint='search' placeholder="请输入标识符" onChange={utils.debounce(onInputChange, 500)}/>

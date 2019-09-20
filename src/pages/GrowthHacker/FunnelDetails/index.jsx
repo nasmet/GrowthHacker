@@ -1,54 +1,45 @@
 import React, {
 	Component,
 	useState,
-	useEffect,
-	useRef,
-	useContext,
-	useCallback,
-	useMemo,
+	useEffect
 } from 'react';
 import {
-	Input,
-	Button,
-	Tab,
 	Table,
 	Message,
-	Loading,
-	Icon,
-	Pagination,
+	Loading
 } from '@alifd/next';
 import {
-	withRouter,
+	withRouter
 } from 'react-router-dom';
 import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
 import Step from './components/Step';
 
 const {
-	Column,
+	Column
 } = Table;
 
 function FunnelDetails({
-	location,
+	location
 }) {
 	const {
 		projectId,
-		boardInfo,
+		boardInfo
 	} = location.state;
 	const {
 		id,
 		name,
-		desc,
+		desc
 	} = boardInfo;
 	const info = [{
 		id: 0,
 		name: '看板名称',
-		value: name,
+		value: name
 	}, {
 		id: 1,
 		name: '看板描述',
-		value: desc,
-	}];
+		value: desc
+	}, ];
 
 	const [loading, setLoading] = useState(false);
 	const [tableData, setTableData] = useState([]);
@@ -66,13 +57,10 @@ function FunnelDetails({
 				limit: 20,
 				offset: 0,
 			}).then((res) => {
-				if (cancelTask) {
-					return;
-				}
+				if (cancelTask) return;
 				const {
 					meta,
-					data,
-					total,
+					data
 				} = res;
 				constructStep(meta, data[0]);
 				setTableData(data);
@@ -80,9 +68,7 @@ function FunnelDetails({
 			}).catch((e) => {
 				Message.success(e ? e.toString() : '网络繁忙');
 			}).finally(() => {
-				if (cancelTask) {
-					return;
-				}
+				if (cancelTask) return;
 				setLoading(false);
 			});
 		}
@@ -100,11 +86,9 @@ function FunnelDetails({
 		for (let i = 1, len = meta.length; i < len; i += 2) {
 			const obj = {
 				name: meta[i],
-				count: data[i],
+				count: data[i]
 			};
-			if (i !== len - 1) {
-				obj.rate = data[i + 1];
-			}
+			if (i !== len - 1) obj.rate = data[i + 1];
 			arr.push(obj);
 		}
 		setSteps(arr);
@@ -132,10 +116,7 @@ function FunnelDetails({
 			<Components.Introduction info={info} />
 			<Loading visible={loading} inline={false}>
 				<Step  totalRate={totalRate} steps={steps} /> 
-				<Table 
-					dataSource={tableData} 
-					hasBorder={false} 
-				>
+				<Table dataSource={tableData} hasBorder={false} >
 				   	{renderTitle()}     		
 				</Table>
 			</Loading>

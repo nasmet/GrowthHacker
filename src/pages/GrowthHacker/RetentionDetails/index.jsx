@@ -1,57 +1,48 @@
 import React, {
 	Component,
 	useState,
-	useEffect,
-	useRef,
-	useContext,
-	useCallback,
-	useMemo,
+	useEffect
 } from 'react';
 import {
-	Input,
-	Button,
 	Tab,
 	Table,
 	Message,
-	Loading,
-	Icon,
-	Pagination,
+	Loading
 } from '@alifd/next';
 import {
-	withRouter,
+	withRouter
 } from 'react-router-dom';
 import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
 import * as retentionDetailsConfig from './retentionDetailsConfig';
 
 const {
-	Column,
+	Column
 } = Table;
-const limit = 20;
 const {
-	Item,
+	Item
 } = Tab;
 
 function RetentionDetails({
-	location,
+	location
 }) {
 	const {
 		projectId,
-		boardInfo,
+		boardInfo
 	} = location.state;
 	const {
 		id,
 		name,
-		desc,
+		desc
 	} = boardInfo;
 	const info = [{
 		id: 0,
 		name: '看板名称',
-		value: name,
+		value: name
 	}, {
 		id: 1,
 		name: '看板描述',
-		value: desc,
+		value: desc
 	}];
 
 	const [loading, setLoading] = useState(false);
@@ -60,23 +51,21 @@ function RetentionDetails({
 	const [showType, setShowType] = useState('0');
 	const [chartData, setChartData] = useState([]);
 	const [chartStyle, setChartStyle] = useState({});
-
 	let cancelTask = false; // 防止内存泄露
+
 	useEffect(() => {
 		function fetchData() {
 			setLoading(true);
 			api.getDataBoard({
 				project_id: projectId,
 				chart_id: id,
-				limit,
+				limit: 20,
 				offset: 0,
 			}).then((res) => {
-				if (cancelTask) {
-					return;
-				}
+				if (cancelTask) return;
 				const {
 					meta,
-					data,
+					data
 				} = res;
 				setTitles(meta);
 				setData(data);
@@ -85,9 +74,7 @@ function RetentionDetails({
 			}).catch((e) => {
 				Message.success(e ? e.toString() : '网络繁忙');
 			}).finally(() => {
-				if (cancelTask) {
-					return;
-				}
+				if (cancelTask) return;
 				setLoading(false);
 			});
 		}
@@ -108,8 +95,8 @@ function RetentionDetails({
 				[meta[0]]: {
 					type: 'timeCat',
 				}
-			}
-		}
+			},
+		};
 	}
 
 	function assemblingChartData(arg, meta) {
@@ -179,7 +166,7 @@ function RetentionDetails({
 		return retentionDetailsConfig.chartTypes.map((item) => {
 			const {
 				name,
-				key,
+				key
 			} = item;
 			return (
 				<Item 
@@ -187,7 +174,7 @@ function RetentionDetails({
           			title={name}
         		>
 	        		<Loading visible={loading} inline={false}>
-	        			<IceContainer>
+	        			<IceContainer className={styles.chartWrap}>
 							{rendTabComponent(key)}
 						</IceContainer>  
 					</Loading>
