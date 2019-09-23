@@ -47,10 +47,8 @@ function DistributeDetails({
 		value: desc
 	}, ];
 
-	const [curPage, setCurPage] = useState(1);
 	const [loading, setLoading] = useState(false);
 	const [data, setData] = useState([]);
-	const [count, setCount] = useState(0);
 	const [sort, setSort] = useState({});
 	const [titles, setTitles] = useState([]);
 	const [showType, setShowType] = useState('0');
@@ -65,17 +63,17 @@ function DistributeDetails({
 				project_id: projectId,
 				chart_id: id,
 				limit,
-				offset: (curPage - 1) * limit,
+				offset: 20,
 			}).then((res) => {
 				if (cancelTask) return;
 				const {
 					meta,
 					data,
-					total
 				} = res;
-				setCount(total);
+				console.log(res);
+				const tableData = assemblingTableData(data);
 				setTitles(meta);
-				setData(data);
+				setData(tableData);
 				setChartStyle(assemblingChartStyle(meta));
 				setChartData(assemblingChartData(data, meta));
 			}).catch((e) => {
@@ -86,36 +84,49 @@ function DistributeDetails({
 			});
 		}
 
-		if (curPage > 0) {
-			fetchData();
-		}
+		fetchData();
 
 		return () => {
 			cancelTask = true;
 		};
-	}, [curPage]);
+	}, []);
+
+	function assemblingTableData(data) {
+		const row = data.reduce((total, value, index, arr) => {
+			return total.map((item, index) => item + value[index]);
+		});
+		row[0] = '总计';
+		return [...data, row];
+	}
 
 	function assemblingChartStyle(meta) {
 		return {
-			x: meta[0].key,
+			x: meta[0],
 			y: 'count',
-			color: 'event'
+			color: 'event',
+			yLabel: {
+				formatter: v => `${(v*100).toFixed(2)}%`
+			},
+			tooltip: ['event*count', (event, count) => {
+				return {
+					name: event,
+					value: `${(count*100).toFixed(2)}%`,
+				};
+			}],
 		};
 	}
 
 	function assemblingChartData(arg, meta) {
 		const arr = [];
-		arg.forEach((item) => {
+		arg.forEach((item, index) => {
 			const value = item[0];
-			const {
-				name,
-				key
-			} = meta[0];
+			const count = item[1];
+			const name = meta[0];
 			item.forEach((v, index) => {
-				if (index !== 0 && meta[index]) {
+				if (index > 1 && meta[index]) {
 					arr.push({
-						[key]: `${name}${value}`,
-						event: meta[index].name,
+						[name]: `${name}${value}`,
+						event: `日期${meta[index]}`,
 						count: v,
 					});
 				}
@@ -124,40 +135,24 @@ function DistributeDetails({
 		return arr;
 	}
 
-	const onSort = (dataIndex, order) => {
-		setSort({
-			[dataIndex]: order
-		});
-		// resetPage();
-	};
-
-	function resetPage() {
-		if (curPage === 1) {
-			setCurPage(0);
-		}
-		setTimeout(() => {
-			setCurPage(1);
-		});
+	const renderColumn = (item, value, index, record) => {
+		return (
+			<span>{(record[item]*100).toFixed(2)}%</span>
+		);
 	}
-
-	const pageChange = (e) => {
-		setCurPage(e);
-	};
 
 	const renderTitle = () => {
 		return titles.map((item, index) => {
-			const {
-				id,
-				name,
-				key
-			} = item;
-			return <Column key={id} title={name} dataIndex={index.toString()} sortable={true} />
+			if (index > 1) {
+				return <Column key={index} title={item} cell={renderColumn.bind(this, index)} />
+			}
+			return <Column key={index} title={item} dataIndex={index.toString()} />
 		});
 	};
 
 	const renderTable = () => {
 		return (
-			<Table dataSource={data} hasBorder={false} onSort={onSort} sort={sort}>
+			<Table dataSource={data} hasBorder={false}>
 			   	{renderTitle()}     		
 			</Table>
 		);
@@ -187,7 +182,9 @@ function DistributeDetails({
 			return (
 				<Item key={key} title={name}>
 	        		<Loading visible={loading} inline={false}>
-	        			<IceContainer>{rendTabComponent(key)}</IceContainer>  
+	        			<IceContainer className={styles.chartWrap}>
+	        				{rendTabComponent(key)}
+	        			</IceContainer>  
 					</Loading>
         		</Item>
 			);
@@ -198,12 +195,6 @@ function DistributeDetails({
 		<div>
 			<Components.Introduction info={info} />
 			<Tab defaultActiveKey="0">{renderTab()}</Tab>
-      		<Pagination 
-      			className={styles.pagination} 
-      			current={curPage}
-            	total={count}
-            	onChange={pageChange}
-		    />
 		</div>
 	);
 }

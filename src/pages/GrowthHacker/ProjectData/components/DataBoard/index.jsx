@@ -34,6 +34,7 @@ function DataBoard({
 			if (cancelTask) {
 				return;
 			}
+			console.log(res);
 			console.log(res.charts);
 			setData(res.charts);
 		}).catch((e) => {
@@ -52,6 +53,7 @@ function DataBoard({
 		} = item;
 		let pathname = '';
 		switch (type) {
+			case 'active_user':
 			case 'distribute':
 				pathname = '/growthhacker/distributedetails';
 				break;

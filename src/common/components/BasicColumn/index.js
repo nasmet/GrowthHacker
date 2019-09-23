@@ -19,22 +19,31 @@ export default function BasicColumn({
 	x = 'name',
 	y = 'value',
 	color,
+	yLabel,
+	tooltip,
 }) {
 	const pos = `${x}*${y}`;
+
 	return (
 		data.length !== 0 ?
-		<Chart height={height} data={data} scale={cols} forceFit={forceFit}>
+		<Chart 
+			height={height}
+			data={data} 
+			scale={cols} 
+			forceFit={forceFit}
+		>
   			<Coord transpose={transpose} />
     		<Axis name={x} />
-    		<Axis name={y} />
+    		<Axis name={y} label={yLabel} />
 			<Legend />
     		<Tooltip />
 			<Geom 
 				type="interval" 
+				tooltip={tooltip}
 				position={pos} 
-				color={color?color:x}
+				color={color}
 				adjust={{ type: 'dodge', marginRatio: 0.05 }}
 			 />
-  		</Chart> : <div style={{textAlign:'center',color: '#A0A2AD'}}>没有数据</div>
+  		</Chart> : <div style={{textAlign:'center',color: '#A0A2AD'}}>没有可视化数据</div>
 	);
 }
