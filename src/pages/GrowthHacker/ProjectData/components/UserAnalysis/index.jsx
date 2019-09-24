@@ -16,13 +16,35 @@ import {
 	Loading,
 } from '@alifd/next';
 import styles from './index.module.scss';
+import userAnalysisConfig from './userAnalysisConfig';
+
+const {
+	Item,
+} = Tab;
 
 export default function UserAnalysis({
 	projectId,
 }) {
+	const renderTab = () => {
+		return userAnalysisConfig.map((item) => {
+			const {
+				key,
+				tab,
+				Component,
+			} = item;
+			return (
+				<Item key={key} title={tab}>
+					<Component projectId={projectId} />
+				</Item>
+			);
+		});
+	}
+
 	return (
-		<div>
-      		用户分析
-    	</div>
+		<div className={styles.wrap}>
+			<Tab defaultActiveKey='up' size='small'>
+				{renderTab()}
+			</Tab>
+		</div>
 	);
 }

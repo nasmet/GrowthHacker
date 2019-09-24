@@ -24,9 +24,9 @@ function DataBoard({
 	const [loading, setLoading] = useState(false);
 	const [showDialog, setShowDialog] = useState(false);
 	const [data, setData] = useState([]);
-	let cancelTask = false;
+	let cancelTask = false; // 防止内存泄漏
 
-	useEffect(() => {
+	function getBoards() {
 		setLoading(true);
 		api.getBoards({
 			id: projectId
@@ -34,8 +34,6 @@ function DataBoard({
 			if (cancelTask) {
 				return;
 			}
-			console.log(res);
-			console.log(res.charts);
 			setData(res.charts);
 		}).catch((e) => {
 			Message.success(e.toString());
@@ -45,6 +43,14 @@ function DataBoard({
 			}
 			setLoading(false);
 		});
+	}
+
+	useEffect(() => {
+		getBoards();
+
+		return () => {
+			cancelTask = true;
+		};
 	}, []);
 
 	const jumpDataBoardDetails = (item) => {
@@ -63,6 +69,8 @@ function DataBoard({
 			case 'funnel':
 				pathname = '/growthhacker/funneldetails';
 				break;
+			case 'analysis':
+				pathname = '/growthhacker/leveldetails';
 		}
 
 		history.push({
@@ -74,13 +82,19 @@ function DataBoard({
 		});
 	};
 
-	const getItem = (name, value) => {
-		return (
-			<div className={styles.itemChild}>
-				<p className={styles.name}>{name}：</p>
-				<p className={styles.value}>{value}</p>
-			</div>
-		);
+	const renderInfo = (info) => {
+		return info.map((item, index) => {
+			const {
+				name,
+				value,
+			} = item;
+			return (
+				<div key={index} className={styles.itemChild}>
+					<p className={styles.name}>{name}：</p>
+					<p className={styles.value}>{value}</p>
+				</div>
+			);
+		});
 	};
 
 	const renderList = () => {
@@ -90,14 +104,18 @@ function DataBoard({
 				name,
 				desc,
 			} = item;
+
+			const info = [{
+				name: '看板名称',
+				value: name,
+			}, {
+				name: '看板描述',
+				value: desc,
+			}];
+
 			return (
 				<Button className={styles.item} key={id} onClick={jumpDataBoardDetails.bind(this,item)}>
-					{
-						getItem('名称',name)
-					}
-					{
-						getItem('描述',desc)
-					}			
+					{renderInfo(info)}		
 				</Button>
 			);
 		});
@@ -146,7 +164,7 @@ function DataBoard({
 		      			<Icon type='add' className={styles.icon} />
 		      			<span >新建看板</span>
 		      		</div>
-	      		</Button>	
+	      		</Button>
 	    	</div>
 
 	    	<Dialog autoFocus visible={showDialog} onClose={onClose} footer={false}>	

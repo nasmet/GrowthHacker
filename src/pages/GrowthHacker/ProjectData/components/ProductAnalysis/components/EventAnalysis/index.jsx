@@ -45,8 +45,8 @@ function EventAnalysis({
 	const [showType, setShowType] = useState('0');
 	const [chartData, setChartData] = useState([]);
 	const [chartStyle, setChartStyle] = useState({});
+	let cancelTask = false; // 防止内存泄漏
 
-	let cancelTask = false; // 防止内存泄露
 	useEffect(() => {
 		return () => {
 			cancelTask = true;

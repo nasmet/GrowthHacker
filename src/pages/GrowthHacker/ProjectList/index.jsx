@@ -23,9 +23,9 @@ function ProjectList({
 	const [showDialog, setShowDialog] = useState(false);
 	const [loading, setLoading] = useState(false);
 	const [data, setData] = useState([]);
-
 	let cancelTask = false; // 防止内存泄漏
-	useEffect(() => {
+
+	function getProjects() {
 		setLoading(true);
 		api.getProjects().then((res) => {
 			if (cancelTask) {
@@ -34,11 +34,12 @@ function ProjectList({
 			const {
 				projects,
 			} = res;
+			if (projects.length === 0) {
+				return;
+			}
+			sessionStorage.setItem('projectinfo', JSON.stringify(projects[0]));
 			setData(projects);
 			setLoading(false);
-			if (projects.length > 0) {
-				sessionStorage.setItem('projectinfo', JSON.stringify(projects[0]));
-			}
 		}).catch((e) => {
 			Message.success(e.toString());
 		}).finally(() => {
@@ -47,7 +48,16 @@ function ProjectList({
 			}
 			setLoading(false);
 		});
+	}
+
+	useEffect(() => {
+		getProjects();
+
+		return () => {
+			cancelTask = true;
+		};
 	}, []);
+
 
 	const jumpProjectData = (e) => {
 		sessionStorage.setItem('projectinfo', JSON.stringify(e));

@@ -59,7 +59,7 @@ function ProjectData({
 	return (
 		<div>
 			<Components.Introduction info={info} />
-			<Tab defaultActiveKey="db">
+			<Tab defaultActiveKey="ua">
 				{ renderTab() }
       		</Tab>
     	</div>

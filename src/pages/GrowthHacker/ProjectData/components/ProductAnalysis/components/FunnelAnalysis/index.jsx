@@ -31,7 +31,7 @@ export default function FunnelAnalysis() {
 	const [titles, setTitles] = useState([]);
 
 	const filterChange = (e) => {
-		console.log(e);
+		
 	};
 
 	const onVisibleChange = (e) => {
@@ -39,7 +39,6 @@ export default function FunnelAnalysis() {
 	};
 
 	const handleOtherDate = (e) => {
-		console.log(e);
 		setShowDatePopup(false);
 	};
 

@@ -28,16 +28,15 @@ export default function Filter({
 	const [loading, setLoading] = useState(false);
 	const [dimensionData, setDimensionData] = useState([]);
 	const [metricData, setMetricData] = useState([]);
-
 	let cancelTask = false; // 防止内存泄漏
-	useEffect(() => {
+
+	function getDataCenter() {
 		setLoading(true);
 		api.getDataCenter().then((res) => {
 			if (cancelTask) {
 				return;
 			}
 			dividingData(res.event_entities);
-			setLoading(false);
 		}).catch((e) => {
 			Message.success(e.toString());
 		}).finally(() => {
@@ -46,6 +45,14 @@ export default function Filter({
 			}
 			setLoading(false);
 		});
+	}
+
+	useEffect(() => {
+		getDataCenter();
+
+		return () => {
+			cancelTask = true;
+		};
 	}, []);
 
 	function dividingData(data) {

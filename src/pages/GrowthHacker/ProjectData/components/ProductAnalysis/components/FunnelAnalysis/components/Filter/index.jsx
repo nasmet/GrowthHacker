@@ -39,8 +39,8 @@ export default function Filter({
 	const [loading, setLoading] = useState(false);
 	const [values, setValues] = useState({});
 	const [steps, setSteps] = useState([]);
-
 	let cancelTask = false; // 防止内存泄漏
+	
 	useEffect(() => {
 		return () => {
 			cancelTask = true;

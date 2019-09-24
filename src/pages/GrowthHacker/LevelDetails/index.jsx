@@ -19,13 +19,16 @@ import Template from '../Template';
 const {
 	Column
 } = Table;
+const {
+	Item
+} = Tab;
 
-function RetentionDetails({
-	location,
+function LevelDetails({
+	location
 }) {
 	const {
 		projectId,
-		boardInfo,
+		boardInfo
 	} = location.state;
 	const {
 		id,
@@ -37,7 +40,7 @@ function RetentionDetails({
 	const [showType, setShowType] = useState('0');
 	const [chartData, setChartData] = useState([]);
 	const [chartStyle, setChartStyle] = useState({});
-	let cancelTask = false; // 防止内存泄露
+	let cancelTask = false; // 防止内存泄漏
 
 	function getDataBoard() {
 		setLoading(true);
@@ -47,10 +50,12 @@ function RetentionDetails({
 			limit: 20,
 			offset: 0,
 		}).then((res) => {
-			if (cancelTask) return;
+			if (cancelTask) {
+				return;
+			}
 			const {
 				meta,
-				data,
+				data
 			} = res;
 			if (data.length === 0) {
 				return;
@@ -64,7 +69,7 @@ function RetentionDetails({
 		}).finally(() => {
 			if (cancelTask) {
 				return;
-			}
+			};
 			setLoading(false);
 		});
 	}
@@ -82,11 +87,6 @@ function RetentionDetails({
 			x: meta[0],
 			y: 'count',
 			color: 'event',
-			cols: {
-				[meta[0]]: {
-					type: 'timeCat',
-				}
-			},
 		};
 	}
 
@@ -98,7 +98,7 @@ function RetentionDetails({
 			item.forEach((v, index) => {
 				if (index !== 0 && meta[index]) {
 					arr.push({
-						[name]: value,
+						[name]: `${name}${value}`,
 						event: meta[index],
 						count: v,
 					})
@@ -110,21 +110,16 @@ function RetentionDetails({
 
 	const renderColumn = (item, value, index, record) => {
 		return (
-			<div className={styles.source}>
-				<span>{record[item]}</span>
-				<span style={{color:'#0AA372'}}>
-					{(record[item]/record[1]*100).toFixed(2)}%
-				</span>
-			</div>
+			<span>{(record[item]*100).toFixed(2)}%</span>
 		);
 	}
 
 	const renderTitle = () => {
 		return titles.map((item, index) => {
-			if (index > 1) {
-				return <Column key={index} title={item} cell={renderColumn.bind(this, index)} width={100} />
+			if (index === 3 || index === 6) {
+				return <Column key={index} title={item} cell={renderColumn.bind(this, index)} />
 			}
-			return <Column key={index} title={item} dataIndex={index.toString()} lock width={100} />
+			return <Column key={index} title={item} dataIndex={index.toString()} />
 		});
 	};
 
@@ -140,4 +135,4 @@ function RetentionDetails({
 	);
 }
 
-export default withRouter(RetentionDetails);
+export default withRouter(LevelDetails);

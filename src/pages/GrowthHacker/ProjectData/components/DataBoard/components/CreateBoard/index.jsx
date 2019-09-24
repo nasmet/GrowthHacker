@@ -31,9 +31,9 @@ export default function CreateBoard({
 	const [metricData, setMetricData] = useState([]);
 	const form = useRef(null);
 	const [type, setType] = useState('');
-
 	let cancelTask = false; // 防止内存泄漏
-	useEffect(() => {
+
+	function getDataCenter() {
 		setLoading(true);
 		api.getDataCenter().then((res) => {
 			if (cancelTask) {
@@ -49,6 +49,14 @@ export default function CreateBoard({
 			}
 			setLoading(false);
 		});
+	}
+
+	useEffect(() => {
+		getDataCenter();
+
+		return () => {
+			cancelTask = true;
+		};
 	}, []);
 
 	function dividingData(data) {

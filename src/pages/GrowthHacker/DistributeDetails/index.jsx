@@ -15,7 +15,7 @@ import {
 } from 'react-router-dom';
 import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
-import * as distributeDetailsConfig from './distributeDetailsConfig';
+import Template from '../Template';
 
 const {
 	Column
@@ -34,18 +34,7 @@ function DistributeDetails({
 	} = location.state;
 	const {
 		id,
-		name,
-		desc
 	} = boardInfo;
-	const info = [{
-		id: 0,
-		name: '看板名称',
-		value: name
-	}, {
-		id: 1,
-		name: '看板描述',
-		value: desc
-	}, ];
 
 	const [loading, setLoading] = useState(false);
 	const [data, setData] = useState([]);
@@ -54,37 +43,43 @@ function DistributeDetails({
 	const [showType, setShowType] = useState('0');
 	const [chartData, setChartData] = useState([]);
 	const [chartStyle, setChartStyle] = useState({});
-	let cancelTask = false; // 防止内存泄露
+	let cancelTask = false; // 防止内存泄漏
+
+	function getDataBoard() {
+		setLoading(true);
+		api.getDataBoard({
+			project_id: projectId,
+			chart_id: id,
+			limit: 20,
+			offset: 0,
+		}).then((res) => {
+			if (cancelTask) {
+				return;
+			}
+			const {
+				meta,
+				data,
+			} = res;
+			if (data.length === 0) {
+				return;
+			}
+			const tableData = assemblingTableData(data);
+			setTitles(meta);
+			setData(tableData);
+			setChartStyle(assemblingChartStyle(meta));
+			setChartData(assemblingChartData(data, meta));
+		}).catch((e) => {
+			Message.success(e.toString());
+		}).finally(() => {
+			if (cancelTask) {
+				return;
+			}
+			setLoading(false);
+		});
+	}
 
 	useEffect(() => {
-		function fetchData() {
-			setLoading(true);
-			api.getDataBoard({
-				project_id: projectId,
-				chart_id: id,
-				limit,
-				offset: 20,
-			}).then((res) => {
-				if (cancelTask) return;
-				const {
-					meta,
-					data,
-				} = res;
-				console.log(res);
-				const tableData = assemblingTableData(data);
-				setTitles(meta);
-				setData(tableData);
-				setChartStyle(assemblingChartStyle(meta));
-				setChartData(assemblingChartData(data, meta));
-			}).catch((e) => {
-				Message.success(e ? e.toString() : '网络繁忙');
-			}).finally(() => {
-				if (cancelTask) return;
-				setLoading(false);
-			});
-		}
-
-		fetchData();
+		getDataBoard();
 
 		return () => {
 			cancelTask = true;
@@ -150,52 +145,15 @@ function DistributeDetails({
 		});
 	};
 
-	const renderTable = () => {
-		return (
-			<Table dataSource={data} hasBorder={false}>
-			   	{renderTitle()}     		
-			</Table>
-		);
-	};
-
-	const rendTabComponent = (key) => {
-		switch (key) {
-			case '0':
-				return renderTable();
-			case '1':
-				return <Components.BasicPolyline data={chartData} forceFit {...chartStyle} />
-			case '2':
-				return <Components.BasicColumn data={chartData} forceFit {...chartStyle} />
-			case '3':
-				return <Components.BasicColumn data={chartData} forceFit transpose {...chartStyle} />
-			default:
-				return null;
-		};
-	};
-
-	const renderTab = () => {
-		return distributeDetailsConfig.chartTypes.map((item) => {
-			const {
-				name,
-				key
-			} = item;
-			return (
-				<Item key={key} title={name}>
-	        		<Loading visible={loading} inline={false}>
-	        			<IceContainer className={styles.chartWrap}>
-	        				{rendTabComponent(key)}
-	        			</IceContainer>  
-					</Loading>
-        		</Item>
-			);
-		});
-	};
-
 	return (
-		<div>
-			<Components.Introduction info={info} />
-			<Tab defaultActiveKey="0">{renderTab()}</Tab>
-		</div>
+		<Template 
+			tableData={data}
+			loading={loading}
+			boardInfo={boardInfo} 
+			chartData={chartData} 
+			chartStyle={chartStyle}
+			renderTitle={renderTitle} 
+		/>
 	);
 }
 

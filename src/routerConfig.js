@@ -14,6 +14,8 @@ import ProjectData from './pages/GrowthHacker/ProjectData';
 import RetentionDetails from './pages/GrowthHacker/RetentionDetails';
 import FunnelDetails from './pages/GrowthHacker/FunnelDetails';
 import DistributeDetails from './pages/GrowthHacker/DistributeDetails';
+import LevelDetails from './pages/GrowthHacker/LevelDetails';
+import UserShare from './pages/GrowthHacker/UserShare';
 
 import QueryEditor from './pages/Sql/QueryEditor';
 import MyQuery from './pages/Sql/MyQuery';
@@ -67,6 +69,14 @@ const growthhacker = [{
 }, {
 	path: '/growthhacker/distributedetails',
 	component: DistributeDetails,
+	exact: true,
+}, {
+	path: '/growthhacker/leveldetails',
+	component: LevelDetails,
+	exact: true,
+}, {
+	path: '/growthhacker/usershare',
+	component: UserShare,
 	exact: true,
 }];
 

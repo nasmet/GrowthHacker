@@ -24,12 +24,12 @@ function FunnelDetails({
 }) {
 	const {
 		projectId,
-		boardInfo
+		boardInfo,
 	} = location.state;
 	const {
 		id,
 		name,
-		desc
+		desc,
 	} = boardInfo;
 	const info = [{
 		id: 0,
@@ -46,34 +46,37 @@ function FunnelDetails({
 	const [titles, setTitles] = useState([]);
 	const [steps, setSteps] = useState([]);
 	const [totalRate, setTotalRate] = useState('');
+	let cancelTask = false; // 防止内存泄漏
 
-	let cancelTask = false; // 防止内存泄露
+	function getDataBoard() {
+		setLoading(true);
+		api.getDataBoard({
+			project_id: projectId,
+			chart_id: id,
+			limit: 20,
+			offset: 0,
+		}).then((res) => {
+			if (cancelTask) return;
+			const {
+				meta,
+				data
+			} = res;
+			if (data.length === 0) {
+				return;
+			}
+			constructStep(meta, data[0]);
+			setTableData(data);
+			setTitles(meta);
+		}).catch((e) => {
+			Message.success(e.toString());
+		}).finally(() => {
+			if (cancelTask) return;
+			setLoading(false);
+		});
+	}
+
 	useEffect(() => {
-		function fetchData() {
-			setLoading(true);
-			api.getDataBoard({
-				project_id: projectId,
-				chart_id: id,
-				limit: 20,
-				offset: 0,
-			}).then((res) => {
-				if (cancelTask) return;
-				const {
-					meta,
-					data
-				} = res;
-				constructStep(meta, data[0]);
-				setTableData(data);
-				setTitles(meta);
-			}).catch((e) => {
-				Message.success(e ? e.toString() : '网络繁忙');
-			}).finally(() => {
-				if (cancelTask) return;
-				setLoading(false);
-			});
-		}
-
-		fetchData();
+		getDataBoard();
 
 		return () => {
 			cancelTask = true;
