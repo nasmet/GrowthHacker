@@ -4,10 +4,11 @@ import React, {
 import Layout from '@icedesign/layout';
 import Header from './components/Header';
 import Aside from './components/Aside';
-import MainRoutes from './MainRoutes';
 import './index.scss';
 
-export default function BasicLayout() {
+export default function BasicLayout({
+	children
+}) {
 	return (
 		<Layout className="ice-design-layout" fixable>
 	      	<Layout.Aside width={240}>
@@ -19,7 +20,7 @@ export default function BasicLayout() {
 	      		</Layout.Header>
 	   	 		<Layout.Main scrollable>
 	     	 		<div className="main-container">
-	        			<MainRoutes />
+	        			{children}
 	      			</div>
 	    		</Layout.Main>
 	  		</Layout.Section>

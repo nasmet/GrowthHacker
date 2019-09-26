@@ -1,3 +1,10 @@
+.wrap{
+	margin: 10px;
+}
+.user:hover{
+	text-decoration:underline;
+	color: blue;
+}
 .lastTitle{
 	display: flex;
 	flex-direction: row;

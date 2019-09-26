@@ -39,15 +39,15 @@ export default function Introduction({
 			} = item;
 			return (
 				<div key={id} className={styles.item}>
-					<p>{name}：</p>
-					<p className={styles.value}>{value}</p>
+					<span className={styles.name}>{name}：</span>
+					<span className={styles.value}>{value}</span>
 				</div>
 			);
 		});
 	};
 
 	return (
-		<IceContainer>
+		<IceContainer className={styles.wrap}>
 			{renderInfo()}
 		</IceContainer>
 	);

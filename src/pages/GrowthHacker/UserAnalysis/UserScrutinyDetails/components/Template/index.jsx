@@ -23,10 +23,10 @@ import {
 import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
 
-export default function UserPortrait() {
+export default function Template() {
 	return (
 		<div>
-      		用户画像
+      		全部事件
     	</div>
 	);
 }

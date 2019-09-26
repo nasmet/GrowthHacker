@@ -3,10 +3,11 @@ import React, {
 } from 'react';
 import Layout from '@icedesign/layout';
 import Header from './components/Header';
-import MainRoutes from './MainRoutes';
 import './index.scss';
 
-export default function SqlLayout() {
+export default function SqlLayout({
+	children
+}) {
 	return (
 		<Layout className="ice-design-layout" fixable >
      		<Layout.Section>
@@ -15,7 +16,7 @@ export default function SqlLayout() {
                 </Layout.Header>
        	 		<Layout.Main>
          	 		<div className="main-container">
-            			<MainRoutes />
+            	   		{children}
           			</div>
         		</Layout.Main>
       		</Layout.Section>

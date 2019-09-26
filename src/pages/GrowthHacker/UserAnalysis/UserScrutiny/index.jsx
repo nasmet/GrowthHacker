@@ -35,47 +35,80 @@ const {
 	Column,
 } = Table;
 
-export default function UserScrutiny({
-	projectId,
+function UserScrutiny({
+	history,
 }) {
-	const [titles, setTitles] = useState([...defaultTitles]);
-	const [tableData, setTableData] = useState([{
-		userid: 0,
-		time: new Date().toString(),
-		location: '深圳',
-		count: 10,
-		openid: 0,
-		country: 1,
-		city: 2,
-		province: 3,
-		gender: 4,
-		unionid: 5,
-	}]);
+	const [titles, setTitles] = useState([]);
+	const [tableData, setTableData] = useState([]);
 	const [selectValues, setSelectValues] = useState([]);
 	const [curPage, setCurPage] = useState(1);
 	const [total, setTotal] = useState(0);
 	const [loading, setLoading] = useState(false);
+	let cancelTask = false;
+	const projectId = sessionStorage.getItem('projectId');
+
+	function getUserScrutiny() {
+		setLoading(true);
+		api.getUserScrutiny({
+			id: projectId,
+		}).then((res) => {
+			if (cancelTask) {
+				return;
+			}
+			const {
+				meta,
+				data,
+			} = res;
+			if (data.length === 0) {
+				return;
+			}
+			setTitles(meta);
+			setTableData(data);
+		}).catch((e) => {
+			Message.success(e.toString());
+		}).finally(() => {
+			if (cancelTask) {
+				return;
+			}
+			setLoading(false);
+		});
+	}
+
+	useEffect(() => {
+		getUserScrutiny();
+
+		return () => {
+			cancelTask = true;
+		};
+	}, []);
 
 	const filterChange = (e) => {
 		console.log(e);
 	};
 
+	const jumpUserDetails = (e) => {
+		history.push({
+			pathname: '/growthhacker/projectdata/pa/userscrutinydetails',
+			state: {
+				id: e,
+			}
+		});
+	};
+
+	const renderCell = (value, index, record) => {
+		const val = record[0] || '';
+		return (
+			<span className={styles.user} onClick={jumpUserDetails.bind(this,val)}>{val}</span>
+		);
+	}
+
 	const renderTitle = () => {
 		return titles.map((item, index) => {
-			const {
-				key,
-				name,
-			} = item;
-			return (
-				<Column 
-					lock={index===0?true:false} 
-					key={key} 
-					title={name} 
-					dataIndex={key} 
-					width={100} 
-				/>
-			);
-		})
+			if (index === 0) {
+				return <Column key={index} title={item} cell={renderCell} />
+			}
+			return <Column key={index} title={item} dataIndex={index.toString()} />
+		});
 	};
 
 	const lastTitle = () => {
@@ -133,28 +166,36 @@ export default function UserScrutiny({
 	};
 
 	return (
-		<div>
+		<div className={styles.wrap}> 
+			{/*
       		<IceContainer>
       			<Filter filterChange={filterChange} />
       		</IceContainer>
+      		*/}
 			<Table 
 				loading={loading} 
 				dataSource={tableData} 
 				hasBorder={false}
 			>
 			    {renderTitle()} 
+			    {/*
 			    <Column 
 			    	title={renderLastTitle()} 
 			    	lock='right'
 			    	width={150} 
-			    />  		
+			    /> 
+				*/} 		
 			</Table>
+			{/*
 		 	<Pagination
             	className={styles.pagination}
            		current={curPage}
             	total={total}
             	onChange={pageChange}
 		    />
+			*/}
     	</div>
 	);
 }
+
+export default withRouter(UserScrutiny);

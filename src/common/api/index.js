@@ -90,3 +90,42 @@ export function getBoards(data) {
 	} = data;
 	return get(`/projects/${id}/charts`);
 }
+
+export function getPortraitArea(data) {
+	const {
+		id,
+		trend,
+	} = data;
+	return get(`/projects/${id}/portrait/terr`, trend);
+}
+
+export function getPortraitModel(data) {
+	const {
+		id,
+		trend,
+	} = data;
+	return get(`/projects/${id}/portrait/phone`, trend);
+}
+
+export function getPortraitTerminal(data) {
+	const {
+		id,
+		trend,
+	} = data;
+	return get(`/projects/${id}/portrait/terminal`, trend);
+}
+
+export function getUserScrutiny(data) {
+	const {
+		id,
+	} = data;
+	return get(`/projects/${id}/insights/segmentations/latest/users`);
+}
+
+export function getUserScrutinyDetails(data) {
+	const {
+		projectId,
+		openId,
+	} = data;
+	return get(`/projects/${projectId}/insights/segmentations/latest/users/${openId}`);
+}

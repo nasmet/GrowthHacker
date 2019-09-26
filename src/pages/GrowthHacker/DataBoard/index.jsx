@@ -19,8 +19,9 @@ import CreateBoard from './components/CreateBoard';
 
 function DataBoard({
 	history,
-	projectId,
 }) {
+	const projectId = sessionStorage.getItem('projectId');
+	
 	const [loading, setLoading] = useState(false);
 	const [showDialog, setShowDialog] = useState(false);
 	const [data, setData] = useState([]);

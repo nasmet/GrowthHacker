@@ -18,49 +18,29 @@ export default function BasicSector({
 	forceFit = false,
 	x = 'name',
 	y = 'value',
+	color,
+	yLabel,
+	tooltip,
+	gLabel,
 }) {
-	const ds = new DataSet();
-	const dv = ds
-		.createView()
-		.source(data)
-		.transform({
-			type: "percent",
-			field: x,
-			dimension: y,
-			as: "percent"
-		});
-	const scale = {
-		percent: {
-			formatter: val => {
-				val = (val * 100).toFixed(2) + "%";
-				return val;
-			}
-		},
-		nice: false
-	};
+	const pos = `${x}*${y}`;
 
 	return (
 		data.length !== 0 ?
-		<Chart height={height} data={dv} scale={scale} forceFit={forceFit} >
+		<Chart height={height} data={data} forceFit={forceFit} >
     		<Coord type="theta" innerRadius={0.3} radius={1} />
-    		<Tooltip showTitle={false} />
+    		<Tooltip />
     		<Legend />
 	        <Geom
 	          	type="intervalStack"
-	          	position="percent"
-	          	color={x}
-	          	style={{
-	            	lineWidth: 2,
-	            	stroke: "#fff"
-	          	}}
+	          	position={pos}
+	          	color={color}
 	        >
-	          	<Label
-	            	content="percent"
-	            	formatter={(val, item) => {
-	              		return item.point[{x}] + ": " + val;
-	            	}}
-	          	/>
+	        	<Label
+	              content={pos}
+	              formatter={gLabel}
+	            />
     		</Geom>
-  		</Chart> : <div style={{textAlign:'center',color: '#A0A2AD'}}>没有数据</div>
+  		</Chart> : <div style={{textAlign:'center',color: '#A0A2AD'}}>没有可视化数据</div>
 	);
 }
