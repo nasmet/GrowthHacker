@@ -129,3 +129,53 @@ export function getUserScrutinyDetails(data) {
 	} = data;
 	return get(`/projects/${projectId}/insights/segmentations/latest/users/${openId}`);
 }
+
+export function getUserScrutinyEvents(data) {
+	const {
+		projectId,
+		openId,
+		trend,
+	} = data;
+	return get(`/projects/${projectId}/insights/segmentations/latest/users/${openId}/events`, trend);
+}
+
+export function getUserScrutinyEventsBar(data) {
+	const {
+		projectId,
+		openId,
+		trend,
+	} = data;
+	return get(`/projects/${projectId}/insights/segmentations/latest/users/${openId}/eventsbar`, trend);
+}
+
+export function createUserGroup(data) {
+	const {
+		projectId,
+		trend,
+	} = data;
+	return post(`/projects/${projectId}/segmentations`, trend);
+}
+
+export function getUserGroups(data) {
+	const {
+		projectId,
+	} = data;
+	return get(`/projects/${projectId}/segmentations`);
+}
+
+export function deleteUserGroup(data) {
+	const {
+		projectId,
+		id,
+	} = data;
+	return del(`/projects/${projectId}/segmentations/${id}`);
+}
+
+export function getUserGroupDetails(data) {
+	const {
+		projectId,
+		id,
+		trend,
+	} = data;
+	return get(`/projects/${projectId}/segmentations/${id}/users`, trend);
+}

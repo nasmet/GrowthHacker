@@ -6,6 +6,7 @@
 	"dependencies": {
 		"@alifd/next": "^1.15.10",
 		"@antv/data-set": "^0.9.6",
+		"@ice/form": "^0.1.5",
 		"@ice/store": "^0.1.1",
 		"@icedesign/container": "^1.x",
 		"@icedesign/form-binder": "^1.x",

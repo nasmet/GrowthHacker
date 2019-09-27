@@ -24,34 +24,100 @@ import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
 
 export default function UserDetails({
-	userInfo,
+	projectId,
+	openId,
 }) {
+	const [city, setCity] = useState('');
+	const [devices, setDevices] = useState([]);
+	const [lastDevice, setLastDevice] = useState('');
+	const [count, setCount] = useState(0);
+	const [time, setTime] = useState('');
+	const [userId, setUserId] = useState('');
+	const [loading, setLoading] = useState(false);
+	let cancelTask = false;
+	const chartStyle = {
+		x: 'device_brand',
+		y: 'device_brand_count',
+		color: 'device_brand',
+		gLabel: (val, item) => {
+			return `${item.point.device_brand}: ${val}`;
+		}
+	};
+
+	function getUserScrutinyDetails() {
+		setLoading(true);
+		api.getUserScrutinyDetails({
+			projectId,
+			openId,
+		}).then((res) => {
+			if (cancelTask) {
+				return;
+			}
+			console.log(res);
+			const {
+				id,
+				city,
+				devices,
+				last_login,
+				login_count,
+				last_login_device,
+			} = res;
+			setUserId(id);
+			setCity(city);
+			setTime(last_login);
+			setCount(login_count);
+			setLastDevice(last_login_device);
+			setDevices(devices);
+		}).catch((e) => {
+			Message.success(e.toString());
+		}).finally(() => {
+			if (cancelTask) {
+				return;
+			}
+			setLoading(false);
+		});
+	}
+
+	useEffect(() => {
+		getUserScrutinyDetails();
+
+		return () => {
+			cancelTask = true;
+		};
+	}, []);
+
 	return (
-		<div className={styles.info}>
-			<div className={styles.first}>
-				<div className={styles.city}>
-					<span className={styles.name}>城市：</span>
-					<span className={styles.value}>深圳</span>
+		<Loading visible={loading} inline={false}>
+			<div className={styles.info}>
+				<div className={styles.first}>
+					<div className={styles.city}>
+						<span className={styles.name}>城市：</span>
+						<span className={styles.value}>{city}</span>
+					</div>
+					<div>
+						<span className={styles.name}>ID：</span>
+						<span className={styles.value}>{userId}</span>
+					</div>
 				</div>
-				<div>
-					<span className={styles.name}>ID：</span>
-					<span className={styles.value}>0</span>
+				<div className={styles.second}>
+					<p>
+						<span className={styles.name}>上次访问设备：</span>
+						<span className={styles.value}>{lastDevice}</span>
+					</p>
+					<p>
+						<span className={styles.name}>近30天访问：</span>
+						<span className={styles.value}>{count}</span>
+					</p>
+					<p>
+						<span className={styles.name}>最近访问：</span>
+						<span className={styles.value}>{utils.formatUnix(time,'Y-M-D')}</span>
+					</p>
+					<p>
+						<span className={styles.name}>设备使用情况：</span>
+					</p>
+					<Components.BasicPercentSector data={devices} {...chartStyle}  />
 				</div>
-			</div>
-			<div className={styles.second}>
-				<p>
-					<span className={styles.name}>上次访问设备：</span>
-					<span className={styles.value}>Apple</span>
-				</p>
-				<p>
-					<span className={styles.name}>近30天访问：</span>
-					<span className={styles.value}>5次</span>
-				</p>
-				<p>
-					<span className={styles.name}>最近访问：</span>
-					<span className={styles.value}>2019-09-25</span>
-				</p>
-			</div>
-  		</div>
+	  		</div>
+  		</Loading>
 	);
 }

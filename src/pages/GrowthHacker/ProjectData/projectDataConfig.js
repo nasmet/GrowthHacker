@@ -18,7 +18,7 @@ export default [{
 	}],
 }, {
 	name: '用户分析',
-	path: '/ua',
+	path: `${baseUrl}/ua`,
 	sub: [{
 		name: '用户分群',
 		path: `${baseUrl}/ua/usergroup`,
@@ -28,6 +28,22 @@ export default [{
 	}, {
 		name: '用户画像',
 		path: `${baseUrl}/ua/userportrait`,
+	}],
+}, {
+	name: '分享传播',
+	path: `${baseUrl}/fs`,
+	sub: [{
+		name: '分享概览',
+		path: `${baseUrl}/fs/shareview`,
+	}, {
+		name: '分享趋势',
+		path: `${baseUrl}/fs/sharetrend`,
+	}, {
+		name: '分享触发分析',
+		path: `${baseUrl}/fs/shareanalysis`,
+	}, {
+		name: '用户分享',
+		path: `${baseUrl}/fs/usershare`,
 	}],
 }, {
 	name: '获客分析',

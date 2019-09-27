@@ -47,8 +47,11 @@ export default function UserPortrait() {
 	};
 
 	return (
-		<Tab defaultActiveKey="aa">
-      		{renderTab()}
-      	</Tab>
+		<div className={styles.wrap}>
+			<p className={styles.title}>用户画像</p>
+			<Tab defaultActiveKey="aa">
+	      		{renderTab()}
+	      	</Tab>
+      	</div>
 	);
 }

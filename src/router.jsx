@@ -18,11 +18,10 @@ const RouteItem = (route) => {
 		redirect,
 		path,
 		component,
-		exact,
 	} = route;
 	if (redirect) {
 		return (
-			<Redirect key={id} exact={exact} from={path} to={redirect} />
+			<Redirect key={id} exact from={path} to={redirect} />
 		);
 	}
 	return (
@@ -39,7 +38,7 @@ const traversing = function fn(route) {
 	} = route;
 	if (children) {
 		return (
-			<Route key={id} component={(props)=>{
+			<Route key={id} path={path} component={(props)=>{
 				return(
 					<RouteComponent {...props}>
 	                    <Switch>

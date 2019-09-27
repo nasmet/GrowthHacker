@@ -92,7 +92,7 @@ export default function Template({
 	};
 
 	return (
-		<div>
+		<div className={styles.wrap}>
 			<Components.Introduction info={info} />
 			<Tab defaultActiveKey="0">
 	      		{renderTab()}

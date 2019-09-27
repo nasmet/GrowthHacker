@@ -1,0 +1,38 @@
+.wrap{
+	margin: 10px;
+	display: flex;
+}
+.leftContent{
+	flex: 1;
+	min-height: 500px;
+	margin-right: 10px;
+	border: 1px solid #e6e6e6;
+	display: flex;
+	flex-direction: column;
+}
+.rightContent{
+	min-width: 280px;
+	min-height: 500px;
+	border: 1px solid #e6e6e6;
+	display: flex;
+	flex-direction: column;
+}
+.btnWrap{
+	margin: 10px; 
+	display: flex;
+	justify-content: space-between;
+}
+.rateWrap,.groupWrap{
+	height: 100px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-around;
+	align-items: center;
+}
+.value{
+	font-weight: bold;
+}
+.name::after{
+	content: '*';
+	color: red;
+}

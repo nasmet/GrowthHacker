@@ -115,7 +115,7 @@ function FunnelDetails({
 	};
 
 	return (
-		<div>
+		<div className={styles.wrap}>
 			<Components.Introduction info={info} />
 			<Loading visible={loading} inline={false}>
 				<Step  totalRate={totalRate} steps={steps} /> 

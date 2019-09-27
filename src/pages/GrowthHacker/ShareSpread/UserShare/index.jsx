@@ -34,16 +34,6 @@ const {
 } = Tab;
 
 function UserShare() {
-	const info = [{
-		id: 0,
-		name: '看板名称',
-		value: '用户分享'
-	}, {
-		id: 1,
-		name: '看板描述',
-		value: '暂无'
-	}];
-
 	const [dateValue, setDateValue] = useState([moment(), moment()]);
 	const [tabValue, setTabValue] = useState('NaN');
 
@@ -110,8 +100,7 @@ function UserShare() {
 	};
 
 	return (
-		<div>
-      		<Components.Introduction info={info} />
+		<div className={styles.wrap}>
       		<div className={styles.item}>
       			<RangePicker 
       				onChange={onDateChange}

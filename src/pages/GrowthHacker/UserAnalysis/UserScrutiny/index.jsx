@@ -88,24 +88,34 @@ function UserScrutiny({
 
 	const jumpUserDetails = (e) => {
 		history.push({
-			pathname: '/growthhacker/projectdata/pa/userscrutinydetails',
+			pathname: '/growthhacker/projectdata/ua/userscrutinydetails',
 			state: {
 				id: e,
 			}
 		});
 	};
 
-	const renderCell = (value, index, record) => {
-		const val = record[0] || '';
+	const renderFirstCell = (value, index, record) => {
+		const val = record[1] || '';
 		return (
 			<span className={styles.user} onClick={jumpUserDetails.bind(this,val)}>{val}</span>
+		);
+	};
+
+	const renderFourCell = (value, index, record) => {
+		const val = record[3] || '';
+		return (
+			<span>{utils.formatUnix(val,'Y-M-D h:m:s')}</span>
 		);
 	}
 
 	const renderTitle = () => {
 		return titles.map((item, index) => {
-			if (index === 0) {
-				return <Column key={index} title={item} cell={renderCell} />
+			if (index === 1) {
+				return <Column key={index} title={item} cell={renderFirstCell} />
+			}
+			if (index === 3) {
+				return <Column key={index} title={item} cell={renderFourCell} />
 			}
 			return <Column key={index} title={item} dataIndex={index.toString()} />
 		});
@@ -167,6 +177,7 @@ function UserScrutiny({
 
 	return (
 		<div className={styles.wrap}> 
+			<p className={styles.title}>用户细查</p>
 			{/*
       		<IceContainer>
       			<Filter filterChange={filterChange} />

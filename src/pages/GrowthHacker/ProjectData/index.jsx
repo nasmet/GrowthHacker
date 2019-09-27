@@ -39,7 +39,7 @@ const word = (name) => {
 const traversing = function fn(nav) {
 	if (nav.sub && utils.isArray(nav.sub)) {
 		return (
-			<SubNav key={nav.path} label={word(nav.name)}>
+			<SubNav key={nav.path} selectable label={word(nav.name)}>
         		{nav.sub.map(fn)}
       		</SubNav>
 		);
@@ -60,6 +60,8 @@ function ProjectData({
 	const {
 		pathname,
 	} = location;
+	const arr = pathname.split('/');
+	const path = `/${arr[1]}/${arr[2]}/${arr[3]}`;
 
 	let projectInfo = sessionStorage.getItem('projectinfo');
 	if (projectInfo) {
@@ -96,7 +98,7 @@ function ProjectData({
         		type= 'primary'
         		direction="hoz"
         		triggerType="hover"
-        		selectedKeys={[pathname]}
+        		selectedKeys={[path]}
         		defaultSelectedKeys={['/growthhacker/projectdata/db']} 
       		>
         		{projectDataConfig.map(traversing)}

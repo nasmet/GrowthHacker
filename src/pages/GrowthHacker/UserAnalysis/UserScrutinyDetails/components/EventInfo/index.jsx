@@ -23,11 +23,11 @@ import {
 import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
 
-export default function DeviceInfo({
-	deviceInfo,
+export default function EventInfo({
+	eventInfo,
 }) {
-	const renderDeviceInfo = () => {
-		return deviceInfo.map((item, index) => {
+	const renderEventInfo = () => {
+		return eventInfo.map((item, index) => {
 			const {
 				name,
 				value,
@@ -46,7 +46,7 @@ export default function DeviceInfo({
 			<div className={styles.details}>事件详情</div>
 			<div className={styles.start}>访问开始</div>
 			<div className={styles.device}>
-				{renderDeviceInfo()}
+				{renderEventInfo()}
 			</div>
 		</div>
 	);
