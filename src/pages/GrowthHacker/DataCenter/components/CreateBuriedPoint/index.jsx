@@ -23,12 +23,12 @@ const {
 } = Select;
 
 export default function CreateBuriedPoint({
-	onOk
+	onOk,
+	entityType,
 }) {
 	const form = useRef(null);
 	const [show, setShow] = useState(false);
 	const [values, setValues] = useState({});
-	const [entityType, setEntityType] = useState('');
 
 	const validateAllFormField = () => {
 		form.current.validateAll((errors, values) => {
@@ -46,14 +46,10 @@ export default function CreateBuriedPoint({
 		setValues({});
 	};
 
-	const onChange = (e) => {
-		setEntityType(e.entity_type);
-	};
-
 	return (
 		<Loading visible={show} inline={false}>
       		<div className={styles.wrap}>
-	        	<IceFormBinderWrapper onChange={onChange} value={values} ref={form}>
+	        	<IceFormBinderWrapper value={values} ref={form}>
 	          		<div className={styles.formItem}>
 	            		<div className={styles.formLabel}>名称：</div>
 	            		<div className={styles.content}>
@@ -84,24 +80,9 @@ export default function CreateBuriedPoint({
 		            	</div>
 		          	</div>
 		
-		          	<div className={styles.formItem}>
-		            	<div className={styles.formLabel}>类别：</div>
-		            	<div className={styles.content}>
-			            	<IceFormBinder name="entity_type" required message="必填">
-								<Select className={styles.input} >
-								    <Option value="event">事件</Option>
-								    <Option value="variable">变量</Option>
-								</Select>
-			            	</IceFormBinder>
-			            	<div className={styles.formError}>
-			              		<IceFormError name="entity_type" />
-			            	</div>
-		            	</div>
-		          	</div>
-
 					{entityType=='event'?
 		          	<div className={styles.formItem}>
-		           		<div className={styles.formLabel}>事件类型：</div>
+		           		<div className={styles.formLabel}>类型：</div>
 		           		<div className={styles.content}>
 			            	<IceFormBinder name="value_type" required message="必填">
 								<Select className={styles.input} >
@@ -116,7 +97,7 @@ export default function CreateBuriedPoint({
 			
 					{entityType=='variable'?
 		         	<div className={styles.formItem}>
-		           		<div className={styles.formLabel}>事件变量类型：</div>
+		           		<div className={styles.formLabel}>类型：</div>
 		           		<div className={styles.content}>
 			            	<IceFormBinder name="variable_type" required message="必填">
 								<Select className={styles.input} >

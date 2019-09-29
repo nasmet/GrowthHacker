@@ -58,19 +58,9 @@ export default function Template({
 					total,
 					events,
 				} = res;
+				console.log(res);
 				setTotal(total);
-				setTableData(events.map((item) => {
-					const {
-						title,
-						event,
-						created_at,
-					} = item;
-					return {
-						title,
-						event,
-						created_at,
-					};
-				}));
+				setTableData(events);
 			}).catch((e) => {
 				Message.success(e.toString());
 			}).finally(() => {
@@ -109,7 +99,7 @@ export default function Template({
 				hasBorder={false}
 				onRowClick={onRowClick}
 			>
-				<Column title='事件名称' dataIndex='title' />
+				<Column title='事件名称' dataIndex='name' />
 				<Column title='事件标识符' dataIndex='event' />
 				<Column title='事件时间' cell={renderTimeColumn} />
 			</Table>

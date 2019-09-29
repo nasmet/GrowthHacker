@@ -80,19 +80,9 @@ function ProjectData({
 
 	sessionStorage.setItem('projectId', id);
 
-	const info = [{
-		id: 0,
-		name: '项目名称',
-		value: name
-	}, {
-		id: 1,
-		name: '项目介绍',
-		value: desc
-	}, ];
-
 	return (
 		<div>
-			<Components.Introduction info={info} />
+			<h1 className={styles.title}>{name}</h1>
 			<Nav
         		className="ice-menu-custom"
         		type= 'primary'

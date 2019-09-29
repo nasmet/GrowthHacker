@@ -46,9 +46,6 @@ export default [{
 		path: `${baseUrl}/fs/usershare`,
 	}],
 }, {
-	name: '获客分析',
-	path: `${baseUrl}/ca`,
-}, {
 	name: '数据中心',
 	path: `${baseUrl}/dc`,
 }];

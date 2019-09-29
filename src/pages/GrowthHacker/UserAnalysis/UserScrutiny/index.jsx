@@ -25,11 +25,6 @@ import {
 import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
 import Filter from './components/Filter';
-import {
-	defaultTitles,
-	selectTitles,
-	selectTitlesMap,
-} from './userScrutinyConfig';
 
 const {
 	Column,
@@ -44,43 +39,50 @@ function UserScrutiny({
 	const [curPage, setCurPage] = useState(1);
 	const [total, setTotal] = useState(0);
 	const [loading, setLoading] = useState(false);
+	const [search, setSearch] = useState('');
 	let cancelTask = false;
 	const projectId = sessionStorage.getItem('projectId');
 
-	function getUserScrutiny() {
-		setLoading(true);
-		api.getUserScrutiny({
-			id: projectId,
-		}).then((res) => {
-			if (cancelTask) {
-				return;
-			}
-			const {
-				meta,
-				data,
-			} = res;
-			if (data.length === 0) {
-				return;
-			}
-			setTitles(meta);
-			setTableData(data);
-		}).catch((e) => {
-			Message.success(e.toString());
-		}).finally(() => {
-			if (cancelTask) {
-				return;
-			}
-			setLoading(false);
-		});
-	}
-
 	useEffect(() => {
+		function getUserScrutiny() {
+			setLoading(true);
+			api.getUserScrutiny({
+				id: projectId,
+				trend: {
+					limit: config.LIMIT,
+					offset: (curPage - 1) * config.LIMIT,
+					search,
+				}
+			}).then((res) => {
+				if (cancelTask) {
+					return;
+				}
+				const {
+					meta,
+					data,
+				} = res;
+				if (data.length === 0) {
+					return;
+				}
+				console.log(res);
+				setTitles(meta);
+				setTableData(data);
+			}).catch((e) => {
+				Message.success(e.toString());
+			}).finally(() => {
+				if (cancelTask) {
+					return;
+				}
+				setLoading(false);
+			});
+		}
+
 		getUserScrutiny();
 
 		return () => {
 			cancelTask = true;
 		};
-	}, []);
+	}, [curPage, search]);
 
 	const filterChange = (e) => {
 		console.log(e);
@@ -175,36 +177,48 @@ function UserScrutiny({
 		setCurPage(e);
 	};
 
+	const onInputChange = (e) => {
+		setCurPage(1);
+		setSearch(e);
+	};
+
 	return (
 		<div className={styles.wrap}> 
 			<p className={styles.title}>用户细查</p>
+			<p className={styles.input}>
+				<Input 
+					hasClear 
+					hint='search' 
+					placeholder="请输入openID" 
+					onChange={utils.debounce(onInputChange, 500)}
+				/>
+			</p>
 			{/*
       		<IceContainer>
       			<Filter filterChange={filterChange} />
       		</IceContainer>
       		*/}
-			<Table 
-				loading={loading} 
-				dataSource={tableData} 
-				hasBorder={false}
-			>
-			    {renderTitle()} 
-			    {/*
-			    <Column 
-			    	title={renderLastTitle()} 
-			    	lock='right'
-			    	width={150} 
-			    /> 
-				*/} 		
-			</Table>
-			{/*
-		 	<Pagination
-            	className={styles.pagination}
-           		current={curPage}
-            	total={total}
-            	onChange={pageChange}
-		    />
-			*/}
+      		<Loading visible={loading} inline={false}>
+				<Table 
+					dataSource={tableData} 
+					hasBorder={false}
+				>
+				    {renderTitle()} 
+				    {/*
+				    <Column 
+				    	title={renderLastTitle()} 
+				    	lock='right'
+				    	width={150} 
+				    /> 
+					*/} 		
+				</Table>
+			 	<Pagination
+	            	className={styles.pagination}
+	           		current={curPage}
+	            	total={total}
+	            	onChange={pageChange}
+			    />
+		    </Loading>
     	</div>
 	);
 }

@@ -11,6 +11,9 @@ import {
 	Pagination,
 	Balloon,
 	DatePicker,
+	Button,
+	Dialog,
+	Input,
 } from '@alifd/next';
 import {
 	withRouter,
@@ -33,9 +36,7 @@ const {
 	Item,
 } = Tab;
 
-function EventAnalysis({
-	projectId,
-}) {
+function EventAnalysis() {
 	const [curPage, setCurPage] = useState(1);
 	const [loading, setLoading] = useState(false);
 	const [data, setData] = useState([]);
@@ -45,7 +46,12 @@ function EventAnalysis({
 	const [showType, setShowType] = useState('0');
 	const [chartData, setChartData] = useState([]);
 	const [chartStyle, setChartStyle] = useState({});
+	const [showDialog, setShowDialog] = useState(false);
+	const [value, setValue] = useState('');
+	const [dialogLoading, setDialogLoading] = useState(false);
+	const [values, setValues] = useState({});
 	let cancelTask = false; // 防止内存泄漏
+	const projectId = sessionStorage.getItem('projectId');
 
 	useEffect(() => {
 		return () => {
@@ -160,14 +166,52 @@ function EventAnalysis({
 	};
 
 	const filterChange = (e) => {
-		console.log(e);
+		setValues(e);
+	};
+
+	const onClose = () => {
+		setShowDialog(false);
+	};
+
+	const onOK = () => {
+		setDialogLoading(true);
+		api.createBoard({
+			id: projectId,
+			trend: { ...values,
+				name: value,
+				type: 'dashboard'
+			}
+		}).then((res) => {
+			if (cancelTask) {
+				return;
+			}
+			Message.success('成功添加到看板');
+			setShowDialog(false);
+		}).catch((e) => {
+			Message.success(e.toString());
+		}).finally(() => {
+			setDialogLoading(false);
+		});
+	};
+
+	const onInputChange = (e) => {
+		setValue(e);
+	};
+
+	const onSave = () => {
+		setShowDialog(true);
 	};
 
 	return (
-		<div>
+		<div className={styles.wrap}>
+			<p className={styles.titleWrap}>
+				<span className={styles.title}>新建事件分析</span>
+				<Button type='primary' onClick={onSave}>保存</Button>
+			</p>
 			<IceContainer>
 				<Filter filterChange={filterChange} />
 			</IceContainer>
+			{/*
 			<IceContainer>
 		      	<div className={styles.item}>
 	      			<RangePicker 
@@ -195,7 +239,19 @@ function EventAnalysis({
 	            	total={count}
 	            	onChange={pageChange}
 			    />
-	    	</IceContainer>
+	    	</IceContainer>*/}
+	    	<Dialog autoFocus visible={showDialog} onClose={onClose} footer={false}>
+      			<Loading visible={dialogLoading} inline={false}>
+					<div style={{margin:'20px'}}>
+						<p className={styles.name}>请输入看板名称</p>
+						<Input onChange={onInputChange} style={{marginBottom:'20px'}} />
+						<div>
+							<Button type='primary' onClick={onOK} style={{marginRight:'20px'}}>确定</Button>
+							<Button onClick={onClose}>取消</Button>
+						</div>
+					</div>
+				</Loading>	
+			</Dialog>	
     	</div>
 	);
 }

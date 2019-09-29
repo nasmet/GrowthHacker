@@ -10,9 +10,9 @@ import {
 	Message,
 } from '@alifd/next';
 import {
-	FormBinderWrapper as IceFormBinderWrapper,
-	FormBinder as IceFormBinder,
-} from '@icedesign/form-binder';
+	Form,
+	Field,
+} from '@ice/form';
 import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
 
@@ -28,27 +28,38 @@ export default function Filter({
 	const [loading, setLoading] = useState(false);
 	const [dimensionData, setDimensionData] = useState([]);
 	const [metricData, setMetricData] = useState([]);
+	const [targetUser, setTargetUser] = useState([]);
 	let cancelTask = false; // 防止内存泄漏
+	const projectId = sessionStorage.getItem('projectId');
 
-	function getDataCenter() {
+	async function fetchData() {
 		setLoading(true);
-		api.getDataCenter().then((res) => {
-			if (cancelTask) {
-				return;
-			}
-			dividingData(res.event_entities);
-		}).catch((e) => {
+		try {
+			await api.getDataCenter().then((res) => {
+				if (cancelTask) {
+					return;
+				}
+				dividingData(res.event_entities);
+			});
+			await api.getUserGroups({
+				project_id: projectId,
+			}).then((res) => {
+				if (cancelTask) {
+					return;
+				}
+				dividingTargetData(res.segmentations);
+			})
+		} catch (e) {
 			Message.success(e.toString());
-		}).finally(() => {
-			if (cancelTask) {
-				return;
-			}
-			setLoading(false);
-		});
+		}
+		if (cancelTask) {
+			return;
+		}
+		setLoading(false);
 	}
 
 	useEffect(() => {
-		getDataCenter();
+		fetchData();
 
 		return () => {
 			cancelTask = true;
@@ -73,47 +84,52 @@ export default function Filter({
 		setDimensionData(dimensions);
 	}
 
+	function dividingTargetData(data) {
+		const targets = data.map((item) => {
+			return {
+				label: item.name,
+				value: item.id,
+			};
+		});
+		setTargetUser(targets);
+	}
+
 	const formChange = (values) => {
 		filterChange(values);
 	};
 
 	return (
-		<Loading visible={loading} inline={false}>
-			<IceFormBinderWrapper
-	        	value={values}
-	        	onChange={formChange}
-	      	>	
-	      		<div role="grid">
-			        <Row wrap justify='start' gutter="20">
-			          	<Col>
-				            <div className={styles.contain}>
-				              	<span className={styles.name}>选择事件：</span>
-				              	<IceFormBinder triggerType="onBlur" name="event">
-									<Select  
-										className={styles.select}
-										mode="multiple"
-										dataSource={metricData}  
-										showSearch
-									/>
-				              	</IceFormBinder>
-				            </div>
-			          	</Col>
-			          	<Col>
-				            <div className={styles.contain}>
-				              	<span className={styles.name}>按以下维度拆分：</span>
-				              	<IceFormBinder triggerType="onBlur" name="dimension">
-									<Select 
-										className={styles.select}
-										mode="multiple"
-										dataSource={dimensionData} 
-										showSearch
-									/>
-				              	</IceFormBinder>
-				            </div>
-			          	</Col>
-			        </Row>
-		        </div>
-	     	</IceFormBinderWrapper>
+		<Loading visible={loading} inline={false} >
+			{targetUser.length!==0?<Form 
+				className={styles.wrap} 
+				onChange={formChange} 
+				initialValues={values} 
+				layout={{labelAlign: 'top',labelTextAlign: 'left'}}
+			>
+				<Field label='选择事件' name='metrics'>
+					<Select  
+						style={{width:'400px'}}
+						mode="multiple"
+						dataSource={metricData}  
+						showSearch
+					/>
+				</Field>
+				<Field label='按以下维度拆分' name='dimensions'>
+					<Select  
+						style={{width:'400px'}}
+						mode="multiple"
+						dataSource={dimensionData}  
+						showSearch
+					/>
+				</Field>
+				<Field label='目标用户' name='segmentation_id'>
+					<Select  
+						style={{width:'400px'}}
+						dataSource={targetUser} 
+						showSearch
+					/>
+				</Field>
+			</Form>:null}
      	</Loading>
 	);
 }

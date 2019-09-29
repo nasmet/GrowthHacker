@@ -27,6 +27,10 @@ import {
 	FormBinderWrapper as IceFormBinderWrapper,
 	FormBinder as IceFormBinder,
 } from '@icedesign/form-binder';
+import {
+	Form,
+	Field,
+} from '@ice/form';
 import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
 import {
@@ -35,174 +39,159 @@ import {
 
 export default function Filter({
 	filterChange,
+	groupChange,
 }) {
-	const [loading, setLoading] = useState(false);
 	const [values, setValues] = useState({});
+	const [loading, setLoading] = useState(false);
+	const [dimensionData, setDimensionData] = useState([]);
+	const [metricData, setMetricData] = useState([]);
+	const [targetUser, setTargetUser] = useState([]);
 	const [steps, setSteps] = useState([]);
 	let cancelTask = false; // 防止内存泄漏
-	
+	const projectId = sessionStorage.getItem('projectId');
+
+	async function fetchData() {
+		setLoading(true);
+		try {
+			await api.getDataCenter().then((res) => {
+				if (cancelTask) {
+					return;
+				}
+				dividingData(res.event_entities);
+			});
+			await api.getUserGroups({
+				project_id: projectId,
+			}).then((res) => {
+				if (cancelTask) {
+					return;
+				}
+				dividingTargetData(res.segmentations);
+			})
+		} catch (e) {
+			Message.success(e.toString());
+		}
+		if (cancelTask) {
+			return;
+		}
+		setLoading(false);
+	}
+
 	useEffect(() => {
+		fetchData();
+
 		return () => {
 			cancelTask = true;
 		};
 	}, []);
 
-	const formChange = (e) => {
-		filterChange(e);
+	useEffect(() => {
+		filterChange(steps);
+	}, [steps]);
+
+	useEffect(() => {
+		filterChange(steps);
+	}, [steps]);
+
+	function dividingData(data) {
+		const dimensions = [];
+		const metrics = [];
+		data.forEach((item) => {
+			const obj = {
+				label: item.name,
+				value: item.entity_key,
+			};
+			if (item.type === 'event') {
+				metrics.push(obj);
+			} else {
+				dimensions.push(obj);
+			}
+		});
+		setMetricData(metrics);
+		setDimensionData(dimensions);
+	}
+
+	function dividingTargetData(data) {
+		const targets = data.map((item) => {
+			return {
+				label: item.name,
+				value: item.id,
+			};
+		});
+		setTargetUser(targets);
+	}
+
+	function createStep() {
+		return {
+			values: {
+				step: metricData[0] && metricData[0].value,
+			},
+			onChange: function(e) {
+				console.log(e);
+				this.values = e;
+			},
+		}
 	};
 
 	const onAddStep = () => {
 		setSteps((pre) => {
-			return [...pre, {
-				filters: [],
-			}];
+			return [...pre, createStep()];
 		});
 	};
 
 	const onResetStep = () => {
 		setSteps([]);
 		setValues({});
+		groupChange(0);
 	};
-
-	const onAddFilter = (stepIndex) => {
-		setSteps((pre) => {
-			const filters = pre[stepIndex].filters;
-			filters.push({
-				id: Date.now(),
-				showLast: true,
-				lastData: [],
-			});
-			return [...pre];
-		});
-	};
-
-	const deleteFilter = (stepIndex, filterIndex) => {
-		setSteps((pre) => {
-			const filters = pre[stepIndex].filters;
-			filters.splice(filterIndex, 1);
-			return [...pre];
-		});
-
-		console.log(stepIndex, filterIndex);
-		setValues((pre) => {
-			[1, 2, 3].forEach((item) => {
-				if (pre[`step_${stepIndex}_filter_${filterIndex}_${item}`]) {
-					delete pre[`step_${stepIndex}_filter_${filterIndex}_${item}`];
-				}
-			});
-			return { ...pre
-			};
-		});
-	};
-
-	const onfirstSelectChange = (stepIndex, filterIndex, value) => {
-		setSteps((pre) => {
-			pre[stepIndex].filters[filterIndex].lastData = [{
-				label: 'option',
-				value: 'option',
-			}];
-			return [...pre];
-		});
-	};
-
-	const onLastSelectChange = (stepIndex, filterIndex, value) => {
-		setSteps((pre) => {
-			pre[stepIndex].filters[filterIndex].showLast = rules[value - 1].showLast;
-			return [...pre];
-		});
-	};
-
-	const renderFilterCondition = (filters, stepIndex) => {
-		return filters.map((item, index) => {
-			const {
-				id,
-				showLast,
-				lastData,
-			} = item;
-			return (
-				<div key={id} className={styles.filterCondition}>
-				<IceFormBinder triggerType="onBlur" name={`step_${stepIndex}_filter_${id}_1`}>
-					<Select  
-						className={styles.select}
-						dataSource={[{
-							label: 'option',
-							value: 'option',
-						}]} 
-						showSearch
-						onChange={onfirstSelectChange.bind(this,stepIndex,index)}
-					/>
-				</IceFormBinder>
-				<IceFormBinder triggerType="onBlur" name={`step_${stepIndex}_filter_${id}_2`}>
-					<Select  
-						className={styles.select}
-						dataSource={rules}
-						showSearch
-						onChange={onLastSelectChange.bind(this,stepIndex,index)}
-					/>
-				</IceFormBinder>
-				{
-					showLast?
-						<IceFormBinder triggerType="onBlur"name={`step_${stepIndex}_filter_${id}_3`}>
-							<Select  
-								className={styles.select}
-								dataSource={lastData}  
-								showSearch
-							/>
-						</IceFormBinder>:null
-				}
-	
-				<Icon type="close" size='small' onClick={deleteFilter.bind(this,stepIndex,index)} />
-			</div>
-			);
-		});
-	}
 
 	const renderStep = () => {
 		return steps.map((item, index) => {
+			const {
+				values,
+				onChange,
+			} = item;
 			return (
-				<div key={index} className={styles.container}>
-					<div className={styles.item}>
-						<span className={styles.name}>Step{`${index+1}`}</span>
-						<IceFormBinder triggerType="onBlur" name={`step_${index}`}>
-							<Select  
-								className={styles.select}
-								dataSource={[{
-									label: 'option',
-									value: 'option',
-								}]}  
-								showSearch
-							/>
-		              	</IceFormBinder>
-		       			<div className={styles.filter} onClick={onAddFilter.bind(this, index)}>
-			      			<Icon type='add' size='small' className={styles.icon} />
-			      			<span>触发限制条件</span>
-						</div>
-					</div>
-					<div>
-						{renderFilterCondition(item.filters,index)}
-					</div>
-				</div>
+				<Form
+					key={index}
+					onChange={onChange.bind(item)} 
+					initialValues={values} 
+					layout={{labelAlign: 'left',labelTextAlign: 'left',labelCol: 1, wrapperCol: 2}}
+				>	
+					<Field label={`步骤${index+1}`} name='step' placeholder="请选择事件">
+						<Select  
+							dataSource={metricData}  
+							showSearch
+						/>
+					</Field>
+				</Form>
 			);
 		});
+	};
+
+	const onChange = (e) => {
+		groupChange(e.segmentation_id);
 	};
 
 	return (
 		<Loading visible={loading} inline={false}>
-			<IceFormBinderWrapper
-	        	value={values}
-	        	onChange={formChange}
-	      	>	
-				<IceContainer>
-					<div className={`${styles.container} ${styles.title}`}>
-						漏斗步骤
-					</div>
-					{renderStep()}
-					<div className={styles.btnWrap}>
-						<Button className={styles.btn} type='primary' onClick={onAddStep}>增加步骤</Button>
-						<Button type='primary' onClick={onResetStep}>重置步骤</Button>
-					</div>
-				</IceContainer>
-			</IceFormBinderWrapper>
+			<IceContainer>	
+				{renderStep()}
+				{steps.length!==0?<Form
+					onChange={onChange}
+					layout={{labelAlign: 'left',labelTextAlign: 'left',labelCol: 1, wrapperCol: 2}}
+				>	
+					<Field label='目标用户' name='segmentation_id'>
+						<Select  
+							dataSource={targetUser}  
+							showSearch
+						/>
+					</Field>
+				</Form>:null}
+				<div className={styles.btnWrap}>
+					<Button className={styles.btn} type='primary' onClick={onAddStep}>增加步骤</Button>
+					<Button type='primary' onClick={onResetStep}>重置步骤</Button>
+				</div>
+			</IceContainer>
 		</Loading>
 	);
 }

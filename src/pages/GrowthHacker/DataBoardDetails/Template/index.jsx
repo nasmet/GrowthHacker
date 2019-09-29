@@ -33,15 +33,6 @@ export default function Template({
 		name,
 		desc
 	} = boardInfo;
-	const info = [{
-		id: 0,
-		name: '看板名称',
-		value: name
-	}, {
-		id: 1,
-		name: '看板描述',
-		value: desc
-	}];
 
 	const renderTable = () => {
 		return (
@@ -93,7 +84,7 @@ export default function Template({
 
 	return (
 		<div className={styles.wrap}>
-			<Components.Introduction info={info} />
+			<p className={styles.title}>{name}</p>
 			<Tab defaultActiveKey="0">
 	      		{renderTab()}
 	      	</Tab>

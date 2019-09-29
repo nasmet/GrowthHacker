@@ -71,6 +71,7 @@ function CreateGroup() {
 	}
 
 	const onOK = () => {
+		console.log(steps);
 		if (!value) {
 			return;
 		}

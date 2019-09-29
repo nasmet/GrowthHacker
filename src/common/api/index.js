@@ -118,8 +118,9 @@ export function getPortraitTerminal(data) {
 export function getUserScrutiny(data) {
 	const {
 		id,
+		trend,
 	} = data;
-	return get(`/projects/${id}/insights/segmentations/latest/users`);
+	return get(`/projects/${id}/insights/segmentations/latest/users`, trend);
 }
 
 export function getUserScrutinyDetails(data) {
@@ -178,4 +179,12 @@ export function getUserGroupDetails(data) {
 		trend,
 	} = data;
 	return get(`/projects/${projectId}/segmentations/${id}/users`, trend);
+}
+
+export function deleteBoard(data) {
+	const {
+		projectId,
+		id,
+	} = data;
+	return del(`/projects/${projectId}/charts/${id}`);
 }

@@ -31,15 +31,6 @@ function FunnelDetails({
 		name,
 		desc,
 	} = boardInfo;
-	const info = [{
-		id: 0,
-		name: '看板名称',
-		value: name
-	}, {
-		id: 1,
-		name: '看板描述',
-		value: desc
-	}, ];
 
 	const [loading, setLoading] = useState(false);
 	const [tableData, setTableData] = useState([]);
@@ -116,7 +107,7 @@ function FunnelDetails({
 
 	return (
 		<div className={styles.wrap}>
-			<Components.Introduction info={info} />
+			<p className={styles.title}>{name}</p>
 			<Loading visible={loading} inline={false}>
 				<Step  totalRate={totalRate} steps={steps} /> 
 				<Table dataSource={tableData} hasBorder={false} >

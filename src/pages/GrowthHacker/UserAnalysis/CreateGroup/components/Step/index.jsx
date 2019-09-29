@@ -25,10 +25,6 @@ import {
 	withRouter,
 } from 'react-router-dom';
 import {
-	FormBinderWrapper as IceFormBinderWrapper,
-	FormBinder as IceFormBinder,
-} from '@icedesign/form-binder';
-import {
 	Form,
 	Field,
 } from '@ice/form';
@@ -140,7 +136,7 @@ export default function Filter({
 			alias,
 			values: {
 				flag: 'true,event',
-				id: metricData[0].value,
+				id: metricData[0] && metricData[0].value,
 				op: '=',
 				values: '1',
 				value: '',
@@ -223,12 +219,22 @@ export default function Filter({
 				<div className={styles.container}>
 					<div className={styles.item}>
 						<span className={styles.name}>{alias}</span>
-						<Field name='flag' dataSource={firstColumn} component={Select} />
-						<Field name='id' dataSource={metricData} component={Select} />
+						<Field name='flag'>
+							<Select style={{width:'120px'}} dataSource={firstColumn} />
+						</Field>
+						<Field name='id'>
+							<Select style={{width:'150px'}} dataSource={metricData} />
+						</Field>
 						<Field name='op' dataSource={rules} component={Select} />
-						<Field  name='values' htmlType="number" placeholder="请输入次数" component={Input} />
-						<Field visible={false} name='value' dataSource={[]} component={Select} />
-						<Field name='range' component={RangePicker} />
+						<Field name='values'>
+							<Input style={{width:'80px'}} htmlType="number" innerAfter={<span>次</span>} />
+						</Field>
+						<Field visible={false} name='value'>
+							<Select style={{width:'150px'}} dataSource={[]} />
+						</Field>
+						<Field name='range'>
+							<RangePicker style={{width:'120px'}} />
+						</Field>
 					</div>
 				</div>
 			</Form>

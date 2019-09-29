@@ -1,3 +1,15 @@
+.wrap{
+	margin: 10px;
+}
+.titleWrap{
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+.title{
+	font-weight: bold;
+	font-size: 20px;
+}
 .pagination {
   	margin-top: 10px;
   	text-align: right;
@@ -16,4 +28,8 @@
 			background: #44BBA3;
 		}
 	}
+}
+.name::after{
+	content: '*';
+	color: red;
 }

@@ -38,17 +38,17 @@ export default function Introduction({
 				value,
 			} = item;
 			return (
-				<div key={id} className={styles.item}>
+				<p key={id} className={styles.item}>
 					<span className={styles.name}>{name}：</span>
 					<span className={styles.value}>{value}</span>
-				</div>
+				</p>
 			);
 		});
 	};
 
 	return (
-		<IceContainer className={styles.wrap}>
+		<div>
 			{renderInfo()}
-		</IceContainer>
+		</div>
 	);
 }

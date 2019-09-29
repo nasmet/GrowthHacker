@@ -19,7 +19,10 @@ const headerMenuConfig = [{
 	path: '',
 }];
 
-const asideMenuConfig = [{
+/**
+ * 热点系统和微博运营
+ */
+/* {
 	name: '热点系统',
 	path: '/system',
 	icon: 'publish',
@@ -47,7 +50,9 @@ const asideMenuConfig = [{
 		name: '微博互动',
 		path: '/operation/Interactive',
 	}],
-}, {
+}, */
+
+const asideMenuConfig = [{
 	name: '增长黑客',
 	path: '/growthhacker',
 	icon: 'publish',

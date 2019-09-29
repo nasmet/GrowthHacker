@@ -15,15 +15,13 @@ import {
 } from 'react-router-dom';
 import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
-import CreateBoard from './components/CreateBoard';
 
 function DataBoard({
 	history,
 }) {
 	const projectId = sessionStorage.getItem('projectId');
-	
+
 	const [loading, setLoading] = useState(false);
-	const [showDialog, setShowDialog] = useState(false);
 	const [data, setData] = useState([]);
 	let cancelTask = false; // 防止内存泄漏
 
@@ -72,6 +70,8 @@ function DataBoard({
 				break;
 			case 'analysis':
 				pathname = '/growthhacker/projectdata/leveldetails';
+			case 'dashboard':
+				pathname = '/growthhacker/projectdata/eventanalysisdetails';
 		}
 
 		history.push({
@@ -83,76 +83,50 @@ function DataBoard({
 		});
 	};
 
-	const renderInfo = (info) => {
-		return info.map((item, index) => {
-			const {
-				name,
-				value,
-			} = item;
-			return (
-				<div key={index} className={styles.itemChild}>
-					<p className={styles.name}>{name}：</p>
-					<p className={styles.value}>{value}</p>
-				</div>
-			);
+	const onDeleteBoard = (id, index, e) => {
+		e.stopPropagation();
+		Dialog.confirm({
+			content: '确定删除吗？',
+			onOk: () => {
+				setLoading(true);
+				api.deleteBoard({
+					projectId,
+					id,
+				}).then((res) => {
+					if (cancelTask) {
+						return;
+					}
+					setData((pre) => {
+						pre.splice(index, 1);
+						return [...pre];
+					});
+					Message.success('删除成功');
+				}).catch((e) => {
+					Message.success(e.toString());
+				}).finally(() => {
+					if (cancelTask) {
+						return;
+					}
+					setLoading(false);
+				});
+			}
 		});
-	};
+	}
 
 	const renderList = () => {
-		return data.map((item) => {
+		return data.map((item, index) => {
 			const {
 				id,
 				name,
 				desc,
 			} = item;
 
-			const info = [{
-				name: '看板名称',
-				value: name,
-			}, {
-				name: '看板描述',
-				value: desc,
-			}];
-
 			return (
 				<Button className={styles.item} key={id} onClick={jumpDataBoardDetails.bind(this,item)}>
-					{renderInfo(info)}		
+					<Icon className={styles.close} type='close' onClick={onDeleteBoard.bind(this,id,index)} />
+					<span className={styles.name}>{name}</span>	
 				</Button>
 			);
-		});
-	};
-
-	const onClose = () => {
-		setShowDialog(false);
-	};
-
-	const onCreateBoard = () => {
-		setShowDialog(true);
-	};
-
-	const onOk = (values, cb) => {
-		api.createBoard({
-			id: projectId,
-			trend: values
-		}).then((res) => {
-			if (cancelTask) {
-				return;
-			}
-			const {
-				id,
-			} = res;
-			setData((pre) => {
-				pre.splice(0, 0, {
-					id,
-					...values,
-				});
-				return [...pre];
-			});
-			setShowDialog(false);
-			Message.success('创建成功');
-		}).catch((e) => {
-			cb();
-			Message.success(e.toString());
 		});
 	};
 
@@ -160,17 +134,7 @@ function DataBoard({
 		<Loading visible={loading} inline={false}>
 			<div className={styles.wrap}>
 	      		{renderList()}
-	      		<Button className={`${styles.item} ${styles.create}`} onClick={onCreateBoard}>
-	      			<div className={styles.itemChild}>
-		      			<Icon type='add' className={styles.icon} />
-		      			<span >新建看板</span>
-		      		</div>
-	      		</Button>
 	    	</div>
-
-	    	<Dialog autoFocus visible={showDialog} onClose={onClose} footer={false}>	
-				<CreateBoard onOk={onOk} />
-			</Dialog>	
     	</Loading>
 	);
 }

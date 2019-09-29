@@ -18,6 +18,7 @@ import RetentionDetails from './pages/GrowthHacker/DataBoardDetails/RetentionDet
 import FunnelDetails from './pages/GrowthHacker/DataBoardDetails/FunnelDetails';
 import DistributeDetails from './pages/GrowthHacker/DataBoardDetails/DistributeDetails';
 import LevelDetails from './pages/GrowthHacker/DataBoardDetails/LevelDetails';
+import EventAnalysisDetails from './pages/GrowthHacker/DataBoardDetails/EventAnalysisDetails';
 import DataBoard from './pages/GrowthHacker/DataBoard';
 import EventAnalysis from './pages/GrowthHacker/ProductAnalysis/EventAnalysis';
 import RetentionAnalysis from './pages/GrowthHacker/ProductAnalysis/RetentionAnalysis';
@@ -128,6 +129,11 @@ const routerConfig = [
 				id: '1008003',
 				path: '/growthhacker/projectdata/leveldetails',
 				component: LevelDetails,
+				exact: true,
+			}, {
+				id: '1008003',
+				path: '/growthhacker/projectdata/eventanalysisdetails',
+				component: EventAnalysisDetails,
 				exact: true,
 			}, {
 				id: '1008005',
