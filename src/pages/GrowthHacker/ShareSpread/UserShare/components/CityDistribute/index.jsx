@@ -27,10 +27,44 @@ const {
 	Column,
 } = Table;
 
-export default function CityDistribute() {
+export default function CityDistribute({
+	type,
+}) {
+	const projectId = sessionStorage.getItem('projectId');
+	let cancelTask = false;
+	const [loading, setLoading] = useState(false);
+	const [tableData, setTableData] = useState([]);
+
+	function getUserShare() {
+		setLoading(true);
+		api.getUserShare({
+			projectId,
+			type,
+		}).then((res) => {
+			if (cancelTask) {
+				return;
+			}
+			console.log(res);
+		}).catch((e) => {
+			Message.success(e.toString());
+		}).finally(() => {
+			if (cancelTask) {
+				return;
+			}
+			setLoading(false);
+		});
+	}
+
+	useEffect(() => {
+
+		return () => {
+			cancelTask = true;
+		}
+	}, []);
+
 	return (
 		<div className={styles.content}>
-			<Table data={[]}>
+			<Table loading={false} dataSource={tableData} hasBorder={false}>
 				<Column title='城市' dataIndex='city' />
 				<Column title='分享人数' dataIndex='shareNum' />
 				<Column title='分享次数' dataIndex='shareCount' />

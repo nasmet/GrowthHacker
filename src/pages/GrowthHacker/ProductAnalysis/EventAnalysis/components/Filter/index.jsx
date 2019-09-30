@@ -2,6 +2,7 @@ import React, {
 	Component,
 	useEffect,
 	useState,
+	useRef,
 } from 'react';
 import {
 	Grid,
@@ -16,19 +17,16 @@ import {
 import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
 
-const {
-	Row,
-	Col,
-} = Grid;
-
 export default function Filter({
 	filterChange,
 }) {
-	const [values, setValues] = useState({});
+	const [values, setValues] = useState({
+		dimensions: [],
+		metrics: [],
+		segmentation_id: '',
+	});
 	const [loading, setLoading] = useState(false);
-	const [dimensionData, setDimensionData] = useState([]);
-	const [metricData, setMetricData] = useState([]);
-	const [targetUser, setTargetUser] = useState([]);
+	const formRef = useRef(null);
 	let cancelTask = false; // 防止内存泄漏
 	const projectId = sessionStorage.getItem('projectId');
 
@@ -42,7 +40,7 @@ export default function Filter({
 				dividingData(res.event_entities);
 			});
 			await api.getUserGroups({
-				project_id: projectId,
+				projectId,
 			}).then((res) => {
 				if (cancelTask) {
 					return;
@@ -80,8 +78,12 @@ export default function Filter({
 				dimensions.push(obj);
 			}
 		});
-		setMetricData(metrics);
-		setDimensionData(dimensions);
+		formRef.current.state.store.setFieldProps('metrics', {
+			dataSource: metrics,
+		});
+		formRef.current.state.store.setFieldProps('dimensions', {
+			dataSource: dimensions,
+		});
 	}
 
 	function dividingTargetData(data) {
@@ -91,7 +93,9 @@ export default function Filter({
 				value: item.id,
 			};
 		});
-		setTargetUser(targets);
+		formRef.current.state.store.setFieldProps('segmentation_id', {
+			dataSource: targets,
+		});
 	}
 
 	const formChange = (values) => {
@@ -100,17 +104,18 @@ export default function Filter({
 
 	return (
 		<Loading visible={loading} inline={false} >
-			{targetUser.length!==0?<Form 
+			<Form 
 				className={styles.wrap} 
 				onChange={formChange} 
 				initialValues={values} 
 				layout={{labelAlign: 'top',labelTextAlign: 'left'}}
+				ref={formRef}
 			>
 				<Field label='选择事件' name='metrics'>
 					<Select  
 						style={{width:'400px'}}
 						mode="multiple"
-						dataSource={metricData}  
+						dataSource={[]}  
 						showSearch
 					/>
 				</Field>
@@ -118,18 +123,18 @@ export default function Filter({
 					<Select  
 						style={{width:'400px'}}
 						mode="multiple"
-						dataSource={dimensionData}  
+						dataSource={[]}  
 						showSearch
 					/>
 				</Field>
 				<Field label='目标用户' name='segmentation_id'>
 					<Select  
 						style={{width:'400px'}}
-						dataSource={targetUser} 
+						dataSource={[]} 
 						showSearch
 					/>
 				</Field>
-			</Form>:null}
+			</Form>
      	</Loading>
 	);
 }

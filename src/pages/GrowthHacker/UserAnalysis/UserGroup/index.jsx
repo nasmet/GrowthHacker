@@ -38,12 +38,11 @@ function UserGroup({
 	function getUserGroups() {
 		setLoading(true);
 		api.getUserGroups({
-			project_id: projectId,
+			projectId,
 		}).then((res) => {
 			if (cancelTask) {
 				return;
 			}
-			console.log(res);
 			setTableData(res.segmentations);
 		}).catch((e) => {
 			Message.success(e.toString());
@@ -57,6 +56,10 @@ function UserGroup({
 
 	useEffect(() => {
 		getUserGroups();
+
+		return () => {
+			cancelTask = true;
+		};
 	}, []);
 
 	const onCreateGroup = () => {

@@ -70,8 +70,10 @@ function DataBoard({
 				break;
 			case 'analysis':
 				pathname = '/growthhacker/projectdata/leveldetails';
+				break;
 			case 'dashboard':
 				pathname = '/growthhacker/projectdata/eventanalysisdetails';
+				break;
 		}
 
 		history.push({
@@ -134,6 +136,7 @@ function DataBoard({
 		<Loading visible={loading} inline={false}>
 			<div className={styles.wrap}>
 	      		{renderList()}
+	      		{data.length===0?<p>暂无数据</p>:null}
 	    	</div>
     	</Loading>
 	);

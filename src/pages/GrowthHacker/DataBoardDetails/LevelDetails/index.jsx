@@ -122,7 +122,7 @@ function LevelDetails({
 			return <Column key={index} title={item} dataIndex={index.toString()} />
 		});
 	};
-
+	
 	return (
 		<Template 
 			tableData={data}

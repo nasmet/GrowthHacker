@@ -37,135 +37,26 @@ const {
 } = Tab;
 
 function EventAnalysis() {
-	const [curPage, setCurPage] = useState(1);
-	const [loading, setLoading] = useState(false);
-	const [data, setData] = useState([]);
-	const [count, setCount] = useState(0);
-	const [sort, setSort] = useState({});
-	const [titles, setTitles] = useState([]);
-	const [showType, setShowType] = useState('0');
-	const [chartData, setChartData] = useState([]);
-	const [chartStyle, setChartStyle] = useState({});
-	const [showDialog, setShowDialog] = useState(false);
-	const [value, setValue] = useState('');
-	const [dialogLoading, setDialogLoading] = useState(false);
-	const [values, setValues] = useState({});
-	let cancelTask = false; // 防止内存泄漏
 	const projectId = sessionStorage.getItem('projectId');
 
-	useEffect(() => {
-		return () => {
-			cancelTask = true;
-		};
-	}, [curPage]);
-
-	function assemblingChartData(arg, meta) {
-		const arr = [];
-		arg.forEach((item) => {
-			const value = item[0];
-			const {
-				name,
-				key,
-			} = meta[0];
-			item.forEach((v, index) => {
-				if (index !== 0 && meta[index]) {
-					arr.push({
-						[key]: `${name}${value}`,
-						event: meta[index].name,
-						count: v,
-					})
-				}
-			})
-		});
-		return arr;
-	}
-
-	const onSort = (dataIndex, order) => {
-		setSort({
-			[dataIndex]: order,
-		});
-		// resetPage();
-	};
-
-	function resetPage() {
-		if (curPage === 1) {
-			setCurPage(0);
-		}
-		setTimeout(() => {
-			setCurPage(1);
-		});
-	}
-
-	const pageChange = (e) => {
-		setCurPage(e);
-	};
-
-	const renderTitle = () => {
-		return titles.map((item, index) => {
-			const {
-				id,
-				name,
-				key,
-			} = item;
-			return <Column key={id} title={name} dataIndex={index.toString()} sortable={true} />
-		})
-	};
-
-	const renderTab = () => {
-		return eventAnalysisConfig.chartTypes.map((item) => {
-			const {
-				name,
-				key,
-			} = item;
-			return (
-				<Item 
-					key={key}
-          			title={name}
-        		/>
-			);
-		});
-	};
-
-	const tabChange = (e) => {
-		setShowType(e);
-	};
-
-	const renderTable = () => {
-		return (
-			<Table 
-				dataSource={data} 
-				hasBorder={false} 
-				onSort={onSort} 
-				sort={sort}
-			>
-			    {renderTitle()}       		
-			</Table>
-		);
-	};
-
-	const rendShowType = () => {
-		switch (showType) {
-			case '0':
-				return renderTable();
-			case '1':
-				return <Components.BasicPolyline data={chartData} forceFit {...chartStyle} />
-			case '2':
-				return <Components.BasicColumn data={chartData} forceFit {...chartStyle} />
-			case '3':
-				return <Components.BasicColumn data={chartData} forceFit transpose {...chartStyle} />
-			default:
-				return null;
-		};
-
-	};
-
-	const onDateChange = (e) => {
-		if (e.length === 2 && e[1]) {
-
-		}
-	};
+	const [loading, setLoading] = useState(false);
+	const [showDialog, setShowDialog] = useState(false);
+	const [name, setName] = useState('');
+	const [values, setValues] = useState({});
+	const [disabled, setDisabled] = useState(true);
+	const [submitDisabled, setSubmitDisabled] = useState(true);
 
 	const filterChange = (e) => {
+		const {
+			dimensions,
+			metrics,
+			segmentation_id,
+		} = e;
+		if (dimensions.length > 0 && metrics.length > 0) {
+			setDisabled(false);
+		} else {
+			setDisabled(true);
+		}
 		setValues(e);
 	};
 
@@ -174,11 +65,11 @@ function EventAnalysis() {
 	};
 
 	const onOK = () => {
-		setDialogLoading(true);
+		setLoading(true);
 		api.createBoard({
 			id: projectId,
 			trend: { ...values,
-				name: value,
+				name,
 				type: 'dashboard'
 			}
 		}).then((res) => {
@@ -190,12 +81,17 @@ function EventAnalysis() {
 		}).catch((e) => {
 			Message.success(e.toString());
 		}).finally(() => {
-			setDialogLoading(false);
+			setLoading(false);
 		});
 	};
 
 	const onInputChange = (e) => {
-		setValue(e);
+		if (e) {
+			setSubmitDisabled(false);
+		} else {
+			setSubmitDisabled(true);
+		}
+		setName(e);
 	};
 
 	const onSave = () => {
@@ -206,47 +102,18 @@ function EventAnalysis() {
 		<div className={styles.wrap}>
 			<p className={styles.titleWrap}>
 				<span className={styles.title}>新建事件分析</span>
-				<Button type='primary' onClick={onSave}>保存</Button>
+				<Button type='primary' disabled={disabled} onClick={onSave}>保存</Button>
 			</p>
 			<IceContainer>
 				<Filter filterChange={filterChange} />
 			</IceContainer>
-			{/*
-			<IceContainer>
-		      	<div className={styles.item}>
-	      			<RangePicker 
-	      				defaultValue={[moment(),moment()]}
-	      				onChange={onDateChange}
-	      			/>
-	      			<Tab 
-	      				className={styles.tabWrap}
-	      				defaultActiveKey="0" 
-	      				shape="capsule" 
-	      				size="small" 
-	      				onChange={tabChange}
-	      			>
-			      		{renderTab()}
-			      	</Tab>
-	      		</div>
-
-	      		<Loading visible={loading} inline={false}>
-	      			{rendShowType()}
-	      		</Loading>
-
-	      		<Pagination
-	            	className={styles.pagination}
-	           		current={curPage}
-	            	total={count}
-	            	onChange={pageChange}
-			    />
-	    	</IceContainer>*/}
 	    	<Dialog autoFocus visible={showDialog} onClose={onClose} footer={false}>
-      			<Loading visible={dialogLoading} inline={false}>
+      			<Loading visible={loading} inline={false}>
 					<div style={{margin:'20px'}}>
 						<p className={styles.name}>请输入看板名称</p>
 						<Input onChange={onInputChange} style={{marginBottom:'20px'}} />
 						<div>
-							<Button type='primary' onClick={onOK} style={{marginRight:'20px'}}>确定</Button>
+							<Button type='primary' disabled={submitDisabled} onClick={onOK} style={{marginRight:'20px'}}>确定</Button>
 							<Button onClick={onClose}>取消</Button>
 						</div>
 					</div>

@@ -28,59 +28,28 @@ const {
 const limit = 10;
 
 export default function RetentionAnalysis() {
-	const [showDatePopup, setShowDatePopup] = useState(false);
-	const [loading, setLoading] = useState(false);
-	const [data, setData] = useState([]);
-	const [titles, setTitles] = useState([]);
-	const [showDialog, setShowDialog] = useState(false);
-	const [value, setValue] = useState('');
-	const [dialogLoading, setDialogLoading] = useState(false);
-	const [values, setValues] = useState({});
-	let cancelTask = false; // 防止内存泄漏
 	const projectId = sessionStorage.getItem('projectId');
 
+	const [loading, setLoading] = useState(false);
+	const [showDialog, setShowDialog] = useState(false);
+	const [disabled, setDisabled] = useState(true);
+	const [name, setName] = useState('');
+	const [values, setValues] = useState({});
+	const [submitDisabled, setSubmitDisabled] = useState(true);
+
 	const filterChange = (e) => {
+		console.log(e);
+		const {
+			init_event,
+			retention_event,
+			segmentation_id,
+		} = e;
+		if (init_event && retention_event) {
+			setDisabled(false);
+		} else {
+			setDisabled(true);
+		}
 		setValues(e);
-	};
-
-	const onDateChange = () => {
-
-	};
-
-	const onVisibleChange = (e) => {
-		setShowDatePopup(e);
-	};
-
-	const handleOtherDate = (e) => {
-		setShowDatePopup(false);
-	};
-
-	const footerRender = () => {
-		return (
-			<div className={styles.footer}>
-				{retentionAnalysisConfig.otherDates.map((item)=>
-					<span
-						className={styles.item} 
-						key={item.id} 
-						status="default"
-						onClick={handleOtherDate.bind(this,item.id)}
-					>
-						{item.name}
-					</span>
-				)}
-		    </div>
-		);
-	};
-
-	const renderTitle = () => {
-		return titles.map((item, index) => {
-			const {
-				id,
-				name,
-				key,
-			} = item;
-			return <Column key={id} title={name} dataIndex={index.toString()} />
-		})
 	};
 
 	const onClose = () => {
@@ -88,11 +57,11 @@ export default function RetentionAnalysis() {
 	};
 
 	const onOK = () => {
-		setDialogLoading(true);
+		setLoading(true);
 		api.createBoard({
 			id: projectId,
 			trend: { ...values,
-				name: value,
+				name,
 				type: 'retention'
 			}
 		}).then((res) => {
@@ -104,12 +73,17 @@ export default function RetentionAnalysis() {
 		}).catch((e) => {
 			Message.success(e.toString());
 		}).finally(() => {
-			setDialogLoading(false);
+			setLoading(false);
 		});
 	};
 
 	const onInputChange = (e) => {
-		setValue(e);
+		if (e) {
+			setSubmitDisabled(false);
+		} else {
+			setSubmitDisabled(true);
+		}
+		setName(e);
 	};
 
 	const onSave = () => {
@@ -120,29 +94,16 @@ export default function RetentionAnalysis() {
 		<div className={styles.wrap}>
 			<p className={styles.titleWrap}>
 				<span className={styles.title}>新建留存分析</span>
-				<Button type='primary' onClick={onSave}>保存</Button>
+				<Button type='primary' disabled={disabled} onClick={onSave}>保存</Button>
 			</p>
       		<Filter filterChange={filterChange} />
-      		{/*
-      		<div className={styles.item}>
-      			<RangePicker 
-      				defaultValue={[moment(),moment()]}
-      				onChange={onDateChange}
-      				footerRender={footerRender}
-      				visible={showDatePopup}
-      				onVisibleChange={onVisibleChange}
-      			/>
-      		</div>
-      		<Table loading={loading} dataSource={data} hasBorder={false}>
-			    {renderTitle()}       		
-			</Table>*/}
 			<Dialog autoFocus visible={showDialog} onClose={onClose} footer={false}>
-      			<Loading visible={dialogLoading} inline={false}>
+      			<Loading visible={loading} inline={false}>
 					<div style={{margin:'20px'}}>
 						<p className={styles.name}>请输入看板名称</p>
 						<Input onChange={onInputChange} style={{marginBottom:'20px'}} />
 						<div>
-							<Button type='primary' onClick={onOK} style={{marginRight:'20px'}}>确定</Button>
+							<Button type='primary' disabled={submitDisabled} onClick={onOK} style={{marginRight:'20px'}}>确定</Button>
 							<Button onClick={onClose}>取消</Button>
 						</div>
 					</div>

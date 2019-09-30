@@ -39,7 +39,6 @@ function ProjectList({
 			}
 			sessionStorage.setItem('projectinfo', JSON.stringify(projects[0]));
 			setData(projects);
-			setLoading(false);
 		}).catch((e) => {
 			Message.success(e.toString());
 		}).finally(() => {

@@ -61,7 +61,6 @@ function UserScrutinyDetails({
 			const {
 				bars,
 			} = res;
-			console.log(res);
 			setChartData(bars);
 			creatChartStyle();
 		}).catch((e) => {

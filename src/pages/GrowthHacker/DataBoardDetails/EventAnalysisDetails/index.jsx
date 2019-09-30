@@ -69,7 +69,6 @@ function EventAnalysisDetails({
 			if (data.length === 0) {
 				return;
 			}
-			console.log(res);
 			setTitles(meta);
 			setData(data);
 			if (dimensions.length < 2) {
@@ -96,7 +95,7 @@ function EventAnalysisDetails({
 
 	function assemblingChartStyle(meta) {
 		return {
-			x: meta[0].key,
+			x: meta[0],
 			y: 'count',
 			color: 'event',
 		};
@@ -106,13 +105,12 @@ function EventAnalysisDetails({
 		const arr = [];
 		arg.forEach((item) => {
 			const value = item[0];
-			const name = meta[0].name;
-			const key = meta[0].key;
+			const name = meta[0];
 			item.forEach((v, index) => {
 				if (index !== 0 && meta[index]) {
 					arr.push({
-						[key]: `${name}${value}`,
-						event: meta[index].name,
+						[name]: `${name}${value}`,
+						event: meta[index],
 						count: v,
 					})
 				}
@@ -123,7 +121,7 @@ function EventAnalysisDetails({
 
 	const renderTitle = () => {
 		return titles.map((item, index) => {
-			return <Column key={index} title={item.name} dataIndex={index.toString()} />
+			return <Column key={index} title={item} dataIndex={index.toString()} />
 		});
 	};
 

@@ -25,15 +25,18 @@ import styles from './index.module.scss';
 import Step from './components/Step';
 
 function CreateGroup() {
+	const projectId = sessionStorage.getItem('projectId');
+
 	const [showDialog, setShowDialog] = useState(false);
-	const [value, setValue] = useState('');
+	const [name, setName] = useState('');
 	const [combination, setCombination] = useState('');
 	const [steps, setSteps] = useState([]);
 	const [loading, setLoading] = useState(false);
-	const projectId = sessionStorage.getItem('projectId');
-	let cancelTask = false;
+	const [disabled, setDisabled] = useState(true);
+	const [submitDisabled, setSubmitDisabled] = useState(true);
 
 	const filterChange = (step, expression) => {
+		setDisabled(expression ? false : true);
 		setSteps(step);
 		setCombination(expression);
 	};
@@ -71,18 +74,12 @@ function CreateGroup() {
 	}
 
 	const onOK = () => {
-		console.log(steps);
-		if (!value) {
-			return;
-		}
 		let result = {
 			expression: combination,
-			name: value,
+			name,
 			conditions: [],
 		};
 		display(steps, result);
-		console.log(result);
-		return;
 		api.createUserGroup({
 			project_id: projectId,
 			trend: result,
@@ -103,7 +100,12 @@ function CreateGroup() {
 	};
 
 	const onInputChange = (e) => {
-		setValue(e);
+		if (e) {
+			setSubmitDisabled(false);
+		} else {
+			setSubmitDisabled(true);
+		}
+		setName(e);
 	};
 
 	return (
@@ -114,7 +116,7 @@ function CreateGroup() {
       		<div className={styles.rightContent}>
       			<div className={styles.btnWrap}>
       				<Button onClick={onCancel}>取消</Button>
-      				<Button type='primary' onClick={onSave}>保存</Button>
+      				<Button type='primary' disabled={disabled} onClick={onSave}>保存</Button>
       			</div>
       			<div className={styles.rateWrap}>
       				<div className={styles.value}>0%</div>
@@ -132,7 +134,7 @@ function CreateGroup() {
 						<p className={styles.name}>请输入用户分群名称</p>
 						<Input onChange={onInputChange} style={{marginBottom:'20px'}} />
 						<div>
-							<Button type='primary' onClick={onOK} style={{marginRight:'20px'}}>确定</Button>
+							<Button type='primary' disabled={submitDisabled} onClick={onOK} style={{marginRight:'20px'}}>确定</Button>
 							<Button onClick={onClose}>取消</Button>
 						</div>
 					</div>

@@ -188,3 +188,59 @@ export function deleteBoard(data) {
 	} = data;
 	return del(`/projects/${projectId}/charts/${id}`);
 }
+
+export function getShareHeader(data) {
+	const {
+		projectId,
+		trend,
+	} = data;
+	return get(`/projects/${projectId}/share/overall/header`, trend);
+}
+
+export function getTop10Share(data) {
+	const {
+		projectId,
+		trend,
+	} = data;
+	return get(`/projects/${projectId}/share/overall/top10share`, trend);
+}
+
+export function getTop10New(data) {
+	const {
+		projectId,
+		trend,
+	} = data;
+	return get(`/projects/${projectId}/share/overall/top10new`, trend);
+}
+
+export function getTop10Open(data) {
+	const {
+		projectId,
+		trend,
+	} = data;
+	return get(`/projects/${projectId}/share/overall/top10open`, trend);
+}
+
+export function getGenderDistribute(data) {
+	const {
+		projectId,
+		trend,
+	} = data;
+	return get(`/projects/${projectId}/share/distribute/gender`, trend);
+}
+
+export function getShareDistribute(data) {
+	const {
+		projectId,
+		trend,
+	} = data;
+	return get(`/projects/${projectId}/share/distribute/destination`, trend);
+}
+
+export function getAreaDistribute(data) {
+	const {
+		projectId,
+		trend,
+	} = data;
+	return get(`/projects/${projectId}/share/distribute/district`, trend);
+}

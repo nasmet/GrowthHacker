@@ -2,6 +2,7 @@ import React, {
 	Component,
 	useState,
 	useEffect,
+	useRef,
 } from 'react';
 import {
 	Message,
@@ -27,6 +28,7 @@ export default function Filter({
 	const [dimensionData, setDimensionData] = useState([]);
 	const [metricData, setMetricData] = useState([]);
 	const [targetUser, setTargetUser] = useState([]);
+	const formRef = useRef(null);
 	let cancelTask = false; // 防止内存泄漏
 	const projectId = sessionStorage.getItem('projectId');
 
@@ -40,7 +42,7 @@ export default function Filter({
 				dividingData(res.event_entities);
 			});
 			await api.getUserGroups({
-				project_id: projectId,
+				projectId,
 			}).then((res) => {
 				if (cancelTask) {
 					return;
@@ -78,6 +80,12 @@ export default function Filter({
 				dimensions.push(obj);
 			}
 		});
+		formRef.current.state.store.setFieldProps('init_event', {
+			dataSource: metrics,
+		});
+		formRef.current.state.store.setFieldProps('retention_event', {
+			dataSource: metrics,
+		});
 		setMetricData(metrics);
 		setDimensionData(dimensions);
 	}
@@ -88,6 +96,9 @@ export default function Filter({
 				label: item.name,
 				value: item.id,
 			};
+		});
+		formRef.current.state.store.setFieldProps('segmentation_id', {
+			dataSource: targets,
 		});
 		setTargetUser(targets);
 	}
@@ -111,32 +122,33 @@ export default function Filter({
 					<div className={styles.title}>
 						显示满足如以下行为模式的用户留存情况
 					</div>
-					{targetUser.length!==0?<Form
+					<Form
+						ref={formRef}
 						onChange={formChange} 
 						initialValues={values} 
 						layout={{labelAlign: 'left',labelTextAlign: 'left',labelCol: 1, wrapperCol: 2}}
 					>
 						<Field label='初始行为是' name='init_event'>
 							<Select  
-								dataSource={metricData}  
+								dataSource={[]}  
 								showSearch
 							/>
 						</Field>
 
 						<Field label='后续行为是' name='retention_event'>
 							<Select  
-								dataSource={metricData}  
+								dataSource={[]}  
 								showSearch
 							/>
 						</Field>
 
 						<Field label='目标用户' name='segmentation_id'>
 							<Select  
-								dataSource={targetUser}  
+								dataSource={[]}  
 								showSearch
 							/>
 						</Field>
-					</Form>:null}
+					</Form>
 				</IceContainer>
 		</Loading>
 	);

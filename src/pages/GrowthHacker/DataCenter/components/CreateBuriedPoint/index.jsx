@@ -29,27 +29,30 @@ export default function CreateBuriedPoint({
 	const form = useRef(null);
 	const [show, setShow] = useState(false);
 	const [values, setValues] = useState({});
+	const [disabled, setDisabled] = useState(true);
 
-	const validateAllFormField = () => {
-		form.current.validateAll((errors, values) => {
-			if (errors) {
-				return;
-			}
-			setShow(true);
-			onOk(values, () => {
-				setShow(false);
-			});
+	const onSubmit = () => {
+		setShow(true);
+		onOk(values, () => {
+			setShow(false);
 		});
 	};
 
 	const onReset = () => {
 		setValues({});
+		setDisabled(true);
+	};
+
+	const onChange = (e) => {
+		form.current.validateAll((errors, values) => {
+			setDisabled(errors ? true : false);
+		});
 	};
 
 	return (
 		<Loading visible={show} inline={false}>
       		<div className={styles.wrap}>
-	        	<IceFormBinderWrapper value={values} ref={form}>
+	        	<IceFormBinderWrapper value={values} ref={form} onChange={onChange}>
 	          		<div className={styles.formItem}>
 	            		<div className={styles.formLabel}>名称：</div>
 	            		<div className={styles.content}>
@@ -127,7 +130,7 @@ export default function CreateBuriedPoint({
 		          	</div>
 					
 					<div className={styles.btnWrap}>
-		          		<Button className={styles.btn} type="primary" onClick={validateAllFormField}>
+		          		<Button className={styles.btn} disabled={disabled} type="primary" onClick={onSubmit}>
 		            		确定
 		          		</Button>
 		          		<Button className={styles.btn} type="primary" onClick={onReset}>

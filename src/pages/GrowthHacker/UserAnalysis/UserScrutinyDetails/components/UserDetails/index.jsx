@@ -53,7 +53,6 @@ export default function UserDetails({
 			if (cancelTask) {
 				return;
 			}
-			console.log(res);
 			const {
 				id,
 				city,

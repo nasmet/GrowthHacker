@@ -48,7 +48,6 @@ export default function Aside({
 			} = res;
 			setData(tables);
 			setTotal(tables);
-			console.log(res);
 		}).catch((e) => {
 			Message.success(e.toString());
 		}).finally(() => {

@@ -52,7 +52,7 @@ function RetentionDetails({
 				meta,
 				data,
 			} = res;
-			if (data.length === 0) {
+			if (!data || data.length === 0) {
 				return;
 			}
 			setTitles(meta);

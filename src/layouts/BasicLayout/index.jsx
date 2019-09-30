@@ -15,9 +15,10 @@ export default function BasicLayout({
 	        	<Aside />
 	     	</Layout.Aside>
 	 		<Layout.Section>
+	 		{/*
 	 			<Layout.Header>
 	        		<Header />
-	      		</Layout.Header>
+	      		</Layout.Header>*/}
 	   	 		<Layout.Main scrollable>
 	     	 		<div className="main-container">
 	        			{children}

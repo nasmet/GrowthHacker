@@ -38,7 +38,7 @@ function UserShare() {
 			return (
 				<Item key={item.key} title={item.tab} >
           			<div className={styles.marginTop10}>
-            			<Content />
+            			<Content type={item.key} />
           			</div>
         		</Item>
 			);

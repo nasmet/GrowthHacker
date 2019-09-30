@@ -19,10 +19,6 @@ import Layout from '@icedesign/layout';
 import styles from './index.module.scss';
 import projectDataConfig from './projectDataConfig';
 
-// const {
-// 	Item
-// } = Tab;
-
 const {
 	Item,
 	SubNav,
@@ -64,12 +60,8 @@ function ProjectData({
 	const path = `/${arr[1]}/${arr[2]}/${arr[3]}`;
 
 	let projectInfo = sessionStorage.getItem('projectinfo');
-	if (projectInfo) {
-		projectInfo = JSON.parse(projectInfo);
-	} else {
-		projectInfo = {};
-	}
-
+	projectInfo = JSON.parse(projectInfo);
+	
 	const {
 		id,
 		name,

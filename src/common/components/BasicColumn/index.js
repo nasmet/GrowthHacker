@@ -21,6 +21,7 @@ export default function BasicColumn({
 	color,
 	yLabel,
 	tooltip,
+	showTitle = true,
 }) {
 	const pos = `${x}*${y}`;
 
@@ -36,7 +37,7 @@ export default function BasicColumn({
     		<Axis name={x} />
     		<Axis name={y} label={yLabel} />
 			<Legend />
-    		<Tooltip />
+    		<Tooltip showTitle={showTitle} />
 			<Geom 
 				type="interval" 
 				tooltip={tooltip}

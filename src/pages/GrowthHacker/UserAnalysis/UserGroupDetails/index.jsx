@@ -45,7 +45,7 @@ function UserGroupDetails({
 		function getUserGroupDetails() {
 			setLoading(true);
 			api.getUserGroupDetails({
-				project_id: projectId,
+				projectId,
 				id,
 				trend: {
 					limit: config.LIMIT,

@@ -27,10 +27,44 @@ const {
 	Column,
 } = Table;
 
-export default function UserShare() {
+export default function UserShare({
+	type,
+}) {
+	const projectId = sessionStorage.getItem('projectId');
+	let cancelTask = false;
+	const [loading, setLoading] = useState(false);
+	const [tableData, setTableData] = useState([]);
+
+	function getUserShare() {
+		setLoading(true);
+		api.getUserShare({
+			projectId,
+			type,
+		}).then((res) => {
+			if (cancelTask) {
+				return;
+			}
+			console.log(res);
+		}).catch((e) => {
+			Message.success(e.toString());
+		}).finally(() => {
+			if (cancelTask) {
+				return;
+			}
+			setLoading(false);
+		});
+	}
+
+	useEffect(() => {
+
+		return () => {
+			cancelTask = true;
+		}
+	}, []);
+
 	return (
 		<div className={styles.content}>
-			<Table data={[]}>
+			<Table dataSource={tableData}>
 				<Column title='用户' dataIndex='user' />
 				<Column title='备注' dataIndex='remark' />
 				<Column title='分享次数' dataIndex='shareCount' />

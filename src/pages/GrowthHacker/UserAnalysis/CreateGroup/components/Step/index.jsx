@@ -62,7 +62,6 @@ export default function Filter({
 			if (cancelTask) {
 				return;
 			}
-			console.log(res);
 			dividingData(res.event_entities);
 			setLoading(false);
 		}).catch((e) => {

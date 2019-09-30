@@ -27,10 +27,44 @@ const {
 	Column,
 } = Table;
 
-export default function LevelShare() {
+export default function LevelShare({
+	type,
+}) {
+	const projectId = sessionStorage.getItem('projectId');
+	let cancelTask = false;
+	const [loading, setLoading] = useState(false);
+	const [tableData, setTableData] = useState([]);
+
+	function getUserShare() {
+		setLoading(true);
+		api.getUserShare({
+			projectId,
+			type,
+		}).then((res) => {
+			if (cancelTask) {
+				return;
+			}
+			console.log(res);
+		}).catch((e) => {
+			Message.success(e.toString());
+		}).finally(() => {
+			if (cancelTask) {
+				return;
+			}
+			setLoading(false);
+		});
+	}
+
+	useEffect(() => {
+
+		return () => {
+			cancelTask = true;
+		}
+	}, []);
+
 	return (
 		<div className={styles.content}>
-			<Table data={[]}>
+			<Table dataSource={tableData}>
 				<Column title='层级' dataIndex='level' />
 				<Column title='分享人数' dataIndex='shareNum' />
 				<Column title='分享次数' dataIndex='shareCount' />

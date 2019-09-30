@@ -28,65 +28,23 @@ const {
 const limit = 10;
 
 export default function FunnelAnalysis() {
-	const [showDatePopup, setShowDatePopup] = useState(false);
-	const [loading, setLoading] = useState(false);
-	const [data, setData] = useState([]);
-	const [titles, setTitles] = useState([]);
-	const [group, setGroup] = useState(0);
-	const [showDialog, setShowDialog] = useState(false);
-	const [value, setValue] = useState('');
-	const [dialogLoading, setDialogLoading] = useState(false);
-	const [values, setValues] = useState({});
-	let cancelTask = false; // 防止内存泄漏
 	const projectId = sessionStorage.getItem('projectId');
 
+	const [showDialog, setShowDialog] = useState(false);
+	const [loading, setLoading] = useState(false);
+	const [group, setGroup] = useState(0);
+	const [name, setName] = useState('');
+	const [values, setValues] = useState({});
+	const [disabled, setDisabled] = useState(true);
+	const [submitDisabled, setSubmitDisabled] = useState(true);
+
 	const filterChange = (e) => {
+		setDisabled(e.length === 0 ? true : false);
 		setValues(e);
 	};
 
 	const groupChange = (e) => {
 		setGroup(e);
-		console.log(e);
-	};
-
-	const onVisibleChange = (e) => {
-		setShowDatePopup(e);
-	};
-
-	const handleOtherDate = (e) => {
-		setShowDatePopup(false);
-	};
-
-	const footerRender = () => {
-		return (
-			<div className={styles.footer}>
-				{funnelAnalysisConfig.otherDates.map((item)=>
-					<span
-						className={styles.item} 
-						key={item.id} 
-						status="default"
-						onClick={handleOtherDate.bind(this,item.id)}
-					>
-						{item.name}
-					</span>
-				)}
-		    </div>
-		);
-	};
-
-	const renderTitle = () => {
-		return titles.map((item, index) => {
-			const {
-				id,
-				name,
-				key,
-			} = item;
-			return <Column key={id} title={name} dataIndex={index.toString()} />
-		})
-	};
-
-	const onDateChange = () => {
-
 	};
 
 	const onClose = () => {
@@ -94,12 +52,12 @@ export default function FunnelAnalysis() {
 	};
 
 	const onOK = () => {
-		setDialogLoading(true);
+		setLoading(true);
 		api.createBoard({
 			id: projectId,
 			trend: {
 				steps: values.map(v => v.values.step),
-				name: value,
+				name,
 				type: 'funnel',
 				segmentation_id: group,
 			}
@@ -112,12 +70,17 @@ export default function FunnelAnalysis() {
 		}).catch((e) => {
 			Message.success(e.toString());
 		}).finally(() => {
-			setDialogLoading(false);
+			setLoading(false);
 		});
 	};
 
 	const onInputChange = (e) => {
-		setValue(e);
+		if (e) {
+			setSubmitDisabled(false);
+		} else {
+			setSubmitDisabled(true);
+		}
+		setName(e);
 	};
 
 	const onSave = () => {
@@ -128,29 +91,17 @@ export default function FunnelAnalysis() {
 		<div className={styles.wrap}> 
 			<p className={styles.titleWrap}>
 				<span className={styles.title}>新建漏斗分析</span>
-				<Button type='primary' onClick={onSave}>保存</Button>
+				<Button type='primary' disabled={disabled} onClick={onSave}>保存</Button>
 			</p>
       		<Filter filterChange={filterChange} groupChange={groupChange} />
-      		{/*
-      		<div className={styles.item}>
-      			<RangePicker 
-      				defaultValue={[moment(),moment()]}
-      				onChange={onDateChange}
-      				footerRender={footerRender}
-      				visible={showDatePopup}
-      				onVisibleChange={onVisibleChange}
-      			/>
-      		</div>
-      		<Table loading={loading} dataSource={data} hasBorder={false}>
-			    {renderTitle()}       		
-			</Table>*/}
+
 			<Dialog autoFocus visible={showDialog} onClose={onClose} footer={false}>
-      			<Loading visible={dialogLoading} inline={false}>
+      			<Loading visible={loading} inline={false}>
 					<div style={{margin:'20px'}}>
 						<p className={styles.name}>请输入看板名称</p>
 						<Input onChange={onInputChange} style={{marginBottom:'20px'}} />
 						<div>
-							<Button type='primary' onClick={onOK} style={{marginRight:'20px'}}>确定</Button>
+							<Button type='primary' disabled={submitDisabled} onClick={onOK} style={{marginRight:'20px'}}>确定</Button>
 							<Button onClick={onClose}>取消</Button>
 						</div>
 					</div>

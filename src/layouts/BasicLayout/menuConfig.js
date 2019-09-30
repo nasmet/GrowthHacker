@@ -5,18 +5,6 @@
 const headerMenuConfig = [{
 	name: '自定义sql查询',
 	path: '/sql',
-}, {
-	name: '帮助文档',
-	path: '',
-}, {
-	name: '通知',
-	path: '',
-}, {
-	name: '用户',
-	path: '',
-}, {
-	name: '语言',
-	path: '',
 }];
 
 /**
@@ -59,10 +47,11 @@ const asideMenuConfig = [{
 	sub: [{
 		name: '项目列表',
 		path: '/growthhacker/projectlist',
-	}, {
-		name: '项目数据',
-		path: '/growthhacker/projectdata',
 	}],
+}, {
+	name: '自定义sql查询',
+	path: '/sql',
+	icon: 'publish',
 }];
 
 export {

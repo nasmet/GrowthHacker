@@ -64,7 +64,6 @@ function UserScrutiny({
 				if (data.length === 0) {
 					return;
 				}
-				console.log(res);
 				setTitles(meta);
 				setTableData(data);
 			}).catch((e) => {

@@ -60,7 +60,7 @@ export default function Filter({
 				dividingData(res.event_entities);
 			});
 			await api.getUserGroups({
-				project_id: projectId,
+				projectId,
 			}).then((res) => {
 				if (cancelTask) {
 					return;
@@ -176,7 +176,7 @@ export default function Filter({
 		<Loading visible={loading} inline={false}>
 			<IceContainer>	
 				{renderStep()}
-				{steps.length!==0?<Form
+				<Form
 					onChange={onChange}
 					layout={{labelAlign: 'left',labelTextAlign: 'left',labelCol: 1, wrapperCol: 2}}
 				>	
@@ -186,7 +186,7 @@ export default function Filter({
 							showSearch
 						/>
 					</Field>
-				</Form>:null}
+				</Form>
 				<div className={styles.btnWrap}>
 					<Button className={styles.btn} type='primary' onClick={onAddStep}>增加步骤</Button>
 					<Button type='primary' onClick={onResetStep}>重置步骤</Button>

@@ -58,7 +58,6 @@ export default function Template({
 					total,
 					events,
 				} = res;
-				console.log(res);
 				setTotal(total);
 				setTableData(events);
 			}).catch((e) => {
