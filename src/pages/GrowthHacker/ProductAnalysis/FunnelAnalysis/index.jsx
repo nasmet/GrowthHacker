@@ -12,6 +12,9 @@ import {
 	Dialog,
 	Input,
 } from '@alifd/next';
+import {
+	withRouter,
+} from 'react-router-dom';
 import IceContainer from '@icedesign/container';
 import moment from 'moment';
 import styles from './index.module.scss';
@@ -27,8 +30,11 @@ const {
 } = Table;
 const limit = 10;
 
-export default function FunnelAnalysis() {
+function FunnelAnalysis({
+	history,
+}) {
 	const projectId = sessionStorage.getItem('projectId');
+	let cancelTask = false;
 
 	const [showDialog, setShowDialog] = useState(false);
 	const [loading, setLoading] = useState(false);
@@ -37,6 +43,13 @@ export default function FunnelAnalysis() {
 	const [values, setValues] = useState({});
 	const [disabled, setDisabled] = useState(true);
 	const [submitDisabled, setSubmitDisabled] = useState(true);
+
+	useEffect(() => {
+
+		return () => {
+			cancelTask = true;
+		};
+	}, []);
 
 	const filterChange = (e) => {
 		setDisabled(e.length === 0 ? true : false);
@@ -66,11 +79,10 @@ export default function FunnelAnalysis() {
 				return;
 			}
 			Message.success('成功添加到看板');
-			setShowDialog(false);
+			history.push('/growthhacker/projectdata/db');
 		}).catch((e) => {
-			Message.success(e.toString());
-		}).finally(() => {
 			setLoading(false);
+			Message.success(e.toString());
 		});
 	};
 
@@ -84,6 +96,7 @@ export default function FunnelAnalysis() {
 	};
 
 	const onSave = () => {
+		setSubmitDisabled(true);
 		setShowDialog(true);
 	};
 
@@ -110,3 +123,5 @@ export default function FunnelAnalysis() {
     	</div>
 	);
 }
+
+export default withRouter(FunnelAnalysis);

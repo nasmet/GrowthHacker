@@ -32,6 +32,8 @@ const {
 } = Tab;
 
 export default function AreaAnalysis() {
+	const [date, setDate] = useState('day:0');
+
 	const renderTab = (e) => {
 		return tabs.map((item) => {
 			const {
@@ -41,14 +43,14 @@ export default function AreaAnalysis() {
 			} = item;
 			return (
 				<Item key={key} title={tab}>
-					<Component type={key} request={api.getPortraitArea} />
+					<Component type={key} request={api.getPortraitArea} date={date} />
 				</Item>
 			);
 		});
 	};
 
 	const filterChange = (e) => {
-		console.log(e);
+		setDate(e);
 	};
 
 	return (

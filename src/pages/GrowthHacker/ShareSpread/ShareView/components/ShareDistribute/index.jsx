@@ -23,55 +23,57 @@ import {
 import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
 
-const {
-	Column,
-} = Table;
-
-export default function UserShare({
-	type,
+export default function ShareDistribute({
+	name,
+	date,
+	request,
 }) {
 	const projectId = sessionStorage.getItem('projectId');
 	let cancelTask = false;
+	const chartStyle = {
+		x: 'desc',
+		y: 'count',
+		color: 'desc',
+		showTitle: false,
+	};
+	const [chartData, setChartData] = useState([]);
 	const [loading, setLoading] = useState(false);
-	const [tableData, setTableData] = useState([]);
 
-	function getUserShare() {
+	useEffect(() => {
 		setLoading(true);
-		api.getUserShare({
+		request({
 			projectId,
-			type,
+			trend: {
+				date,
+			}
 		}).then((res) => {
 			if (cancelTask) {
 				return;
 			}
-			console.log(res);
+			setChartData(res.data);
 		}).catch((e) => {
-			Message.success(e.toString());
+			console.error(e);
 		}).finally(() => {
 			if (cancelTask) {
 				return;
 			}
 			setLoading(false);
 		});
-	}
-
-	useEffect(() => {
 
 		return () => {
 			cancelTask = true;
-		}
-	}, []);
+		};
+	}, [date]);
+
 
 	return (
-		<div className={styles.content}>
-			<Table loading={false} dataSource={tableData} hasBorder={false} >
-				<Column title='用户' dataIndex='user' />
-				<Column title='备注' dataIndex='remark' />
-				<Column title='分享次数' dataIndex='shareCount' />
-				<Column title='回流量' dataIndex='flow' />
-				<Column title='分享回流比' dataIndex='shareRate' />
-				<Column title='分享新增' dataIndex='shareAddition' />
-			</Table>
+		<div className={styles.userShareItem}>
+			<Loading visible={loading} inline={false}>
+				<p style={{paddingLeft:'20px'}}>{name}</p>
+				<div className={styles.userShareItemChart}>
+					<Components.BasicColumn data={chartData} {...chartStyle} />
+				</div>
+			</Loading>
 		</div>
 	);
 }

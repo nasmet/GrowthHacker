@@ -51,6 +51,7 @@ function UserShare() {
 
 	return (
 		<div className={styles.wrap}>
+			<p className={styles.title}>用户分享</p>
 			<Filter filterChange={filterChange} />
 			<Tab defaultActiveKey="us">
 	    		{renderTab()}

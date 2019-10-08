@@ -244,3 +244,11 @@ export function getAreaDistribute(data) {
 	} = data;
 	return get(`/projects/${projectId}/share/distribute/district`, trend);
 }
+
+export function getShareTrend(data) {
+	const {
+		projectId,
+		trend,
+	} = data;
+	return get(`/projects/${projectId}/share/trending`, trend);
+}

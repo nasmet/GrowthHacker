@@ -40,6 +40,7 @@ function UserScrutiny({
 	const [total, setTotal] = useState(0);
 	const [loading, setLoading] = useState(false);
 	const [search, setSearch] = useState('');
+	const [emptyContent, setEmptyContent] = useState(1);
 	let cancelTask = false;
 	const projectId = sessionStorage.getItem('projectId');
 
@@ -61,9 +62,7 @@ function UserScrutiny({
 					meta,
 					data,
 				} = res;
-				if (data.length === 0) {
-					return;
-				}
+				setEmptyContent(search ? 0 : 1);
 				setTitles(meta);
 				setTableData(data);
 			}).catch((e) => {
@@ -201,6 +200,7 @@ function UserScrutiny({
 				<Table 
 					dataSource={tableData} 
 					hasBorder={false}
+					emptyContent={<span>{emptyContent?'暂无数据':'查询结果为空'}</span>}
 				>
 				    {renderTitle()} 
 				    {/*

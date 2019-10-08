@@ -20,11 +20,11 @@ function DataBoard({
 	history,
 }) {
 	const projectId = sessionStorage.getItem('projectId');
+	let cancelTask = false; // 防止内存泄漏
 
 	const [loading, setLoading] = useState(false);
 	const [data, setData] = useState([]);
-	let cancelTask = false; // 防止内存泄漏
-
+	
 	function getBoards() {
 		setLoading(true);
 		api.getBoards({

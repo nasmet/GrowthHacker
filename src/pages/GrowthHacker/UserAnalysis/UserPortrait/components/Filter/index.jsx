@@ -38,8 +38,13 @@ const {
 export default function Filter({
 	filterChange,
 }) {
-	const [dateValue, setDateValue] = useState([moment(), moment()]);
-	const [tabValue, setTabValue] = useState('NaN');
+	const [dateValue, setDateValue] = useState([]);
+	const [curDateValue, setCurDateValue] = useState([moment(), moment()]);
+	const [tabValue, setTabValue] = useState('0');
+
+	useEffect(() => {
+		setDateValue(curDateValue);
+	}, [curDateValue]);
 
 	const renderDateTab = () => {
 		return dateTypes.map((item) => {
@@ -71,33 +76,44 @@ export default function Filter({
 			case '1':
 				startDate = endDate = getDate();
 				break;
-			case '2':
+			case '7':
 				startDate = getDate(7);
 				endDate = getDate();
 				break;
-			case '3':
+			case '30':
 				startDate = getDate(30);
 				endDate = getDate();
 				break;
 		}
 		setTabValue(e);
-		setDateValue([moment(startDate), moment(endDate)]);
-		filterChange(e);
+		setCurDateValue([moment(startDate), moment(endDate)]);
+		filterChange(`day:${e}`);
 	};
 
 	const onDateChange = (e) => {
 		setDateValue(e);
-		if (e.length === 2 && e[1]) {
-			setTabValue('NaN');
-			filterChange(e);
-		}
 	};
+
+	const onOk = (e) => {
+		setTabValue('NaN');
+		setCurDateValue(e);
+		filterChange(`abs:${e[0].valueOf()},${e[1].valueOf()}`);
+	};
+
+	const onVisibleChange = (e) => {
+		if (!e) {
+			setDateValue(curDateValue);
+		}
+	}
 
 	return (
 		<div className={styles.item}>
   			<RangePicker 
   				onChange={onDateChange}
   				value={dateValue}
+  				onOk={onOk}
+  				disabledDate={model.disabledDate}
+  				onVisibleChange={onVisibleChange}
   			/>
   			<Tab 
   				className={styles.tabWrap}

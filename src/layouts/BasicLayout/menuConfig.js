@@ -5,6 +5,13 @@
 const headerMenuConfig = [{
 	name: '自定义sql查询',
 	path: '/sql',
+}, {
+	name: '用户',
+	path: '/user',
+	sub: [{
+		name: '切换用户',
+		path: '/user/login',
+	}],
 }];
 
 /**
@@ -48,10 +55,6 @@ const asideMenuConfig = [{
 		name: '项目列表',
 		path: '/growthhacker/projectlist',
 	}],
-}, {
-	name: '自定义sql查询',
-	path: '/sql',
-	icon: 'publish',
 }];
 
 export {

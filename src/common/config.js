@@ -5,3 +5,5 @@ export const BASEURL = `${HOST}/v1`;
 export const TIMEOUT = 5000;
 export const TOKENKEY = 'Token';
 export const LIMIT = 10;
+export const ACCOUNT = 'ACCOUNT';
+export const PASSWORD = 'PASSWORD';

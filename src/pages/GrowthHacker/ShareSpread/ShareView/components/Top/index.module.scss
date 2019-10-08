@@ -1,0 +1,16 @@
+.userShareItem{
+	flex: 1;
+	margin-right: 10px;
+	border-radius: 10px;
+	background: #fff;
+	display: flex;
+	flex-direction: column;
+}
+.userShareItemChart{
+	flex: 1;
+	display: flex;
+	justify-content: center;
+}
+.column{
+	font-size: 12px;
+}

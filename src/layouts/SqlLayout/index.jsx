@@ -1,15 +1,27 @@
 import React, {
-	Component,
+  Component,
+  useEffect,
 } from 'react';
+import {
+  withRouter,
+} from 'react-router-dom';
 import Layout from '@icedesign/layout';
 import Header from './components/Header';
 import './index.scss';
 
-export default function SqlLayout({
-	children
+function SqlLayout({
+  children,
+  history,
 }) {
-	return (
-		<Layout className="ice-design-layout" fixable >
+  useEffect(() => {
+    const token = sessionStorage.getItem(config.TOKENKEY);
+    if (!token) {
+      history.push('/user/login');
+    }
+  }, []);
+
+  return (
+    <Layout className="ice-design-layout" fixable >
      		<Layout.Section>
           		<Layout.Header>
                   	<Header />
@@ -21,5 +33,7 @@ export default function SqlLayout({
         		</Layout.Main>
       		</Layout.Section>
     	</Layout>
-	);
+  );
 }
+
+export default withRouter(SqlLayout);

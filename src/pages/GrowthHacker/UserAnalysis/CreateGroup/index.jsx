@@ -26,7 +26,7 @@ import Step from './components/Step';
 
 function CreateGroup() {
 	const projectId = sessionStorage.getItem('projectId');
-
+	let cancelTask = false;
 	const [showDialog, setShowDialog] = useState(false);
 	const [name, setName] = useState('');
 	const [combination, setCombination] = useState('');
@@ -42,6 +42,7 @@ function CreateGroup() {
 	};
 
 	const onSave = () => {
+		setSubmitDisabled(true);
 		setShowDialog(true);
 	};
 
@@ -68,6 +69,8 @@ function CreateGroup() {
 				obj.aggregator = temp_1[1];
 				obj.alias = item.alias;
 				obj.values = [obj.values];
+				const temp_2 = obj.date;
+				obj.date = `abs:${temp_2[0].valueOf()},${temp_2[1].valueOf()}`;
 				result.conditions.push(obj);
 			}
 		});
@@ -75,26 +78,22 @@ function CreateGroup() {
 
 	const onOK = () => {
 		let result = {
-			expression: combination,
+			condition_expr: combination,
 			name,
 			conditions: [],
 		};
 		display(steps, result);
+		console.log(result);
 		api.createUserGroup({
-			project_id: projectId,
+			projectId,
 			trend: result,
 		}).then((res) => {
 			if (cancelTask) {
 				return;
 			}
-			console.log(res);
 			history.back();
 		}).catch((e) => {
 			Message.success(e.toString());
-		}).finally(() => {
-			if (cancelTask) {
-				return;
-			}
 			setLoading(false);
 		});
 	};

@@ -93,6 +93,10 @@ export default function Filter({
 				value: item.id,
 			};
 		});
+		targets.splice(0, 0, {
+			label: '全部用户',
+			value: 0,
+		});
 		formRef.current.state.store.setFieldProps('segmentation_id', {
 			dataSource: targets,
 		});

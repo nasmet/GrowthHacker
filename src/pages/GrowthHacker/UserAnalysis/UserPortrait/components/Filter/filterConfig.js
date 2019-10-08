@@ -5,9 +5,9 @@ export const dateTypes = [{
 	key: '1',
 	name: '昨天',
 }, {
-	key: '2',
+	key: '7',
 	name: '最近7天',
 }, {
-	key: '3',
+	key: '30',
 	name: '最近30天',
 }];

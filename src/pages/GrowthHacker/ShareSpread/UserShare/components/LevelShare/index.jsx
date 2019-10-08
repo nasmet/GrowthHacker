@@ -64,7 +64,7 @@ export default function LevelShare({
 
 	return (
 		<div className={styles.content}>
-			<Table dataSource={tableData}>
+			<Table loading={false} dataSource={tableData} hasBorder={false}>
 				<Column title='层级' dataIndex='level' />
 				<Column title='分享人数' dataIndex='shareNum' />
 				<Column title='分享次数' dataIndex='shareCount' />

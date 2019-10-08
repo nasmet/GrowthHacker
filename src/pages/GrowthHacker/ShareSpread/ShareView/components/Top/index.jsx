@@ -27,51 +27,50 @@ const {
 	Column,
 } = Table;
 
-export default function UserShare({
-	type,
+export default function Top({
+	request,
+	title,
+	date,
+	name,
 }) {
 	const projectId = sessionStorage.getItem('projectId');
 	let cancelTask = false;
 	const [loading, setLoading] = useState(false);
 	const [tableData, setTableData] = useState([]);
 
-	function getUserShare() {
+	useEffect(() => {
 		setLoading(true);
-		api.getUserShare({
+		request({
 			projectId,
-			type,
+			trend: {
+				date,
+			}
 		}).then((res) => {
 			if (cancelTask) {
 				return;
 			}
-			console.log(res);
+			setTableData(res.users);
 		}).catch((e) => {
-			Message.success(e.toString());
+			console.error(e);
 		}).finally(() => {
 			if (cancelTask) {
 				return;
 			}
 			setLoading(false);
 		});
-	}
-
-	useEffect(() => {
-
-		return () => {
-			cancelTask = true;
-		}
-	}, []);
+	}, [date]);
 
 	return (
-		<div className={styles.content}>
-			<Table loading={false} dataSource={tableData} hasBorder={false} >
-				<Column title='用户' dataIndex='user' />
-				<Column title='备注' dataIndex='remark' />
-				<Column title='分享次数' dataIndex='shareCount' />
-				<Column title='回流量' dataIndex='flow' />
-				<Column title='分享回流比' dataIndex='shareRate' />
-				<Column title='分享新增' dataIndex='shareAddition' />
-			</Table>
+		<div className={styles.userShareItem}>
+			<p style={{paddingLeft:'20px'}}>{name}</p>
+			<div className={styles.userShareItemChart}>
+				<Table loading={loading} dataSource={tableData} hasBorder={false} >
+					<Column className={styles.column} title='Top排名' dataIndex='ranking_num' />
+					<Column className={styles.column} title='头像' dataIndex='avatar' />
+					<Column className={styles.column} title='昵称' dataIndex='name' />
+					<Column className={styles.column} title={title} dataIndex='count' />
+				</Table>
+			</div>
 		</div>
 	);
 }

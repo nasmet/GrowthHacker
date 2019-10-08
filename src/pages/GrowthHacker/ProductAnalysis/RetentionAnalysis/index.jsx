@@ -12,6 +12,9 @@ import {
 	Dialog,
 	Input,
 } from '@alifd/next';
+import {
+	withRouter,
+} from 'react-router-dom';
 import IceContainer from '@icedesign/container';
 import moment from 'moment';
 import styles from './index.module.scss';
@@ -27,9 +30,11 @@ const {
 } = Table;
 const limit = 10;
 
-export default function RetentionAnalysis() {
+function RetentionAnalysis({
+	history,
+}) {
 	const projectId = sessionStorage.getItem('projectId');
-
+	let cancelTask = false;
 	const [loading, setLoading] = useState(false);
 	const [showDialog, setShowDialog] = useState(false);
 	const [disabled, setDisabled] = useState(true);
@@ -38,13 +43,12 @@ export default function RetentionAnalysis() {
 	const [submitDisabled, setSubmitDisabled] = useState(true);
 
 	const filterChange = (e) => {
-		console.log(e);
 		const {
 			init_event,
 			retention_event,
 			segmentation_id,
 		} = e;
-		if (init_event && retention_event) {
+		if (init_event && retention_event && segmentation_id !== undefined) {
 			setDisabled(false);
 		} else {
 			setDisabled(true);
@@ -69,11 +73,10 @@ export default function RetentionAnalysis() {
 				return;
 			}
 			Message.success('成功添加到看板');
-			setShowDialog(false);
+			history.push('/growthhacker/projectdata/db');
 		}).catch((e) => {
-			Message.success(e.toString());
-		}).finally(() => {
 			setLoading(false);
+			Message.success(e.toString());
 		});
 	};
 
@@ -87,6 +90,7 @@ export default function RetentionAnalysis() {
 	};
 
 	const onSave = () => {
+		setSubmitDisabled(true);
 		setShowDialog(true);
 	};
 
@@ -112,3 +116,5 @@ export default function RetentionAnalysis() {
     	</div>
 	);
 }
+
+export default withRouter(RetentionAnalysis);

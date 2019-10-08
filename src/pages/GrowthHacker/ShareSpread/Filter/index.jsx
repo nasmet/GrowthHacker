@@ -39,7 +39,7 @@ export default function Filter({
 	filterChange,
 }) {
 	const [dateValue, setDateValue] = useState([]);
-	const [curDateValue, setCurDateValue] = useState([]);
+	const [curDateValue, setCurDateValue] = useState([moment(),moment()]);
 	const [tabValue, setTabValue] = useState('0');
 
 	useEffect(() => {
@@ -76,17 +76,18 @@ export default function Filter({
 			case '1':
 				startDate = endDate = getDate();
 				break;
-			case '2':
+			case '7':
 				startDate = getDate(7);
 				endDate = getDate();
 				break;
-			case '3':
+			case '30':
 				startDate = getDate(30);
 				endDate = getDate();
 				break;
 		}
 		setTabValue(e);
-		filterChange([e]);
+		setCurDateValue([moment(startDate), moment(endDate)]);
+		filterChange(`day:${e}`);
 	};
 
 	const onDateChange = (e) => {
@@ -96,7 +97,7 @@ export default function Filter({
 	const onOk = (e) => {
 		setTabValue('NaN');
 		setCurDateValue(e);
-		filterChange(e);
+		filterChange(`abs:${e[0].valueOf()},${e[1].valueOf()}`);
 	};
 
 	const onVisibleChange = (e) => {

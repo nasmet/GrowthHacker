@@ -41,9 +41,20 @@ import MyQuery from './pages/Sql/MyQuery';
 import SaveQuery from './pages/Sql/SaveQuery';
 import HistoryRecord from './pages/Sql/HistoryRecord';
 
+import UserLogin from './pages/UserLogin';
+import UserRegister from './pages/UserRegister';
+
 const routerConfig = [
 	// 分组路由，children 里的路由会将父节点的 component 作为布局组件
 	{
+		id: '30001',
+		path: '/user/login',
+		component: UserLogin,
+	}, {
+		id: '40001',
+		path: '/user/register',
+		component: UserRegister,
+	}, {
 		id: '20001',
 		path: '/sql',
 		component: SqlLayout,

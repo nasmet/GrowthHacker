@@ -15,37 +15,49 @@ import {
 
 const {
 	Item,
+	SubNav,
 } = Nav;
+
+const word = (name) => {
+	return (
+		<span className="ice-menu-item-text">
+      		{name}
+    	</span>
+	);
+};
+
+const traversing = function fn(nav) {
+	if (nav.sub && utils.isArray(nav.sub)) {
+		return (
+			<SubNav key={nav.path} selectable label={word(nav.name)}>
+        		{nav.sub.map(fn)}
+      		</SubNav>
+		);
+	}
+	return (
+		<Item key={nav.path}>
+      		<Link to={nav.path} className="ice-menu-link">
+        		{word(nav.name)}
+      		</Link>
+   		</Item>
+	);
+};
 
 function Header({
 	history,
 }) {
-	const handle = (e) => {
-		if(!e){
-			return;
-		}
-		history.push(e);
-	};
-
 	return (
 		<div className="header-container">
-      		<div className="header-navbar">
-        		<Nav
-          			className="header-navbar-menu"
-          			direction="hoz"
-          			type="secondary"
-        		>
-          			{
-            			headerMenuConfig.map((nav, index) => {
-              				return (
-                				<Item key={index} onClick={handle.bind(this,nav.path)}>
-						        	<span>{nav.name}</span>
-                				</Item>
-              				);
-            			})
-         		 	}
-        		</Nav>
-      		</div>
+    		<Nav
+      			className="header-navbar-menu"
+      			direction="hoz"
+      			type="secondary"
+      			triggerType="hover"
+    		>
+      			{
+        			headerMenuConfig.map(traversing)
+     		 	}
+    		</Nav>
     	</div>
 	);
 }

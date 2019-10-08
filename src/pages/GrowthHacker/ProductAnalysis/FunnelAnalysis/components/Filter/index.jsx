@@ -117,6 +117,10 @@ export default function Filter({
 				value: item.id,
 			};
 		});
+		targets.splice(0, 0, {
+			label: '全部用户',
+			value: 0,
+		});
 		setTargetUser(targets);
 	}
 
@@ -176,8 +180,11 @@ export default function Filter({
 		<Loading visible={loading} inline={false}>
 			<IceContainer>	
 				{renderStep()}
-				<Form
+				{steps.length>0? <Form
 					onChange={onChange}
+					initialValues={{
+						segmentation_id:0,
+					}}
 					layout={{labelAlign: 'left',labelTextAlign: 'left',labelCol: 1, wrapperCol: 2}}
 				>	
 					<Field label='目标用户' name='segmentation_id'>
@@ -186,7 +193,7 @@ export default function Filter({
 							showSearch
 						/>
 					</Field>
-				</Form>
+				</Form>:null}
 				<div className={styles.btnWrap}>
 					<Button className={styles.btn} type='primary' onClick={onAddStep}>增加步骤</Button>
 					<Button type='primary' onClick={onResetStep}>重置步骤</Button>

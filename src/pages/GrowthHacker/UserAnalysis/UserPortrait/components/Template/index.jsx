@@ -33,6 +33,7 @@ const {
 export default function Template({
 	type,
 	request,
+	date,
 }) {
 	const [tableData, setTableData] = useState([]);
 	const [titles, setTitles] = useState([]);
@@ -42,46 +43,11 @@ export default function Template({
 	let cancelTask = false;
 	const projectId = sessionStorage.getItem('projectId');
 
-	function fetchData() {
-		setLoading(true);
-		request({
-			project_id: projectId,
-			trend: {
-				type,
-			},
-		}).then((res) => {
-			if (cancelTask) {
-				return;
-			}
-			const {
-				meta,
-				data,
-			} = res;
-			if (data.length === 0) {
-				return;
-			}
-			setTitles(meta);
-			setTableData(data);
-			setChartStyle(assemblingChartStyle(meta));
-			setChartData(assemblingChartData(data, meta));
-		}).catch((e) => {
-			Message.success(e.toString());
-		}).finally(() => {
-			if (cancelTask) {
-				return;
-			}
-			setLoading(false);
-		});
-	}
-
 	function assemblingChartStyle(meta) {
 		return {
 			x: 'name',
 			y: 'count',
 			color: 'value',
-			gLabel: (val, item) => {
-				return item.point.value;
-			}
 		};
 	}
 
@@ -99,12 +65,45 @@ export default function Template({
 	}
 
 	useEffect(() => {
+		function fetchData() {
+			setLoading(true);
+			request({
+				project_id: projectId,
+				trend: {
+					type,
+					date,
+				},
+			}).then((res) => {
+				if (cancelTask) {
+					return;
+				}
+				const {
+					meta,
+					data,
+				} = res;
+				if (data.length === 0) {
+					return;
+				}
+				setTitles(meta);
+				setTableData(data);
+				setChartStyle(assemblingChartStyle(meta));
+				setChartData(assemblingChartData(data, meta));
+			}).catch((e) => {
+				Message.success(e.toString());
+			}).finally(() => {
+				if (cancelTask) {
+					return;
+				}
+				setLoading(false);
+			});
+		}
+
 		fetchData();
 
 		return () => {
 			cancelTask = true;
 		};
-	}, []);
+	}, [date]);
 
 	const renderTitle = () => {
 		return titles.map((item, index) => {

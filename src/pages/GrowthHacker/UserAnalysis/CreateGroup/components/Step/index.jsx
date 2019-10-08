@@ -139,6 +139,7 @@ export default function Filter({
 				op: '=',
 				values: '1',
 				value: '',
+				date: [moment(), moment()],
 			},
 			onChange: function(e) {
 				console.log(e);
@@ -231,7 +232,7 @@ export default function Filter({
 						<Field visible={false} name='value'>
 							<Select style={{width:'150px'}} dataSource={[]} />
 						</Field>
-						<Field name='range'>
+						<Field name='date'>
 							<RangePicker style={{width:'120px'}} />
 						</Field>
 					</div>

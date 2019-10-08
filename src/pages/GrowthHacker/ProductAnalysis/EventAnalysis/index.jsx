@@ -36,9 +36,11 @@ const {
 	Item,
 } = Tab;
 
-function EventAnalysis() {
+function EventAnalysis({
+	history,
+}) {
 	const projectId = sessionStorage.getItem('projectId');
-
+	let cancelTask = false;
 	const [loading, setLoading] = useState(false);
 	const [showDialog, setShowDialog] = useState(false);
 	const [name, setName] = useState('');
@@ -52,7 +54,7 @@ function EventAnalysis() {
 			metrics,
 			segmentation_id,
 		} = e;
-		if (dimensions.length > 0 && metrics.length > 0) {
+		if (dimensions.length > 0 && metrics.length > 0 && segmentation_id !== '') {
 			setDisabled(false);
 		} else {
 			setDisabled(true);
@@ -77,10 +79,9 @@ function EventAnalysis() {
 				return;
 			}
 			Message.success('成功添加到看板');
-			setShowDialog(false);
+			history.push('/growthhacker/projectdata/db');
 		}).catch((e) => {
 			Message.success(e.toString());
-		}).finally(() => {
 			setLoading(false);
 		});
 	};
@@ -95,6 +96,7 @@ function EventAnalysis() {
 	};
 
 	const onSave = () => {
+		setSubmitDisabled(true);
 		setShowDialog(true);
 	};
 

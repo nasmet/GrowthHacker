@@ -23,6 +23,7 @@ import {
 import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
 import Filter from '../Filter';
+import Header from '../Header';
 
 const {
 	Column,
@@ -35,27 +36,37 @@ export default function ShareTrend() {
 	const [loading, setLoading] = useState(false);
 	const [tableData, setTableData] = useState([]);
 	const [titles, setTitles] = useState([]);
-	const [values, setValues] = useState(['0']);
+	const [date, setDate] = useState('day:0');
+	const [curPage, setCurPage] = useState(1);
+	const [count, setCount] = useState(0);
+	const [chartData, setChartData] = useState([]);
+	const chartStyle = {
+		x: 'time',
+		y: 'count',
+		color: 'event',
+	};
 
 	useEffect(() => {
 		function getShareTrend() {
 			setLoading(true);
-			let date = '';
-			if (values.length === 1) {
-				date = `day:${values[0]}`;
-			} else {
-				date = `abs:${values[0]},${values[1]}`;
-			}
-			api.ShareTrend({
-				project_id: projectId,
+			api.getShareTrend({
+				projectId,
 				trend: {
 					date,
+					limit: config.LIMIT,
+					offset: (curPage - 1) * config.LIMIT,
 				}
 			}).then((res) => {
 				if (cancelTask) {
 					return;
 				}
-				console.log(res);
+				const {
+					share_overview,
+					total,
+				} = res;
+				setTableData(share_overview);
+				setCount(total);
+				setChartData(assembleChartData(share_overview));
 			}).catch((e) => {
 				Message.success(e.toString());
 			}).finally(() => {
@@ -66,11 +77,56 @@ export default function ShareTrend() {
 			});
 		}
 
-		// getShareTrend();
-	}, [values]);
+		getShareTrend();
+
+		return () => {
+			cancelTask = true;
+		};
+	}, [date, curPage]);
+
+	function assembleChartData(arg) {
+		const temp = [];
+		arg.map((item) => {
+			const {
+				new_count,
+				share_count,
+				share_open_count,
+				share_reflux_ratio,
+				share_user_count,
+				time_range
+			} = item;
+			const time = formatTime(time_range);
+			temp.push({
+				time,
+				event: '分享人数',
+				count: share_user_count,
+			});
+			temp.push({
+				time,
+				event: '分享次数',
+				count: share_count,
+			});
+			temp.push({
+				time,
+				event: '回流量',
+				count: share_open_count,
+			});
+			temp.push({
+				time,
+				event: '分享回流比',
+				count: share_reflux_ratio,
+			});
+			temp.push({
+				time,
+				event: '分享新增',
+				count: new_count,
+			});
+		});
+		return temp;
+	}
 
 	const filterChange = (e) => {
-		setValues(e);
+		setDate(e);
 	};
 
 	const renderTitles = () => {
@@ -81,18 +137,58 @@ export default function ShareTrend() {
 		});
 	};
 
+	const pageChange = (e) => {
+		setCurPage(e);
+	};
+
+	const renderFirstColumn = (value, index, record) => {
+		return <span>{formatTime(record.time_range)}</span>;
+	};
+
+	function formatTime(arg) {
+		const start = arg.from;
+		const end = arg.to;
+		if (end - start > 3600) {
+			return `日期:${utils.formatUnix(start, 'Y-M-D')}`;
+		}
+		const formatStart = utils.formatUnix(start, 'h:m');
+		const formatEnd = utils.formatUnix(end, 'h:m');
+		return `${formatStart}-${formatEnd}`;
+	}
+
+	const renderFiveColumn = (value, index, record) => {
+		const temp = (record.share_reflux_ratio * 100).toFixed(2);
+		return `${temp}%`;
+	};
+
 	return (
 		<div className={styles.wrap}>
 			<p className={styles.title}>分享趋势</p>
 			<Filter filterChange={filterChange} />
+			<div>
+				<Header date={date} />
+				<Components.BasicColumn data={chartData} {...chartStyle} forceFit />
+			</div>
 			<IceContainer>
 				<Table 
 					loading={loading} 
 					dataSource={tableData} 
 					hasBorder={false}
 				>
-					{renderTitles()}
+					<Column title='日期' cell={renderFirstColumn} />
+					<Column title='分享人数' dataIndex='share_user_count' />
+					<Column title='分享次数' dataIndex='share_count' />
+					<Column title='回流量' dataIndex='share_open_count' />
+					<Column title='分享回流比' cell={renderFiveColumn} />
+					<Column title='分享新增' dataIndex='new_count' />
 				</Table>
+
+	          	<Pagination
+	           		className={styles.pagination}
+	            	current={curPage}
+	            	total={count}
+	            	onChange={pageChange}
+	          	/>
 			</IceContainer>
     	</div>
 	);
