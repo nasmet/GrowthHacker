@@ -86,11 +86,40 @@ function ProjectList({
 		}];
 	};
 
+	const onDeleteProject = (id, index, e) => {
+		e.stopPropagation();
+		Dialog.confirm({
+			content: '确定删除吗？',
+			onOk: () => {
+				setLoading(true);
+				api.deleteProject({
+					id,
+				}).then((res) => {
+					if (cancelTask) {
+						return;
+					}
+					setData((pre) => {
+						pre.splice(index, 1);
+						return [...pre];
+					});
+					Message.success('删除成功');
+				}).catch((e) => {
+					Message.success(e.toString());
+				}).finally(() => {
+					if (cancelTask) {
+						return;
+					}
+					setLoading(false);
+				});
+			}
+		});
+	}
+
 	const renderList = () => {
-		return data.map((item) => {
+		return data.map((item, index) => {
 			const newItem = constructNewItem(item);
 			return (
-				<Button className={styles.item} key={item.id} onClick={jumpProjectData.bind(this,item)}>
+				<Button type='primary' className={styles.item} key={item.id} onClick={jumpProjectData.bind(this,item)}>
 					{	
 						newItem.map((item,index)=>{
 							const{
@@ -105,6 +134,7 @@ function ProjectList({
 							);
 						})
 					}
+					<Icon className={styles.close} type='close' onClick={onDeleteProject.bind(this,item.id,index)} />
 				</Button>
 			);
 		});
@@ -119,6 +149,7 @@ function ProjectList({
 	};
 
 	const onOk = (values, cb) => {
+		console.log(values);
 		api.createProject(values).then((res) => {
 			if (cancelTask) {
 				return;

@@ -1,9 +1,10 @@
 .wrap{
+	margin: 10px;
 	display: flex;
 }
 .leftContent{
-	flex: 7;
-	margin: 10px;
+	flex: 6;
+	margin-right: 20px;
 }
 
 .rightContent{

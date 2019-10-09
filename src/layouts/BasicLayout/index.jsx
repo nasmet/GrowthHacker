@@ -12,15 +12,7 @@ import './index.scss';
 
 function BasicLayout({
 	children,
-	history,
 }) {
-	useEffect(() => {
-		const token = sessionStorage.getItem(config.TOKENKEY);
-		if (!token) {
-			history.push('/user/login');
-		}
-	}, []);
-
 	return (
 		<Layout className="ice-design-layout" fixable>
 	      	<Layout.Aside width={240}>

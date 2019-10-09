@@ -6,14 +6,16 @@
 	flex: 1;
 	min-height: 500px;
 	margin-right: 10px;
-	border: 1px solid #e6e6e6;
+	padding: 10px;
+	border-radius: 10px;
+	background: #fff;
 	display: flex;
 	flex-direction: column;
 }
 .rightContent{
 	min-width: 280px;
 	min-height: 500px;
-	border: 1px solid #e6e6e6;
+	background: #fff;
 	display: flex;
 	flex-direction: column;
 }

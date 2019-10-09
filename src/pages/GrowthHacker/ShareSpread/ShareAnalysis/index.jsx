@@ -34,53 +34,80 @@ export default function ShareAnalysis() {
 	const [loading, setLoading] = useState(false);
 	const [tableData, setTableData] = useState([]);
 	const [titles, setTitles] = useState([]);
-
-	function getShareAnalysis() {
-		setLoading(true);
-		api.getShareAnalysis({
-			projectId,
-		}).then((res) => {
-			if (cancelTask) {
-				return;
-			}
-			console.log(res);
-		}).catch((e) => {
-			Message.success(e);
-		}).finally(() => {
-			if (cancelTask) {
-				return;
-			}
-			setLoading(false);
-		});
-	}
+	const [date, setDate] = useState('day:0');
+	const [search, setSearch] = useState('');
+	const [emptyContent, setEmptyContent] = useState(1);
 
 	useEffect(() => {
-		// getShareAnalysis();
-		
+		function getShareAnalysis() {
+			setLoading(true);
+			api.getShareAnalysis({
+				projectId,
+				trend: {
+					date,
+					name: search,
+				}
+			}).then((res) => {
+				if (cancelTask) {
+					return;
+				}
+				setEmptyContent(search ? 0 : 1);
+				setTableData(res.data);
+			}).catch((e) => {
+				Message.success(e);
+			}).finally(() => {
+				if (cancelTask) {
+					return;
+				}
+				setLoading(false);
+			});
+		}
+
+		getShareAnalysis();
+
 		return () => {
 			cancelTask = true;
 		};
-	}, []);
+	}, [date, search]);
 
 	const filterChange = (e) => {
-		console.log(e);
+		setDate(e);
 	};
 
-	const renderTitles = () => {
-		return titles.map((item, index) => {
-			return (
-				<Column key={index} title={item} dataIndex={index.toString()} />
-			);
-		});
+	const renderFiveColumn = (value, index, record) => {
+		const temp = (record.share_reflux_ratio * 100).toFixed(2);
+		return `${temp}%`;
+	};
+
+	const onInputChange = (e) => {
+		setSearch(e);
 	};
 
 	return (
 		<div className={styles.wrap}>
 			<p className={styles.title}>分享触发分析</p>
 			<Filter filterChange={filterChange} />
+			<p>
+				<Input 
+					hasClear 
+					hint='search' 
+					placeholder="请输入触发名称" 
+					onChange={utils.debounce(onInputChange, 500)}
+				/>
+			</p>
 			<IceContainer>
-				<Table loading={loading} dataSource={tableData} hasBorder={false}>
-					{renderTitles()}
+				<Table 
+					loading={loading} 
+					dataSource={tableData} 
+					hasBorder={false}
+					emptyContent={<span>{emptyContent?'暂无数据':'查询结果为空'}</span>}
+				>
+					<Column title='触发名称' dataIndex='trigger_name' />
+					<Column title='分享人数' dataIndex='share_user_count' />
+					<Column title='分享次数' dataIndex='share_count' />
+					<Column title='分享回流量' dataIndex='share_open_count' />
+					<Column title='分享回流比' cell={renderFiveColumn} />
+					<Column title='分享新增' dataIndex='new_count' />
 				</Table>
 			</IceContainer>
     	</div>

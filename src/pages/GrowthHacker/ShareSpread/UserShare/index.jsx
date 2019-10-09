@@ -32,13 +32,15 @@ const {
 } = Tab;
 
 function UserShare() {
+	const [date, setDate] = useState('day:0');
+
 	const renderTab = () => {
 		return tabs.map((item) => {
 			const Content = item.component;
 			return (
 				<Item key={item.key} title={item.tab} >
           			<div className={styles.marginTop10}>
-            			<Content type={item.key} />
+            			<Content type={item.key} date={date} />
           			</div>
         		</Item>
 			);
@@ -46,14 +48,14 @@ function UserShare() {
 	};
 
 	const filterChange = (e) => {
-		console.log(e);
+		setDate(e);
 	};
 
 	return (
 		<div className={styles.wrap}>
 			<p className={styles.title}>用户分享</p>
 			<Filter filterChange={filterChange} />
-			<Tab defaultActiveKey="us">
+			<Tab defaultActiveKey="user">
 	    		{renderTab()}
 	  		</Tab>
     	</div>

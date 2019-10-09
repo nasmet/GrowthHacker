@@ -120,18 +120,18 @@ function UserGroup({
 	return (
 		<div className={styles.wrap}>
 			<p className={styles.title}>用户分群列表</p>
-			<p>
-				<Button style={{borderRadius:'10px'}} onClick={onCreateGroup}>新建分群</Button>
-			</p>
-			<Table 
-				loading={loading} 
-				dataSource={tableData} 
-				hasBorder={false}
-			>
-				<Column title='id' cell={renderFirstCell} />
-				<Column title='名称' dataIndex='name' />
-				<Column title='操作' cell={renderLastCell} />
-			</Table>
+			<IceContainer>
+				<Button type='primary' style={{borderRadius:'10px',marginBottom:'20px'}} onClick={onCreateGroup}>新建分群</Button>
+				<Table 
+					loading={loading} 
+					dataSource={tableData} 
+					hasBorder={false}
+				>
+					<Column title='id' cell={renderFirstCell} />
+					<Column title='名称' dataIndex='name' />
+					<Column title='操作' cell={renderLastCell} />
+				</Table>
+			</IceContainer>
     	</div>
 	);
 }

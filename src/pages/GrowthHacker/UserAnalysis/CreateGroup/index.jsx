@@ -42,6 +42,7 @@ function CreateGroup() {
 	};
 
 	const onSave = () => {
+		console.log(steps);
 		setSubmitDisabled(true);
 		setShowDialog(true);
 	};
@@ -83,7 +84,6 @@ function CreateGroup() {
 			conditions: [],
 		};
 		display(steps, result);
-		console.log(result);
 		api.createUserGroup({
 			projectId,
 			trend: result,

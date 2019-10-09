@@ -74,14 +74,13 @@ function ProjectData({
 
 	return (
 		<div>
-			<h1 className={styles.title}>{name}</h1>
+			<h2 className={styles.title}>{name}</h2>
 			<Nav
-        		className="ice-menu-custom"
-        		type= 'primary'
         		direction="hoz"
         		triggerType="hover"
         		selectedKeys={[path]}
         		defaultSelectedKeys={['/growthhacker/projectdata/db']} 
+        		type='line'
       		>
         		{projectDataConfig.map(traversing)}
       		</Nav>

@@ -65,10 +65,10 @@ export default function Top({
 			<p style={{paddingLeft:'20px'}}>{name}</p>
 			<div className={styles.userShareItemChart}>
 				<Table loading={loading} dataSource={tableData} hasBorder={false} >
-					<Column className={styles.column} title='Top排名' dataIndex='ranking_num' />
-					<Column className={styles.column} title='头像' dataIndex='avatar' />
-					<Column className={styles.column} title='昵称' dataIndex='name' />
-					<Column className={styles.column} title={title} dataIndex='count' />
+					<Column style={{background: 'transparent'}} className={styles.column} title='Top排名' dataIndex='ranking_num' />
+					<Column style={{background: 'transparent'}} className={styles.column} title='头像' dataIndex='avatar' />
+					<Column style={{background: 'transparent'}} className={styles.column} title='昵称' dataIndex='name' />
+					<Column style={{background: 'transparent'}} className={styles.column} title={title} dataIndex='count' />
 				</Table>
 			</div>
 		</div>

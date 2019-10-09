@@ -50,7 +50,6 @@ function UserLogin({
 	}, []);
 
 	const onLogin = (e) => {
-		console.log(e);
 		const {
 			username,
 			password,
@@ -76,7 +75,7 @@ function UserLogin({
 					onSubmit={onLogin} 
 					initialValues={values}
 					renderField={({label, component, error}) => (
-			            <div style={{display:'flex',alignItems:'center', marginBottom: '10px'}}>
+			            <div style={{display:'flex',alignItems:'center', marginBottom: '20px'}}>
 			              <div style={{width:'80px'}}>{label}</div>
 			              <span>{component}</span>
 			            </div>

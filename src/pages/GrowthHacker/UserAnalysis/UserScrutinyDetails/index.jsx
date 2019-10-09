@@ -147,12 +147,12 @@ function UserScrutinyDetails({
 	return (
 		<div className={styles.wrap}>
       		<div className={styles.leftContent}>
-      			<p>
-					<Button style={{borderRadius:'10px'}} onClick={onBack}>返回今日访问用户</Button>
-				</p>
-      			<Loading visible={loading} inline={false}>
-      				<Components.BasicColumn data={chartData} {...chartStyle} forceFit />
-      			</Loading>
+      			<div style={{background:'#fff'}}>
+					<Button style={{borderRadius:'10px',margin:'10px'}} onClick={onBack}>返回今日访问用户</Button>
+	      			<Loading visible={loading} inline={false}>
+	      				<Components.BasicColumn data={chartData} {...chartStyle} forceFit />
+	      			</Loading>
+      			</div>
       			<Tab defaultActiveKey="all" onChange={onTabChange}>
 		      		{renderTab()}
 		      	</Tab>

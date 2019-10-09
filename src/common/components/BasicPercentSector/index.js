@@ -70,6 +70,6 @@ export default function BasicPercentSector({
 	              formatter={gLabel}
 	            />
     		</Geom>
-  		</Chart> : <div style={{textAlign:'center',color: '#A0A2AD'}}>没有可视化数据</div>
+  		</Chart> : <div style={{height:`${height}px`,display:'flex',justifyContent:'center',alignItems:'center', color: '#A0A2AD'}}>没有可视化数据</div>
 	);
 }

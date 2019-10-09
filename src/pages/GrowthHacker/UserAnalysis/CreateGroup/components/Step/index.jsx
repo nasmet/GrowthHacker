@@ -141,8 +141,17 @@ export default function Filter({
 				value: '',
 				date: [moment(), moment()],
 			},
+			curDate: [moment(), moment()],
+			onVisibleChange: function(formCore, e) {
+				if (!e) {
+					formCore.setFieldValue('date', this.curDate);
+				}
+			},
+			onOk: function(formCore, e) {
+				formCore.setFieldValue('date', e);
+				this.curDate = e;
+			},
 			onChange: function(e) {
-				console.log(e);
 				this.values = e;
 			},
 			effects: [{
@@ -208,6 +217,9 @@ export default function Filter({
 			values,
 			onChange,
 			effects,
+			onVisibleChange,
+			onOk,
+			curDate,
 		} = item;
 		return (
 			<Form
@@ -216,6 +228,7 @@ export default function Filter({
 	        	onChange={onChange.bind(item)}
 	        	effects={effects}
 			>	
+			{formCore=>(
 				<div className={styles.container}>
 					<div className={styles.item}>
 						<span className={styles.name}>{alias}</span>
@@ -233,10 +246,16 @@ export default function Filter({
 							<Select style={{width:'150px'}} dataSource={[]} />
 						</Field>
 						<Field name='date'>
-							<RangePicker style={{width:'120px'}} />
+							<RangePicker 
+								style={{width:'120px'}} 
+								disabledDate={model.disabledDate} 
+								onVisibleChange={onVisibleChange.bind(item,formCore)}
+								onOk={onOk.bind(item,formCore)}
+							/>
 						</Field>
 					</div>
 				</div>
+			)}
 			</Form>
 		);
 	}
@@ -268,7 +287,7 @@ export default function Filter({
 
 	return (
 		<Loading visible={loading} inline={false}>
-			<div className={styles.title}>新建分群</div>
+			<p className={styles.title}>新建分群</p>
 			<div className={styles.combination}>{combination}</div>
 				{renderStep()}
 			<div className={styles.filter} onClick={onAddAndFilter}>

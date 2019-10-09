@@ -5,6 +5,7 @@
 	"author": "ice-admin@alibaba-inc.com",
 	"dependencies": {
 		"@alifd/next": "^1.15.10",
+		"@alifd/theme-ice-purple": "^1.0.1",
 		"@antv/data-set": "^0.9.6",
 		"@ice/form": "^0.1.5",
 		"@ice/store": "^0.1.1",

@@ -29,48 +29,52 @@ const {
 
 export default function UserShare({
 	type,
+	date,
 }) {
 	const projectId = sessionStorage.getItem('projectId');
 	let cancelTask = false;
 	const [loading, setLoading] = useState(false);
 	const [tableData, setTableData] = useState([]);
 
-	function getUserShare() {
-		setLoading(true);
-		api.getUserShare({
-			projectId,
-			type,
-		}).then((res) => {
-			if (cancelTask) {
-				return;
-			}
-			console.log(res);
-		}).catch((e) => {
-			Message.success(e.toString());
-		}).finally(() => {
-			if (cancelTask) {
-				return;
-			}
-			setLoading(false);
-		});
-	}
-
 	useEffect(() => {
+		function getUserShare() {
+			setLoading(true);
+			api.getUserShare({
+				projectId,
+				trend: {
+					tab: type,
+					date,
+				}
+			}).then((res) => {
+				if (cancelTask) {
+					return;
+				}
+				setTableData(res.data);
+			}).catch((e) => {
+				Message.success(e.toString());
+			}).finally(() => {
+				if (cancelTask) {
+					return;
+				}
+				setLoading(false);
+			});
+		}
+
+		getUserShare();
 
 		return () => {
 			cancelTask = true;
 		}
-	}, []);
+	}, [date]);
 
 	return (
 		<div className={styles.content}>
 			<Table loading={false} dataSource={tableData} hasBorder={false} >
-				<Column title='用户' dataIndex='user' />
-				<Column title='备注' dataIndex='remark' />
-				<Column title='分享次数' dataIndex='shareCount' />
-				<Column title='回流量' dataIndex='flow' />
-				<Column title='分享回流比' dataIndex='shareRate' />
-				<Column title='分享新增' dataIndex='shareAddition' />
+				<Column title='用户' dataIndex='wechat_openid' />
+				<Column title='分享次数' dataIndex='share_count' />
+				<Column title='回流量' dataIndex='share_open_count' />
+				<Column title='分享回流比' dataIndex='share_reflux_ratio' />
+				<Column title='分享新增' dataIndex='new_count' />
 			</Table>
 		</div>
 	);

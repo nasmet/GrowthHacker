@@ -44,6 +44,8 @@ import HistoryRecord from './pages/Sql/HistoryRecord';
 import UserLogin from './pages/UserLogin';
 import UserRegister from './pages/UserRegister';
 
+import NotFound from './common/components/NotFound';
+
 const routerConfig = [
 	// 分组路由，children 里的路由会将父节点的 component 作为布局组件
 	{
@@ -63,26 +65,34 @@ const routerConfig = [
 			path: '/sql/queryeditor',
 			component: QueryEditor,
 			exact: true,
+			auth: true,
 		}, {
 			id: '20003',
 			path: '/sql/myquery',
 			component: MyQuery,
 			exact: true,
+			auth: true,
 		}, {
 			id: '20004',
 			path: '/sql/savequery',
 			component: SaveQuery,
 			exact: true,
+			auth: true,
 		}, {
 			id: '20005',
 			path: '/sql/historyrecord',
 			component: HistoryRecord,
 			exact: true,
+			auth: true,
 		}, {
 			id: '20006',
 			path: '/sql',
 			// 重定向
 			redirect: '/sql/queryeditor',
+		}, {
+			id: '20007',
+			// 404 没有匹配到的路由
+			component: NotFound,
 		}],
 	}, {
 		id: '1000',
@@ -117,6 +127,7 @@ const routerConfig = [
 			path: '/growthhacker/projectlist',
 			component: ProjectList,
 			exact: true,
+			auth: true,
 		}, {
 			id: '1008',
 			path: '/growthhacker/projectdata',
@@ -126,119 +137,148 @@ const routerConfig = [
 				path: '/growthhacker/projectdata/retentiondetails',
 				component: RetentionDetails,
 				exact: true,
+				auth: true,
 			}, {
 				id: '1008001',
 				path: '/growthhacker/projectdata/funneldetails',
 				component: FunnelDetails,
 				exact: true,
+				auth: true,
 			}, {
 				id: '1008002',
 				path: '/growthhacker/projectdata/distributedetails',
 				component: DistributeDetails,
 				exact: true,
+				auth: true,
 			}, {
 				id: '1008003',
 				path: '/growthhacker/projectdata/leveldetails',
 				component: LevelDetails,
 				exact: true,
+				auth: true,
 			}, {
 				id: '1008003',
 				path: '/growthhacker/projectdata/eventanalysisdetails',
 				component: EventAnalysisDetails,
 				exact: true,
+				auth: true,
 			}, {
 				id: '1008005',
 				path: '/growthhacker/projectdata/db',
 				component: DataBoard,
 				exact: true,
+				auth: true,
 			}, {
 				id: '1008006',
 				path: '/growthhacker/projectdata/pa/eventanalysis',
 				component: EventAnalysis,
 				exact: true,
+				auth: true,
 			}, {
 				id: '1008007',
 				path: '/growthhacker/projectdata/pa/retentionanalysis',
 				component: RetentionAnalysis,
 				exact: true,
+				auth: true,
 			}, {
 				id: '1008008',
 				path: '/growthhacker/projectdata/pa/funnelanalysis',
 				component: FunnelAnalysis,
 				exact: true,
+				auth: true,
 			}, {
 				id: '1008009',
 				path: '/growthhacker/projectdata/ua/usergroup',
 				component: UserGroup,
 				exact: true,
+				auth: true,
 			}, {
 				id: '1008010',
 				path: '/growthhacker/projectdata/ua/userscrutiny',
 				component: UserScrutiny,
 				exact: true,
+				auth: true,
 			}, {
 				id: '1008011',
 				path: '/growthhacker/projectdata/ua/userportrait',
 				component: UserPortrait,
 				exact: true,
+				auth: true,
 			}, {
 				id: '1008014',
 				path: '/growthhacker/projectdata/ua/userscrutinydetails',
 				component: UserScrutinyDetails,
 				exact: true,
+				auth: true,
 			}, {
 				id: '1008015',
 				path: '/growthhacker/projectdata/ua/creategroup',
 				component: CreateGroup,
 				exact: true,
+				auth: true,
 			}, {
 				id: '1008016',
 				path: '/growthhacker/projectdata/ua/usergroupdetails',
 				component: UserGroupDetails,
 				exact: true,
+				auth: true,
 			}, {
 				id: '1008012',
 				path: '/growthhacker/projectdata/ca',
 				component: CustomerAnalysis,
 				exact: true,
+				auth: true,
 			}, {
 				id: '1008013',
 				path: '/growthhacker/projectdata/dc',
 				component: DataCenter,
 				exact: true,
+				auth: true,
 			}, {
 				id: '1008017',
 				path: '/growthhacker/projectdata/fs/shareanalysis',
 				component: ShareAnalysis,
 				exact: true,
+				auth: true,
 			}, {
 				id: '1008018',
 				path: '/growthhacker/projectdata/fs/sharetrend',
 				component: ShareTrend,
 				exact: true,
+				auth: true,
 			}, {
 				id: '1008019',
 				path: '/growthhacker/projectdata/fs/shareview',
 				component: ShareView,
 				exact: true,
+				auth: true,
 			}, {
 				id: '1008020',
 				path: '/growthhacker/projectdata/fs/usershare',
 				component: UserShare,
 				exact: true,
+				auth: true,
 			}, {
 				id: '10080000',
 				path: '/growthhacker/projectdata',
 				// 重定向
 				redirect: '/growthhacker/projectdata/db',
+			}, {
+				id: '10080001',
+				// 404 没有匹配到的路由
+				component: NotFound,
 			}],
 		}, {
 			id: '10000',
 			path: '/',
 			// 重定向
 			redirect: '/growthhacker/projectlist',
+		}, {
+			id: '10001',
+			// 404 没有匹配到的路由
+			component: NotFound,
 		}]
-	}
+	},
 ];
 
 export default routerConfig;

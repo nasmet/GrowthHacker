@@ -31,27 +31,30 @@ export default function CreateProject({
 	const [show, setShow] = useState(false);
 	const [values, setValues] = useState({});
 	const form = useRef(null);
+	const [disabled, setDisabled] = useState(true);
 
 	const validateAllFormField = () => {
-		form.current.validateAll((errors, values) => {
-			if (errors) {
-				return;
-			}
-			setShow(true);
-			onOk(values, () => {
-				setShow(false);
-			});
+		setShow(true);
+		onOk(values, () => {
+			setShow(false);
 		});
 	};
 
 	const onReset = () => {
 		setValues({});
+		setDisabled(true);
+	};
+
+	const onChange = (e) => {
+		form.current.validateAll((errors, values) => {
+			setDisabled(errors ? true : false);
+		});
 	};
 
 	return (
 		<Loading visible={show} inline={false}>
       		<div className={styles.wrap}>
-	        	<IceFormBinderWrapper value={values} ref={form}>
+	        	<IceFormBinderWrapper value={values} ref={form} onChange={onChange}>
 	          		<div className={styles.formItem}>
 	            		<div className={styles.formLabel}>名称：</div>
 	            		<div className={styles.content}>
@@ -78,6 +81,21 @@ export default function CreateProject({
 			            	</IceFormBinder>
 			            	<div className={styles.formError}>
 			              		<IceFormError name="type" />
+			            	</div>
+		            	</div>
+		          	</div>
+
+		          	<div className={styles.formItem}>
+		            	<div className={styles.formLabel}>appid：</div>
+		            	<div className={styles.content}>
+			            	<IceFormBinder name="appid" required message="必填">
+								<Input 
+		              				className={styles.input} 
+		              				placeholder='请输入appid'
+		              			/>
+			            	</IceFormBinder>
+			            	<div className={styles.formError}>
+			              		<IceFormError name="appid" />
 			            	</div>
 		            	</div>
 		          	</div>
@@ -112,7 +130,7 @@ export default function CreateProject({
 	          		</div>
 
 					<div className={styles.btnWrap}>
-	          			<Button className={styles.btn} type="primary" onClick={validateAllFormField}>
+	          			<Button className={styles.btn} disabled={disabled} type="primary" onClick={validateAllFormField}>
 		            		确定
 		          		</Button>
 		          		<Button className={styles.btn} type="primary" onClick={onReset}>

@@ -124,7 +124,7 @@ function DataBoard({
 			} = item;
 
 			return (
-				<Button className={styles.item} key={id} onClick={jumpDataBoardDetails.bind(this,item)}>
+				<Button type='primary' className={styles.item} key={id} onClick={jumpDataBoardDetails.bind(this,item)}>
 					<Icon className={styles.close} type='close' onClick={onDeleteBoard.bind(this,id,index)} />
 					<span className={styles.name}>{name}</span>	
 				</Button>

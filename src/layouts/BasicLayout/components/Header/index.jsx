@@ -49,7 +49,6 @@ function Header({
 	return (
 		<div className="header-container">
     		<Nav
-      			className="header-navbar-menu"
       			direction="hoz"
       			type="secondary"
       			triggerType="hover"

@@ -50,6 +50,7 @@ export default function ShareDistribute({
 			if (cancelTask) {
 				return;
 			}
+			console.log(res);
 			setChartData(res.data);
 		}).catch((e) => {
 			console.error(e);

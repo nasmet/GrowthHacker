@@ -165,7 +165,7 @@ export default function ShareTrend() {
 		<div className={styles.wrap}>
 			<p className={styles.title}>分享趋势</p>
 			<Filter filterChange={filterChange} />
-			<div>
+			<div style={{background:'#fff'}}>
 				<Header date={date} />
 				<Components.BasicColumn data={chartData} {...chartStyle} forceFit />
 			</div>

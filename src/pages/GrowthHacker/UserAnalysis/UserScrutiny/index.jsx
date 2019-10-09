@@ -182,8 +182,8 @@ function UserScrutiny({
 
 	return (
 		<div className={styles.wrap}> 
-			<p className={styles.title}>用户细查</p>
-			<p className={styles.input}>
+			<p className={styles.titleWrap}>
+				<span className={styles.title}>用户细查</span>
 				<Input 
 					hasClear 
 					hint='search' 
@@ -197,26 +197,28 @@ function UserScrutiny({
       		</IceContainer>
       		*/}
       		<Loading visible={loading} inline={false}>
-				<Table 
-					dataSource={tableData} 
-					hasBorder={false}
-					emptyContent={<span>{emptyContent?'暂无数据':'查询结果为空'}</span>}
-				>
-				    {renderTitle()} 
-				    {/*
-				    <Column 
-				    	title={renderLastTitle()} 
-				    	lock='right'
-				    	width={150} 
-				    /> 
-					*/} 		
-				</Table>
-			 	<Pagination
-	            	className={styles.pagination}
-	           		current={curPage}
-	            	total={total}
-	            	onChange={pageChange}
-			    />
+      			<IceContainer>
+					<Table 
+						dataSource={tableData} 
+						hasBorder={false}
+						emptyContent={<span>{emptyContent?'暂无数据':'查询结果为空'}</span>}
+					>
+					    {renderTitle()} 
+					    {/*
+					    <Column 
+					    	title={renderLastTitle()} 
+					    	lock='right'
+					    	width={150} 
+					    /> 
+						*/} 		
+					</Table>
+				 	<Pagination
+		            	className={styles.pagination}
+		           		current={curPage}
+		            	total={total}
+		            	onChange={pageChange}
+				    />
+			    </IceContainer>
 		    </Loading>
     	</div>
 	);

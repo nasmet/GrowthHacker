@@ -24,7 +24,7 @@ export default function BasicPolyline({
 	const pos = `${x}*${y}`;
 
 	return (
-	data.length !== 0 ?
+		data.length !== 0 ?
 		<Chart 
 			height={height}
 			data={data} 
@@ -49,6 +49,6 @@ export default function BasicPolyline({
 				size={4} 
 				color={color} 
 			/>
-      	</Chart> : <div style={{textAlign:'center',color: '#A0A2AD'}}>没有可视化数据</div>
+      	</Chart> : <div style={{height:`${height}px`,display:'flex',justifyContent:'center',alignItems:'center', color: '#A0A2AD'}}>没有可视化数据</div>
 	);
 }

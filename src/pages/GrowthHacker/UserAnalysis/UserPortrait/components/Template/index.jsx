@@ -48,6 +48,9 @@ export default function Template({
 			x: 'name',
 			y: 'count',
 			color: 'value',
+			gLabel: (val, item) => {
+				return item.point.value;
+			}
 		};
 	}
 

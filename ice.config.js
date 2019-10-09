@@ -6,7 +6,7 @@ module.exports = {
 	publicPath: './',
 	plugins: [
 		['ice-plugin-fusion', {
-			themePackage: '@icedesign/theme',
+			themePackage: '@alifd/theme-ice-purple',
 		}],
 		['ice-plugin-moment-locales', {
 			locales: ['zh-cn'],

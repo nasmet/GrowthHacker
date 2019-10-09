@@ -80,7 +80,7 @@ function UserRegister({
 					    }
 					]}
 					renderField={({label, component, error}) => (
-			            <div style={{position:'relative', display:'flex',alignItems:'center', marginBottom: '10px'}}>
+			            <div style={{position:'relative', display:'flex',alignItems:'center', marginBottom: '20px'}}>
 			              <div style={{width:'80px'}}>{label}</div>
 			              <span>{component}</span>
 			              <div style={{position:'absolute',left:'290px',width:'100px',fontSize:'10px', color: '#ee7893'}}>{error}</div>
@@ -99,7 +99,7 @@ function UserRegister({
 					<Field label="">
 						<div className={styles.btnWrap}>
 							<Button className={styles.btn} type='primary' htmlType="submit">注册</Button>
-							<Button onClick={onBack}>返回</Button>
+							<Button className={styles.btn} onClick={onBack}>返回</Button>
 						</div>
 		      		</Field>
 		  		</Form>

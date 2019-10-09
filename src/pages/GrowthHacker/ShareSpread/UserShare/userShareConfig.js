@@ -3,7 +3,7 @@ import LevelShare from './components/LevelShare';
 import CityDistribute from './components/CityDistribute';
 
 export const tabs = [{
-	key: 'us',
+	key: 'user',
 	tab: '用户分享',
 	component: UserShare,
 }, {
@@ -11,7 +11,7 @@ export const tabs = [{
 	tab: '层级分享',
 	component: LevelShare,
 }, {
-	key: 'cd',
+	key: 'city',
 	tab: '城市分布',
 	component: CityDistribute,
 }];

@@ -76,6 +76,13 @@ export function createProject(data) {
 	return post('/projects', data);
 }
 
+export function deleteProject(data) {
+	const {
+		id,
+	} = data;
+	return del(`/projects/${id}`);
+}
+
 export function createBoard(data) {
 	const {
 		id,
@@ -251,4 +258,20 @@ export function getShareTrend(data) {
 		trend,
 	} = data;
 	return get(`/projects/${projectId}/share/trending`, trend);
+}
+
+export function getShareAnalysis(data) {
+	const {
+		projectId,
+		trend,
+	} = data;
+	return get(`/projects/${projectId}/share/trigger`, trend);
+}
+
+export function getUserShare(data) {
+	const {
+		projectId,
+		trend,
+	} = data;
+	return get(`/projects/${projectId}/share/user`, trend);
 }
