@@ -270,10 +270,10 @@ export default function Filter({
 					{
 						renderChild(item)
 					}
-					<div className={styles.filter} onClick={onAddOrFilter.bind(this, index)} >
+					<Button className={styles.filter} onClick={onAddOrFilter.bind(this, index)} >
 						<Icon type='add' size='small' className={styles.icon} /> 
 						<span>OR</span> 
-					</div>
+					</Button>
 				</div>
 			);
 		});
@@ -284,10 +284,10 @@ export default function Filter({
 			<p className={styles.title}>新建分群</p>
 			<div className={styles.combination}>{combination}</div>
 				{renderStep()}
-			<div className={styles.filter} onClick={onAddAndFilter}>
+			<Button className={styles.filter} onClick={onAddAndFilter}>
       			<Icon type='add' size='small' className={styles.icon} />
       			<span>AND</span>
-			</div>
+			</Button>
 		</Loading>
 	);
 }

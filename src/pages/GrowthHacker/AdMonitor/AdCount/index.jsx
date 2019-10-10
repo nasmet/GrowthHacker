@@ -24,6 +24,8 @@ import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
 
 export default function AdCount() {
+	const projectId = sessionStorage.getItem('projectId');
+	let cancelTask = false;
 	const [loading, setLoading] = useState(false);
 	const [tableData, setTableData] = useState([]);
 
