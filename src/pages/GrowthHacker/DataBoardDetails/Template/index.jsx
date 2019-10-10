@@ -6,7 +6,6 @@ import React, {
 import {
 	Tab,
 	Table,
-	Message,
 	Loading
 } from '@alifd/next';
 import IceContainer from '@icedesign/container';
@@ -83,11 +82,11 @@ export default function Template({
 	};
 
 	return (
-		<div className={styles.wrap}>
-			<p className={styles.title}>{name}</p>
+		<Components.Wrap>
+			<Components.Title title={name} />
 			<Tab defaultActiveKey="0">
 	      		{renderTab()}
 	      	</Tab>
-		</div>
+		</Components.Wrap>
 	);
 }

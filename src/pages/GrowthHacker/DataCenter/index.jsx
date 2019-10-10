@@ -41,10 +41,10 @@ export default function DataCenter() {
 	};
 
 	return (
-		<div className={styles.wrap}>
+		<Components.Wrap>
 			<Tab defaultActiveKey="bp">
 	      		{renderTab()}
 	      	</Tab>
-	    </div>
+		</Components.Wrap>
 	);
 }

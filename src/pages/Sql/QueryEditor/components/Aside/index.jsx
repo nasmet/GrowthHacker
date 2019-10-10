@@ -49,7 +49,7 @@ export default function Aside({
 			setData(tables);
 			setTotal(tables);
 		}).catch((e) => {
-			Message.success(e.toString());
+			model.log(e);
 		}).finally(() => {
 			if (cancelTask) {
 				return;

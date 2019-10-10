@@ -51,7 +51,7 @@ export default function Top({
 			}
 			setTableData(res.users);
 		}).catch((e) => {
-			console.error(e);
+			model.log(e);
 		}).finally(() => {
 			if (cancelTask) {
 				return;

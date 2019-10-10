@@ -22,7 +22,6 @@ import {
 } from 'react-router-dom';
 import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
-import Filter from '../Filter';
 
 const {
 	Column,
@@ -54,7 +53,7 @@ export default function ShareAnalysis() {
 				setEmptyContent(search ? 0 : 1);
 				setTableData(res.data);
 			}).catch((e) => {
-				Message.success(e);
+				model.log(e);
 			}).finally(() => {
 				if (cancelTask) {
 					return;
@@ -84,9 +83,9 @@ export default function ShareAnalysis() {
 	};
 
 	return (
-		<div className={styles.wrap}>
-			<p className={styles.title}>分享触发分析</p>
-			<Filter filterChange={filterChange} />
+		<Components.Wrap>
+			<Components.Title title='分享触发分析' />
+			<Components.DateFilter filterChange={filterChange} />
 			<p>
 				<Input 
 					hasClear 
@@ -110,6 +109,6 @@ export default function ShareAnalysis() {
 					<Column title='分享新增' dataIndex='new_count' />
 				</Table>
 			</IceContainer>
-    	</div>
+    	</Components.Wrap>
 	);
 }

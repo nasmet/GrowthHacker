@@ -47,11 +47,11 @@ export default function UserPortrait() {
 	};
 
 	return (
-		<div className={styles.wrap}>
-			<p className={styles.title}>用户画像</p>
+		<Components.Wrap>
+			<Components.Title title='用户画像' />
 			<Tab defaultActiveKey="aa">
 	      		{renderTab()}
 	      	</Tab>
-      	</div>
+     	</Components.Wrap>
 	);
 }

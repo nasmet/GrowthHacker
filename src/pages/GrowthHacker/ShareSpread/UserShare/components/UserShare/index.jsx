@@ -35,6 +35,8 @@ export default function UserShare({
 	let cancelTask = false;
 	const [loading, setLoading] = useState(false);
 	const [tableData, setTableData] = useState([]);
+	const [curPage, setCurPage] = useState(1);
+	const [count, setCount] = useState(0);
 
 	useEffect(() => {
 		function getUserShare() {
@@ -44,14 +46,17 @@ export default function UserShare({
 				trend: {
 					tab: type,
 					date,
+					limit: config.LIMIT,
+					offset: (curPage - 1) * config.LIMIT,
 				}
 			}).then((res) => {
 				if (cancelTask) {
 					return;
 				}
+				setCount(res.total);
 				setTableData(res.data);
 			}).catch((e) => {
-				Message.success(e.toString());
+				model.log(e);
 			}).finally(() => {
 				if (cancelTask) {
 					return;
@@ -65,17 +70,29 @@ export default function UserShare({
 		return () => {
 			cancelTask = true;
 		}
-	}, [date]);
+	}, [date, curPage]);
+
+	const pageChange = (e) => {
+		setCurPage(e);
+	};
 
 	return (
 		<div className={styles.content}>
-			<Table loading={false} dataSource={tableData} hasBorder={false} >
-				<Column title='用户' dataIndex='wechat_openid' />
-				<Column title='分享次数' dataIndex='share_count' />
-				<Column title='回流量' dataIndex='share_open_count' />
-				<Column title='分享回流比' dataIndex='share_reflux_ratio' />
-				<Column title='分享新增' dataIndex='new_count' />
-			</Table>
+			<IceContainer>
+				<Table loading={false} dataSource={tableData} hasBorder={false} >
+					<Column title='用户' dataIndex='wechat_openid' />
+					<Column title='分享次数' dataIndex='share_count' />
+					<Column title='回流量' dataIndex='share_open_count' />
+					<Column title='分享回流比' dataIndex='share_reflux_ratio' />
+					<Column title='分享新增' dataIndex='new_count' />
+				</Table>
+				<Pagination
+	           		className={styles.pagination}
+	            	current={curPage}
+	            	total={count}
+	            	onChange={pageChange}
+	          	/>
+          	</IceContainer>
 		</div>
 	);
 }

@@ -8,7 +8,6 @@ import {
 	Button,
 	Tab,
 	Table,
-	Message,
 	Loading,
 	Pagination,
 	Icon,
@@ -52,9 +51,11 @@ export default function BuriedPoint() {
 				setCount(total);
 				setTableData(event_entities);
 			}).catch((e) => {
-				Message.success(e.toString());
+				model.log(e);
 			}).finally(() => {
-				if (cancelTask) return;
+				if (cancelTask) {
+					return;
+				}
 				setLoading(false);
 			});
 		}
@@ -85,11 +86,13 @@ export default function BuriedPoint() {
 						pre.splice(index, 1);
 						return [...pre];
 					});
-					Message.success('删除成功');
+					model.log('删除成功');
 				}).catch((e) => {
-					Message.success(e.toString());
+					model.log(e);
 				}).finally(() => {
-					if (cancelTask) return;
+					if (cancelTask) {
+						return;
+					}
 					setLoading(false);
 				});
 			},
@@ -114,9 +117,8 @@ export default function BuriedPoint() {
 	const onClose = () => {
 		setShow(false);
 	};
-	//variable
+
 	const onOk = (values, cb) => {
-		console.log(values);
 		api.createEvent({ ...values,
 			entity_type: 'event',
 		}).then((res) => {
@@ -128,10 +130,10 @@ export default function BuriedPoint() {
 				return [...pre];
 			});
 			setShow(false);
-			Message.success('创建成功');
+			model.log('创建成功');
 		}).catch((e) => {
 			cb();
-			Message.success(e.toString());
+			model.log(e);
 		});
 	};
 

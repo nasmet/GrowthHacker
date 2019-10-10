@@ -76,7 +76,7 @@ function RetentionAnalysis({
 			history.push('/growthhacker/projectdata/db');
 		}).catch((e) => {
 			setLoading(false);
-			Message.success(e.toString());
+			model.log(e);
 		});
 	};
 
@@ -95,7 +95,7 @@ function RetentionAnalysis({
 	};
 
 	return (
-		<div className={styles.wrap}>
+		<Components.Wrap>
 			<p className={styles.titleWrap}>
 				<span className={styles.title}>新建留存分析</span>
 				<Button type='primary' disabled={disabled} onClick={onSave}>保存</Button>
@@ -113,7 +113,7 @@ function RetentionAnalysis({
 					</div>
 				</Loading>	
 			</Dialog>	
-    	</div>
+    	</Components.Wrap>
 	);
 }
 

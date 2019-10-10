@@ -64,7 +64,7 @@ function UserScrutinyDetails({
 			setChartData(bars);
 			creatChartStyle();
 		}).catch((e) => {
-			Message.success(e.toString());
+			model.log(e);
 		}).finally(() => {
 			if (cancelTask) {
 				return;

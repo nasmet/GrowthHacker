@@ -46,6 +46,19 @@ export default [{
 		path: `${baseUrl}/fs/usershare`,
 	}],
 }, {
+	name: '广告监测',
+	path: `${baseUrl}/ad`,
+	sub: [{
+		name: '广告次数',
+		path: `${baseUrl}/ad/adcount`,
+	}, {
+		name: '广告分析',
+		path: `${baseUrl}/ad/adanalysis`,
+	}, {
+		name: 'ARPU分析',
+		path: `${baseUrl}/ad/arpuanalysis`,
+	}],
+}, {
 	name: '数据中心',
 	path: `${baseUrl}/dc`,
 }];

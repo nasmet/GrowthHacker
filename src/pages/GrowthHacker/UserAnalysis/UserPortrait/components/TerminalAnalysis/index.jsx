@@ -25,7 +25,6 @@ import styles from './index.module.scss';
 import {
 	tabs,
 } from './terminalAnalysisConfig';
-import Filter from '../Filter';
 
 const {
 	Item,
@@ -55,7 +54,7 @@ export default function ModelAnalysis() {
 
 	return (
 		<div className={styles.wrap}>
-			<Filter filterChange={filterChange} />
+			<Components.DateFilter filterChange={filterChange} />
 		    <IceContainer>
 			  	<Tab 
 	  				defaultActiveKey='phone_platform' 

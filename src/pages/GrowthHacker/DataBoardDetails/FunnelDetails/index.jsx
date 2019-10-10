@@ -5,7 +5,6 @@ import React, {
 } from 'react';
 import {
 	Table,
-	Message,
 	Loading
 } from '@alifd/next';
 import {
@@ -59,9 +58,11 @@ function FunnelDetails({
 			setTableData(data);
 			setTitles(meta);
 		}).catch((e) => {
-			Message.success(e.toString());
+			model.log(e);
 		}).finally(() => {
-			if (cancelTask) return;
+			if (cancelTask) {
+				return;
+			}
 			setLoading(false);
 		});
 	}
@@ -106,15 +107,15 @@ function FunnelDetails({
 	};
 
 	return (
-		<div className={styles.wrap}>
-			<p className={styles.title}>{name}</p>
+		<Components.Wrap>
+			<Components.Title title={name} />
 			<Loading visible={loading} inline={false}>
 				<Step  totalRate={totalRate} steps={steps} /> 
 				<Table dataSource={tableData} hasBorder={false} >
 				   	{renderTitle()}     		
 				</Table>
 			</Loading>
-		</div>
+		</Components.Wrap>
 	);
 }
 

@@ -6,7 +6,6 @@ import React, {
 import {
 	Tab,
 	Table,
-	Message,
 	Loading,
 	Pagination
 } from '@alifd/next';
@@ -69,7 +68,7 @@ function DistributeDetails({
 			setChartStyle(assemblingChartStyle(meta));
 			setChartData(assemblingChartData(data, meta));
 		}).catch((e) => {
-			Message.success(e.toString());
+			model.log(e);
 		}).finally(() => {
 			if (cancelTask) {
 				return;

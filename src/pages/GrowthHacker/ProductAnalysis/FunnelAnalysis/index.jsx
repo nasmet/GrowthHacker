@@ -82,7 +82,7 @@ function FunnelAnalysis({
 			history.push('/growthhacker/projectdata/db');
 		}).catch((e) => {
 			setLoading(false);
-			Message.success(e.toString());
+			model.log(e);
 		});
 	};
 
@@ -101,7 +101,7 @@ function FunnelAnalysis({
 	};
 
 	return (
-		<div className={styles.wrap}> 
+		<Components.Wrap>
 			<p className={styles.titleWrap}>
 				<span className={styles.title}>新建漏斗分析</span>
 				<Button type='primary' disabled={disabled} onClick={onSave}>保存</Button>
@@ -120,7 +120,7 @@ function FunnelAnalysis({
 					</div>
 				</Loading>	
 			</Dialog>	
-    	</div>
+    	</Components.Wrap>
 	);
 }
 

@@ -5,7 +5,6 @@ import React, {
 } from 'react';
 import {
 	Button,
-	Message,
 	Loading,
 	Icon,
 	Dialog
@@ -24,7 +23,7 @@ function DataBoard({
 
 	const [loading, setLoading] = useState(false);
 	const [data, setData] = useState([]);
-	
+
 	function getBoards() {
 		setLoading(true);
 		api.getBoards({
@@ -35,7 +34,7 @@ function DataBoard({
 			}
 			setData(res.charts);
 		}).catch((e) => {
-			Message.success(e.toString());
+			model.log(e);
 		}).finally(() => {
 			if (cancelTask) {
 				return;
@@ -102,9 +101,9 @@ function DataBoard({
 						pre.splice(index, 1);
 						return [...pre];
 					});
-					Message.success('删除成功');
+					model.log('删除成功');
 				}).catch((e) => {
-					Message.success(e.toString());
+					model.log(e);
 				}).finally(() => {
 					if (cancelTask) {
 						return;
@@ -134,10 +133,12 @@ function DataBoard({
 
 	return (
 		<Loading visible={loading} inline={false}>
-			<div className={styles.wrap}>
-	      		{renderList()}
-	      		{data.length===0?<p>暂无数据</p>:null}
-	    	</div>
+			<Components.Wrap>
+				<div className={styles.content}>
+					{renderList()}
+				</div>
+	      		{data.length===0 && <Components.NotData style={{height:'200px'}} />}
+    		</Components.Wrap>
     	</Loading>
 	);
 }

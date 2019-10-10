@@ -50,7 +50,7 @@ export default function Filter({
 				dividingTargetData(res.segmentations);
 			})
 		} catch (e) {
-			Message.success(e.toString());
+			model.log(e);
 		}
 		if (cancelTask) {
 			return;

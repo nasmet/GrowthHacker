@@ -64,7 +64,7 @@ function UserGroupDetails({
 				setTitles(meta);
 				setTableData(data);
 			}).catch((e) => {
-				Message.success(e.toString());
+				model.log(e);
 			}).finally(() => {
 				if (cancelTask) {
 					return;
@@ -91,11 +91,10 @@ function UserGroupDetails({
 	};
 
 	return (
-		<div className={styles.wrap}>
-			<p>
-				<Button style={{borderRadius:'10px'}} onClick={onBack}>返回用户分群</Button>
-			</p>
+		<Components.Wrap>
+			<Components.Title title='用户分享详情' />
 			<IceContainer>
+				<Button style={{marginBottom:'20px',borderRadius:'10px'}} onClick={onBack}>返回用户分群</Button>
 				<Table 
 					loading={loading} 
 					dataSource={tableData} 
@@ -110,7 +109,7 @@ function UserGroupDetails({
 	            	onChange={pageChange}
 	          	/>
           	</IceContainer>
-    	</div>
+    	</Components.Wrap>
 	);
 }
 

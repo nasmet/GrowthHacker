@@ -3,7 +3,10 @@ import BasicPolyline from './BasicPolyline';
 import BasicSector from './BasicSector';
 import BasicPercentSector from './BasicPercentSector';
 import NotFound from './NotFound';
-import Introduction from './Introduction';
+import DateFilter from './DateFilter';
+import Title from './Title';
+import Wrap from './Wrap';
+import NotData from './NotData';
 
 export default {
 	BasicColumn,
@@ -11,5 +14,8 @@ export default {
 	BasicSector,
 	BasicPercentSector,
 	NotFound,
-	Introduction,
+	DateFilter,
+	Title,
+	Wrap,
+	NotData,
 }

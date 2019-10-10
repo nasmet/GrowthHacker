@@ -6,7 +6,6 @@ import React, {
 import {
 	Tab,
 	Table,
-	Message,
 	Loading
 } from '@alifd/next';
 import {
@@ -60,7 +59,7 @@ function RetentionDetails({
 			setChartStyle(assemblingChartStyle(meta));
 			setChartData(assemblingChartData(data, meta));
 		}).catch((e) => {
-			Message.success(e.toString());
+			model.log(e);
 		}).finally(() => {
 			if (cancelTask) {
 				return;

@@ -53,7 +53,7 @@ export default function AreaDistribute({
 			}
 			setChartData(res.data);
 		}).catch((e) => {
-			console.error(e);
+			model.log(e);
 		}).finally(() => {
 			if (cancelTask) {
 				return;

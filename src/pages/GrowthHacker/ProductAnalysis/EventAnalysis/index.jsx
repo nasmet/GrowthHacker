@@ -81,7 +81,7 @@ function EventAnalysis({
 			Message.success('成功添加到看板');
 			history.push('/growthhacker/projectdata/db');
 		}).catch((e) => {
-			Message.success(e.toString());
+			model.log(e);
 			setLoading(false);
 		});
 	};
@@ -101,7 +101,7 @@ function EventAnalysis({
 	};
 
 	return (
-		<div className={styles.wrap}>
+		<Components.Wrap>
 			<p className={styles.titleWrap}>
 				<span className={styles.title}>新建事件分析</span>
 				<Button type='primary' disabled={disabled} onClick={onSave}>保存</Button>
@@ -121,7 +121,7 @@ function EventAnalysis({
 					</div>
 				</Loading>	
 			</Dialog>	
-    	</div>
+    	</Components.Wrap>
 	);
 }
 

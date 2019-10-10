@@ -25,7 +25,6 @@ import styles from './index.module.scss';
 import {
 	tabs,
 } from './userShareConfig';
-import Filter from '../Filter';
 
 const {
 	Item,
@@ -52,13 +51,13 @@ function UserShare() {
 	};
 
 	return (
-		<div className={styles.wrap}>
-			<p className={styles.title}>用户分享</p>
-			<Filter filterChange={filterChange} />
+		<Components.Wrap>
+			<Components.Title title='用户分享' />
+			<Components.DateFilter filterChange={filterChange} />
 			<Tab defaultActiveKey="user">
 	    		{renderTab()}
 	  		</Tab>
-    	</div>
+    	</Components.Wrap>
 	);
 }
 

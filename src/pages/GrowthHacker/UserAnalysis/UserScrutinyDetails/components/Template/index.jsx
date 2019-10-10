@@ -61,7 +61,7 @@ export default function Template({
 				setTotal(total);
 				setTableData(events);
 			}).catch((e) => {
-				Message.success(e.toString());
+				model.log(e);
 			}).finally(() => {
 				if (cancelTask) {
 					return;

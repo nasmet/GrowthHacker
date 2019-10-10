@@ -36,6 +36,8 @@ export default function CityDistribute({
 	const [loading, setLoading] = useState(false);
 	const [tableData, setTableData] = useState([]);
 	const [chartData, setChartData] = useState([]);
+	const [curPage, setCurPage] = useState(1);
+	const [count, setCount] = useState(0);
 	const chartStyle = {
 		x: 'city',
 		y: 'count',
@@ -50,15 +52,18 @@ export default function CityDistribute({
 				trend: {
 					tab: type,
 					date,
+					limit: config.LIMIT,
+					offset: (curPage - 1) * config.LIMIT,
 				}
 			}).then((res) => {
 				if (cancelTask) {
 					return;
 				}
 				setChartData(assembleChartData(res.data));
+				setCount(res.total);
 				setTableData(res.data);
 			}).catch((e) => {
-				Message.success(e.toString());
+				model.log(e);
 			}).finally(() => {
 				if (cancelTask) {
 					return;
@@ -72,7 +77,7 @@ export default function CityDistribute({
 		return () => {
 			cancelTask = true;
 		}
-	}, [date]);
+	}, [date, curPage]);
 
 	function assembleChartData(arg) {
 		const temp = [];
@@ -114,19 +119,31 @@ export default function CityDistribute({
 		return temp;
 	}
 
+	const pageChange = (e) => {
+		setCurPage(e);
+	};
+
 	return (
 		<div className={styles.content}>
 			<div style={{background:'#fff'}}>
 				<Components.BasicColumn data={chartData} {...chartStyle} forceFit />
 			</div>
-			<Table loading={false} dataSource={tableData} hasBorder={false}>
-				<Column title='城市' dataIndex='city' />
-				<Column title='分享人数' dataIndex='share_user_count' />
-				<Column title='分享次数' dataIndex='share_count' />
-				<Column title='回流量' dataIndex='share_open_count' />
-				<Column title='回流量占比' dataIndex='share_reflux_ratio' />
-				<Column title='分享新增' dataIndex='new_count' />
-			</Table>
+			<IceContainer>
+				<Table loading={false} dataSource={tableData} hasBorder={false}>
+					<Column title='城市' dataIndex='city' />
+					<Column title='分享人数' dataIndex='share_user_count' />
+					<Column title='分享次数' dataIndex='share_count' />
+					<Column title='回流量' dataIndex='share_open_count' />
+					<Column title='回流量占比' dataIndex='share_reflux_ratio' />
+					<Column title='分享新增' dataIndex='new_count' />
+				</Table>
+			    <Pagination
+	           		className={styles.pagination}
+	            	current={curPage}
+	            	total={count}
+	            	onChange={pageChange}
+	          	/>
+          	</IceContainer>
 		</div>
 	);
 }

@@ -26,7 +26,6 @@ import FunnelAnalysis from './pages/GrowthHacker/ProductAnalysis/FunnelAnalysis'
 import UserGroup from './pages/GrowthHacker/UserAnalysis/UserGroup';
 import UserScrutiny from './pages/GrowthHacker/UserAnalysis/UserScrutiny';
 import UserPortrait from './pages/GrowthHacker/UserAnalysis/UserPortrait';
-import CustomerAnalysis from './pages/GrowthHacker/CustomerAnalysis';
 import DataCenter from './pages/GrowthHacker/DataCenter';
 import UserScrutinyDetails from './pages/GrowthHacker/UserAnalysis/UserScrutinyDetails';
 import CreateGroup from './pages/GrowthHacker/UserAnalysis/CreateGroup';
@@ -35,6 +34,9 @@ import ShareAnalysis from './pages/GrowthHacker/ShareSpread/ShareAnalysis';
 import ShareTrend from './pages/GrowthHacker/ShareSpread/ShareTrend';
 import ShareView from './pages/GrowthHacker/ShareSpread/ShareView';
 import UserShare from './pages/GrowthHacker/ShareSpread/UserShare';
+import AdAnalysis from './pages/GrowthHacker/AdMonitor/AdAnalysis';
+import AdCount from './pages/GrowthHacker/AdMonitor/AdCount';
+import ARPUAnalysis from './pages/GrowthHacker/AdMonitor/ARPUAnalysis';
 
 import QueryEditor from './pages/Sql/QueryEditor';
 import MyQuery from './pages/Sql/MyQuery';
@@ -157,7 +159,7 @@ const routerConfig = [
 				exact: true,
 				auth: true,
 			}, {
-				id: '1008003',
+				id: '1008004',
 				path: '/growthhacker/projectdata/eventanalysisdetails',
 				component: EventAnalysisDetails,
 				exact: true,
@@ -205,37 +207,31 @@ const routerConfig = [
 				exact: true,
 				auth: true,
 			}, {
-				id: '1008014',
+				id: '1008012',
 				path: '/growthhacker/projectdata/ua/userscrutinydetails',
 				component: UserScrutinyDetails,
 				exact: true,
 				auth: true,
 			}, {
-				id: '1008015',
+				id: '1008013',
 				path: '/growthhacker/projectdata/ua/creategroup',
 				component: CreateGroup,
 				exact: true,
 				auth: true,
 			}, {
-				id: '1008016',
+				id: '1008014',
 				path: '/growthhacker/projectdata/ua/usergroupdetails',
 				component: UserGroupDetails,
 				exact: true,
 				auth: true,
 			}, {
-				id: '1008012',
-				path: '/growthhacker/projectdata/ca',
-				component: CustomerAnalysis,
-				exact: true,
-				auth: true,
-			}, {
-				id: '1008013',
+				id: '1008015',
 				path: '/growthhacker/projectdata/dc',
 				component: DataCenter,
 				exact: true,
 				auth: true,
 			}, {
-				id: '1008017',
+				id: '1008016',
 				path: '/growthhacker/projectdata/fs/shareanalysis',
 				component: ShareAnalysis,
 				exact: true,
@@ -256,6 +252,24 @@ const routerConfig = [
 				id: '1008020',
 				path: '/growthhacker/projectdata/fs/usershare',
 				component: UserShare,
+				exact: true,
+				auth: true,
+			}, , {
+				id: '1008021',
+				path: '/growthhacker/projectdata/ad/adcount',
+				component: AdCount,
+				exact: true,
+				auth: true,
+			}, {
+				id: '1008022',
+				path: '/growthhacker/projectdata/ad/adanalysis',
+				component: AdAnalysis,
+				exact: true,
+				auth: true,
+			}, {
+				id: '1008023',
+				path: '/growthhacker/projectdata/ad/arpuanalysis',
+				component: ARPUAnalysis,
 				exact: true,
 				auth: true,
 			}, {

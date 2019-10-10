@@ -66,7 +66,7 @@ function UserScrutiny({
 				setTitles(meta);
 				setTableData(data);
 			}).catch((e) => {
-				Message.success(e.toString());
+				model.log(e);
 			}).finally(() => {
 				if (cancelTask) {
 					return;
@@ -181,16 +181,8 @@ function UserScrutiny({
 	};
 
 	return (
-		<div className={styles.wrap}> 
-			<p className={styles.titleWrap}>
-				<span className={styles.title}>用户细查</span>
-				<Input 
-					hasClear 
-					hint='search' 
-					placeholder="请输入openID" 
-					onChange={utils.debounce(onInputChange, 500)}
-				/>
-			</p>
+		<Components.Wrap>
+			<Components.Title title='用户细查' />
 			{/*
       		<IceContainer>
       			<Filter filterChange={filterChange} />
@@ -198,6 +190,13 @@ function UserScrutiny({
       		*/}
       		<Loading visible={loading} inline={false}>
       			<IceContainer>
+      				<Input 
+      					style={{marginBottom:'20px'}}
+						hasClear 
+						hint='search' 
+						placeholder="请输入openID" 
+						onChange={utils.debounce(onInputChange, 500)}
+					/>
 					<Table 
 						dataSource={tableData} 
 						hasBorder={false}
@@ -220,7 +219,7 @@ function UserScrutiny({
 				    />
 			    </IceContainer>
 		    </Loading>
-    	</div>
+    	</Components.Wrap>
 	);
 }
 

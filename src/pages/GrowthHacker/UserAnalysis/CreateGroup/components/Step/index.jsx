@@ -42,10 +42,6 @@ const {
 	RangePicker,
 } = DatePicker;
 
-function createStep() {
-
-}
-
 export default function Filter({
 	filterChange,
 }) {
@@ -54,6 +50,7 @@ export default function Filter({
 	const [metricData, setMetricData] = useState([]);
 	const [combination, setCombination] = useState('');
 	const [steps, setSteps] = useState([]);
+
 	let cancelTask = false; // 防止内存泄漏
 
 	function getDataCenter() {
@@ -65,7 +62,7 @@ export default function Filter({
 			dividingData(res.event_entities);
 			setLoading(false);
 		}).catch((e) => {
-			Message.success(e.toString());
+			model.log(e);
 		}).finally(() => {
 			if (cancelTask) {
 				return;
@@ -118,17 +115,12 @@ export default function Filter({
 				temp += item.alias;
 			}
 		});
+		if (metricData.length > 0) {
+
+		}
 		setCombination(temp);
 		filterChange(steps, temp);
 	}, [steps]);
-
-	const onAddStep = () => {
-		setSteps((pre) => {
-			return [...pre, {
-				filters: [],
-			}];
-		});
-	};
 
 	function createStep(alias) {
 		return {
@@ -227,6 +219,7 @@ export default function Filter({
 	        	initialValues={values}
 	        	onChange={onChange.bind(item)}
 	        	effects={effects}
+	        	layout={{}}
 			>	
 			{formCore=>(
 				<div className={styles.container}>
@@ -236,7 +229,7 @@ export default function Filter({
 							<Select style={{width:'120px'}} dataSource={firstColumn} />
 						</Field>
 						<Field name='id'>
-							<Select style={{width:'150px'}} dataSource={metricData} />
+							<Select style={{width:'150px'}} dataSource={metricData} showSearch />
 						</Field>
 						<Field name='op' dataSource={rules} component={Select} />
 						<Field name='values'>
@@ -248,6 +241,7 @@ export default function Filter({
 						<Field name='date'>
 							<RangePicker 
 								style={{width:'120px'}} 
+								hasClear={false}
 								disabledDate={model.disabledDate} 
 								onVisibleChange={onVisibleChange.bind(item,formCore)}
 								onOk={onOk.bind(item,formCore)}

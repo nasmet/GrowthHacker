@@ -57,6 +57,8 @@ export default function Header({
 				pre[4].value = new_count;
 				return [...pre];
 			});
+		}).catch((e) => {
+			model.log(e);
 		}).finally(() => {
 			if (cancelTask) {
 				return;

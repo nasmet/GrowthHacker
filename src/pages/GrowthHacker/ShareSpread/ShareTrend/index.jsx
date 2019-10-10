@@ -22,7 +22,6 @@ import {
 } from 'react-router-dom';
 import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
-import Filter from '../Filter';
 import Header from '../Header';
 
 const {
@@ -68,7 +67,7 @@ export default function ShareTrend() {
 				setCount(total);
 				setChartData(assembleChartData(share_overview));
 			}).catch((e) => {
-				Message.success(e.toString());
+				model.log(e);
 			}).finally(() => {
 				if (cancelTask) {
 					return;
@@ -162,9 +161,9 @@ export default function ShareTrend() {
 	};
 
 	return (
-		<div className={styles.wrap}>
-			<p className={styles.title}>分享趋势</p>
-			<Filter filterChange={filterChange} />
+		<Components.Wrap>
+			<Components.Title title='分享趋势' />
+			<Components.DateFilter filterChange={filterChange} />
 			<div style={{background:'#fff'}}>
 				<Header date={date} />
 				<Components.BasicColumn data={chartData} {...chartStyle} forceFit />
@@ -190,6 +189,6 @@ export default function ShareTrend() {
 	            	onChange={pageChange}
 	          	/>
 			</IceContainer>
-    	</div>
+    	</Components.Wrap>
 	);
 }

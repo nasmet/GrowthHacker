@@ -41,8 +41,7 @@ function CreateGroup() {
 		setCombination(expression);
 	};
 
-	const onSave = () => {
-		console.log(steps);
+	const onSave = () => {;
 		setSubmitDisabled(true);
 		setShowDialog(true);
 	};
@@ -65,9 +64,11 @@ function CreateGroup() {
 				const temp = obj.flag.split(',');
 				obj.flag = temp[0] === 'true' ? true : false;
 				obj.type = temp[1];
-				const temp_1 = obj.id.split(',');
-				obj.id = temp_1[0];
-				obj.aggregator = temp_1[1];
+				if (obj.id) {
+					const temp_1 = obj.id.split(',');
+					obj.id = temp_1[0];
+					obj.aggregator = temp_1[1];
+				}
 				obj.alias = item.alias;
 				obj.values = [obj.values];
 				const temp_2 = obj.date;
@@ -84,6 +85,7 @@ function CreateGroup() {
 			conditions: [],
 		};
 		display(steps, result);
+		setLoading(true);
 		api.createUserGroup({
 			projectId,
 			trend: result,
@@ -91,9 +93,10 @@ function CreateGroup() {
 			if (cancelTask) {
 				return;
 			}
+			model.log('创建成功');
 			history.back();
 		}).catch((e) => {
-			Message.success(e.toString());
+			model.log(e);
 			setLoading(false);
 		});
 	};
@@ -117,14 +120,14 @@ function CreateGroup() {
       				<Button onClick={onCancel}>取消</Button>
       				<Button type='primary' disabled={disabled} onClick={onSave}>保存</Button>
       			</div>
-      			<div className={styles.rateWrap}>
+      			{/*<div className={styles.rateWrap}>
       				<div className={styles.value}>0%</div>
       				<div>占访问用户比率</div>
       			</div>
 				<div className={styles.groupWrap}>
 					<div className={styles.value}>0</div>
 					<div>分群人数</div>
-				</div>
+				</div>*/}
       		</div>
 
       		<Dialog autoFocus visible={showDialog} onClose={onClose} footer={false}>

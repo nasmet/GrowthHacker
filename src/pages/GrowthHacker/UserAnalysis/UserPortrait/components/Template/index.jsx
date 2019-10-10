@@ -92,7 +92,7 @@ export default function Template({
 				setChartStyle(assemblingChartStyle(meta));
 				setChartData(assemblingChartData(data, meta));
 			}).catch((e) => {
-				Message.success(e.toString());
+				model.log(e);
 			}).finally(() => {
 				if (cancelTask) {
 					return;

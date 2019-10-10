@@ -22,7 +22,6 @@ import {
 } from 'react-router-dom';
 import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
-import Filter from '../Filter';
 import Top from './components/Top';
 import ShareDistribute from './components/ShareDistribute';
 import AreaDistribute from './components/AreaDistribute';
@@ -36,9 +35,9 @@ export default function ShareView() {
 	};
 
 	return (
-		<div className={styles.wrap}>
-			<p className={styles.title}>分享概览</p>
-			<Filter filterChange={filterChange} />
+		<Components.Wrap>
+			<Components.Title title='分享概览' />
+			<Components.DateFilter filterChange={filterChange} />
 			<IceContainer>
 				<Header date={date} />
 				<div>
@@ -66,6 +65,6 @@ export default function ShareView() {
 
 			<AreaDistribute name='层级分享' request={api.getAreaDistribute} date={date} />
 			<AreaDistribute name='地域分布' request={api.getAreaDistribute} date={date} />
-    	</div>
+    	</Components.Wrap>
 	);
 }

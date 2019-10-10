@@ -44,7 +44,9 @@ export default function EventVariable() {
 				offset: (curPage - 1) * config.LIMIT,
 				type: 'variable',
 			}).then((res) => {
-				if (cancelTask) return;
+				if (cancelTask) {
+					return;
+				}
 				const {
 					total,
 					event_entities
@@ -52,9 +54,11 @@ export default function EventVariable() {
 				setCount(total);
 				setTableData(event_entities);
 			}).catch((e) => {
-				Message.success(e.toString());
+				model.log(e);
 			}).finally(() => {
-				if (cancelTask) return;
+				if (cancelTask) {
+					return;
+				}
 				setLoading(false);
 			});
 		}
@@ -80,16 +84,20 @@ export default function EventVariable() {
 				api.deleteEvent({
 					id
 				}).then((res) => {
-					if (cancelTask) return;
+					if (cancelTask) {
+						return;
+					}
 					setTableData((pre) => {
 						pre.splice(index, 1);
 						return [...pre];
 					});
-					Message.success('删除成功');
+					model.log('删除成功');
 				}).catch((e) => {
-					Message.success(e.toString());
+					model.log(e);
 				}).finally(() => {
-					if (cancelTask) return;
+					if (cancelTask) {
+						return;
+					}
 					setLoading(false);
 				});
 			},
@@ -114,9 +122,8 @@ export default function EventVariable() {
 	const onClose = () => {
 		setShow(false);
 	};
-	//variable
+
 	const onOk = (values, cb) => {
-		console.log(values);
 		api.createEvent({ ...values,
 			entity_type: 'variable',
 		}).then((res) => {
@@ -128,10 +135,10 @@ export default function EventVariable() {
 				return [...pre];
 			});
 			setShow(false);
-			Message.success('创建成功');
+			model.log('创建成功');
 		}).catch((e) => {
 			cb();
-			Message.success(e.toString());
+			model.log(e);
 		});
 	};
 

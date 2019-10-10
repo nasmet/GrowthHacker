@@ -68,7 +68,7 @@ export default function UserDetails({
 			setLastDevice(last_login_device);
 			setDevices(devices);
 		}).catch((e) => {
-			Message.success(e.toString());
+			model.log(e);
 		}).finally(() => {
 			if (cancelTask) {
 				return;

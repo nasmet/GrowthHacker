@@ -68,7 +68,6 @@ export default function Main({
 			if (cancelTask) {
 				return;
 			}
-			console.log(res);
 			const {
 				columns,
 				data,
@@ -87,7 +86,7 @@ export default function Main({
 			setQueryData(value);
 			setColumnData(columns);
 		}).catch((e) => {
-			Message.success(e.toString());
+			model.log(e);
 		}).finally(() => {
 			if (cancelTask) {
 				return;
@@ -132,7 +131,7 @@ export default function Main({
 		});
 	};
 
-	const resetSql=()=>{
+	const resetSql = () => {
 		setValue('');
 	};
 

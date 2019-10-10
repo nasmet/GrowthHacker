@@ -5,7 +5,6 @@ import React, {
 } from 'react';
 import {
 	Button,
-	Message,
 	Loading,
 	Icon,
 	Dialog
@@ -40,7 +39,7 @@ function ProjectList({
 			sessionStorage.setItem('projectinfo', JSON.stringify(projects[0]));
 			setData(projects);
 		}).catch((e) => {
-			Message.success(e.toString());
+			model.log(e);
 		}).finally(() => {
 			if (cancelTask) {
 				return;
@@ -102,9 +101,9 @@ function ProjectList({
 						pre.splice(index, 1);
 						return [...pre];
 					});
-					Message.success('删除成功');
+					model.log('删除成功');
 				}).catch((e) => {
-					Message.success(e.toString());
+					model.log(e);
 				}).finally(() => {
 					if (cancelTask) {
 						return;
@@ -165,10 +164,10 @@ function ProjectList({
 				return [...pre];
 			});
 			setShowDialog(false);
-			Message.success('创建成功');
+			model.log('创建成功');
 		}).catch((e) => {
 			cb();
-			Message.success(e.toString());
+			model.log(e);
 		});
 	};
 

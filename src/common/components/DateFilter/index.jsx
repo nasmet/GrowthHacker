@@ -25,7 +25,7 @@ import moment from 'moment';
 import styles from './index.module.scss';
 import {
 	dateTypes,
-} from './filterConfig';
+} from './dateFilterConfig';
 
 moment.locale('zh-cn');
 const {
@@ -35,11 +35,11 @@ const {
 	Item,
 } = Tab;
 
-export default function Filter({
+export default function DateFilter({
 	filterChange,
 }) {
 	const [dateValue, setDateValue] = useState([]);
-	const [curDateValue, setCurDateValue] = useState([moment(),moment()]);
+	const [curDateValue, setCurDateValue] = useState([moment(), moment()]);
 	const [tabValue, setTabValue] = useState('0');
 
 	useEffect(() => {

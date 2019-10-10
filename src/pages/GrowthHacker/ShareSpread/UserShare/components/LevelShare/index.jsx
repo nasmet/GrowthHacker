@@ -46,7 +46,7 @@ export default function LevelShare({
 			}
 			console.log(res);
 		}).catch((e) => {
-			Message.success(e.toString());
+			model.log(e);
 		}).finally(() => {
 			if (cancelTask) {
 				return;
@@ -64,14 +64,16 @@ export default function LevelShare({
 
 	return (
 		<div className={styles.content}>
-			<Table loading={false} dataSource={tableData} hasBorder={false}>
-				<Column title='层级' dataIndex='level' />
-				<Column title='分享人数' dataIndex='shareNum' />
-				<Column title='分享次数' dataIndex='shareCount' />
-				<Column title='回流量' dataIndex='flow' />
-				<Column title='回流量占比' dataIndex='shareRate' />
-				<Column title='分享新增' dataIndex='shareAddition' />
-			</Table>
+			<IceContainer>
+				<Table loading={false} dataSource={tableData} hasBorder={false}>
+					<Column title='层级' dataIndex='level' />
+					<Column title='分享人数' dataIndex='shareNum' />
+					<Column title='分享次数' dataIndex='shareCount' />
+					<Column title='回流量' dataIndex='flow' />
+					<Column title='回流量占比' dataIndex='shareRate' />
+					<Column title='分享新增' dataIndex='shareAddition' />
+				</Table>
+			</IceContainer>
 		</div>
 	);
 }

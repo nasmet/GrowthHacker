@@ -6,7 +6,6 @@ import React, {
 import {
 	Tab,
 	Table,
-	Message,
 	Loading
 } from '@alifd/next';
 import {
@@ -65,7 +64,7 @@ function LevelDetails({
 			setChartStyle(assemblingChartStyle(meta));
 			setChartData(assemblingChartData(data, meta));
 		}).catch((e) => {
-			Message.success(e.toString());
+			model.log(e);
 		}).finally(() => {
 			if (cancelTask) {
 				return;
@@ -122,7 +121,7 @@ function LevelDetails({
 			return <Column key={index} title={item} dataIndex={index.toString()} />
 		});
 	};
-	
+
 	return (
 		<Template 
 			tableData={data}

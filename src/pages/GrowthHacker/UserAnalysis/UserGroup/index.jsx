@@ -45,7 +45,7 @@ function UserGroup({
 			}
 			setTableData(res.segmentations);
 		}).catch((e) => {
-			Message.success(e.toString());
+			model.log(e);
 		}).finally(() => {
 			if (cancelTask) {
 				return;
@@ -72,7 +72,7 @@ function UserGroup({
 			onOk: () => {
 				setLoading(true);
 				api.deleteUserGroup({
-					project_id: projectId,
+					projectId,
 					id,
 				}).then((res) => {
 					if (cancelTask) {
@@ -82,9 +82,9 @@ function UserGroup({
 						pre.splice(index, 1);
 						return [...pre];
 					});
-					Message.success('删除成功');
+					model.log('删除成功');
 				}).catch((e) => {
-					Message.success(e.toString());
+					model.log(e);
 				}).finally(() => {
 					if (cancelTask) {
 						return;
@@ -113,26 +113,27 @@ function UserGroup({
 
 	const renderLastCell = (value, index, record) => {
 		return (
-			<Button onClick={onDeleteGroup.bind(this,record.id,index)}>删除</Button>
+			<Button type='primary' warning onClick={onDeleteGroup.bind(this,record.id,index)}>删除</Button>
 		);
 	};
 
 	return (
-		<div className={styles.wrap}>
-			<p className={styles.title}>用户分群列表</p>
+		<Components.Wrap>
+			<Components.Title title='用户分群列表' />
 			<IceContainer>
-				<Button type='primary' style={{borderRadius:'10px',marginBottom:'20px'}} onClick={onCreateGroup}>新建分群</Button>
-				<Table 
-					loading={loading} 
-					dataSource={tableData} 
-					hasBorder={false}
-				>
-					<Column title='id' cell={renderFirstCell} />
-					<Column title='名称' dataIndex='name' />
-					<Column title='操作' cell={renderLastCell} />
-				</Table>
+				<Loading visible={loading} inline={false}>
+					<Button type='primary' style={{borderRadius:'10px',marginBottom:'20px'}} onClick={onCreateGroup}>新建分群</Button>
+					<Table 
+						dataSource={tableData} 
+						hasBorder={false}
+					>
+						<Column title='id' cell={renderFirstCell} />
+						<Column title='名称' dataIndex='name' />
+						<Column title='操作' cell={renderLastCell} />
+					</Table>
+				</Loading>
 			</IceContainer>
-    	</div>
+    	</Components.Wrap>
 	);
 }
 
