@@ -7,3 +7,6 @@ export const TOKENKEY = 'Token';
 export const LIMIT = 10;
 export const ACCOUNT = 'ACCOUNT';
 export const PASSWORD = 'PASSWORD';
+export const PROJECTID = 'PROJECTID';
+export const PROJECTNAME = 'PROJECTNAME';
+export const COLOR = '#722ED1';

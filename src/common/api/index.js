@@ -4,62 +4,33 @@ import {
 	put,
 	del,
 } from './base';
+// export function find(data) {
+// 	return get('/trends', data);
+// }
 
-export function find(data) {
-	return get('/trends', data);
-}
+// export function getWeiboList(data) {
+// 	return get('/weibolist', data);
+// }
 
-export function getWeiboList(data) {
-	return get('/weibolist', data);
-}
+// export function getEarlyWarning(data) {
+// 	return get('/earlywarning', data);
+// }
 
-export function getEarlyWarning(data) {
-	return get('/earlywarning', data);
-}
+// export function getMonitor(data) {
+// 	return get('/monitor', data);
+// }
 
-export function getMonitor(data) {
-	return get('/monitor', data);
-}
+// export function getMonitorAnalysis(data) {
+// 	return get('/monitoranalysis', data);
+// }
 
-export function getMonitorAnalysis(data) {
-	return get('/monitoranalysis', data);
-}
+// export function getSpotAnalysis(data) {
+// 	return get('/spotanalysis', data);
+// }
 
-export function getSpotAnalysis(data) {
-	return get('/spotanalysis', data);
-}
-
-export function getExponentAnalysis(data) {
-	return get('/exponentanalysis', data);
-}
-
-export function getDataBoard(data) {
-	const {
-		project_id,
-		chart_id,
-	} = data;
-	return post(`/projects/${project_id}/charts/${chart_id}/chartdata`, data);
-}
-
-export function getDataCenter(data) {
-	return get('/event_entities', data);
-}
-
-export function getEventAnalysis(data) {
-	return get('/eventanalysis', data);
-}
-
-export function deleteEvent(data) {
-	const {
-		id,
-	} = data;
-	return del(`/event_entities/${id}`, data);
-}
-
-export function createEvent(data) {
-	return post('/event_entities', data);
-}
-
+// export function getExponentAnalysis(data) {
+// 	return get('/exponentanalysis', data);
+// }
 export function getSqlTable(data) {
 	return get('/sql/tables', data);
 }
@@ -83,195 +54,163 @@ export function deleteProject(data) {
 	return del(`/projects/${id}`);
 }
 
-export function createBoard(data) {
+export function getDataCenter(data) {
+	return get('/event_entities', data);
+}
+
+export function deleteEvent(data) {
 	const {
 		id,
-		trend,
 	} = data;
-	return post(`/projects/${id}/charts`, trend);
+	return del(`/event_entities/${id}`, data);
+}
+
+export function createEvent(data) {
+	return post('/event_entities', data);
 }
 
 export function getBoards(data) {
-	const {
-		id,
-	} = data;
-	return get(`/projects/${id}/charts`);
+	return get(`/projects/${sessionStorage.getItem(config.PROJECTID)}/charts`);
 }
 
-export function getPortraitArea(data) {
-	const {
-		id,
-		trend,
-	} = data;
-	return get(`/projects/${id}/portrait/terr`, trend);
-}
-
-export function getPortraitModel(data) {
-	const {
-		id,
-		trend,
-	} = data;
-	return get(`/projects/${id}/portrait/phone`, trend);
-}
-
-export function getPortraitTerminal(data) {
-	const {
-		id,
-		trend,
-	} = data;
-	return get(`/projects/${id}/portrait/terminal`, trend);
-}
-
-export function getUserScrutiny(data) {
-	const {
-		id,
-		trend,
-	} = data;
-	return get(`/projects/${id}/insights/segmentations/latest/users`, trend);
-}
-
-export function getUserScrutinyDetails(data) {
-	const {
-		projectId,
-		openId,
-	} = data;
-	return get(`/projects/${projectId}/insights/segmentations/latest/users/${openId}`);
-}
-
-export function getUserScrutinyEvents(data) {
-	const {
-		projectId,
-		openId,
-		trend,
-	} = data;
-	return get(`/projects/${projectId}/insights/segmentations/latest/users/${openId}/events`, trend);
-}
-
-export function getUserScrutinyEventsBar(data) {
-	const {
-		projectId,
-		openId,
-		trend,
-	} = data;
-	return get(`/projects/${projectId}/insights/segmentations/latest/users/${openId}/eventsbar`, trend);
-}
-
-export function createUserGroup(data) {
-	const {
-		projectId,
-		trend,
-	} = data;
-	return post(`/projects/${projectId}/segmentations`, trend);
-}
-
-export function getUserGroups(data) {
-	const {
-		projectId,
-	} = data;
-	return get(`/projects/${projectId}/segmentations`);
-}
-
-export function deleteUserGroup(data) {
-	const {
-		projectId,
-		id,
-	} = data;
-	return del(`/projects/${projectId}/segmentations/${id}`);
-}
-
-export function getUserGroupDetails(data) {
-	const {
-		projectId,
-		id,
-		trend,
-	} = data;
-	return get(`/projects/${projectId}/segmentations/${id}/users`, trend);
+export function createBoard(data) {
+	return post(`/projects/${sessionStorage.getItem(config.PROJECTID)}/charts`, data);
 }
 
 export function deleteBoard(data) {
 	const {
-		projectId,
 		id,
 	} = data;
-	return del(`/projects/${projectId}/charts/${id}`);
+	return del(`/projects/${sessionStorage.getItem(config.PROJECTID)}/charts/${id}`);
 }
 
-export function getShareHeader(data) {
+export function getDataBoard(data) {
 	const {
-		projectId,
+		chart_id,
 		trend,
 	} = data;
-	return get(`/projects/${projectId}/share/overall/header`, trend);
+	return post(`/projects/${sessionStorage.getItem(config.PROJECTID)}/charts/${chart_id}/chartdata`, trend);
+}
+
+export function getPortraitArea(data) {
+	return get(`/projects/${sessionStorage.getItem(config.PROJECTID)}/portrait/terr`, data);
+}
+
+export function getPortraitModel(data) {
+	return get(`/projects/${sessionStorage.getItem(config.PROJECTID)}/portrait/phone`, data);
+}
+
+export function getPortraitTerminal(data) {
+	return get(`/projects/${sessionStorage.getItem(config.PROJECTID)}/portrait/terminal`, data);
+}
+
+export function getUserScrutiny(data) {
+	return get(`/projects/${sessionStorage.getItem(config.PROJECTID)}/insights/segmentations/latest/users`, data);
+}
+
+export function getUserScrutinyDetails(data) {
+	const {
+		openId,
+	} = data;
+	return get(`/projects/${sessionStorage.getItem(config.PROJECTID)}/insights/segmentations/latest/users/${openId}`);
+}
+
+export function getUserScrutinyEvents(data) {
+	const {
+		openId,
+		trend,
+	} = data;
+	return get(`/projects/${sessionStorage.getItem(config.PROJECTID)}/insights/segmentations/latest/users/${openId}/events`, trend);
+}
+
+export function getUserScrutinyEventsBar(data) {
+	const {
+		openId,
+		trend,
+	} = data;
+	return get(`/projects/${sessionStorage.getItem(config.PROJECTID)}/insights/segmentations/latest/users/${openId}/eventsbar`, trend);
+}
+
+export function createUserGroup(data) {
+	return post(`/projects/${sessionStorage.getItem(config.PROJECTID)}/segmentations`, data);
+}
+
+export function getUserGroups(data) {
+	return get(`/projects/${sessionStorage.getItem(config.PROJECTID)}/segmentations`);
+}
+
+export function deleteUserGroup(data) {
+	const {
+		id,
+	} = data;
+	return del(`/projects/${sessionStorage.getItem(config.PROJECTID)}/segmentations/${id}`);
+}
+
+export function getUserGroupDetails(data) {
+	const {
+		id,
+		trend,
+	} = data;
+	return get(`/projects/${sessionStorage.getItem(config.PROJECTID)}/segmentations/${id}/users`, trend);
+}
+
+
+export function getShareHeader(data) {
+	return get(`/projects/${sessionStorage.getItem(config.PROJECTID)}/share/overall/header`, data);
 }
 
 export function getTop10Share(data) {
-	const {
-		projectId,
-		trend,
-	} = data;
-	return get(`/projects/${projectId}/share/overall/top10share`, trend);
+	return get(`/projects/${sessionStorage.getItem(config.PROJECTID)}/share/overall/top10share`, data);
 }
 
 export function getTop10New(data) {
-	const {
-		projectId,
-		trend,
-	} = data;
-	return get(`/projects/${projectId}/share/overall/top10new`, trend);
+	return get(`/projects/${sessionStorage.getItem(config.PROJECTID)}/share/overall/top10new`, data);
 }
 
 export function getTop10Open(data) {
-	const {
-		projectId,
-		trend,
-	} = data;
-	return get(`/projects/${projectId}/share/overall/top10open`, trend);
+	return get(`/projects/${sessionStorage.getItem(config.PROJECTID)}/share/overall/top10open`, data);
 }
 
 export function getGenderDistribute(data) {
-	const {
-		projectId,
-		trend,
-	} = data;
-	return get(`/projects/${projectId}/share/distribute/gender`, trend);
+	return get(`/projects/${sessionStorage.getItem(config.PROJECTID)}/share/distribute/gender`, data);
 }
 
 export function getShareDistribute(data) {
-	const {
-		projectId,
-		trend,
-	} = data;
-	return get(`/projects/${projectId}/share/distribute/destination`, trend);
+	return get(`/projects/${sessionStorage.getItem(config.PROJECTID)}/share/distribute/destination`, data);
 }
 
 export function getAreaDistribute(data) {
-	const {
-		projectId,
-		trend,
-	} = data;
-	return get(`/projects/${projectId}/share/distribute/district`, trend);
+	return get(`/projects/${sessionStorage.getItem(config.PROJECTID)}/share/distribute/district`, data);
 }
 
 export function getShareTrend(data) {
-	const {
-		projectId,
-		trend,
-	} = data;
-	return get(`/projects/${projectId}/share/trending`, trend);
+	return get(`/projects/${sessionStorage.getItem(config.PROJECTID)}/share/trending`, data);
 }
 
 export function getShareAnalysis(data) {
-	const {
-		projectId,
-		trend,
-	} = data;
-	return get(`/projects/${projectId}/share/trigger`, trend);
+	return get(`/projects/${sessionStorage.getItem(config.PROJECTID)}/share/trigger`, data);
 }
 
 export function getUserShare(data) {
-	const {
-		projectId,
-		trend,
-	} = data;
-	return get(`/projects/${projectId}/share/user`, trend);
+	return get(`/projects/${sessionStorage.getItem(config.PROJECTID)}/share/user`, data);
+}
+
+export function getAdCount(data) {
+	return get(`/projects/${sessionStorage.getItem(config.PROJECTID)}/ads/ltv`, data);
+}
+
+export function getAdAnalysis(data) {
+	return get(`/projects/${sessionStorage.getItem(config.PROJECTID)}/ads/ltv_analysing`, data);
+}
+
+export function getARPUData(data) {
+	return get(`/projects/${sessionStorage.getItem(config.PROJECTID)}/ads/arpu`, data);
+}
+
+export function getARPUDaily(data) {
+	return get(`/projects/${sessionStorage.getItem(config.PROJECTID)}/ads/arpu_daily`, data);
+}
+
+export function getARPURate(data) {
+	return get(`/projects/${sessionStorage.getItem(config.PROJECTID)}/ads/arpu_click`, data);
 }

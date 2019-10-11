@@ -23,74 +23,53 @@ import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
 import Template from '../Template';
 
-const {
-	Column
-} = Table;
-const {
-	Item
-} = Tab;
-
 function EventAnalysisDetails({
 	location,
 }) {
 	const {
-		projectId,
 		boardInfo
 	} = location.state;
-	const {
-		id,
-		dimensions,
-	} = boardInfo;
 
+	const [count, setCount] = useState(0);
+	const [curPage, setCurPage] = useState(1);
 	const [loading, setLoading] = useState(false);
 	const [data, setData] = useState([]);
 	const [titles, setTitles] = useState([]);
-	const [showType, setShowType] = useState('0');
 	const [chartData, setChartData] = useState([]);
 	const [chartStyle, setChartStyle] = useState({});
-	let cancelTask = false; // 防止内存泄漏
-
-	function getDataBoard() {
-		setLoading(true);
-		api.getDataBoard({
-			project_id: projectId,
-			chart_id: id,
-			limit: 20,
-			offset: 0,
-		}).then((res) => {
-			if (cancelTask) {
-				return;
-			}
-			const {
-				meta,
-				data
-			} = res;
-			if (data.length === 0) {
-				return;
-			}
-			setTitles(meta);
-			setData(data);
-			if (dimensions.length < 2) {
-				setChartStyle(assemblingChartStyle(meta));
-				setChartData(assemblingChartData(data, meta));
-			}
-		}).catch((e) => {
-			model.log(e);
-		}).finally(() => {
-			if (cancelTask) {
-				return;
-			};
-			setLoading(false);
-		});
-	}
 
 	useEffect(() => {
-		getDataBoard();
+		function getDataBoard() {
+			setLoading(true);
+			api.getDataBoard({
+				chart_id: boardInfo.id,
+				trend: {
+					offset: (curPage - 1) * config.LIMIT,
+					limit: config.LIMIT,
+				}
+			}).then((res) => {
+				const {
+					meta,
+					data,
+					total,
+				} = res;
+				if (data.length === 0) {
+					return;
+				}
+				setCount(total);
+				setTitles(meta);
+				setData(data);
+				setChartStyle(assemblingChartStyle(meta));
+				setChartData(assemblingChartData(data, meta));
+			}).catch((e) => {
+				model.log(e);
+			}).finally(() => {
+				setLoading(false);
+			});
+		}
 
-		return () => {
-			cancelTask = true;
-		};
-	}, []);
+		getDataBoard();
+	}, [curPage]);
 
 	function assemblingChartStyle(meta) {
 		return {
@@ -120,19 +99,31 @@ function EventAnalysisDetails({
 
 	const renderTitle = () => {
 		return titles.map((item, index) => {
-			return <Column key={index} title={item} dataIndex={index.toString()} />
+			return <Table.Column key={index} title={item} dataIndex={index.toString()} />
 		});
 	};
 
+	const pageChange = (e) => {
+		setCurPage(e);
+	};
+
 	return (
-		<Template 
-			tableData={data}
-			loading={loading}
-			boardInfo={boardInfo} 
-			chartData={chartData} 
-			chartStyle={chartStyle}
-			renderTitle={renderTitle} 
-		/>
+		<Components.Wrap>
+			<Components.Title title={boardInfo.name} />
+			<Template 
+				tableData={data}
+				loading={loading}
+				chartData={chartData} 
+				chartStyle={chartStyle}
+				renderTitle={renderTitle} 
+			/>
+	        <Pagination
+	       		className={styles.pagination}
+	        	current={curPage}
+	        	total={count}
+	        	onChange={pageChange}
+	      	/>	
+		</Components.Wrap>
 	);
 }
 

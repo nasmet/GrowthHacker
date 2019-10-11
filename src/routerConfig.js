@@ -38,6 +38,9 @@ import AdAnalysis from './pages/GrowthHacker/AdMonitor/AdAnalysis';
 import AdCount from './pages/GrowthHacker/AdMonitor/AdCount';
 import ARPUAnalysis from './pages/GrowthHacker/AdMonitor/ARPUAnalysis';
 
+import UserTag from './pages/ThousandFaces/UserTag';
+import Strategy from './pages/ThousandFaces/Strategy';
+
 import QueryEditor from './pages/Sql/QueryEditor';
 import MyQuery from './pages/Sql/MyQuery';
 import SaveQuery from './pages/Sql/SaveQuery';
@@ -282,6 +285,14 @@ const routerConfig = [
 				// 404 没有匹配到的路由
 				component: NotFound,
 			}],
+		}, {
+			id: '1009',
+			path: '/thousandfaces/usertag',
+			component: UserTag,
+		}, {
+			id: '1010',
+			path: '/thousandfaces/strategy',
+			component: Strategy,
 		}, {
 			id: '10000',
 			path: '/',

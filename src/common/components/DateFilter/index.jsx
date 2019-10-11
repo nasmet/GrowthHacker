@@ -97,7 +97,7 @@ export default function DateFilter({
 	const onOk = (e) => {
 		setTabValue('NaN');
 		setCurDateValue(e);
-		filterChange(`abs:${e[0].valueOf()},${e[1].valueOf()}`);
+		filterChange(`abs:${e[0].valueOf()/1000},${e[1].valueOf()/1000}`);
 	};
 
 	const onVisibleChange = (e) => {

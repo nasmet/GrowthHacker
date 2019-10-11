@@ -26,10 +26,6 @@ import {
 	tabs,
 } from './terminalAnalysisConfig';
 
-const {
-	Item,
-} = Tab;
-
 export default function ModelAnalysis() {
 	const [date, setDate] = useState('day:0');
 
@@ -41,9 +37,9 @@ export default function ModelAnalysis() {
 				Component,
 			} = item;
 			return (
-				<Item key={key} title={tab}>
+				<Tab.Item key={key} title={tab}>
 					<Component type={key} request={api.getPortraitTerminal} date={date} />
-				</Item>
+				</Tab.Item>
 			);
 		});
 	};

@@ -23,43 +23,25 @@ import {
 import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
 
-const {
-	Column,
-} = Table;
-
 function UserGroup({
 	history,
 }) {
 	const [loading, setLoading] = useState(false);
 	const [tableData, setTableData] = useState([]);
-	const projectId = sessionStorage.getItem('projectId');
-	let cancelTask = false;
 
 	function getUserGroups() {
 		setLoading(true);
-		api.getUserGroups({
-			projectId,
-		}).then((res) => {
-			if (cancelTask) {
-				return;
-			}
+		api.getUserGroups().then((res) => {
 			setTableData(res.segmentations);
 		}).catch((e) => {
 			model.log(e);
 		}).finally(() => {
-			if (cancelTask) {
-				return;
-			}
 			setLoading(false);
 		});
 	}
 
 	useEffect(() => {
 		getUserGroups();
-
-		return () => {
-			cancelTask = true;
-		};
 	}, []);
 
 	const onCreateGroup = () => {
@@ -72,12 +54,8 @@ function UserGroup({
 			onOk: () => {
 				setLoading(true);
 				api.deleteUserGroup({
-					projectId,
 					id,
 				}).then((res) => {
-					if (cancelTask) {
-						return;
-					}
 					setTableData((pre) => {
 						pre.splice(index, 1);
 						return [...pre];
@@ -86,9 +64,6 @@ function UserGroup({
 				}).catch((e) => {
 					model.log(e);
 				}).finally(() => {
-					if (cancelTask) {
-						return;
-					}
 					setLoading(false);
 				});
 			}
@@ -127,9 +102,9 @@ function UserGroup({
 						dataSource={tableData} 
 						hasBorder={false}
 					>
-						<Column title='id' cell={renderFirstCell} />
-						<Column title='名称' dataIndex='name' />
-						<Column title='操作' cell={renderLastCell} />
+						<Table.Column title='id' cell={renderFirstCell} />
+						<Table.Column title='名称' dataIndex='name' />
+						<Table.Column title='操作' cell={renderLastCell} />
 					</Table>
 				</Loading>
 			</IceContainer>

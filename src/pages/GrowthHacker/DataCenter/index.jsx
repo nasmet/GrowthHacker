@@ -20,10 +20,6 @@ import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
 import dataCenterConfig from './dataCenterConfig';
 
-const {
-	Item,
-} = Tab;
-
 export default function DataCenter() {
 	const renderTab = () => {
 		return dataCenterConfig.map((item) => {
@@ -33,9 +29,9 @@ export default function DataCenter() {
 				Component,
 			} = item;
 			return (
-				<Item key={key} title={tab} >
+				<Tab.Item key={key} title={tab} >
           			<Component />
-        		</Item>
+        		</Tab.Item>
 			);
 		});
 	};

@@ -19,28 +19,12 @@ import {
 	withRouter,
 } from 'react-router-dom';
 import IceContainer from '@icedesign/container';
-import moment from 'moment';
 import styles from './index.module.scss';
-import * as eventAnalysisConfig from './eventAnalysisConfig';
 import Filter from './components/Filter';
-
-moment.locale('zh-cn');
-const {
-	RangePicker,
-} = DatePicker;
-const {
-	Column,
-} = Table;
-const limit = 10;
-const {
-	Item,
-} = Tab;
 
 function EventAnalysis({
 	history,
 }) {
-	const projectId = sessionStorage.getItem('projectId');
-	let cancelTask = false;
 	const [loading, setLoading] = useState(false);
 	const [showDialog, setShowDialog] = useState(false);
 	const [name, setName] = useState('');
@@ -68,16 +52,10 @@ function EventAnalysis({
 
 	const onOK = () => {
 		setLoading(true);
-		api.createBoard({
-			id: projectId,
-			trend: { ...values,
-				name,
-				type: 'dashboard'
-			}
+		api.createBoard({ ...values,
+			name,
+			type: 'dashboard'
 		}).then((res) => {
-			if (cancelTask) {
-				return;
-			}
 			Message.success('成功添加到看板');
 			history.push('/growthhacker/projectdata/db');
 		}).catch((e) => {

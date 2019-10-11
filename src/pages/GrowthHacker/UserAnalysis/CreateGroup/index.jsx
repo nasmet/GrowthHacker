@@ -25,8 +25,6 @@ import styles from './index.module.scss';
 import Step from './components/Step';
 
 function CreateGroup() {
-	const projectId = sessionStorage.getItem('projectId');
-	let cancelTask = false;
 	const [showDialog, setShowDialog] = useState(false);
 	const [name, setName] = useState('');
 	const [combination, setCombination] = useState('');
@@ -87,12 +85,8 @@ function CreateGroup() {
 		display(steps, result);
 		setLoading(true);
 		api.createUserGroup({
-			projectId,
-			trend: result,
+			result,
 		}).then((res) => {
-			if (cancelTask) {
-				return;
-			}
 			model.log('创建成功');
 			history.back();
 		}).catch((e) => {

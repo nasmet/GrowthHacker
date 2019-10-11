@@ -19,23 +19,10 @@ import IceContainer from '@icedesign/container';
 import moment from 'moment';
 import styles from './index.module.scss';
 import Filter from './components/Filter';
-import * as funnelAnalysisConfig from './funnelAnalysisConfig';
-
-moment.locale('zh-cn');
-const {
-	RangePicker,
-} = DatePicker;
-const {
-	Column,
-} = Table;
-const limit = 10;
 
 function FunnelAnalysis({
 	history,
 }) {
-	const projectId = sessionStorage.getItem('projectId');
-	let cancelTask = false;
-
 	const [showDialog, setShowDialog] = useState(false);
 	const [loading, setLoading] = useState(false);
 	const [group, setGroup] = useState(0);
@@ -43,13 +30,6 @@ function FunnelAnalysis({
 	const [values, setValues] = useState({});
 	const [disabled, setDisabled] = useState(true);
 	const [submitDisabled, setSubmitDisabled] = useState(true);
-
-	useEffect(() => {
-
-		return () => {
-			cancelTask = true;
-		};
-	}, []);
 
 	const filterChange = (e) => {
 		setDisabled(e.length === 0 ? true : false);
@@ -67,17 +47,11 @@ function FunnelAnalysis({
 	const onOK = () => {
 		setLoading(true);
 		api.createBoard({
-			id: projectId,
-			trend: {
-				steps: values.map(v => v.values.step),
-				name,
-				type: 'funnel',
-				segmentation_id: group,
-			}
+			steps: values.map(v => v.values.step),
+			name,
+			type: 'funnel',
+			segmentation_id: group,
 		}).then((res) => {
-			if (cancelTask) {
-				return;
-			}
 			Message.success('成功添加到看板');
 			history.push('/growthhacker/projectdata/db');
 		}).catch((e) => {

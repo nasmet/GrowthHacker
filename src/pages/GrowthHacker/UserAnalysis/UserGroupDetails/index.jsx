@@ -23,38 +23,27 @@ import {
 import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
 
-const {
-	Column,
-} = Table;
-
 function UserGroupDetails({
 	location,
 }) {
-	const {
-		id,
-	} = location.state;
+	const id = location.state.id;
+
 	const [curPage, setCurPage] = useState(1);
 	const [count, setCount] = useState(0);
 	const [loading, setLoading] = useState(false);
 	const [titles, setTitles] = useState([]);
 	const [tableData, setTableData] = useState([]);
-	const projectId = sessionStorage.getItem('projectId');
-	let cancelTask = false;
 
 	useEffect(() => {
 		function getUserGroupDetails() {
 			setLoading(true);
 			api.getUserGroupDetails({
-				projectId,
 				id,
 				trend: {
 					limit: config.LIMIT,
 					offset: (curPage - 1) * config.LIMIT,
 				}
 			}).then((res) => {
-				if (cancelTask) {
-					return;
-				}
 				const {
 					data,
 					meta,
@@ -66,9 +55,6 @@ function UserGroupDetails({
 			}).catch((e) => {
 				model.log(e);
 			}).finally(() => {
-				if (cancelTask) {
-					return;
-				}
 				setLoading(false);
 			});
 		}
@@ -78,7 +64,7 @@ function UserGroupDetails({
 
 	const renderTitle = () => {
 		return titles.map((item, index) => {
-			return <Column key={index} title={item} dataIndex={index.toString()} />
+			return <Table.Column key={index} title={item} dataIndex={index.toString()} />
 		});
 	};
 

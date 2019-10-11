@@ -26,10 +26,6 @@ import {
 	tabs,
 } from './userShareConfig';
 
-const {
-	Item,
-} = Tab;
-
 function UserShare() {
 	const [date, setDate] = useState('day:0');
 
@@ -37,11 +33,11 @@ function UserShare() {
 		return tabs.map((item) => {
 			const Content = item.component;
 			return (
-				<Item key={item.key} title={item.tab} >
+				<Tab.Item key={item.key} title={item.tab} >
           			<div className={styles.marginTop10}>
             			<Content type={item.key} date={date} />
           			</div>
-        		</Item>
+        		</Tab.Item>
 			);
 		});
 	};

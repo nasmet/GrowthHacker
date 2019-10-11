@@ -23,13 +23,7 @@ import {
 import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
 
-const {
-	Column,
-} = Table;
-
 export default function ShareAnalysis() {
-	const projectId = sessionStorage.getItem('projectId');
-	let cancelTask = false;
 	const [loading, setLoading] = useState(false);
 	const [tableData, setTableData] = useState([]);
 	const [titles, setTitles] = useState([]);
@@ -41,32 +35,19 @@ export default function ShareAnalysis() {
 		function getShareAnalysis() {
 			setLoading(true);
 			api.getShareAnalysis({
-				projectId,
-				trend: {
-					date,
-					name: search,
-				}
+				date,
+				name: search,
 			}).then((res) => {
-				if (cancelTask) {
-					return;
-				}
 				setEmptyContent(search ? 0 : 1);
 				setTableData(res.data);
 			}).catch((e) => {
 				model.log(e);
 			}).finally(() => {
-				if (cancelTask) {
-					return;
-				}
 				setLoading(false);
 			});
 		}
 
 		getShareAnalysis();
-
-		return () => {
-			cancelTask = true;
-		};
 	}, [date, search]);
 
 	const filterChange = (e) => {
@@ -74,8 +55,7 @@ export default function ShareAnalysis() {
 	};
 
 	const renderFiveColumn = (value, index, record) => {
-		const temp = (record.share_reflux_ratio * 100).toFixed(2);
-		return `${temp}%`;
+		return `${utils.transformPercent(record.share_reflux_ratio)}`;
 	};
 
 	const onInputChange = (e) => {
@@ -101,12 +81,12 @@ export default function ShareAnalysis() {
 					hasBorder={false}
 					emptyContent={<span>{emptyContent?'暂无数据':'查询结果为空'}</span>}
 				>
-					<Column title='触发名称' dataIndex='trigger_name' />
-					<Column title='分享人数' dataIndex='share_user_count' />
-					<Column title='分享次数' dataIndex='share_count' />
-					<Column title='分享回流量' dataIndex='share_open_count' />
-					<Column title='分享回流比' cell={renderFiveColumn} />
-					<Column title='分享新增' dataIndex='new_count' />
+					<Table.Column title='触发名称' dataIndex='trigger_name' />
+					<Table.Column title='分享人数' dataIndex='share_user_count' />
+					<Table.Column title='分享次数' dataIndex='share_count' />
+					<Table.Column title='分享回流量' dataIndex='share_open_count' />
+					<Table.Column title='分享回流比' cell={renderFiveColumn} />
+					<Table.Column title='分享新增' dataIndex='new_count' />
 				</Table>
 			</IceContainer>
     	</Components.Wrap>

@@ -26,38 +26,25 @@ import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
 import Filter from './components/Filter';
 
-const {
-	Column,
-} = Table;
-
 function UserScrutiny({
 	history,
 }) {
 	const [titles, setTitles] = useState([]);
 	const [tableData, setTableData] = useState([]);
-	const [selectValues, setSelectValues] = useState([]);
 	const [curPage, setCurPage] = useState(1);
 	const [total, setTotal] = useState(0);
 	const [loading, setLoading] = useState(false);
 	const [search, setSearch] = useState('');
 	const [emptyContent, setEmptyContent] = useState(1);
-	let cancelTask = false;
-	const projectId = sessionStorage.getItem('projectId');
 
 	useEffect(() => {
 		function getUserScrutiny() {
 			setLoading(true);
 			api.getUserScrutiny({
-				id: projectId,
-				trend: {
-					limit: config.LIMIT,
-					offset: (curPage - 1) * config.LIMIT,
-					search,
-				}
+				limit: config.LIMIT,
+				offset: (curPage - 1) * config.LIMIT,
+				search,
 			}).then((res) => {
-				if (cancelTask) {
-					return;
-				}
 				const {
 					meta,
 					data,
@@ -68,23 +55,12 @@ function UserScrutiny({
 			}).catch((e) => {
 				model.log(e);
 			}).finally(() => {
-				if (cancelTask) {
-					return;
-				}
 				setLoading(false);
 			});
 		}
 
 		getUserScrutiny();
-
-		return () => {
-			cancelTask = true;
-		};
 	}, [curPage, search]);
-
-	const filterChange = (e) => {
-		console.log(e);
-	};
 
 	const jumpUserDetails = (e) => {
 		history.push({
@@ -112,64 +88,14 @@ function UserScrutiny({
 	const renderTitle = () => {
 		return titles.map((item, index) => {
 			if (index === 1) {
-				return <Column key={index} title={item} cell={renderFirstCell} />
+				return <Table.Column key={index} title={item} cell={renderFirstCell} />
 			}
 			if (index === 3) {
-				return <Column key={index} title={item} cell={renderFourCell} />
+				return <Table.Column key={index} title={item} cell={renderFourCell} />
 			}
-			return <Column key={index} title={item} dataIndex={index.toString()} />
+			return <Table.Column key={index} title={item} dataIndex={index.toString()} />
 		});
 	};
-
-	const lastTitle = () => {
-		return (
-			<Button className={styles.lastTitle}>
-				<Icon className={styles.icon} type='add' size='small'/>
-				<span>业务标签</span>
-			</Button>
-		);
-	}
-
-	const onSelectTitleChange = (e) => {
-		const increase = [];
-		e.forEach((v) => {
-			const index = selectTitlesMap[v];
-			const {
-				label,
-				value,
-			} = selectTitles[index];
-
-			increase.push({
-				key: value,
-				name: label,
-			});
-		});
-		setSelectValues(e);
-		setTitles((pre) => {
-			const clone = [...defaultTitles];
-			clone.splice(1, 0, ...increase);
-			return [...clone];
-		});
-	};
-
-	const renderLastTitle = () => {
-		return (
-			<Balloon 
-				trigger={lastTitle()} 
-				closable={false}
-				align='bl'
-				triggerType='click'
-				needAdjust
-			>	
-				<Checkbox.Group 
-					itemDirection="ver" 
-					dataSource={selectTitles}
-					onChange={onSelectTitleChange}
-					value={selectValues} 
-				/>
-			</Balloon>
-		);
-	}
 
 	const pageChange = (e) => {
 		setCurPage(e);
@@ -183,11 +109,6 @@ function UserScrutiny({
 	return (
 		<Components.Wrap>
 			<Components.Title title='用户细查' />
-			{/*
-      		<IceContainer>
-      			<Filter filterChange={filterChange} />
-      		</IceContainer>
-      		*/}
       		<Loading visible={loading} inline={false}>
       			<IceContainer>
       				<Input 
@@ -202,14 +123,7 @@ function UserScrutiny({
 						hasBorder={false}
 						emptyContent={<span>{emptyContent?'暂无数据':'查询结果为空'}</span>}
 					>
-					    {renderTitle()} 
-					    {/*
-					    <Column 
-					    	title={renderLastTitle()} 
-					    	lock='right'
-					    	width={150} 
-					    /> 
-						*/} 		
+					    {renderTitle()} 	
 					</Table>
 				 	<Pagination
 		            	className={styles.pagination}

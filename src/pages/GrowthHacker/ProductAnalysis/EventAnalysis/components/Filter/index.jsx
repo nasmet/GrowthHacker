@@ -27,41 +27,24 @@ export default function Filter({
 	});
 	const [loading, setLoading] = useState(false);
 	const formRef = useRef(null);
-	let cancelTask = false; // 防止内存泄漏
-	const projectId = sessionStorage.getItem('projectId');
 
 	async function fetchData() {
 		setLoading(true);
 		try {
 			await api.getDataCenter().then((res) => {
-				if (cancelTask) {
-					return;
-				}
 				dividingData(res.event_entities);
 			});
-			await api.getUserGroups({
-				projectId,
-			}).then((res) => {
-				if (cancelTask) {
-					return;
-				}
+			await api.getUserGroups().then((res) => {
 				dividingTargetData(res.segmentations);
 			})
 		} catch (e) {
 			model.log(e);
-		}
-		if (cancelTask) {
-			return;
 		}
 		setLoading(false);
 	}
 
 	useEffect(() => {
 		fetchData();
-
-		return () => {
-			cancelTask = true;
-		};
 	}, []);
 
 	function dividingData(data) {

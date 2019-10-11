@@ -22,25 +22,16 @@ import {
 } from 'react-router-dom';
 import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
-import EventInfo from './components/EventInfo';
 import UserDetails from './components/UserDetails';
 import {
 	tabs,
 } from './userScrutinyDetailsConfig';
 
-const {
-	Item
-} = Tab;
-
 function UserScrutinyDetails({
 	location,
 }) {
-	const projectId = sessionStorage.getItem('projectId');
-	const {
-		id,
-	} = location.state;
+	const id = location.state.id;
 
-	let cancelTask = false;
 	const [eventInfo, setEventInfo] = useState([]);
 	const [chartData, setChartData] = useState([]);
 	const [loading, setLoading] = useState(false);
@@ -49,26 +40,16 @@ function UserScrutinyDetails({
 	function getUserScrutinyEventsBar() {
 		setLoading(true);
 		api.getUserScrutinyEventsBar({
-			projectId,
 			openId: id,
 			trend: {
 				tab: 'all',
 			},
 		}).then((res) => {
-			if (cancelTask) {
-				return;
-			}
-			const {
-				bars,
-			} = res;
-			setChartData(bars);
+			setChartData(res.bars);
 			creatChartStyle();
 		}).catch((e) => {
 			model.log(e);
 		}).finally(() => {
-			if (cancelTask) {
-				return;
-			}
 			setLoading(false);
 		});
 	}
@@ -104,10 +85,6 @@ function UserScrutinyDetails({
 
 	useEffect(() => {
 		getUserScrutinyEventsBar();
-
-		return () => {
-			cancelTask = true;
-		};
 	}, []);
 
 	const renderTab = () => {
@@ -118,16 +95,15 @@ function UserScrutinyDetails({
 				Component,
 			} = item;
 			return (
-				<Item key={key} title={tab} >
-          			<div className={styles.marginTop10}>
+				<Tab.Item key={key} title={tab} >
+          			<Components.Wrap>
             			<Component 
-            				projectId={projectId} 
             				openId={id} 
             				tab={key} 
             				onEventDetals={onEventDetals} 
             			/>
-          			</div>
-        		</Item>
+          			</Components.Wrap>
+        		</Tab.Item>
 			);
 		});
 	};
@@ -158,8 +134,7 @@ function UserScrutinyDetails({
 		      	</Tab>
       		</div>
       		<div className={styles.rightContent}>
-      			<UserDetails projectId={projectId} openId={id} />
-      			{/*<EventInfo eventInfo={eventInfo} />*/}
+      			<UserDetails openId={id} />
       		</div>
     	</div>
 	);

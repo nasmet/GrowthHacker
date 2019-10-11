@@ -12,27 +12,13 @@ import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
 import * as templateConfig from './templateConfig';
 
-const {
-	Column
-} = Table;
-const {
-	Item
-} = Tab;
-
 export default function Template({
-	boardInfo,
 	tableData,
 	renderTitle,
 	chartStyle,
 	chartData,
 	loading,
 }) {
-	const {
-		id,
-		name,
-		desc
-	} = boardInfo;
-
 	const renderTable = () => {
 		return (
 			<Table 
@@ -67,7 +53,7 @@ export default function Template({
 				key
 			} = item;
 			return (
-				<Item 
+				<Tab.Item 
 					key={key}
           			title={name}
         		>
@@ -76,17 +62,16 @@ export default function Template({
 							{rendTabComponent(key)}
 						</IceContainer>  
 					</Loading>
-        		</Item>
+        		</Tab.Item>
 			);
 		});
 	};
 
 	return (
-		<Components.Wrap>
-			<Components.Title title={name} />
+		<IceContainer>
 			<Tab defaultActiveKey="0">
 	      		{renderTab()}
 	      	</Tab>
-		</Components.Wrap>
+      	</IceContainer>
 	);
 }

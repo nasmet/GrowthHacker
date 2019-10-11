@@ -24,17 +24,12 @@ import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
 import CreateBuriedPoint from '../CreateBuriedPoint';
 
-const {
-	Column
-} = Table;
-
 export default function EventVariable() {
 	const [curPage, setCurPage] = useState(1);
 	const [loading, setLoading] = useState(false);
 	const [tableData, setTableData] = useState([]);
 	const [count, setCount] = useState(0);
 	const [show, setShow] = useState(false);
-	let cancelTask = false; // 防止内存泄露
 
 	useEffect(() => {
 		function fetchData() {
@@ -44,9 +39,6 @@ export default function EventVariable() {
 				offset: (curPage - 1) * config.LIMIT,
 				type: 'variable',
 			}).then((res) => {
-				if (cancelTask) {
-					return;
-				}
 				const {
 					total,
 					event_entities
@@ -56,20 +48,11 @@ export default function EventVariable() {
 			}).catch((e) => {
 				model.log(e);
 			}).finally(() => {
-				if (cancelTask) {
-					return;
-				}
 				setLoading(false);
 			});
 		}
 
-		if (curPage > 0) {
-			fetchData();
-		}
-
-		return () => {
-			cancelTask = true;
-		};
+		fetchData();
 	}, [curPage]);
 
 	const pageChange = (e) => {
@@ -84,9 +67,6 @@ export default function EventVariable() {
 				api.deleteEvent({
 					id
 				}).then((res) => {
-					if (cancelTask) {
-						return;
-					}
 					setTableData((pre) => {
 						pre.splice(index, 1);
 						return [...pre];
@@ -95,9 +75,6 @@ export default function EventVariable() {
 				}).catch((e) => {
 					model.log(e);
 				}).finally(() => {
-					if (cancelTask) {
-						return;
-					}
 					setLoading(false);
 				});
 			},
@@ -127,9 +104,6 @@ export default function EventVariable() {
 		api.createEvent({ ...values,
 			entity_type: 'variable',
 		}).then((res) => {
-			if (cancelTask) {
-				return;
-			}
 			setTableData((pre) => {
 				pre.splice(0, 0, res.event_entity);
 				return [...pre];
@@ -156,11 +130,11 @@ export default function EventVariable() {
 	          		dataSource={tableData} 
 	          		hasBorder={false} 
 	          	>	
-	          		<Column title="id" dataIndex="id" />
-	            	<Column title="名称" dataIndex="name" />
-	            	<Column title="标识符" dataIndex="entity_key" />
-	            	<Column title="类型" dataIndex="variable_type" />
-	            	<Column title="操作" cell={renderCover} />
+	          		<Table.Column title="id" dataIndex="id" />
+	            	<Table.Column title="名称" dataIndex="name" />
+	            	<Table.Column title="标识符" dataIndex="entity_key" />
+	            	<Table.Column title="类型" dataIndex="variable_type" />
+	            	<Table.Column title="操作" cell={renderCover} />
 	          	</Table>
 
 	          	<Pagination

@@ -50,8 +50,8 @@ function Header({
 		<div className="header-container">
     		<Nav
       			direction="hoz"
-      			type="secondary"
       			triggerType="hover"
+      			type='primary'
     		>
       			{
         			headerMenuConfig.map(traversing)

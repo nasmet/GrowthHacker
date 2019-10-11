@@ -49,10 +49,10 @@ export default [{
 	name: '广告监测',
 	path: `${baseUrl}/ad`,
 	sub: [{
-		name: '广告次数',
+		name: '生命周期广告次数',
 		path: `${baseUrl}/ad/adcount`,
 	}, {
-		name: '广告分析',
+		name: '付费率分析',
 		path: `${baseUrl}/ad/adanalysis`,
 	}, {
 		name: 'ARPU分析',

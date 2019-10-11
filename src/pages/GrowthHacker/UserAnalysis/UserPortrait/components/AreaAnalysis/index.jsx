@@ -26,10 +26,6 @@ import {
 	tabs,
 } from './areaAnalysisConfig';
 
-const {
-	Item,
-} = Tab;
-
 export default function AreaAnalysis() {
 	const [date, setDate] = useState('day:0');
 
@@ -41,9 +37,9 @@ export default function AreaAnalysis() {
 				Component,
 			} = item;
 			return (
-				<Item key={key} title={tab}>
+				<Tab.Item key={key} title={tab}>
 					<Component type={key} request={api.getPortraitArea} date={date} />
-				</Item>
+				</Tab.Item>
 			);
 		});
 	};

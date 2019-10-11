@@ -15,11 +15,11 @@ function BasicLayout({
 }) {
 	return (
 		<Layout className="ice-design-layout" fixable>
-	      	<Layout.Aside width={240}>
+	      	<Layout.Aside width={240} style={{background: '#333333'}}>
 	        	<Aside />
 	     	</Layout.Aside>
 	 		<Layout.Section>
-	 			<Layout.Header>
+	 			<Layout.Header style={{background: '#333333'}}>
 	        		<Header />
 	      		</Layout.Header>
 	   	 		<Layout.Main scrollable>

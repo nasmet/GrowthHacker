@@ -24,14 +24,7 @@ import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
 import Header from '../Header';
 
-const {
-	Column,
-} = Table;
-
 export default function ShareTrend() {
-	const projectId = sessionStorage.getItem('projectId');
-	let cancelTask = false;
-
 	const [loading, setLoading] = useState(false);
 	const [tableData, setTableData] = useState([]);
 	const [titles, setTitles] = useState([]);
@@ -49,16 +42,10 @@ export default function ShareTrend() {
 		function getShareTrend() {
 			setLoading(true);
 			api.getShareTrend({
-				projectId,
-				trend: {
-					date,
-					limit: config.LIMIT,
-					offset: (curPage - 1) * config.LIMIT,
-				}
+				date,
+				limit: config.LIMIT,
+				offset: (curPage - 1) * config.LIMIT,
 			}).then((res) => {
-				if (cancelTask) {
-					return;
-				}
 				const {
 					share_overview,
 					total,
@@ -69,18 +56,11 @@ export default function ShareTrend() {
 			}).catch((e) => {
 				model.log(e);
 			}).finally(() => {
-				if (cancelTask) {
-					return;
-				}
 				setLoading(false);
 			});
 		}
 
 		getShareTrend();
-
-		return () => {
-			cancelTask = true;
-		};
 	}, [date, curPage]);
 
 	function assembleChartData(arg) {
@@ -156,8 +136,7 @@ export default function ShareTrend() {
 	}
 
 	const renderFiveColumn = (value, index, record) => {
-		const temp = (record.share_reflux_ratio * 100).toFixed(2);
-		return `${temp}%`;
+		return `${utils.transformPercent(record.share_reflux_ratio)}`;
 	};
 
 	return (
@@ -174,12 +153,12 @@ export default function ShareTrend() {
 					dataSource={tableData} 
 					hasBorder={false}
 				>
-					<Column title='日期' cell={renderFirstColumn} />
-					<Column title='分享人数' dataIndex='share_user_count' />
-					<Column title='分享次数' dataIndex='share_count' />
-					<Column title='回流量' dataIndex='share_open_count' />
-					<Column title='分享回流比' cell={renderFiveColumn} />
-					<Column title='分享新增' dataIndex='new_count' />
+					<Table.Column title='日期' cell={renderFirstColumn} />
+					<Table.Column title='分享人数' dataIndex='share_user_count' />
+					<Table.Column title='分享次数' dataIndex='share_count' />
+					<Table.Column title='回流量' dataIndex='share_open_count' />
+					<Table.Column title='分享回流比' cell={renderFiveColumn} />
+					<Table.Column title='分享新增' dataIndex='new_count' />
 				</Table>
 
 	          	<Pagination

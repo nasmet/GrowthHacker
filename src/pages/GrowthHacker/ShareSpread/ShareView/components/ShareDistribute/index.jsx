@@ -28,8 +28,6 @@ export default function ShareDistribute({
 	date,
 	request,
 }) {
-	const projectId = sessionStorage.getItem('projectId');
-	let cancelTask = false;
 	const chartStyle = {
 		x: 'desc',
 		y: 'count',
@@ -42,27 +40,14 @@ export default function ShareDistribute({
 	useEffect(() => {
 		setLoading(true);
 		request({
-			projectId,
-			trend: {
-				date,
-			}
+			date,
 		}).then((res) => {
-			if (cancelTask) {
-				return;
-			}
 			setChartData(res.data);
 		}).catch((e) => {
 			model.log(e);
 		}).finally(() => {
-			if (cancelTask) {
-				return;
-			}
 			setLoading(false);
 		});
-
-		return () => {
-			cancelTask = true;
-		};
 	}, [date]);
 
 

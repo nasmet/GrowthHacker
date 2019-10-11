@@ -19,11 +19,6 @@ import Layout from '@icedesign/layout';
 import styles from './index.module.scss';
 import projectDataConfig from './projectDataConfig';
 
-const {
-	Item,
-	SubNav,
-} = Nav;
-
 const word = (name) => {
 	return (
 		<span className="ice-menu-item-text">
@@ -35,17 +30,17 @@ const word = (name) => {
 const traversing = function fn(nav) {
 	if (nav.sub && utils.isArray(nav.sub)) {
 		return (
-			<SubNav key={nav.path} selectable label={word(nav.name)}>
+			<Nav.SubNav key={nav.path} selectable label={word(nav.name)}>
         		{nav.sub.map(fn)}
-      		</SubNav>
+      		</Nav.SubNav>
 		);
 	}
 	return (
-		<Item key={nav.path}>
+		<Nav.Item key={nav.path}>
       		<Link to={nav.path} className="ice-menu-link">
         		{word(nav.name)}
       		</Link>
-   		</Item>
+   		</Nav.Item>
 	);
 };
 
@@ -58,34 +53,22 @@ function ProjectData({
 	} = location;
 	const arr = pathname.split('/');
 	const path = `/${arr[1]}/${arr[2]}/${arr[3]}`;
-
-	let projectInfo = sessionStorage.getItem('projectinfo');
-	projectInfo = JSON.parse(projectInfo);
-	
-	const {
-		id,
-		name,
-		domain_name,
-		type,
-		desc
-	} = projectInfo;
-
-	sessionStorage.setItem('projectId', id);
+	const header = <span className={styles.fusion}>{sessionStorage.getItem('PROJECTNAME')}</span>;
 
 	return (
-		<div>
-			<h2 className={styles.title}>{name}</h2>
+		<Components.Wrap>
 			<Nav
         		direction="hoz"
         		triggerType="hover"
         		selectedKeys={[path]}
         		defaultSelectedKeys={['/growthhacker/projectdata/db']} 
-        		type='line'
+        		type='secondary'
+        		header={header}
       		>
         		{projectDataConfig.map(traversing)}
       		</Nav>
       		{children}
-    	</div>
+    	</Components.Wrap>
 	);
 }
 

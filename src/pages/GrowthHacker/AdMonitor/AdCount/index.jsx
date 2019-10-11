@@ -24,51 +24,52 @@ import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
 
 export default function AdCount() {
-	const projectId = sessionStorage.getItem('projectId');
-	let cancelTask = false;
 	const [loading, setLoading] = useState(false);
+	const [titles, setTitles] = useState([]);
 	const [tableData, setTableData] = useState([]);
+	const [date, setDate] = useState('day:0');
 
 	useEffect(() => {
 		function getAdCount() {
 			setLoading(true);
-			api.getAdCount().then((res) => {
-				if (cancelTask) {
-					return;
-				}
-				console.log(res);
+			api.getAdCount({
+				date,
+			}).then((res) => {
+				const {
+					meta,
+					data,
+				} = res;
+				setTitles(meta);
+				setTableData(data);
 			}).catch((e) => {
 				model.log(e);
 			}).finally(() => {
-				if (cancelTask) {
-					return;
-				}
 				setLoading(false);
 			});
 		}
+		getAdCount();
+	}, [date]);
 
-		return () => {
-			cancelTask = true;
-		}
-	}, []);
+	const filterChange = (e) => {
+		setDate(e);
+	};
+
+	const renderTitles = () => {
+		return titles.map((item, index) => {
+			return <Table.Column key={index} title={item} dataIndex={index.toString()} />;
+		});
+	};
 
 	return (
 		<Components.Wrap>
-			<Components.Title title='广告次数' />
+			<Components.Title title='生命周期广告次数' />
+			<Components.DateFilter filterChange={filterChange} />
 			<IceContainer>
-				<Table dataSource={tableData} loading={loading} hasBorder={false} >
-					<Table.Column title='注册日期' />
-					<Table.Column title='玩家数' />
-					<Table.Column title='1' />
-					<Table.Column title='2' />
-					<Table.Column title='3' />
-					<Table.Column title='4' />
-					<Table.Column title='5' />
-					<Table.Column title='6' />
-					<Table.Column title='7' />
-					<Table.Column title='14' />
-					<Table.Column title='30' />
-				</Table>
+				<Loading visible={loading} inline={false}>
+					<Table dataSource={tableData} hasBorder={false} >
+						{renderTitles()}
+					</Table>
+				</Loading>
 			</IceContainer>
     	</Components.Wrap>
 	);

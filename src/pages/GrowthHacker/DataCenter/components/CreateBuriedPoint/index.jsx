@@ -17,10 +17,6 @@ import {
 } from '@icedesign/form-binder';
 import styles from './index.module.scss';
 
-const {
-	Option
-} = Select;
-
 export default function CreateBuriedPoint({
 	onOk,
 	entityType,
@@ -88,7 +84,7 @@ export default function CreateBuriedPoint({
 		           		<div className={styles.content}>
 			            	<IceFormBinder name="value_type" required message="必填">
 								<Select className={styles.input} >
-								    <Option value="counter">计数器</Option>
+								    <Select.Option value="counter">计数器</Select.Option>
 								</Select>
 			            	</IceFormBinder>
 			            	<div className={styles.formError}>
@@ -103,9 +99,9 @@ export default function CreateBuriedPoint({
 		           		<div className={styles.content}>
 			            	<IceFormBinder name="variable_type" required message="必填">
 								<Select className={styles.input} >
-								    <Option value="integer">整形</Option>
-								    <Option value="float">浮点型</Option>
-								    <Option value="string">字符串</Option>
+								    <Select.Option value="integer">整形</Select.Option>
+								    <Select.Option value="float">浮点型</Select.Option>
+								    <Select.Option value="string">字符串</Select.Option>
 								</Select>
 			            	</IceFormBinder>
 			            	<div className={styles.formError}>

@@ -26,22 +26,14 @@ import styles from './index.module.scss';
 export default function Header({
 	date,
 }) {
-	const projectId = sessionStorage.getItem('projectId');
-	let cancelTask = false;
 	const [loading, setLoading] = useState(false);
 	const [header, setHeader] = useState(createHeader());
 
 	useEffect(() => {
 		setLoading(true);
 		api.getShareHeader({
-			projectId,
-			trend: {
-				date,
-			}
+			date,
 		}).then((res) => {
-			if (cancelTask) {
-				return;
-			}
 			const {
 				new_count,
 				share_count,
@@ -53,22 +45,15 @@ export default function Header({
 				pre[0].value = share_user_count;
 				pre[1].value = share_count;
 				pre[2].value = share_open_count;
-				pre[3].value = `${(share_reflux_ratio * 100).toFixed(2)}%`;
+				pre[3].value = utils.transformPercent(share_reflux_ratio);
 				pre[4].value = new_count;
 				return [...pre];
 			});
 		}).catch((e) => {
 			model.log(e);
 		}).finally(() => {
-			if (cancelTask) {
-				return;
-			}
 			setLoading(false);
 		});
-
-		return () => {
-			cancelTask = true;
-		};
 	}, [date]);
 
 	function createHeader() {

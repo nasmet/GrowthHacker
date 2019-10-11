@@ -18,37 +18,22 @@ import styles from './index.module.scss';
 function DataBoard({
 	history,
 }) {
-	const projectId = sessionStorage.getItem('projectId');
-	let cancelTask = false; // 防止内存泄漏
-
 	const [loading, setLoading] = useState(false);
 	const [data, setData] = useState([]);
 
 	function getBoards() {
 		setLoading(true);
-		api.getBoards({
-			id: projectId
-		}).then((res) => {
-			if (cancelTask) {
-				return;
-			}
+		api.getBoards().then((res) => {
 			setData(res.charts);
 		}).catch((e) => {
 			model.log(e);
 		}).finally(() => {
-			if (cancelTask) {
-				return;
-			}
 			setLoading(false);
 		});
 	}
 
 	useEffect(() => {
 		getBoards();
-
-		return () => {
-			cancelTask = true;
-		};
 	}, []);
 
 	const jumpDataBoardDetails = (item) => {
@@ -78,7 +63,6 @@ function DataBoard({
 		history.push({
 			pathname,
 			state: {
-				projectId,
 				boardInfo: item,
 			},
 		});
@@ -91,12 +75,8 @@ function DataBoard({
 			onOk: () => {
 				setLoading(true);
 				api.deleteBoard({
-					projectId,
 					id,
 				}).then((res) => {
-					if (cancelTask) {
-						return;
-					}
 					setData((pre) => {
 						pre.splice(index, 1);
 						return [...pre];
@@ -105,9 +85,6 @@ function DataBoard({
 				}).catch((e) => {
 					model.log(e);
 				}).finally(() => {
-					if (cancelTask) {
-						return;
-					}
 					setLoading(false);
 				});
 			}
@@ -123,7 +100,7 @@ function DataBoard({
 			} = item;
 
 			return (
-				<Button type='primary' className={styles.item} key={id} onClick={jumpDataBoardDetails.bind(this,item)}>
+				<Button type='secondary' className={styles.item} key={id} onClick={jumpDataBoardDetails.bind(this,item)}>
 					<Icon className={styles.close} type='close' onClick={onDeleteBoard.bind(this,id,index)} />
 					<span className={styles.name}>{name}</span>	
 				</Button>

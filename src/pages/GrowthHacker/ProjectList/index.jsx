@@ -22,43 +22,26 @@ function ProjectList({
 	const [showDialog, setShowDialog] = useState(false);
 	const [loading, setLoading] = useState(false);
 	const [data, setData] = useState([]);
-	let cancelTask = false; // 防止内存泄漏
 
 	function getProjects() {
 		setLoading(true);
 		api.getProjects().then((res) => {
-			if (cancelTask) {
-				return;
-			}
-			const {
-				projects,
-			} = res;
-			if (projects.length === 0) {
-				return;
-			}
-			sessionStorage.setItem('projectinfo', JSON.stringify(projects[0]));
-			setData(projects);
+			setData(res.projects);
 		}).catch((e) => {
 			model.log(e);
 		}).finally(() => {
-			if (cancelTask) {
-				return;
-			}
 			setLoading(false);
 		});
 	}
 
 	useEffect(() => {
 		getProjects();
-
-		return () => {
-			cancelTask = true;
-		};
 	}, []);
 
 
 	const jumpProjectData = (e) => {
-		sessionStorage.setItem('projectinfo', JSON.stringify(e));
+		sessionStorage.setItem(config.PROJECTID, e.id);
+		sessionStorage.setItem(config.PROJECTNAME, e.name);
 		history.push('/growthhacker/projectdata');
 	};
 
@@ -94,9 +77,6 @@ function ProjectList({
 				api.deleteProject({
 					id,
 				}).then((res) => {
-					if (cancelTask) {
-						return;
-					}
 					setData((pre) => {
 						pre.splice(index, 1);
 						return [...pre];
@@ -105,9 +85,6 @@ function ProjectList({
 				}).catch((e) => {
 					model.log(e);
 				}).finally(() => {
-					if (cancelTask) {
-						return;
-					}
 					setLoading(false);
 				});
 			}
@@ -148,17 +125,10 @@ function ProjectList({
 	};
 
 	const onOk = (values, cb) => {
-		console.log(values);
 		api.createProject(values).then((res) => {
-			if (cancelTask) {
-				return;
-			}
-			const {
-				id,
-			} = res;
 			setData((pre) => {
 				pre.splice(0, 0, {
-					id,
+					id: res.id,
 					...values,
 				});
 				return [...pre];

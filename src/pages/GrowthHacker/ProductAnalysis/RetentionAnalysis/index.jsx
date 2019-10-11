@@ -19,22 +19,10 @@ import IceContainer from '@icedesign/container';
 import moment from 'moment';
 import styles from './index.module.scss';
 import Filter from './components/Filter';
-import * as retentionAnalysisConfig from './retentionAnalysisConfig';
-
-moment.locale('zh-cn');
-const {
-	RangePicker,
-} = DatePicker;
-const {
-	Column,
-} = Table;
-const limit = 10;
 
 function RetentionAnalysis({
 	history,
 }) {
-	const projectId = sessionStorage.getItem('projectId');
-	let cancelTask = false;
 	const [loading, setLoading] = useState(false);
 	const [showDialog, setShowDialog] = useState(false);
 	const [disabled, setDisabled] = useState(true);
@@ -62,21 +50,15 @@ function RetentionAnalysis({
 
 	const onOK = () => {
 		setLoading(true);
-		api.createBoard({
-			id: projectId,
-			trend: { ...values,
-				name,
-				type: 'retention'
-			}
+		api.createBoard({ ...values,
+			name,
+			type: 'retention'
 		}).then((res) => {
-			if (cancelTask) {
-				return;
-			}
 			Message.success('成功添加到看板');
 			history.push('/growthhacker/projectdata/db');
 		}).catch((e) => {
-			setLoading(false);
 			model.log(e);
+			setLoading(false);
 		});
 	};
 

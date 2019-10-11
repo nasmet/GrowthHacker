@@ -14,39 +14,28 @@ import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
 import Step from './components/Step';
 
-const {
-	Column
-} = Table;
-
 function FunnelDetails({
 	location
 }) {
 	const {
-		projectId,
 		boardInfo,
 	} = location.state;
-	const {
-		id,
-		name,
-		desc,
-	} = boardInfo;
 
 	const [loading, setLoading] = useState(false);
 	const [tableData, setTableData] = useState([]);
 	const [titles, setTitles] = useState([]);
 	const [steps, setSteps] = useState([]);
 	const [totalRate, setTotalRate] = useState('');
-	let cancelTask = false; // 防止内存泄漏
 
 	function getDataBoard() {
 		setLoading(true);
 		api.getDataBoard({
-			project_id: projectId,
-			chart_id: id,
-			limit: 20,
-			offset: 0,
+			chart_id: boardInfo.id,
+			trend: {
+				offset: 0,
+				limit: config.LIMIT,
+			}
 		}).then((res) => {
-			if (cancelTask) return;
 			const {
 				meta,
 				data
@@ -60,19 +49,12 @@ function FunnelDetails({
 		}).catch((e) => {
 			model.log(e);
 		}).finally(() => {
-			if (cancelTask) {
-				return;
-			}
 			setLoading(false);
 		});
 	}
 
 	useEffect(() => {
 		getDataBoard();
-
-		return () => {
-			cancelTask = true;
-		};
 	}, []);
 
 	function constructStep(meta, data) {
@@ -101,20 +83,23 @@ function FunnelDetails({
 	const renderTitle = () => {
 		const arr = [];
 		for (let i = 0, len = titles.length; i < len; i += 2) {
-			arr.push(<Column key={i} title={titles[i]} cell={renderColumn.bind(this, i)} />);
+			arr.push(<Table.Column key={i} title={titles[i]} cell={renderColumn.bind(this, i)} />);
 		}
 		return arr;
 	};
 
 	return (
 		<Components.Wrap>
-			<Components.Title title={name} />
-			<Loading visible={loading} inline={false}>
-				<Step  totalRate={totalRate} steps={steps} /> 
-				<Table dataSource={tableData} hasBorder={false} >
-				   	{renderTitle()}     		
-				</Table>
-			</Loading>
+			<Components.Title title={boardInfo.name} />
+			<IceContainer>
+				<Loading visible={loading} inline={false}>
+
+					<Step  totalRate={totalRate} steps={steps} /> 
+					<Table dataSource={tableData} hasBorder={false} >
+					   	{renderTitle()}     		
+					</Table>
+				</Loading>
+			</IceContainer>
 		</Components.Wrap>
 	);
 }

@@ -24,17 +24,8 @@ import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
 
 export default function UserDetails({
-	projectId,
 	openId,
 }) {
-	const [city, setCity] = useState('');
-	const [devices, setDevices] = useState([]);
-	const [lastDevice, setLastDevice] = useState('');
-	const [count, setCount] = useState(0);
-	const [time, setTime] = useState('');
-	const [userId, setUserId] = useState('');
-	const [loading, setLoading] = useState(false);
-	let cancelTask = false;
 	const chartStyle = {
 		x: 'device_brand',
 		y: 'device_brand_count',
@@ -44,15 +35,19 @@ export default function UserDetails({
 		}
 	};
 
+	const [city, setCity] = useState('');
+	const [devices, setDevices] = useState([]);
+	const [lastDevice, setLastDevice] = useState('');
+	const [count, setCount] = useState(0);
+	const [time, setTime] = useState('');
+	const [userId, setUserId] = useState('');
+	const [loading, setLoading] = useState(false);
+
 	function getUserScrutinyDetails() {
 		setLoading(true);
 		api.getUserScrutinyDetails({
-			projectId,
 			openId,
 		}).then((res) => {
-			if (cancelTask) {
-				return;
-			}
 			const {
 				id,
 				city,
@@ -70,19 +65,12 @@ export default function UserDetails({
 		}).catch((e) => {
 			model.log(e);
 		}).finally(() => {
-			if (cancelTask) {
-				return;
-			}
 			setLoading(false);
 		});
 	}
 
 	useEffect(() => {
 		getUserScrutinyDetails();
-
-		return () => {
-			cancelTask = true;
-		};
 	}, []);
 
 	return (

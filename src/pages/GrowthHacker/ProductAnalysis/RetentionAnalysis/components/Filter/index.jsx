@@ -16,9 +16,6 @@ import {
 } from '@ice/form';
 import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
-import {
-	rules,
-} from './filterConfig';
 
 export default function Filter({
 	filterChange,
@@ -29,41 +26,24 @@ export default function Filter({
 	const [metricData, setMetricData] = useState([]);
 	const [targetUser, setTargetUser] = useState([]);
 	const formRef = useRef(null);
-	let cancelTask = false; // 防止内存泄漏
-	const projectId = sessionStorage.getItem('projectId');
 
 	async function fetchData() {
 		setLoading(true);
 		try {
 			await api.getDataCenter().then((res) => {
-				if (cancelTask) {
-					return;
-				}
 				dividingData(res.event_entities);
 			});
-			await api.getUserGroups({
-				projectId,
-			}).then((res) => {
-				if (cancelTask) {
-					return;
-				}
+			await api.getUserGroups().then((res) => {
 				dividingTargetData(res.segmentations);
 			})
 		} catch (e) {
 			model.log(e);
-		}
-		if (cancelTask) {
-			return;
 		}
 		setLoading(false);
 	}
 
 	useEffect(() => {
 		fetchData();
-
-		return () => {
-			cancelTask = true;
-		};
 	}, []);
 
 	function dividingData(data) {
@@ -109,15 +89,6 @@ export default function Filter({
 
 	const formChange = (e) => {
 		filterChange(e);
-	};
-
-	const renderFilter = (event, name = '筛选条件') => {
-		return (
-			<div className={styles.filter}>
-      			<Icon type='add' size='small' className={styles.icon} />
-      			<span>{name}</span>
-			</div>
-		)
 	};
 
 	return (

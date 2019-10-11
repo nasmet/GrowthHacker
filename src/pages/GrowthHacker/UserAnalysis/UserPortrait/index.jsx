@@ -24,10 +24,6 @@ import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
 import userPortraitConfig from './userPortraitConfig';
 
-const {
-	Item
-} = Tab;
-
 export default function UserPortrait() {
 	const renderTab = () => {
 		return userPortraitConfig.map((item) => {
@@ -37,11 +33,11 @@ export default function UserPortrait() {
 				Component,
 			} = item;
 			return (
-				<Item key={key} title={tab} >
+				<Tab.Item key={key} title={tab} >
           			<div className={styles.marginTop10}>
             			<Component />
           			</div>
-        		</Item>
+        		</Tab.Item>
 			);
 		});
 	};

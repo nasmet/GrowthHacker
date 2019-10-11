@@ -15,38 +15,28 @@ import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
 import Template from '../Template';
 
-const {
-	Column
-} = Table;
-
 function RetentionDetails({
 	location,
 }) {
 	const {
-		projectId,
 		boardInfo,
 	} = location.state;
-	const {
-		id,
-	} = boardInfo;
 
 	const [loading, setLoading] = useState(false);
 	const [data, setData] = useState([]);
 	const [titles, setTitles] = useState([]);
-	const [showType, setShowType] = useState('0');
 	const [chartData, setChartData] = useState([]);
 	const [chartStyle, setChartStyle] = useState({});
-	let cancelTask = false; // 防止内存泄露
 
 	function getDataBoard() {
 		setLoading(true);
 		api.getDataBoard({
-			project_id: projectId,
-			chart_id: id,
-			limit: 20,
-			offset: 0,
+			chart_id: boardInfo.id,
+			trend: {
+				offset: 0,
+				limit: config.LIMIT,
+			}
 		}).then((res) => {
-			if (cancelTask) return;
 			const {
 				meta,
 				data,
@@ -61,19 +51,12 @@ function RetentionDetails({
 		}).catch((e) => {
 			model.log(e);
 		}).finally(() => {
-			if (cancelTask) {
-				return;
-			}
 			setLoading(false);
 		});
 	}
 
 	useEffect(() => {
 		getDataBoard();
-
-		return () => {
-			cancelTask = true;
-		};
 	}, []);
 
 	function assemblingChartStyle(meta) {
@@ -112,7 +95,7 @@ function RetentionDetails({
 			<div className={styles.source}>
 				<span>{record[item]}</span>
 				<span style={{color:'#0AA372'}}>
-					{(record[item]/record[1]*100).toFixed(2)}%
+					{utils.transformPercent(record[item]/record[1])}
 				</span>
 			</div>
 		);
@@ -121,21 +104,23 @@ function RetentionDetails({
 	const renderTitle = () => {
 		return titles.map((item, index) => {
 			if (index > 1) {
-				return <Column key={index} title={item} cell={renderColumn.bind(this, index)} width={100} />
+				return <Table.Column key={index} title={item} cell={renderColumn.bind(this, index)} width={100} />
 			}
-			return <Column key={index} title={item} dataIndex={index.toString()} lock width={100} />
+			return <Table.Column key={index} title={item} dataIndex={index.toString()} lock width={100} />
 		});
 	};
 
 	return (
-		<Template 
-			tableData={data}
-			loading={loading}
-			boardInfo={boardInfo} 
-			chartData={chartData} 
-			chartStyle={chartStyle}
-			renderTitle={renderTitle} 
-		/>
+		<Components.Wrap>
+			<Components.Title title={boardInfo.name} />
+			<Template 
+				tableData={data}
+				loading={loading}
+				chartData={chartData} 
+				chartStyle={chartStyle}
+				renderTitle={renderTitle} 
+			/>
+		</Components.Wrap>
 	);
 }
 

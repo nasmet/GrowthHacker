@@ -35,12 +35,7 @@ import {
 	rules,
 	firstColumn,
 } from './stepConfig';
-
-
 moment.locale('zh-cn');
-const {
-	RangePicker,
-} = DatePicker;
 
 export default function Filter({
 	filterChange,
@@ -51,22 +46,14 @@ export default function Filter({
 	const [combination, setCombination] = useState('');
 	const [steps, setSteps] = useState([]);
 
-	let cancelTask = false; // 防止内存泄漏
-
 	function getDataCenter() {
 		setLoading(true);
 		api.getDataCenter().then((res) => {
-			if (cancelTask) {
-				return;
-			}
 			dividingData(res.event_entities);
 			setLoading(false);
 		}).catch((e) => {
 			model.log(e);
 		}).finally(() => {
-			if (cancelTask) {
-				return;
-			}
 			setLoading(false);
 		});
 	}
@@ -97,10 +84,6 @@ export default function Filter({
 
 	useEffect(() => {
 		getDataCenter();
-
-		return () => {
-			cancelTask = true;
-		};
 	}, []);
 
 	useEffect(() => {
@@ -239,7 +222,7 @@ export default function Filter({
 							<Select style={{width:'150px'}} dataSource={[]} />
 						</Field>
 						<Field name='date'>
-							<RangePicker 
+							<DatePicker.RangePicker 
 								style={{width:'120px'}} 
 								hasClear={false}
 								disabledDate={model.disabledDate} 

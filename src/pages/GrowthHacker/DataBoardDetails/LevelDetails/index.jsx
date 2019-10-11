@@ -15,43 +15,28 @@ import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
 import Template from '../Template';
 
-const {
-	Column
-} = Table;
-const {
-	Item
-} = Tab;
-
 function LevelDetails({
 	location
 }) {
 	const {
-		projectId,
-		boardInfo
+		boardInfo,
 	} = location.state;
-	const {
-		id,
-	} = boardInfo;
 
 	const [loading, setLoading] = useState(false);
 	const [data, setData] = useState([]);
 	const [titles, setTitles] = useState([]);
-	const [showType, setShowType] = useState('0');
 	const [chartData, setChartData] = useState([]);
 	const [chartStyle, setChartStyle] = useState({});
-	let cancelTask = false; // 防止内存泄漏
 
 	function getDataBoard() {
 		setLoading(true);
 		api.getDataBoard({
-			project_id: projectId,
-			chart_id: id,
-			limit: 20,
-			offset: 0,
-		}).then((res) => {
-			if (cancelTask) {
-				return;
+			chart_id: boardInfo.id,
+			trend: {
+				limit: config.LIMIT,
+				offset: 0,
 			}
+		}).then((res) => {
 			const {
 				meta,
 				data
@@ -66,19 +51,12 @@ function LevelDetails({
 		}).catch((e) => {
 			model.log(e);
 		}).finally(() => {
-			if (cancelTask) {
-				return;
-			};
 			setLoading(false);
 		});
 	}
 
 	useEffect(() => {
 		getDataBoard();
-
-		return () => {
-			cancelTask = true;
-		};
 	}, []);
 
 	function assemblingChartStyle(meta) {
@@ -116,21 +94,23 @@ function LevelDetails({
 	const renderTitle = () => {
 		return titles.map((item, index) => {
 			if (index === 3 || index === 6) {
-				return <Column key={index} title={item} cell={renderColumn.bind(this, index)} />
+				return <Table.Column key={index} title={item} cell={renderColumn.bind(this, index)} />
 			}
-			return <Column key={index} title={item} dataIndex={index.toString()} />
+			return <Table.Column key={index} title={item} dataIndex={index.toString()} />
 		});
 	};
 
 	return (
-		<Template 
-			tableData={data}
-			loading={loading}
-			boardInfo={boardInfo} 
-			chartData={chartData} 
-			chartStyle={chartStyle}
-			renderTitle={renderTitle} 
-		/>
+		<Components.Wrap>
+			<Components.Title title={boardInfo.name} />
+			<Template 
+				tableData={data}
+				loading={loading}
+				chartData={chartData} 
+				chartStyle={chartStyle}
+				renderTitle={renderTitle} 
+			/>
+		</Components.Wrap>
 	);
 }
 

@@ -10,11 +10,10 @@ import {
 	Link,
 } from 'react-router-dom';
 import FoundationSymbol from '@icedesign/foundation-symbol';
-import Logo from '../Logo';
 import {
 	asideMenuConfig,
 } from '../../menuConfig';
-import './Aside.scss';
+import styles from './index.module.scss';
 
 const {
 	Item,
@@ -64,14 +63,14 @@ function Aside({
 	const path = value ? value[0] : '/growthhacker';
 
 	return (
-		<div className="aside-custom-menu">
-      		<Logo text="云图互娱平台" />
+		<div className={styles.wrap}>
+      		<h2 className={styles.title}>云图互娱平台</h2>
       		<Nav
         		openMode="single"
         		selectedKeys={[pathname]}
-        		className="ice-menu-custom"
         		activeDirection="right"
         		defaultOpenKeys={[path]}
+        		type='primary'
       		>
         		{asideMenuConfig.map(traversing)}
       		</Nav>

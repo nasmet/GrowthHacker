@@ -21,10 +21,6 @@ import {
 import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
 
-const {
-	Option,
-} = Select;
-
 export default function CreateProject({
 	onOk,
 }) {
@@ -75,8 +71,8 @@ export default function CreateProject({
 		            	<div className={styles.content}>
 			            	<IceFormBinder name="type" required message="必填">
 								<Select className={styles.input} >
-								    <Option value="miniapp">小程序</Option>
-								    <Option value="minigame">小游戏</Option>
+								    <Select.Option value="miniapp">小程序</Select.Option>
+								    <Select.Option value="minigame">小游戏</Select.Option>
 								</Select>
 			            	</IceFormBinder>
 			            	<div className={styles.formError}>

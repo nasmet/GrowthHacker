@@ -23,55 +23,40 @@ import {
 import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
 
-const {
-	Column,
-} = Table;
-
 export default function LevelShare({
 	type,
 }) {
-	const projectId = sessionStorage.getItem('projectId');
-	let cancelTask = false;
 	const [loading, setLoading] = useState(false);
 	const [tableData, setTableData] = useState([]);
 
 	function getUserShare() {
 		setLoading(true);
 		api.getUserShare({
-			projectId,
-			type,
+			tab: type,
+			date,
 		}).then((res) => {
-			if (cancelTask) {
-				return;
-			}
 			console.log(res);
 		}).catch((e) => {
 			model.log(e);
 		}).finally(() => {
-			if (cancelTask) {
-				return;
-			}
 			setLoading(false);
 		});
 	}
 
 	useEffect(() => {
 
-		return () => {
-			cancelTask = true;
-		}
 	}, []);
 
 	return (
 		<div className={styles.content}>
 			<IceContainer>
 				<Table loading={false} dataSource={tableData} hasBorder={false}>
-					<Column title='层级' dataIndex='level' />
-					<Column title='分享人数' dataIndex='shareNum' />
-					<Column title='分享次数' dataIndex='shareCount' />
-					<Column title='回流量' dataIndex='flow' />
-					<Column title='回流量占比' dataIndex='shareRate' />
-					<Column title='分享新增' dataIndex='shareAddition' />
+					<Table.Column title='层级' dataIndex='level' />
+					<Table.Column title='分享人数' dataIndex='shareNum' />
+					<Table.Column title='分享次数' dataIndex='shareCount' />
+					<Table.Column title='回流量' dataIndex='flow' />
+					<Table.Column title='回流量占比' dataIndex='shareRate' />
+					<Table.Column title='分享新增' dataIndex='shareAddition' />
 				</Table>
 			</IceContainer>
 		</div>

@@ -23,13 +23,6 @@ import {
 import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
 
-const {
-	Column,
-} = Table;
-const {
-	Option,
-} = Select;
-
 export default function Template({
 	type,
 	request,
@@ -40,8 +33,6 @@ export default function Template({
 	const [loading, setLoading] = useState(false);
 	const [chartData, setChartData] = useState([]);
 	const [chartStyle, setChartStyle] = useState({});
-	let cancelTask = false;
-	const projectId = sessionStorage.getItem('projectId');
 
 	function assemblingChartStyle(meta) {
 		return {
@@ -71,15 +62,9 @@ export default function Template({
 		function fetchData() {
 			setLoading(true);
 			request({
-				project_id: projectId,
-				trend: {
-					type,
-					date,
-				},
+				type,
+				date,
 			}).then((res) => {
-				if (cancelTask) {
-					return;
-				}
 				const {
 					meta,
 					data,
@@ -94,23 +79,16 @@ export default function Template({
 			}).catch((e) => {
 				model.log(e);
 			}).finally(() => {
-				if (cancelTask) {
-					return;
-				}
 				setLoading(false);
 			});
 		}
 
 		fetchData();
-
-		return () => {
-			cancelTask = true;
-		};
 	}, [date]);
 
 	const renderTitle = () => {
 		return titles.map((item, index) => {
-			return <Column key={index} title={item} dataIndex={index.toString()} />
+			return <Table.Column key={index} title={item} dataIndex={index.toString()} />
 		});
 	};
 
@@ -127,8 +105,8 @@ export default function Template({
 						defaultValue={1}
 						onChange={onSelectChange}
 					>
-						<Option value={1}>新用户数</Option>
-						<Option value={2}>访问人数</Option>
+						<Select.Option value={1}>新用户数</Select.Option>
+						<Select.Option value={2}>访问人数</Select.Option>
 					</Select>
 					
 					<Components.BasicSector data={chartData} {...chartStyle} forceFit />

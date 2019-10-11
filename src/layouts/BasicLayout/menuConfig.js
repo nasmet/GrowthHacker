@@ -55,6 +55,17 @@ const asideMenuConfig = [{
 		name: '项目列表',
 		path: '/growthhacker/projectlist',
 	}],
+}, {
+	name: '千人千面',
+	path: '/thousandfaces',
+	icon: 'publish',
+	sub: [{
+		name: '用户标签',
+		path: '/thousandfaces/usertag',
+	}, {
+		name: '策略配置',
+		path: '/thousandfaces/strategy',
+	}],
 }];
 
 export {

@@ -23,12 +23,7 @@ import {
 import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
 
-const {
-	Column,
-} = Table;
-
 export default function Template({
-	projectId,
 	openId,
 	tab,
 	onEventDetals,
@@ -37,13 +32,11 @@ export default function Template({
 	const [total, setTotal] = useState(0);
 	const [tableData, setTableData] = useState([]);
 	const [loading, setLoading] = useState(false);
-	let cancelTask = false;
 
 	useEffect(() => {
 		function getUserScrutinyEvents() {
 			setLoading(true);
 			api.getUserScrutinyEvents({
-				projectId,
 				openId,
 				trend: {
 					tab,
@@ -51,9 +44,6 @@ export default function Template({
 					offset: (curPage - 1) * config.LIMIT,
 				},
 			}).then((res) => {
-				if (cancelTask) {
-					return;
-				}
 				const {
 					total,
 					events,
@@ -63,18 +53,11 @@ export default function Template({
 			}).catch((e) => {
 				model.log(e);
 			}).finally(() => {
-				if (cancelTask) {
-					return;
-				}
 				setLoading(false);
 			});
 		}
 
 		getUserScrutinyEvents();
-
-		return () => {
-			cancelTask = true;
-		};
 	}, [curPage]);
 
 	const pageChange = (e) => {
@@ -98,9 +81,9 @@ export default function Template({
 				hasBorder={false}
 				onRowClick={onRowClick}
 			>
-				<Column title='事件名称' dataIndex='name' />
-				<Column title='事件标识符' dataIndex='event' />
-				<Column title='事件时间' cell={renderTimeColumn} />
+				<Table.Column title='事件名称' dataIndex='name' />
+				<Table.Column title='事件标识符' dataIndex='event' />
+				<Table.Column title='事件时间' cell={renderTimeColumn} />
 			</Table>
 		 	<Pagination
             	className={styles.pagination}
