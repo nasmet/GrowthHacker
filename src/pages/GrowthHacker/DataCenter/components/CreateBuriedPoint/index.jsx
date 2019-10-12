@@ -2,7 +2,7 @@ import React, {
 	Component,
 	useEffect,
 	useState,
-	useRef
+	useRef,
 } from 'react';
 import {
 	Button,

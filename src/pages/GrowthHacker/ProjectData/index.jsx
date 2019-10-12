@@ -1,21 +1,13 @@
 import React, {
 	Component,
-	useState,
-	useEffect
 } from 'react';
 import {
-	Tab,
 	Nav,
 } from '@alifd/next';
 import {
 	withRouter,
 	Link,
-	Redirect,
-	Switch,
-	Route,
 } from 'react-router-dom';
-import IceContainer from '@icedesign/container';
-import Layout from '@icedesign/layout';
 import styles from './index.module.scss';
 import projectDataConfig from './projectDataConfig';
 

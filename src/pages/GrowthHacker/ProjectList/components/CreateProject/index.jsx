@@ -18,7 +18,6 @@ import {
 	FormBinder as IceFormBinder,
 	FormError as IceFormError,
 } from '@icedesign/form-binder';
-import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
 
 export default function CreateProject({

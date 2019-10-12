@@ -13,11 +13,6 @@ import {
 	headerMenuConfig,
 } from '../../menuConfig';
 
-const {
-	Item,
-	SubNav,
-} = Nav;
-
 const word = (name) => {
 	return (
 		<span className="ice-menu-item-text">
@@ -29,17 +24,17 @@ const word = (name) => {
 const traversing = function fn(nav) {
 	if (nav.sub && utils.isArray(nav.sub)) {
 		return (
-			<SubNav key={nav.path} selectable label={word(nav.name)}>
+			<Nav.SubNav key={nav.path} selectable label={word(nav.name)}>
         		{nav.sub.map(fn)}
-      		</SubNav>
+      		</Nav.SubNav>
 		);
 	}
 	return (
-		<Item key={nav.path}>
+		<Nav.Item key={nav.path}>
       		<Link to={nav.path} className="ice-menu-link">
         		{word(nav.name)}
       		</Link>
-   		</Item>
+   		</Nav.Item>
 	);
 };
 

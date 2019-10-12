@@ -4,22 +4,12 @@ import React, {
 	useEffect,
 } from 'react';
 import {
-	Input,
 	Button,
-	Tab,
-	Table,
 	Message,
 	Loading,
-	Pagination,
-	Icon,
 	Dialog,
 	Select,
-	Grid,
-	DatePicker,
 } from '@alifd/next';
-import {
-	withRouter,
-} from 'react-router-dom';
 import {
 	Form,
 	Field,
@@ -31,6 +21,8 @@ import {
 } from './strategyConfig';
 
 export default function Strategy() {
+	const [loading, setLoading] = useState(false);
+
 	const initStrategy = () => {
 		return {
 			timeStamp: Date.now(),
@@ -54,7 +46,7 @@ export default function Strategy() {
 		}
 	}
 
-	const [strategys, setStrategys] = useState([initStrategy()]);
+	const [strategys, setStrategys] = useState([]);
 
 	const renderTags = () => {
 		return tags.map(item => {
@@ -82,7 +74,7 @@ export default function Strategy() {
 	}
 
 	const renderField = ({
-		width = 120,
+		width = 140,
 		dataSource = [{
 			label: '1',
 			value: '1',
@@ -90,10 +82,12 @@ export default function Strategy() {
 		mode = 'single',
 		name,
 		style,
+		placeholder = '请选择用户标签',
 	}) => {
 		return (
 			<Field name={name} >
 				<Select  
+					placeholder={placeholder}
 					style={{width:`${width}px`, marginRight: '10px'}}
 					dataSource={dataSource}
 					mode={mode}
@@ -107,6 +101,10 @@ export default function Strategy() {
 		Dialog.confirm({
 			content: '是否确认保存该策略？',
 			onOk: () => {
+				setLoading(true);
+				setTimeout(() => {
+					setLoading(false);
+				}, 500);
 				const index = strategys.indexOf(item);
 				setStrategys(pre => {
 					pre.splice(index, 1);
@@ -121,16 +119,16 @@ export default function Strategy() {
 			return (
 				<div key={item.timeStamp} className={styles.item} >
 					<Form 
-						style={{display:'flex'}} 
+						style={{display:'flex',flexWrap: 'wrap'}} 
 						onChange={item.onChange.bind(item)}
 						ref={(ref)=>{
 							item.refForm = ref;
 						}}
 					>	
 						{renderField({name:tags[0].key,mode:'multiple',width:300})}
-						{renderField({name:tags[1].key})}
-						{renderField({name:tags[2].key})}
-						{renderField({name:tags[3].key})}
+						{renderField({name:tags[1].key,placeholder:'请选择展示策略'})}
+						{renderField({name:tags[2].key,placeholder:'请选择数值策略'})}
+						{renderField({name:tags[3].key,placeholder:'请选择广告策略'})}
 						<Field name='btn'>
 							{renderBtn({text:'保存策略',event:onSaveStrategy.bind(this,item),disabled:item.disabled})}
 						</Field>
@@ -147,7 +145,10 @@ export default function Strategy() {
 				{renderBtn({text:'增加策略',event:onAddStrategy})}
       		</div>
       		<IceContainer>
-      			{renderStrategys()}
+      			<Loading visible={loading} inline={false}>
+      				{renderStrategys()}
+      				{strategys.length===0 && <Components.NotData text='暂未增加策略' />}
+      			</Loading>
       		</IceContainer>
     	</Components.Wrap>
 	);

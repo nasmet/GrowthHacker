@@ -1,34 +1,30 @@
 import React, {
-  Component,
+	Component,
 } from 'react';
 import {
-  withRouter,
-  Link,
+	withRouter,
+	Link,
 } from 'react-router-dom';
 import {
-  Nav,
+	Nav,
 } from '@alifd/next';
 import styles from './index.module.scss';
 import {
-  headerMenuConfig,
+	headerMenuConfig,
 } from '../../menuConfig';
 
-const {
-  Item,
-} = Nav;
-
 function Header({
-  location,
+	location,
 }) {
-  let {
-    pathname,
-  } = location;
-  if (pathname === '/sql') {
-    pathname = '/sql/queryeditor';
-  }
+	let {
+		pathname,
+	} = location;
+	if (pathname === '/sql') {
+		pathname = '/sql/queryeditor';
+	}
 
-  return (
-    <div className={styles.container}>
+	return (
+		<div className={styles.container}>
         	<div className={styles.title}>SQL Query</div>
 
       		<div className={styles.navbar}>
@@ -41,18 +37,18 @@ function Header({
           			{
             			headerMenuConfig.map((nav, index) => {
               				return (
-                				<Item key={nav.path}>
+                				<Nav.Item key={nav.path}>
                   					<Link to={nav.path}>
 						        		<span>{nav.name}</span>
 						      		</Link>
-                				</Item>
+                				</Nav.Item>
               				);
             			})
          		 	}
         		</Nav>
       		</div>
     	</div>
-  );
+	);
 }
 
 export default withRouter(Header);

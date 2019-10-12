@@ -2,27 +2,12 @@ import React, {
 	Component,
 	useState,
 	useEffect,
-	useRef,
-	useContext,
-	useCallback,
-	useMemo,
 } from 'react';
 import {
-	Input,
 	Button,
-	Tab,
-	Table,
-	Message,
 	Loading,
-	Pagination,
-	Icon,
-	Dialog,
 	Select,
-	Grid,
 } from '@alifd/next';
-import {
-	withRouter,
-} from 'react-router-dom';
 import {
 	Form,
 	Field,
@@ -152,7 +137,7 @@ export default function Filter({
 		<Loading visible={loading} inline={false}>
 			<IceContainer>	
 				{renderStep()}
-				{steps.length>0? <Form
+				{steps.length>0 && <Form
 					onChange={onChange}
 					initialValues={{
 						segmentation_id:0,
@@ -165,7 +150,7 @@ export default function Filter({
 							showSearch
 						/>
 					</Field>
-				</Form>:null}
+				</Form>}
 				<div className={styles.btnWrap}>
 					<Button className={styles.btn} type='primary' onClick={onAddStep}>增加步骤</Button>
 					<Button type='primary' onClick={onResetStep}>重置步骤</Button>

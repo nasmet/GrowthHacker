@@ -5,9 +5,7 @@ import React, {
 	useRef,
 } from 'react';
 import {
-	Message,
 	Loading,
-	Icon,
 	Select,
 } from '@alifd/next';
 import {

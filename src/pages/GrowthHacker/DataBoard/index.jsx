@@ -12,7 +12,6 @@ import {
 import {
 	withRouter
 } from 'react-router-dom';
-import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
 
 function DataBoard({

@@ -1,21 +1,9 @@
 import React, {
 	Component,
-	useState,
-	useEffect
 } from 'react';
 import {
-	Input,
-	Button,
-	Table,
-	Message,
-	Loading,
-	Pagination,
-	Dialog,
 	Tab,
 } from '@alifd/next';
-import {
-	withRouter
-} from 'react-router-dom';
 import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
 import dataCenterConfig from './dataCenterConfig';

@@ -289,10 +289,14 @@ const routerConfig = [
 			id: '1009',
 			path: '/thousandfaces/usertag',
 			component: UserTag,
+			exact: true,
+			auth: true,
 		}, {
 			id: '1010',
 			path: '/thousandfaces/strategy',
 			component: Strategy,
+			exact: true,
+			auth: true,
 		}, {
 			id: '10000',
 			path: '/',

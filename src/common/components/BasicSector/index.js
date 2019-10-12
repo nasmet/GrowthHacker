@@ -10,7 +10,6 @@ import {
 	Label,
 	Legend,
 } from "bizcharts";
-import DataSet from "@antv/data-set";
 
 export default function BasicSector({
 	data,
@@ -31,15 +30,8 @@ export default function BasicSector({
     		<Coord type="theta" innerRadius={0.3} radius={1} />
     		<Tooltip />
     		<Legend />
-	        <Geom
-	          	type="intervalStack"
-	          	position={pos}
-	          	color={color}
-	        >
-	        	<Label
-	              content={pos}
-	              formatter={gLabel}
-	            />
+	        <Geom type="intervalStack" position={pos} color={color} >
+	        	<Label content={pos} formatter={gLabel} />
     		</Geom>
  		</Chart> : <Components.NotData style={{height:`${height}px`}} />
 	);

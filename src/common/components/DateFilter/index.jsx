@@ -4,36 +4,14 @@ import React, {
 	useEffect,
 } from 'react';
 import {
-	Input,
-	Button,
 	Tab,
-	Table,
-	Message,
-	Loading,
-	Pagination,
-	Icon,
-	Dialog,
-	Select,
-	Grid,
 	DatePicker,
 } from '@alifd/next';
-import {
-	withRouter,
-} from 'react-router-dom';
-import IceContainer from '@icedesign/container';
 import moment from 'moment';
 import styles from './index.module.scss';
 import {
 	dateTypes,
 } from './dateFilterConfig';
-
-moment.locale('zh-cn');
-const {
-	RangePicker,
-} = DatePicker;
-const {
-	Item,
-} = Tab;
 
 export default function DateFilter({
 	filterChange,
@@ -53,7 +31,7 @@ export default function DateFilter({
 				key,
 			} = item;
 			return (
-				<Item 
+				<Tab.Item 
 					key={key}
           			title={name}
         		/>
@@ -97,7 +75,7 @@ export default function DateFilter({
 	const onOk = (e) => {
 		setTabValue('NaN');
 		setCurDateValue(e);
-		filterChange(`abs:${e[0].valueOf()/1000},${e[1].valueOf()/1000}`);
+		filterChange(`abs:${parseInt(e[0].valueOf()/1000)},${parseInt(e[1].valueOf()/1000)}`);
 	};
 
 	const onVisibleChange = (e) => {
@@ -107,8 +85,8 @@ export default function DateFilter({
 	}
 
 	return (
-		<div className={styles.item}>
-  			<RangePicker 
+		<div className={styles.wrap}>
+  			<DatePicker.RangePicker 
   				onChange={onDateChange}
   				value={dateValue}
   				onOk={onOk}

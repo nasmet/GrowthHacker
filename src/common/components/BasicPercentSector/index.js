@@ -37,7 +37,7 @@ export default function BasicPercentSector({
 	const cols = {
 		percent: {
 			formatter: val => {
-				val = (val * 100).toFixed(2) + "%";
+				val = utils.transformPercent(val);
 				return val;
 			}
 		}
@@ -57,7 +57,7 @@ export default function BasicPercentSector({
 	          	tooltip={[
 	              `${x}*percent`,
 	              (item, percent) => {
-					percent = (percent * 100).toFixed(2) + "%";
+					percent = utils.transformPercent(percent);
 	                return {
 	                  name: item,
 	                  value: percent
@@ -65,10 +65,7 @@ export default function BasicPercentSector({
 	              }
 	            ]}
 	        >
-	        	<Label
-	              content='percent'
-	              formatter={gLabel}
-	            />
+	        	<Label content='percent' formatter={gLabel} />
     		</Geom>
   		</Chart> : <Components.NotData style={{height:`${height}px`}} />
 	);

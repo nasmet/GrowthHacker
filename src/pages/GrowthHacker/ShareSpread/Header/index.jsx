@@ -4,30 +4,19 @@ import React, {
 	useEffect,
 } from 'react';
 import {
-	Input,
-	Button,
-	Tab,
-	Table,
-	Message,
 	Loading,
-	Pagination,
-	Icon,
-	Dialog,
-	Select,
-	Grid,
-	DatePicker,
 } from '@alifd/next';
-import {
-	withRouter,
-} from 'react-router-dom';
-import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
 
 export default function Header({
 	date,
 }) {
 	const [loading, setLoading] = useState(false);
-	const [header, setHeader] = useState(createHeader());
+	const [userCount, setUserCount] = useState(0);
+	const [count, setCount] = useState(0);
+	const [newCount, setNewCount] = useState(0);
+	const [openCount, setOpenCount] = useState(0);
+	const [rate, setRate] = useState(0);
 
 	useEffect(() => {
 		setLoading(true);
@@ -41,14 +30,11 @@ export default function Header({
 				share_reflux_ratio,
 				share_user_count,
 			} = res;
-			setHeader((pre) => {
-				pre[0].value = share_user_count;
-				pre[1].value = share_count;
-				pre[2].value = share_open_count;
-				pre[3].value = utils.transformPercent(share_reflux_ratio);
-				pre[4].value = new_count;
-				return [...pre];
-			});
+			setNewCount(new_count);
+			setCount(share_count);
+			setOpenCount(share_open_count);
+			setRate(utils.transformPercent(share_reflux_ratio));
+			setUserCount(share_user_count);
 		}).catch((e) => {
 			model.log(e);
 		}).finally(() => {
@@ -56,40 +42,23 @@ export default function Header({
 		});
 	}, [date]);
 
-	function createHeader() {
-		return [{
-			name: '分享人数',
-			value: 0,
-		}, {
-			name: '分享次数',
-			value: 0,
-		}, {
-			name: '回流量',
-			value: 0,
-		}, {
-			name: '分享回流比',
-			value: 0,
-		}, {
-			name: '分享新增',
-			value: 0,
-		}];
-	}
-
-	const renderHeader = () => {
-		return header.map((item, index) => {
-			return (
-				<div className={styles.item} key={index}>
-					<span className={styles.value}>{item.value}</span>
-					<span>{item.name}</span>
-				</div>
-			);
-		});
+	const renderItem = (name, value) => {
+		return (
+			<div className={styles.item}>
+				<span className={styles.value}>{value}</span>
+				<span>{name}</span>
+			</div>
+		);
 	}
 
 	return (
 		<Loading visible={loading} inline={false}>
 			<div className={styles.list}>
-				{renderHeader()}
+				{renderItem('分享人数',userCount)}
+				{renderItem('分享次数',count)}
+				{renderItem('回流量',openCount)}
+				{renderItem('分享回流比',rate)}
+				{renderItem('分享新增',newCount)}
 			</div>
 		</Loading>
 	);

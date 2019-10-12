@@ -1,15 +1,11 @@
 import React, {
   Component,
-  useEffect,
 } from 'react';
-import {
-  withRouter,
-} from 'react-router-dom';
 import Layout from '@icedesign/layout';
 import Header from './components/Header';
 import './index.scss';
 
-function SqlLayout({
+export default function SqlLayout({
   children,
 }) {
   return (
@@ -27,5 +23,3 @@ function SqlLayout({
     	</Layout>
   );
 }
-
-export default withRouter(SqlLayout);

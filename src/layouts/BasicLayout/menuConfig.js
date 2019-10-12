@@ -54,6 +54,10 @@ const asideMenuConfig = [{
 	sub: [{
 		name: '项目列表',
 		path: '/growthhacker/projectlist',
+	}, {
+		name: '项目数据',
+		path: '/growthhacker/projectdata',
+		auth: () => sessionStorage.getItem(config.PROJECTID),
 	}],
 }, {
 	name: '千人千面',

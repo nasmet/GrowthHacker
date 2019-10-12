@@ -1,16 +1,12 @@
 import React, {
 	Component,
-	useEffect,
 } from 'react';
-import {
-	withRouter,
-} from 'react-router-dom';
 import Layout from '@icedesign/layout';
 import Header from './components/Header';
 import Aside from './components/Aside';
 import './index.scss';
 
-function BasicLayout({
+export default function BasicLayout({
 	children,
 }) {
 	return (
@@ -31,5 +27,3 @@ function BasicLayout({
     	</Layout>
 	);
 }
-
-export default withRouter(BasicLayout);

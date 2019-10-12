@@ -10,3 +10,6 @@ export const PASSWORD = 'PASSWORD';
 export const PROJECTID = 'PROJECTID';
 export const PROJECTNAME = 'PROJECTNAME';
 export const COLOR = '#722ED1';
+export const UserTags = [
+	'A', 'B', 'C', 'D', 'E', 'F',
+];

@@ -1,4 +1,5 @@
 import moment from 'moment';
+
 const currentDate = moment();
 export default (date, view) => {
 	switch (view) {

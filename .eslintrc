@@ -1,7 +1,7 @@
 {
   	"root": true,
   	"parser": "babel-eslint",
-  	"extends": "eslint-config-airbnb",
+  	"extends": 'eslint:recommended',
   	"parserOptions": {
     	"ecmaVersion": 6,
     	"ecmaFeatures": {
@@ -25,7 +25,6 @@
 	    "react/no-array-index-key": 0,
 	    "func-names": 0,
 	    "arrow-body-style": 0,
-	    "no-use-before-define": 0,
 	    "react/sort-comp": 0,
 	    "react/prop-types": 0,
 	    "react/jsx-first-prop-new-line": 0,
@@ -61,5 +60,4 @@
     	"config": true,
     	"Components": true,
   	},
-  	"no-unused-vars": [2, {"vars": "all", "args": "after-used"}],
 }

@@ -1,4 +1,3 @@
-/* eslint no-undef:0, no-unused-expressions:0, array-callback-return:0 */
 import React, {
 	Component,
 } from 'react';
@@ -12,13 +11,9 @@ import {
 import FoundationSymbol from '@icedesign/foundation-symbol';
 import {
 	asideMenuConfig,
+	asideMenuConfig2,
 } from '../../menuConfig';
 import styles from './index.module.scss';
-
-const {
-	Item,
-	SubNav,
-} = Nav;
 
 const word = (name) => {
 	return (
@@ -37,18 +32,21 @@ const icon = (url) => {
 const traversing = function fn(nav) {
 	if (nav.sub && utils.isArray(nav.sub)) {
 		return (
-			<SubNav key={nav.path} label={word(nav.name)} icon={icon(nav.icon)}>
+			<Nav.SubNav key={nav.path} label={word(nav.name)} icon={icon(nav.icon)}>
         		{nav.sub.map(fn)}
-      		</SubNav>
+      		</Nav.SubNav>
 		);
 	}
+	if (nav.auth && !nav.auth()) {
+		return;
+	}
 	return (
-		<Item key={nav.path}>
+		<Nav.Item key={nav.path}>
       		<Link to={nav.path} className="ice-menu-link">
         		{icon(nav.icon)}
         		{word(nav.name)}
       		</Link>
-   		</Item>
+   		</Nav.Item>
 	);
 };
 
@@ -58,6 +56,8 @@ function Aside({
 	const {
 		pathname,
 	} = location;
+	const arr = pathname.split('/');
+	const selectedPath = `/${arr[1]}/${arr[2]}`;
 	const regex = /^\/[a-zA-Z]+/;
 	const value = regex.exec(pathname);
 	const path = value ? value[0] : '/growthhacker';
@@ -67,7 +67,7 @@ function Aside({
       		<h2 className={styles.title}>云图互娱平台</h2>
       		<Nav
         		openMode="single"
-        		selectedKeys={[pathname]}
+        		selectedKeys={[selectedPath]}
         		activeDirection="right"
         		defaultOpenKeys={[path]}
         		type='primary'

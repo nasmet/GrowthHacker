@@ -70,7 +70,7 @@ function CreateGroup() {
 				obj.alias = item.alias;
 				obj.values = [obj.values];
 				const temp_2 = obj.date;
-				obj.date = `abs:${temp_2[0].valueOf()},${temp_2[1].valueOf()}`;
+				obj.date = `abs:${parseInt(temp_2[0].valueOf()/1000)},${parseInt(temp_2[1].valueOf()/1000)}`;
 				result.conditions.push(obj);
 			}
 		});
@@ -84,9 +84,7 @@ function CreateGroup() {
 		};
 		display(steps, result);
 		setLoading(true);
-		api.createUserGroup({
-			result,
-		}).then((res) => {
+		api.createUserGroup(result).then((res) => {
 			model.log('创建成功');
 			history.back();
 		}).catch((e) => {

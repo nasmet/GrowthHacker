@@ -1,0 +1,18 @@
+.tagWrap{
+	max-width: 400px;
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+}
+.tag{
+	float:left;
+	min-width: 60px;
+	margin-right: 8px;
+	margin-bottom: 10px;
+	padding: 6px 10px;
+	background: #ea6947;
+	border-radius: 20px;
+	color: #fff;
+	font-size: 12px;
+	text-align: center;
+}
