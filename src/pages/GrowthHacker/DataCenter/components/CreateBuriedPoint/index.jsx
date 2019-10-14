@@ -2,7 +2,6 @@ import React, {
 	Component,
 	useEffect,
 	useState,
-	useRef,
 } from 'react';
 import {
 	Button,
@@ -11,128 +10,112 @@ import {
 	Select
 } from '@alifd/next';
 import {
-	FormBinderWrapper as IceFormBinderWrapper,
-	FormBinder as IceFormBinder,
-	FormError as IceFormError,
-} from '@icedesign/form-binder';
+	Form,
+	Field,
+} from '@ice/form';
 import styles from './index.module.scss';
 
 export default function CreateBuriedPoint({
 	onOk,
 	entityType,
 }) {
-	const form = useRef(null);
-	const [show, setShow] = useState(false);
-	const [values, setValues] = useState({});
-	const [disabled, setDisabled] = useState(true);
+	const [loading, setLoading] = useState(false);
+	const type = entityType === 'event' ? 'value_type' : 'variable_type';
 
-	const onSubmit = () => {
-		setShow(true);
-		onOk(values, () => {
-			setShow(false);
+	const onSubmit = (e) => {
+		setLoading(true);
+		api.createEvent({ ...e,
+			entity_type: entityType,
+		}).then((res) => {
+			model.log('创建成功');
+			onOk(res.event_entity);
+		}).catch((e) => {
+			model.log(e);
+			setLoading(false);
 		});
 	};
 
-	const onReset = () => {
-		setValues({});
-		setDisabled(true);
-	};
-
-	const onChange = (e) => {
-		form.current.validateAll((errors, values) => {
-			setDisabled(errors ? true : false);
-		});
+	const onReset = (formCore) => {
+		formCore.reset();
 	};
 
 	return (
-		<Loading visible={show} inline={false}>
-      		<div className={styles.wrap}>
-	        	<IceFormBinderWrapper value={values} ref={form} onChange={onChange}>
-	          		<div className={styles.formItem}>
-	            		<div className={styles.formLabel}>名称：</div>
-	            		<div className={styles.content}>
-		            		<IceFormBinder name="name" required message="必填">
-		              			<Input 
-		              				className={styles.input} 
+		<Loading visible={loading} inline={false}>
+			<div className={styles.wrap}>
+      			<Form
+      				onSubmit={onSubmit} 
+  					rules={{
+					    name: [{
+					      required: true,
+					      message: '必填'
+					    }],
+					    key:  [{
+					      	required: true,
+					     	message: '必填'
+					    }],
+					    [type]:  [{
+					      	required: true,
+					     	message: '必填',
+					    }],
+					}}
+					renderField={({label, component, error}) => (
+		            	<div className={styles.field}>
+		              		<span className={styles.input}>{component}</span>
+		              		<span className={styles.error}>{error}</span>
+		           		</div>
+		          	)}
+      			>
+	      			{formCore => (
+	      				<div>
+		      				<Field name='name'>
+		  						<Input 
+		       						className={styles.input} 
 		              				placeholder='请输入名称'
+		              				maxLength={32}
 		              			/>
-		            		</IceFormBinder>
-		            		<div className={styles.formError}>
-		              			<IceFormError name="name" />
-		            		</div>
-	            		</div>
-	          		</div>
-
-	          		<div className={styles.formItem}>
-		           		<div className={styles.formLabel}>标识符：</div>
-		           		<div className={styles.content}>
-			            	<IceFormBinder name="key" required message="必填">
-			              		<Input 
+		      				</Field>
+		      				<Field name='key'>
+								<Input 
 			              			className={styles.input} 
 			              			placeholder='请输入标识符'
 			              		/>
-			            	</IceFormBinder>
-			            	<div className={styles.formError}>
-			              		<IceFormError name="key" />
-			            	</div>
-		            	</div>
-		          	</div>
-		
-					{entityType=='event'?
-		          	<div className={styles.formItem}>
-		           		<div className={styles.formLabel}>类型：</div>
-		           		<div className={styles.content}>
-			            	<IceFormBinder name="value_type" required message="必填">
-								<Select className={styles.input} >
-								    <Select.Option value="counter">计数器</Select.Option>
-								</Select>
-			            	</IceFormBinder>
-			            	<div className={styles.formError}>
-			              		<IceFormError name="value_type" />
-			            	</div>
-		            	</div>
-		          	</div>:null}
-			
-					{entityType=='variable'?
-		         	<div className={styles.formItem}>
-		           		<div className={styles.formLabel}>类型：</div>
-		           		<div className={styles.content}>
-			            	<IceFormBinder name="variable_type" required message="必填">
-								<Select className={styles.input} >
-								    <Select.Option value="integer">整形</Select.Option>
-								    <Select.Option value="float">浮点型</Select.Option>
-								    <Select.Option value="string">字符串</Select.Option>
-								</Select>
-			            	</IceFormBinder>
-			            	<div className={styles.formError}>
-			              		<IceFormError name="variable_type" />
-			            	</div>
-		            	</div>
-		          	</div>:null}
-
-		          	<div className={styles.formItem}>
-		            	<div className={styles.formLabel}>描述：</div>
-		            	<div className={styles.content}>
-			            	<IceFormBinder name="desc">
-			              		<Input 
-			              			className={styles.input} 
-			              		/>
-			            	</IceFormBinder>
-		            		<div className={styles.formError}>
-		              			(选填)
-		            		</div>
-	            		</div>
-		          	</div>
-					
-					<div className={styles.btnWrap}>
-		          		<Button className={styles.btn} disabled={disabled} type="primary" onClick={onSubmit}>
-		            		确定
-		          		</Button>
-		          		<Button className={styles.btn} type="primary" onClick={onReset}>
-		            		重置
-		          		</Button>
-	          		</div>
-	        	</IceFormBinderWrapper>
+		      				</Field>
+		      				{
+		      					entityType==='event' && 
+		      					<Field name="value_type">
+									<Select className={styles.input} placeholder='请输入类型' >
+									 	<Select.Option value="counter">计数器</Select.Option>
+									</Select>
+		      					</Field>
+		      				}
+		      				{
+		      					entityType==='variable' && 
+		      					<Field name="variable_type">
+									<Select className={styles.input} placeholder='请输入类型' >
+									 	<Select.Option value="integer">整形</Select.Option>
+								    	<Select.Option value="float">浮点型</Select.Option>
+								    	<Select.Option value="string">字符串</Select.Option>
+									</Select>
+		      					</Field>
+		      				}
+		      				<Field name='desc'>
+		  						<Input 
+		              				className={styles.input} 
+		              				placeholder='请输入描述'
+		              				maxLength={50}
+		              			/>
+		      				</Field>
+		      				<div className={styles.btnWrap}>
+			          			<Button className={styles.btn} type="primary" htmlType="submit">
+				            		确定
+				          		</Button>
+				          		<Button className={styles.btn} type="primary" onClick={onReset.bind(this,formCore)}>
+				            		重置
+				          		</Button>
+			          		</div>
+		          		</div>
+		          	)}
+      			</Form>
       		</div>
    		</Loading>
 	);

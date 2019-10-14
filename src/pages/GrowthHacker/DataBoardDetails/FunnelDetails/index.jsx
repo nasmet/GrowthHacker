@@ -93,11 +93,14 @@ function FunnelDetails({
 			<Components.Title title={boardInfo.name} />
 			<IceContainer>
 				<Loading visible={loading} inline={false}>
-
-					<Step  totalRate={totalRate} steps={steps} /> 
-					<Table dataSource={tableData} hasBorder={false} >
-					   	{renderTitle()}     		
-					</Table>
+				{tableData.length!==0?
+					<div>
+						<Step  totalRate={totalRate} steps={steps} /> 
+						<Table dataSource={tableData} hasBorder={false} >
+						   	{renderTitle()}     		
+						</Table>
+					</div> : <Components.NotData />
+				}
 				</Loading>
 			</IceContainer>
 		</Components.Wrap>

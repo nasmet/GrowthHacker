@@ -25,18 +25,9 @@ function EventAnalysis({
 	const [disabled, setDisabled] = useState(true);
 	const [submitDisabled, setSubmitDisabled] = useState(true);
 
-	const filterChange = (e) => {
-		const {
-			dimensions,
-			metrics,
-			segmentation_id,
-		} = e;
-		if (dimensions.length > 0 && metrics.length > 0 && segmentation_id !== '') {
-			setDisabled(false);
-		} else {
-			setDisabled(true);
-		}
-		setValues(e);
+	const filterChange = (value, flag) => {
+		setDisabled(flag);
+		setValues(value);
 	};
 
 	const onClose = () => {
@@ -49,7 +40,7 @@ function EventAnalysis({
 			name,
 			type: 'dashboard'
 		}).then((res) => {
-			Message.success('成功添加到看板');
+			model.log('成功添加到看板');
 			history.push('/growthhacker/projectdata/db');
 		}).catch((e) => {
 			model.log(e);

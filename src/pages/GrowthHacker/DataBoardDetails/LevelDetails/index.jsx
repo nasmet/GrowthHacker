@@ -103,13 +103,15 @@ function LevelDetails({
 	return (
 		<Components.Wrap>
 			<Components.Title title={boardInfo.name} />
-			<Template 
-				tableData={data}
-				loading={loading}
-				chartData={chartData} 
-				chartStyle={chartStyle}
-				renderTitle={renderTitle} 
-			/>
+			<IceContainer>
+				<Template 
+					tableData={data}
+					loading={loading}
+					chartData={chartData} 
+					chartStyle={chartStyle}
+					renderTitle={renderTitle} 
+				/>
+			</IceContainer>
 		</Components.Wrap>
 	);
 }

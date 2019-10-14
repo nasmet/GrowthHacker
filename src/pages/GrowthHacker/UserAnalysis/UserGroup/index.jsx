@@ -96,8 +96,8 @@ function UserGroup({
 		<Components.Wrap>
 			<Components.Title title='用户分群列表' />
 			<IceContainer>
+				<Button type='primary' style={{borderRadius:'10px',marginBottom:'20px'}} onClick={onCreateGroup}>新建分群</Button>
 				<Loading visible={loading} inline={false}>
-					<Button type='primary' style={{borderRadius:'10px',marginBottom:'20px'}} onClick={onCreateGroup}>新建分群</Button>
 					<Table 
 						dataSource={tableData} 
 						hasBorder={false}

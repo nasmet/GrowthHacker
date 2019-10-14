@@ -68,10 +68,8 @@ export default function Template({
 	};
 
 	return (
-		<IceContainer>
-			<Tab defaultActiveKey="0">
-	      		{renderTab()}
-	      	</Tab>
-      	</IceContainer>
+		<Tab defaultActiveKey="0">
+      		{renderTab()}
+      	</Tab>
 	);
 }

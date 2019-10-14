@@ -120,6 +120,7 @@ export default function Filter({
 				>	
 					<Field label={`步骤${index+1}`} name='step' placeholder="请选择事件">
 						<Select  
+							style={{width:'200px'}} 
 							dataSource={metricData}  
 							showSearch
 						/>

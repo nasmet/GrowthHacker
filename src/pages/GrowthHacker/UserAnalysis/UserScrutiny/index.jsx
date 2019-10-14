@@ -109,15 +109,15 @@ function UserScrutiny({
 	return (
 		<Components.Wrap>
 			<Components.Title title='用户细查' />
-      		<Loading visible={loading} inline={false}>
-      			<IceContainer>
-      				<Input 
-      					style={{marginBottom:'20px'}}
-						hasClear 
-						hint='search' 
-						placeholder="请输入openID" 
-						onChange={utils.debounce(onInputChange, 500)}
-					/>
+  			<IceContainer>
+  				<Input 
+  					style={{marginBottom:'20px'}}
+					hasClear 
+					hint='search' 
+					placeholder="请输入openID" 
+					onChange={utils.debounce(onInputChange, 500)}
+				/>
+				<Loading visible={loading} inline={false}>
 					<Table 
 						dataSource={tableData} 
 						hasBorder={false}
@@ -125,14 +125,14 @@ function UserScrutiny({
 					>
 					    {renderTitle()} 	
 					</Table>
-				 	<Pagination
-		            	className={styles.pagination}
-		           		current={curPage}
-		            	total={total}
-		            	onChange={pageChange}
-				    />
-			    </IceContainer>
-		    </Loading>
+				</Loading>
+			 	<Pagination
+	            	className={styles.pagination}
+	           		current={curPage}
+	            	total={total}
+	            	onChange={pageChange}
+			    />
+		    </IceContainer>
     	</Components.Wrap>
 	);
 }

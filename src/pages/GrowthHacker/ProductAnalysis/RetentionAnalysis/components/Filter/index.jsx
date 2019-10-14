@@ -18,7 +18,6 @@ import styles from './index.module.scss';
 export default function Filter({
 	filterChange,
 }) {
-	const [values, setValues] = useState({});
 	const [loading, setLoading] = useState(false);
 	const [dimensionData, setDimensionData] = useState([]);
 	const [metricData, setMetricData] = useState([]);
@@ -86,43 +85,54 @@ export default function Filter({
 	}
 
 	const formChange = (e) => {
-		filterChange(e);
+		const {
+			init_event,
+			retention_event,
+			segmentation_id,
+		} = e;
+		let flag = true;
+		if (init_event && retention_event && segmentation_id !== undefined) {
+			flag = false;
+		}
+		filterChange(e, flag);
 	};
 
 	return (
 		<Loading visible={loading} inline={false}>
-				<IceContainer>
-					<div className={styles.title}>
-						显示满足如以下行为模式的用户留存情况
-					</div>
-					<Form
-						ref={formRef}
-						onChange={formChange} 
-						initialValues={values} 
-						layout={{labelAlign: 'left',labelTextAlign: 'left',labelCol: 1, wrapperCol: 2}}
-					>
-						<Field label='初始行为是' name='init_event'>
-							<Select  
-								dataSource={[]}  
-								showSearch
-							/>
-						</Field>
+			<IceContainer>
+				<div className={styles.title}>
+					显示满足如以下行为模式的用户留存情况
+				</div>
+				<Form
+					ref={formRef}
+					onChange={formChange} 
+					layout={{labelAlign: 'left',labelTextAlign: 'left',labelCol: 1, wrapperCol: 2}}
+				>
+					<Field label='初始行为是' name='init_event'>
+						<Select  
+							style={{width:'200px'}} 
+							dataSource={[]}  
+							showSearch
+						/>
+					</Field>
 
-						<Field label='后续行为是' name='retention_event'>
-							<Select  
-								dataSource={[]}  
-								showSearch
-							/>
-						</Field>
+					<Field label='后续行为是' name='retention_event'>
+						<Select 
+							style={{width:'200px'}} 
+							dataSource={[]}  
+							showSearch
+						/>
+					</Field>
 
-						<Field label='目标用户' name='segmentation_id'>
-							<Select  
-								dataSource={[]}  
-								showSearch
-							/>
-						</Field>
-					</Form>
-				</IceContainer>
+					<Field label='目标用户' name='segmentation_id'>
+						<Select  
+							style={{width:'200px'}} 
+							dataSource={[]}  
+							showSearch
+						/>
+					</Field>
+				</Form>
+			</IceContainer>
 		</Loading>
 	);
 }

@@ -49,5 +49,9 @@
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/ice-lab/react-materials/tree/master/scaffolds/ice-commodity-management-admin"
+	},
+	"iceworks": {
+		"type": "react",
+		"adapter": "adapter-react-v2"
 	}
 }

@@ -148,19 +148,19 @@ export default function ShareTrend() {
 				<Components.BasicColumn data={chartData} {...chartStyle} forceFit />
 			</div>
 			<IceContainer>
-				<Table 
-					loading={loading} 
-					dataSource={tableData} 
-					hasBorder={false}
-				>
-					<Table.Column title='日期' cell={renderFirstColumn} />
-					<Table.Column title='分享人数' dataIndex='share_user_count' />
-					<Table.Column title='分享次数' dataIndex='share_count' />
-					<Table.Column title='回流量' dataIndex='share_open_count' />
-					<Table.Column title='分享回流比' cell={renderFiveColumn} />
-					<Table.Column title='分享新增' dataIndex='new_count' />
-				</Table>
-
+				<Loading visible={loading} inline={false}>
+					<Table 
+						dataSource={tableData} 
+						hasBorder={false}
+					>
+						<Table.Column title='日期' cell={renderFirstColumn} />
+						<Table.Column title='分享人数' dataIndex='share_user_count' />
+						<Table.Column title='分享次数' dataIndex='share_count' />
+						<Table.Column title='回流量' dataIndex='share_open_count' />
+						<Table.Column title='分享回流比' cell={renderFiveColumn} />
+						<Table.Column title='分享新增' dataIndex='new_count' />
+					</Table>
+				</Loading>
 	          	<Pagination
 	           		className={styles.pagination}
 	            	current={curPage}

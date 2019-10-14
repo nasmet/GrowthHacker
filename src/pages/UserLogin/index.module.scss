@@ -14,9 +14,10 @@
 }
 .btnWrap{
 	display: flex;
+	flex-direction: column;
 	align-items: center;
 }
 .btn{
-	width: 80px;
-	margin-right: 20px;
+	width: 120px;
+	margin-bottom: 10px;
 }

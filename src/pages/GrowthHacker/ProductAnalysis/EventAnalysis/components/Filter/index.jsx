@@ -84,7 +84,16 @@ export default function Filter({
 	}
 
 	const formChange = (values) => {
-		filterChange(values);
+		const {
+			dimensions,
+			metrics,
+			segmentation_id,
+		} = values;
+		let flag = true;
+		if (dimensions.length > 0 && metrics.length > 0 && segmentation_id !== '') {
+			flag = false;
+		}
+		filterChange(values, flag);
 	};
 
 	return (
@@ -95,7 +104,7 @@ export default function Filter({
 				initialValues={values} 
 				layout={{labelAlign: 'top',labelTextAlign: 'left'}}
 				ref={formRef}
-			>
+			>	
 				<Field label='选择事件' name='metrics'>
 					<Select  
 						style={{width:'400px'}}

@@ -78,7 +78,7 @@ function UserGroupDetails({
 
 	return (
 		<Components.Wrap>
-			<Components.Title title='用户分享详情' />
+			<Components.Title title='用户分群详情' />
 			<IceContainer>
 				<Button style={{marginBottom:'20px',borderRadius:'10px'}} onClick={onBack}>返回用户分群</Button>
 				<Table 

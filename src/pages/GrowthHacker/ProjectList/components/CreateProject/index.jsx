@@ -2,7 +2,6 @@ import React, {
 	Component,
 	useState,
 	useEffect,
-	useRef,
 } from 'react';
 import {
 	Input,
@@ -11,128 +10,109 @@ import {
 	Loading,
 } from '@alifd/next';
 import {
-	withRouter,
-} from 'react-router-dom';
-import {
-	FormBinderWrapper as IceFormBinderWrapper,
-	FormBinder as IceFormBinder,
-	FormError as IceFormError,
-} from '@icedesign/form-binder';
+	Form,
+	Field,
+} from '@ice/form';
 import styles from './index.module.scss';
 
 export default function CreateProject({
 	onOk,
 }) {
-	const [show, setShow] = useState(false);
-	const [values, setValues] = useState({});
-	const form = useRef(null);
-	const [disabled, setDisabled] = useState(true);
+	const [loading, setLoading] = useState(false);
 
-	const validateAllFormField = () => {
-		setShow(true);
-		onOk(values, () => {
-			setShow(false);
+	const onSubmit = (e) => {
+		setLoading(true);
+		api.createProject(e).then((res) => {
+			model.log('创建成功');
+			onOk(res.id, e);
+		}).catch((e) => {
+			model.log(e);
+			setLoading(false);
 		});
 	};
 
-	const onReset = () => {
-		setValues({});
-		setDisabled(true);
-	};
-
-	const onChange = (e) => {
-		form.current.validateAll((errors, values) => {
-			setDisabled(errors ? true : false);
-		});
+	const onReset = (formCore) => {
+		formCore.reset();
 	};
 
 	return (
-		<Loading visible={show} inline={false}>
+		<Loading visible={loading} inline={false}>
       		<div className={styles.wrap}>
-	        	<IceFormBinderWrapper value={values} ref={form} onChange={onChange}>
-	          		<div className={styles.formItem}>
-	            		<div className={styles.formLabel}>名称：</div>
-	            		<div className={styles.content}>
-		            		<IceFormBinder name="name" required message="必填">
-		              			<Input 
-		              				className={styles.input} 
+      			<Form
+      				onSubmit={onSubmit} 
+  					rules={{
+					    name: [{
+					      required: true,
+					      max: 8,
+					      message: '最多8个字符'
+					    }],
+					    type:  [{
+					      	required: true,
+					     	 message: '必填',
+					    }],
+					    appid:  [{
+					      	required: true,
+					     	message: '必填',
+					    }],
+					    domain_name:[{
+							required: true,
+							message: '必填',
+					    }],
+					}}
+					renderField={({label, component, error}) => (
+		            	<div className={styles.field}>
+		              		<span className={styles.input}>{component}</span>
+		              		<span className={styles.error}>{error}</span>
+		           		</div>
+		          	)}
+      			>
+	      			{formCore => (
+	      				<div>
+		      				<Field name='name'>
+		  						<Input 
+		       						className={styles.input} 
 		              				placeholder='请输入名称'
+		              				maxLength={32}
 		              			/>
-		            		</IceFormBinder>
-		            		<div className={styles.formError}>
-		              			<IceFormError name="name" />
-		            		</div>
-	            		</div>
-	          		</div>
-
-		          	<div className={styles.formItem}>
-		            	<div className={styles.formLabel}>应用类型：</div>
-		            	<div className={styles.content}>
-			            	<IceFormBinder name="type" required message="必填">
-								<Select className={styles.input} >
+		      				</Field>
+		      				<Field name='type'>
+								<Select className={styles.input} placeholder='请输入应用类型' >
 								    <Select.Option value="miniapp">小程序</Select.Option>
 								    <Select.Option value="minigame">小游戏</Select.Option>
 								</Select>
-			            	</IceFormBinder>
-			            	<div className={styles.formError}>
-			              		<IceFormError name="type" />
-			            	</div>
-		            	</div>
-		          	</div>
-
-		          	<div className={styles.formItem}>
-		            	<div className={styles.formLabel}>appid：</div>
-		            	<div className={styles.content}>
-			            	<IceFormBinder name="appid" required message="必填">
-								<Input 
+		      				</Field>
+		      				<Field name='appid'>
+		  						<Input 
 		              				className={styles.input} 
 		              				placeholder='请输入appid'
+		              				maxLength={32}
 		              			/>
-			            	</IceFormBinder>
-			            	<div className={styles.formError}>
-			              		<IceFormError name="appid" />
-			            	</div>
-		            	</div>
-		          	</div>
-					
-	          		<div className={styles.formItem}>
-	            		<div className={styles.formLabel}>域名：</div>
-	            		<div className={styles.content}>
-		            		<IceFormBinder name="domain_name" required message="必填">
-		              			<Input 
+		      				</Field>
+		      				<Field name='domain_name'>
+		  						<Input 
 		              				className={styles.input} 
 		              				placeholder='请输入域名'
+		              				maxLength={32}
 		              			/>
-		            		</IceFormBinder>
-		            		<div className={styles.formError}>
-		              			<IceFormError name="domain_name" />
-		            		</div>
-	            		</div>
-	          		</div>
-
-	          		<div className={styles.formItem}>
-	            		<div className={styles.formLabel}>描述：</div>
-	            		<div className={styles.content}>
-		            		<IceFormBinder name="desc">
-		              			<Input 
+		      				</Field>
+		      				<Field name='desc'>
+		  						<Input 
 		              				className={styles.input} 
+		              				placeholder='请输入描述'
+		              				maxLength={50}
 		              			/>
-		            		</IceFormBinder>
-		            		<div className={styles.formError}>
-		              			(选填)
-		            		</div>
-	            		</div>
-	          		</div>
-
-					<div className={styles.btnWrap}>
-	          			<Button className={styles.btn} disabled={disabled} type="primary" onClick={validateAllFormField}>
-		            		确定
-		          		</Button>
-		          		<Button className={styles.btn} type="primary" onClick={onReset}>
-		            		重置
-		          		</Button>
-	          		</div>
-	        	</IceFormBinderWrapper>
+		      				</Field>
+		      				<div className={styles.btnWrap}>
+			          			<Button className={styles.btn} type="primary" htmlType="submit">
+				            		确定
+				          		</Button>
+				          		<Button className={styles.btn} type="primary" onClick={onReset.bind(this,formCore)}>
+				            		重置
+				          		</Button>
+			          		</div>
+		          		</div>
+		          	)}
+      			</Form>
       		</div>
    		</Loading>
 	);

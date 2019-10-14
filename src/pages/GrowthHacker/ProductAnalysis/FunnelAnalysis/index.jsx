@@ -47,7 +47,7 @@ function FunnelAnalysis({
 			type: 'funnel',
 			segmentation_id: group,
 		}).then((res) => {
-			Message.success('成功添加到看板');
+			model.log('成功添加到看板');
 			history.push('/growthhacker/projectdata/db');
 		}).catch((e) => {
 			setLoading(false);

@@ -62,7 +62,7 @@ export default function ARPUData() {
       		<Components.DateFilter filterChange={filterChange} />
 			<IceContainer>
 				<Loading visible={loading} inline={false}>
-					<Table dataSource={tableData} hasBorder={false} >
+					<Table dataSource={tableData} hasBorder={false} fixedHeader maxBodyHeight={400} >
 						{renderTitles()}
 					</Table>
 				</Loading>

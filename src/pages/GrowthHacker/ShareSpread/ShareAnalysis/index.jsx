@@ -75,19 +75,20 @@ export default function ShareAnalysis() {
 				/>
 			</p>
 			<IceContainer>
-				<Table 
-					loading={loading} 
-					dataSource={tableData} 
-					hasBorder={false}
-					emptyContent={<span>{emptyContent?'暂无数据':'查询结果为空'}</span>}
-				>
-					<Table.Column title='触发名称' dataIndex='trigger_name' />
-					<Table.Column title='分享人数' dataIndex='share_user_count' />
-					<Table.Column title='分享次数' dataIndex='share_count' />
-					<Table.Column title='分享回流量' dataIndex='share_open_count' />
-					<Table.Column title='分享回流比' cell={renderFiveColumn} />
-					<Table.Column title='分享新增' dataIndex='new_count' />
-				</Table>
+				<Loading visible={loading} inline={false}>
+					<Table 
+						dataSource={tableData} 
+						hasBorder={false}
+						emptyContent={<span>{emptyContent?'暂无数据':'查询结果为空'}</span>}
+					>
+						<Table.Column title='触发名称' dataIndex='trigger_name' />
+						<Table.Column title='分享人数' dataIndex='share_user_count' />
+						<Table.Column title='分享次数' dataIndex='share_count' />
+						<Table.Column title='分享回流量' dataIndex='share_open_count' />
+						<Table.Column title='分享回流比' cell={renderFiveColumn} />
+						<Table.Column title='分享新增' dataIndex='new_count' />
+					</Table>
+				</Loading>
 			</IceContainer>
     	</Components.Wrap>
 	);

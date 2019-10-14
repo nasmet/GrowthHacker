@@ -36,6 +36,7 @@ function UserLogin({
 	const [values, setValues] = useState({});
 
 	useEffect(() => {
+		sessionStorage.removeItem(config.PROJECTID);
 		sessionStorage.removeItem(config.TOKENKEY);
 		const username = localStorage.getItem(config.ACCOUNT);
 
@@ -55,6 +56,7 @@ function UserLogin({
 			password,
 			flag,
 		} = e;
+		setLoading(true);
 		setTimeout(() => {
 			if (flag) {
 				localStorage.setItem(config.ACCOUNT, username);
@@ -69,34 +71,34 @@ function UserLogin({
 	};
 
 	return (
-		<div className={styles.wrap}>	
-			<Loading visible={loading}>
-				<Form 
-					onSubmit={onLogin} 
-					initialValues={values}
-					renderField={({label, component, error}) => (
-			            <div style={{display:'flex',alignItems:'center', marginBottom: '20px'}}>
-			              <div style={{width:'80px'}}>{label}</div>
-			              <span>{component}</span>
-			            </div>
-			        )}
-				>
-		  			<Field label="用户名：" name="username" >
-		  				<Input style={{width: '200px'}} placeholder="请输入用户名" />
-		  			</Field>
-		  			<Field label="密码：" name="password" >
-		  				<Input style={{width: '200px'}} htmlType="password" placeholder="请输入密码"  />
-		  			</Field>
-		  			<Field valueName='checked' label="记住密码：" name="flag" component={Checkbox} />
-					<Field label="">
+		<Loading visible={loading} inline={false}>
+			<div className={styles.wrap}>	
+				<div>
+					<Form 
+						onSubmit={onLogin} 
+						initialValues={values}
+						renderField={({label, component, error}) => (
+				            <div style={{display:'flex',alignItems:'center', marginBottom: '20px'}}>
+				            	{label && <span>{label}</span>}
+				            	<span>{component}</span>
+				            </div>
+				        )}
+					>
+			  			<Field name="username" >
+			  				<Input style={{width: '200px'}} autoComplete="new-password" placeholder="请输入用户名" />
+			  			</Field>
+			  			<Field name="password" >
+			  				<Input style={{width: '200px'}} autoComplete="new-password" htmlType="password" placeholder="请输入密码"  />
+			  			</Field>
+			  			<Field valueName='checked' label="记住密码：" name="flag" component={Checkbox} />
 						<div className={styles.btnWrap}>
 							<Button className={styles.btn} type='primary' htmlType="submit">登录</Button>
 							<Link to='/user/register'>注册</Link>
 						</div>
-		      		</Field>
-		  		</Form>
-	  		</Loading>
-  		</div>
+			  		</Form>
+		  		</div>
+	  		</div>
+  		</Loading>
 	);
 }
 

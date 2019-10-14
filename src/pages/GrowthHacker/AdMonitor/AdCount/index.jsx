@@ -44,6 +44,9 @@ export default function AdCount() {
 
 	const renderTitles = () => {
 		return titles.map((item, index) => {
+			if (index === 0) {
+				return <Table.Column key={index} title={item} dataIndex={index.toString()} lock width={120} />;
+			}
 			return <Table.Column key={index} title={item} dataIndex={index.toString()} />;
 		});
 	};
@@ -54,7 +57,7 @@ export default function AdCount() {
 			<Components.DateFilter filterChange={filterChange} />
 			<IceContainer>
 				<Loading visible={loading} inline={false}>
-					<Table dataSource={tableData} hasBorder={false} >
+					<Table dataSource={tableData} hasBorder={false} fixedHeader maxBodyHeight={400} >
 						{renderTitles()}
 					</Table>
 				</Loading>

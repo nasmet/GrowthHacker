@@ -90,20 +90,12 @@ export default function EventVariable() {
 		setShow(false);
 	};
 
-	const onOk = (values, cb) => {
-		api.createEvent({ ...values,
-			entity_type: 'variable',
-		}).then((res) => {
-			setTableData((pre) => {
-				pre.splice(0, 0, res.event_entity);
-				return [...pre];
-			});
-			setShow(false);
-			model.log('创建成功');
-		}).catch((e) => {
-			cb();
-			model.log(e);
+	const onOk = (value, cb) => {
+		setTableData((pre) => {
+			pre.splice(0, 0, value);
+			return [...pre];
 		});
+		setShow(false);
 	};
 
 	return (
@@ -114,19 +106,18 @@ export default function EventVariable() {
 						创建事件变量
 					</Button>
 				</div>
-
-	          	<Table 
-	          		loading={loading} 
-	          		dataSource={tableData} 
-	          		hasBorder={false} 
-	          	>	
-	          		<Table.Column title="id" dataIndex="id" />
-	            	<Table.Column title="名称" dataIndex="name" />
-	            	<Table.Column title="标识符" dataIndex="entity_key" />
-	            	<Table.Column title="类型" dataIndex="variable_type" />
-	            	<Table.Column title="操作" cell={renderCover} />
-	          	</Table>
-
+				<Loading visible={loading} inline={false}>
+		          	<Table 
+		          		dataSource={tableData} 
+		          		hasBorder={false} 
+		          	>	
+		          		<Table.Column title="id" dataIndex="id" />
+		            	<Table.Column title="名称" dataIndex="name" />
+		            	<Table.Column title="标识符" dataIndex="entity_key" />
+		            	<Table.Column title="类型" dataIndex="variable_type" />
+		            	<Table.Column title="操作" cell={renderCover} />
+		          	</Table>
+				</Loading>
 	          	<Pagination
 	           		className={styles.pagination}
 	            	current={curPage}

@@ -7,16 +7,26 @@
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
-	color: #fff;
 }
 .input{
 	width: 300px;
 }
 .btnWrap{
+	text-align: center;
+}
+.btn{
+	width: 120px;
+}
+.field{
+	position: relative;
+	margin-bottom: 20px;
 	display: flex;
 	align-items: center;
 }
-.btn{
-	width: 80px;
-	margin-right: 20px;
+.error{
+	position: absolute;
+	left: 210px;
+	width: 200px;
+	color: #ee7893;
+	font-size: 10px;
 }

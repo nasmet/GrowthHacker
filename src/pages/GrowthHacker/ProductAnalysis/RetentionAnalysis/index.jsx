@@ -25,18 +25,9 @@ function RetentionAnalysis({
 	const [values, setValues] = useState({});
 	const [submitDisabled, setSubmitDisabled] = useState(true);
 
-	const filterChange = (e) => {
-		const {
-			init_event,
-			retention_event,
-			segmentation_id,
-		} = e;
-		if (init_event && retention_event && segmentation_id !== undefined) {
-			setDisabled(false);
-		} else {
-			setDisabled(true);
-		}
-		setValues(e);
+	const filterChange = (value, flag) => {
+		setDisabled(flag)
+		setValues(value);
 	};
 
 	const onClose = () => {
@@ -49,7 +40,7 @@ function RetentionAnalysis({
 			name,
 			type: 'retention'
 		}).then((res) => {
-			Message.success('成功添加到看板');
+			model.log('成功添加到看板');
 			history.push('/growthhacker/projectdata/db');
 		}).catch((e) => {
 			model.log(e);

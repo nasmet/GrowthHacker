@@ -1,7 +1,8 @@
 import React, {
 	Component,
 	useState,
-	useEffect
+	useEffect,
+	useReducer,
 } from 'react';
 import {
 	Button,
@@ -22,49 +23,25 @@ function ProjectList({
 	const [loading, setLoading] = useState(false);
 	const [data, setData] = useState([]);
 
-	function getProjects() {
-		setLoading(true);
-		api.getProjects().then((res) => {
-			setData(res.projects);
-		}).catch((e) => {
-			model.log(e);
-		}).finally(() => {
-			setLoading(false);
-		});
-	}
-
 	useEffect(() => {
+		function getProjects() {
+			setLoading(true);
+			api.getProjects().then((res) => {
+				setData(res.projects);
+			}).catch((e) => {
+				model.log(e);
+			}).finally(() => {
+				setLoading(false);
+			});
+		}
+
 		getProjects();
 	}, []);
-
 
 	const jumpProjectData = (e) => {
 		sessionStorage.setItem(config.PROJECTID, e.id);
 		sessionStorage.setItem(config.PROJECTNAME, e.name);
 		history.push('/growthhacker/projectdata');
-	};
-
-	const constructNewItem = (item) => {
-		const {
-			id,
-			name,
-			domain_name,
-			type,
-			desc,
-		} = item;
-		return [{
-			name: '名称：',
-			value: name,
-		}, {
-			name: '域名：',
-			value: domain_name,
-		}, {
-			name: '类型：',
-			value: type,
-		}, {
-			name: '描述：',
-			value: desc,
-		}];
 	};
 
 	const onDeleteProject = (id, index, e) => {
@@ -92,23 +69,31 @@ function ProjectList({
 
 	const renderList = () => {
 		return data.map((item, index) => {
-			const newItem = constructNewItem(item);
+			const {
+				id,
+				name,
+				domain_name,
+				type,
+				desc,
+			} = item;
 			return (
-				<Button type='primary' className={styles.item} key={item.id} onClick={jumpProjectData.bind(this,item)}>
-					{	
-						newItem.map((item,index)=>{
-							const{
-								name,
-								value,
-							} = item;
-							return (
-								<div key={index} className={styles.itemChild}>
-									<span className={styles.name}>{name}</span>
-									<span className={styles.value}>{value}</span>
-								</div>
-							);
-						})
-					}
+				<Button type='primary' className={styles.item} key={id} onClick={jumpProjectData.bind(this,item)}>
+					<div className={styles.itemChild}>
+						<span className={styles.name}>名称：</span>
+						<span className={styles.value}>{name}</span>
+					</div>
+					<div className={styles.itemChild}>
+						<span className={styles.name}>域名：</span>
+						<span className={styles.value}>{domain_name}</span>
+					</div>
+					<div className={styles.itemChild}>
+						<span className={styles.name}>类型：</span>
+						<span className={styles.value}>{type}</span>
+					</div>
+					<div className={styles.itemChild}>
+						<span className={styles.name}>描述：</span>
+						<span className={styles.value}>{desc}</span>
+					</div>
 					<Icon className={styles.close} type='close' onClick={onDeleteProject.bind(this,item.id,index)} />
 				</Button>
 			);
@@ -123,21 +108,15 @@ function ProjectList({
 		setShowDialog(true);
 	};
 
-	const onOk = (values, cb) => {
-		api.createProject(values).then((res) => {
-			setData((pre) => {
-				pre.splice(0, 0, {
-					id: res.id,
-					...values,
-				});
-				return [...pre];
+	const onOk = (id, values) => {
+		setData((pre) => {
+			pre.splice(0, 0, {
+				id,
+				...values,
 			});
-			setShowDialog(false);
-			model.log('创建成功');
-		}).catch((e) => {
-			cb();
-			model.log(e);
+			return [...pre];
 		});
+		setShowDialog(false);
 	};
 
 	return (

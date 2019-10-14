@@ -106,20 +106,22 @@ function RetentionDetails({
 			if (index > 1) {
 				return <Table.Column key={index} title={item} cell={renderColumn.bind(this, index)} width={100} />
 			}
-			return <Table.Column key={index} title={item} dataIndex={index.toString()} lock width={100} />
+			return <Table.Column key={index} title={item} dataIndex={index.toString()} lock width={120} />
 		});
 	};
 
 	return (
 		<Components.Wrap>
 			<Components.Title title={boardInfo.name} />
-			<Template 
-				tableData={data}
-				loading={loading}
-				chartData={chartData} 
-				chartStyle={chartStyle}
-				renderTitle={renderTitle} 
-			/>
+			<IceContainer>
+				<Template 
+					tableData={data}
+					loading={loading}
+					chartData={chartData} 
+					chartStyle={chartStyle}
+					renderTitle={renderTitle} 
+				/>
+			</IceContainer>
 		</Components.Wrap>
 	);
 }
