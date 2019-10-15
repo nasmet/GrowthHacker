@@ -61,6 +61,10 @@ export default function ShareTrend() {
 		}
 
 		getShareTrend();
+
+		return () => {
+			api.cancelRequest();
+		};
 	}, [date, curPage]);
 
 	function assembleChartData(arg) {

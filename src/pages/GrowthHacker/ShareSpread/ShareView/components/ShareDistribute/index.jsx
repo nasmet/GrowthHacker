@@ -48,6 +48,10 @@ export default function ShareDistribute({
 		}).finally(() => {
 			setLoading(false);
 		});
+
+		return () => {
+			api.cancelRequest();
+		};
 	}, [date]);
 
 

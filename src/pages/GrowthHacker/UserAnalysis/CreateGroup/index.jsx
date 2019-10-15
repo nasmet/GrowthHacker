@@ -33,6 +33,12 @@ function CreateGroup() {
 	const [disabled, setDisabled] = useState(true);
 	const [submitDisabled, setSubmitDisabled] = useState(true);
 
+	useEffect(() => {
+		return () => {
+			api.cancelRequest();
+		};
+	}, []);
+
 	const filterChange = (step, expression) => {
 		setDisabled(expression ? false : true);
 		setSteps(step);

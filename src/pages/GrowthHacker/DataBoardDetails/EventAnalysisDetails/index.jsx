@@ -69,6 +69,10 @@ function EventAnalysisDetails({
 		}
 
 		getDataBoard();
+
+		return () => {
+			api.cancelRequest();
+		};
 	}, [curPage]);
 
 	function assemblingChartStyle(meta) {

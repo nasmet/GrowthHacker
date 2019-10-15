@@ -60,6 +60,10 @@ function UserGroupDetails({
 		}
 
 		getUserGroupDetails();
+
+		return () => {
+			api.cancelRequest();
+		};
 	}, [curPage]);
 
 	const renderTitle = () => {

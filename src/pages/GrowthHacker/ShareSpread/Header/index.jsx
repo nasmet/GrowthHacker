@@ -40,6 +40,10 @@ export default function Header({
 		}).finally(() => {
 			setLoading(false);
 		});
+
+		return () => {
+			api.cancelRequest();
+		};
 	}, [date]);
 
 	const renderItem = (name, value) => {

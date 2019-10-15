@@ -42,6 +42,10 @@ function UserGroup({
 
 	useEffect(() => {
 		getUserGroups();
+
+		return () => {
+			api.cancelRequest();
+		};
 	}, []);
 
 	const onCreateGroup = () => {

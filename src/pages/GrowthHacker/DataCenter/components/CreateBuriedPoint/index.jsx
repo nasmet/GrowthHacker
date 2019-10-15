@@ -22,6 +22,12 @@ export default function CreateBuriedPoint({
 	const [loading, setLoading] = useState(false);
 	const type = entityType === 'event' ? 'value_type' : 'variable_type';
 
+	useEffect(() => {
+		return () => {
+			api.cancelRequest();
+		};
+	}, []);
+
 	const onSubmit = (e) => {
 		setLoading(true);
 		api.createEvent({ ...e,

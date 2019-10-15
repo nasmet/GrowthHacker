@@ -4,23 +4,9 @@ import React, {
 	useEffect,
 } from 'react';
 import {
-	Input,
-	Button,
-	Tab,
 	Table,
-	Message,
-	Loading,
-	Pagination,
-	Icon,
-	Dialog,
-	Select,
-	Grid,
-	DatePicker,
 } from '@alifd/next';
-import {
-	withRouter,
-} from 'react-router-dom';
-import IceContainer from '@icedesign/container';
+import Img from '@icedesign/img';
 import styles from './index.module.scss';
 
 export default function Top({
@@ -43,7 +29,17 @@ export default function Top({
 		}).finally(() => {
 			setLoading(false);
 		});
+
+		return () => {
+			api.cancelRequest();
+		};
 	}, [date]);
+
+	const renderTwoColumn = (value, index, record) => {
+		return record.avatar ?
+			<Img width={30} height={30} src={record.avatar} enableAliCDNSuffix={true} shape='circle' /> :
+			<span>暂无头像</span>
+	};
 
 	return (
 		<div className={styles.userShareItem}>
@@ -51,7 +47,7 @@ export default function Top({
 			<div className={styles.userShareItemChart}>
 				<Table loading={loading} dataSource={tableData} hasBorder={false} >
 					<Table.Column style={{background: 'transparent'}} className={styles.column} title='Top排名' dataIndex='ranking_num' />
-					<Table.Column style={{background: 'transparent'}} className={styles.column} title='头像' dataIndex='avatar' />
+					<Table.Column style={{background: 'transparent'}} className={styles.column} title='头像' cell={renderTwoColumn} />
 					<Table.Column style={{background: 'transparent'}} className={styles.column} title='昵称' dataIndex='name' />
 					<Table.Column style={{background: 'transparent'}} className={styles.column} title={title} dataIndex='count' />
 				</Table>

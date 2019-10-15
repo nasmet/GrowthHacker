@@ -35,7 +35,12 @@ export default function AdCount() {
 				setLoading(false);
 			});
 		}
+
 		getAdCount();
+
+		return () => {
+			api.cancelRequest();
+		};
 	}, [date]);
 
 	const filterChange = (e) => {

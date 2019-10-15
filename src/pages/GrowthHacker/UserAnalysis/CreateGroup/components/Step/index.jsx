@@ -84,6 +84,10 @@ export default function Filter({
 
 	useEffect(() => {
 		getDataCenter();
+
+		return () => {
+			api.cancelRequest();
+		};
 	}, []);
 
 	useEffect(() => {

@@ -37,6 +37,10 @@ export default function AdAnalysis() {
 		}
 
 		getAdAnalysis();
+
+		return () => {
+			api.cancelRequest();
+		};
 	}, [date]);
 
 	const filterChange = (e) => {

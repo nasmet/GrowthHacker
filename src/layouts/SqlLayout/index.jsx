@@ -1,19 +1,19 @@
 import React, {
-  Component,
+	Component,
 } from 'react';
 import Layout from '@icedesign/layout';
 import Header from './components/Header';
 import './index.scss';
 
 export default function SqlLayout({
-  children,
+	children,
 }) {
-  return (
-    <Layout className="ice-design-layout" fixable >
+	return (
+		<Layout className="ice-design-layout" fixable >
+		    <Layout.Header type='primary'>
+                <Header />
+            </Layout.Header>
      		<Layout.Section>
-          		<Layout.Header>
-                  	<Header />
-                </Layout.Header>
        	 		<Layout.Main>
          	 		<div className="main-container">
             	   		{children}
@@ -21,5 +21,5 @@ export default function SqlLayout({
         		</Layout.Main>
       		</Layout.Section>
     	</Layout>
-  );
+	);
 }

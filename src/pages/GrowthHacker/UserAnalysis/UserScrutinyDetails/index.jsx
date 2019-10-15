@@ -85,6 +85,10 @@ function UserScrutinyDetails({
 
 	useEffect(() => {
 		getUserScrutinyEventsBar();
+
+		return () => {
+			api.cancelRequest();
+		};
 	}, []);
 
 	const renderTab = () => {

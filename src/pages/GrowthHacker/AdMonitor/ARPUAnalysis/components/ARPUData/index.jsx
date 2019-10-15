@@ -37,6 +37,10 @@ export default function ARPUData() {
 		}
 
 		getARPUData();
+
+		return () => {
+			api.cancelRequest();
+		};
 	}, [date]);
 
 

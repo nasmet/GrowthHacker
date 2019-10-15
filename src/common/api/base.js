@@ -33,6 +33,9 @@ axios.interceptors.response.use((response) => {
 	return Promise.reject(error.message);
 });
 
+const CancelToken = axios.CancelToken;
+export let cancelRequestTask = () => {};
+
 /**
  * fetch 请求方法
  * @param url
@@ -43,9 +46,15 @@ export function get(url, params = {}) {
 	return new Promise((resolve, reject) => {
 		axios.get(url, {
 			params,
+			cancelToken: new CancelToken(function executor(c) {
+				cancelRequestTask = c;
+			})
 		}).then((response) => {
 			resolve(response.data);
 		}).catch((err) => {
+			if (!err) {
+				return;
+			}
 			reject(err);
 		});
 	});
@@ -59,9 +68,16 @@ export function get(url, params = {}) {
  */
 export function post(url, data = {}) {
 	return new Promise((resolve, reject) => {
-		axios.post(url, data).then((response) => {
+		axios.post(url, data, {
+			cancelToken: new CancelToken(function executor(c) {
+				cancelRequestTask = c;
+			})
+		}).then((response) => {
 			resolve(response.data);
 		}, (err) => {
+			if (!err) {
+				return;
+			}
 			reject(err);
 		});
 	});
@@ -75,9 +91,16 @@ export function post(url, data = {}) {
  */
 export function put(url, data = {}) {
 	return new Promise((resolve, reject) => {
-		axios.put(url, data).then((response) => {
+		axios.put(url, data, {
+			cancelToken: new CancelToken(function executor(c) {
+				cancelRequestTask = c;
+			})
+		}).then((response) => {
 			resolve(response.data);
 		}, (err) => {
+			if (!err) {
+				return;
+			}
 			reject(err);
 		});
 	});
@@ -93,9 +116,15 @@ export function del(url, params = {}) {
 	return new Promise((resolve, reject) => {
 		axios.delete(url, {
 			params,
+			cancelToken: new CancelToken(function executor(c) {
+				cancelRequestTask = c;
+			})
 		}).then((response) => {
 			resolve(response.data);
 		}, (err) => {
+			if (!err) {
+				return;
+			}
 			reject(err);
 		});
 	});

@@ -21,7 +21,7 @@ import {
 } from 'react-router-dom';
 import Layout from '@icedesign/layout';
 import IceContainer from '@icedesign/container';
-import styles from './index.module.scss';
+import './index.scss';
 import Aside from './components/Aside';
 import Main from './components/Main';
 
@@ -39,9 +39,7 @@ export default function QueryEditor() {
 	        		<Aside menuSelect={menuSelect} />
 	     		</Layout.Aside>
        	 		<Layout.Main scrollable>
-          			<div className={styles.container}>
-            			<Main query={query} />
-          			</div>
+            		<Main query={query} />
         		</Layout.Main>
       		</Layout.Section>
     	</Layout>

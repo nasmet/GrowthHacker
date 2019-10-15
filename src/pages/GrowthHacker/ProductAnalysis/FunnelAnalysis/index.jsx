@@ -26,6 +26,12 @@ function FunnelAnalysis({
 	const [disabled, setDisabled] = useState(true);
 	const [submitDisabled, setSubmitDisabled] = useState(true);
 
+	useEffect(() => {
+		return () => {
+			api.cancelRequest();
+		};
+	}, []);
+
 	const filterChange = (e) => {
 		setDisabled(e.length === 0 ? true : false);
 		setValues(e);

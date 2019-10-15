@@ -84,6 +84,10 @@ export default function Template({
 		}
 
 		fetchData();
+
+		return () => {
+			api.cancelRequest();
+		};
 	}, [date]);
 
 	const renderTitle = () => {

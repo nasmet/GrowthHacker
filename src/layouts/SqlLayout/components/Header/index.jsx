@@ -24,30 +24,25 @@ function Header({
 	}
 
 	return (
-		<div className={styles.container}>
-        	<div className={styles.title}>SQL Query</div>
-
-      		<div className={styles.navbar}>
-        		<Nav
-          			className={styles.menu}
-          			direction="hoz"
-          			type="line"
-          			defaultSelectedKeys={pathname}
-        		>
-          			{
-            			headerMenuConfig.map((nav, index) => {
-              				return (
-                				<Nav.Item key={nav.path}>
-                  					<Link to={nav.path}>
-						        		<span>{nav.name}</span>
-						      		</Link>
-                				</Nav.Item>
-              				);
-            			})
-         		 	}
-        		</Nav>
-      		</div>
-    	</div>
+		<Nav
+  			className={styles.menu}
+  			direction="hoz"
+  			type='primary'
+  			defaultSelectedKeys={pathname}
+  			header={<span style={{margin:'0 20px'}}>SQL Query</span>}
+		>
+  			{
+    			headerMenuConfig.map((nav, index) => {
+      				return (
+        				<Nav.Item key={nav.path}>
+          					<Link to={nav.path}>
+				        		<span>{nav.name}</span>
+				      		</Link>
+        				</Nav.Item>
+      				);
+    			})
+ 		 	}
+		</Nav>
 	);
 }
 

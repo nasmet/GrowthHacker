@@ -3,6 +3,7 @@ import {
 	post,
 	put,
 	del,
+	cancelRequestTask,
 } from './base';
 // export function find(data) {
 // 	return get('/trends', data);
@@ -31,6 +32,11 @@ import {
 // export function getExponentAnalysis(data) {
 // 	return get('/exponentanalysis', data);
 // }
+
+export function cancelRequest() {
+	cancelRequestTask();
+}
+
 export function getSqlTable(data) {
 	return get('/sql/tables', data);
 }

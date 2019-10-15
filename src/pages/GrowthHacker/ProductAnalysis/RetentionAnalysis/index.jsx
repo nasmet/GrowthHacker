@@ -25,6 +25,12 @@ function RetentionAnalysis({
 	const [values, setValues] = useState({});
 	const [submitDisabled, setSubmitDisabled] = useState(true);
 
+	useEffect(() => {
+		return () => {
+			api.cancelRequest();
+		};
+	}, []);
+
 	const filterChange = (value, flag) => {
 		setDisabled(flag)
 		setValues(value);

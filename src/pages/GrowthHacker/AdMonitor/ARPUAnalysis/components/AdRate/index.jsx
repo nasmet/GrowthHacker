@@ -37,6 +37,10 @@ export default function AdRate() {
 		}
 
 		getARPURate();
+
+		return () => {
+			api.cancelRequest();
+		};
 	}, [date]);
 
 

@@ -43,6 +43,10 @@ export default function EventVariable() {
 		}
 
 		fetchData();
+
+		return () => {
+			api.cancelRequest();
+		};
 	}, [curPage]);
 
 	const pageChange = (e) => {

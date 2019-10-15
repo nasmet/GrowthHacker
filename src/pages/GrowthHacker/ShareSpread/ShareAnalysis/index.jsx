@@ -48,6 +48,10 @@ export default function ShareAnalysis() {
 		}
 
 		getShareAnalysis();
+
+		return () => {
+			api.cancelRequest();
+		};
 	}, [date, search]);
 
 	const filterChange = (e) => {

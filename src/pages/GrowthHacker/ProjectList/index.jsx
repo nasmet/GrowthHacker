@@ -36,6 +36,10 @@ function ProjectList({
 		}
 
 		getProjects();
+
+		return () => {
+			api.cancelRequest();
+		};
 	}, []);
 
 	const jumpProjectData = (e) => {

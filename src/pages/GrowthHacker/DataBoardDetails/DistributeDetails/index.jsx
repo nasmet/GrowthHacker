@@ -54,6 +54,10 @@ function DistributeDetails({
 
 	useEffect(() => {
 		getDataBoard();
+
+		return () => {
+			api.cancelRequest();
+		};
 	}, []);
 
 	function assemblingTableData(data) {

@@ -99,7 +99,7 @@ export default function Aside({
 		<Loading visible={loading} inline={false}>
 			<div className={styles.wrap}>
 	      		<div className={styles.title}>辅助</div>
-	      		<div className={styles.content}>
+	      		<div>
 	      			<div className={styles.title}>数据表</div>
 	      			<Input className={styles.input} hasClear hint='search' placeholder="请输入表名" onChange={utils.debounce(onInputChange, 500)}/>
 	  			    <Menu openMode="single" selectMode="single" onSelect={onMenuSelect}>

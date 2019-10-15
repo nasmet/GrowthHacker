@@ -71,6 +71,10 @@ export default function UserDetails({
 
 	useEffect(() => {
 		getUserScrutinyDetails();
+
+		return () => {
+			api.cancelRequest();
+		};
 	}, []);
 
 	return (

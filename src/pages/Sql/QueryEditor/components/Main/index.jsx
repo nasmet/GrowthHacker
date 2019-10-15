@@ -42,7 +42,6 @@ export default function Main({
 	});
 	const [graphData, setGraphData] = useState([]);
 
-	let cancelTask = false; // 防止内存泄露
 	useEffect(() => {
 		setValue((pre) => {
 			if (pre) {
@@ -50,6 +49,10 @@ export default function Main({
 			}
 			return `${query}`;
 		})
+
+		return () => {
+			api.cancelRequest();
+		};
 	}, [query]);
 
 	const onChange = (e) => {
@@ -65,9 +68,6 @@ export default function Main({
 		api.getSqlData({
 			query: value,
 		}).then((res) => {
-			if (cancelTask) {
-				return;
-			}
 			const {
 				columns,
 				data,
@@ -88,9 +88,6 @@ export default function Main({
 		}).catch((e) => {
 			model.log(e);
 		}).finally(() => {
-			if (cancelTask) {
-				return;
-			}
 			setLoading(false);
 		});
 	};
@@ -123,9 +120,7 @@ export default function Main({
 			} = item;
 			return (
 				<Item key={key} title={tab} >
-         			<div className={styles.marginTop10}>
-            			<Content sql={transferData(key)} />
-          			</div>
+            		<Content sql={transferData(key)} />
         		</Item>
 			);
 		});
@@ -147,7 +142,7 @@ export default function Main({
 	      		</div>
 				
 				<div className={styles.middle}>
-		      		<Tab defaultActiveKey="recentquery">
+		      		<Tab defaultActiveKey="recentquery" >
 		        		{rendTab()}
 		      		</Tab>
 	      		</div>

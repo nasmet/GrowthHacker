@@ -58,6 +58,10 @@ export default function Template({
 		}
 
 		getUserScrutinyEvents();
+
+		return () => {
+			api.cancelRequest();
+		};
 	}, [curPage]);
 
 	const pageChange = (e) => {

@@ -60,6 +60,10 @@ function UserScrutiny({
 		}
 
 		getUserScrutiny();
+
+		return () => {
+			api.cancelRequest();
+		};
 	}, [curPage, search]);
 
 	const jumpUserDetails = (e) => {

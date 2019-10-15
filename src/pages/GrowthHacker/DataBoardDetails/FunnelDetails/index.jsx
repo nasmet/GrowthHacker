@@ -55,6 +55,10 @@ function FunnelDetails({
 
 	useEffect(() => {
 		getDataBoard();
+
+		return () => {
+			api.cancelRequest();
+		};
 	}, []);
 
 	function constructStep(meta, data) {

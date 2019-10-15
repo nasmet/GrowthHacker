@@ -38,8 +38,8 @@ function UserLogin({
 	useEffect(() => {
 		sessionStorage.removeItem(config.PROJECTID);
 		sessionStorage.removeItem(config.TOKENKEY);
+		
 		const username = localStorage.getItem(config.ACCOUNT);
-
 		if (username) {
 			const password = localStorage.getItem(config.PASSWORD);
 			setValues({

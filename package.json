@@ -1,7 +1,7 @@
 {
 	"name": "@icedesign/commodity-management-scaffold",
 	"version": "2.0.7",
-	"description": "热点系统",
+	"description": "数据分析系统",
 	"author": "ice-admin@alibaba-inc.com",
 	"dependencies": {
 		"@alifd/next": "^1.15.10",

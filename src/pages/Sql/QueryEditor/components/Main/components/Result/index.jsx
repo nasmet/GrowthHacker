@@ -35,13 +35,16 @@ export default function Result({
 	} = sql;
 	const renderTitle = () => {
 		return titles.map((item, index) => {
-			return <Column key={index} title={item} dataIndex={index.toString()} />
+			if(index===0){
+				return <Column key={index} title={item} dataIndex={index.toString()} lock width={120} />
+			}
+			return <Column key={index} title={item} dataIndex={index.toString()} width={140} />
 		})
 	};
 
 	return (
 		<IceContainer>
-			<Table dataSource={data} hasBorder={false}>
+			<Table dataSource={data} hasBorder={false} fixedHeader maxBodyHeight={400}>
 			    {renderTitle()}       		
 			</Table>
     	</IceContainer>

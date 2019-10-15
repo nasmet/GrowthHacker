@@ -57,6 +57,10 @@ function RetentionDetails({
 
 	useEffect(() => {
 		getDataBoard();
+
+		return () => {
+			api.cancelRequest();
+		};
 	}, []);
 
 	function assemblingChartStyle(meta) {

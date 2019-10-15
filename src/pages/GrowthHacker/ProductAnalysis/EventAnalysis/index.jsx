@@ -1,5 +1,6 @@
 import React, {
 	Component,
+	useEffect,
 	useState,
 } from 'react';
 import {
@@ -24,6 +25,12 @@ function EventAnalysis({
 	const [values, setValues] = useState({});
 	const [disabled, setDisabled] = useState(true);
 	const [submitDisabled, setSubmitDisabled] = useState(true);
+
+	useEffect(() => {
+		return () => {
+			api.cancelRequest();
+		};
+	}, []);
 
 	const filterChange = (value, flag) => {
 		setDisabled(flag);

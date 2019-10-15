@@ -1,25 +1,24 @@
 .wrap{
 	margin: 10px;
-	flex: 1;
-	.head{
-		width: 100%;
-		margin-bottom: 20px;
-		padding: 20px;
-		background: #fff;
-		display: flex;
-		flex-direction: column;
-		.input{
-			width: 100%;
-			min-height: 50px;
-			margin-bottom: 20px;
-		}
-		.btn{
-			width: 100px;
-			margin-right: 10px;
-		}
-	}
-	.middle{
-		padding: 20px;
-		background: #fff;
-	}
+}
+.head{
+	width: 100%;
+	margin-bottom: 20px;
+	padding: 20px;
+	background: #fff;
+	display: flex;
+	flex-direction: column;	
+}
+.input{
+	width: 100%;
+	min-height: 50px;
+	margin-bottom: 20px;
+}
+.btn{
+	width: 100px;
+	margin-right: 10px;
+}
+.middle{
+	padding: 20px;
+	background: #fff;
 }

@@ -37,6 +37,10 @@ export default function AdCount() {
 		}
 
 		getARPUDaily();
+
+		return () => {
+			api.cancelRequest();
+		};
 	}, [date]);
 
 

@@ -43,6 +43,10 @@ export default function BuriedPoint() {
 		}
 
 		fetchData();
+
+		return () => {
+			api.cancelRequest();
+		};
 	}, [curPage]);
 
 	const pageChange = (e) => {

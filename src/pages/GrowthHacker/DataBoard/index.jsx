@@ -33,6 +33,10 @@ function DataBoard({
 
 	useEffect(() => {
 		getBoards();
+
+		return () => {
+			api.cancelRequest();
+		};
 	}, []);
 
 	const jumpDataBoardDetails = (item) => {

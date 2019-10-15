@@ -49,6 +49,10 @@ export default function AreaDistribute({
 		}).finally(() => {
 			setLoading(false);
 		});
+
+		return () => {
+			api.cancelRequest();
+		};
 	}, [date]);
 
 	return (
