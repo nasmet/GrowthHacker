@@ -34,8 +34,8 @@ export default function BasicColumn({
 			forceFit={forceFit}
 		>
   			<Coord transpose={transpose} />
-    		<Axis name={x} />
-    		<Axis name={y} label={yLabel} />
+    		<Axis key={x} name={x} />
+    		<Axis key={y} name={y} label={yLabel} />
 			<Legend />
     		<Tooltip showTitle={showTitle} />
 			<Geom 

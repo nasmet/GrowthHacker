@@ -64,7 +64,7 @@ function Aside({
 
 	return (
 		<div className={styles.wrap}>
-      		<h2 className={styles.title}>云图互娱平台</h2>
+      		<h2 className={styles.title}>增长黑客</h2>
       		<Nav
         		openMode="single"
         		selectedKeys={[selectedPath]}

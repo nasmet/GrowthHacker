@@ -86,19 +86,19 @@ export default function RecentlySavedQuery() {
 
 	return (
 		<IceContainer>
-          	<Table 
-          		loading={loading} 
-          		dataSource={data} 
-          		hasBorder={false} 
-          		onSort={onSort} 
-          		sort={sort}
-          		rowSelection={rowSelection}
-          	>
-            	<Column title="名称" dataIndex="name" sortable />
-            	<Column title="描述" dataIndex="description" sortable />
-            	<Column title="上次修改" dataIndex="modify" sortable />
-          	</Table>
-
+			<Loading visible={loading} inline={false}>
+	          	<Table 
+	          		dataSource={data} 
+	          		hasBorder={false} 
+	          		onSort={onSort} 
+	          		sort={sort}
+	          		rowSelection={rowSelection}
+	          	>
+	            	<Column title="名称" dataIndex="name" sortable />
+	            	<Column title="描述" dataIndex="description" sortable />
+	            	<Column title="上次修改" dataIndex="modify" sortable />
+	          	</Table>
+			</Loading>
           	<Pagination
            		className={styles.pagination}
             	current={curPage}

@@ -48,9 +48,9 @@ const headerMenuConfig = [{
 }, */
 
 const asideMenuConfig = [{
-	name: '增长黑客',
+	name: '数据分析',
 	path: '/growthhacker',
-	icon: 'publish',
+	icon: '',
 	sub: [{
 		name: '项目列表',
 		path: '/growthhacker/projectlist',
@@ -62,7 +62,7 @@ const asideMenuConfig = [{
 }, {
 	name: '千人千面',
 	path: '/thousandfaces',
-	icon: 'publish',
+	icon: '',
 	sub: [{
 		name: '用户标签',
 		path: '/thousandfaces/usertag',

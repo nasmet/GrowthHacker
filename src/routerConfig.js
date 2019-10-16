@@ -1,16 +1,10 @@
 // 以下文件格式为描述路由的协议格式
 // 你可以调整 routerConfig 里的内容
 // 变量名 routerConfig 为 iceworks 检测关键字，请不要修改名称
+import React from 'react';
+
 import BasicLayout from './layouts/BasicLayout';
 import SqlLayout from './layouts/SqlLayout';
-
-import Find from './pages/System/Find';
-import Monitor from './pages/System/Monitor';
-import Analysis from './pages/System/Analysis';
-
-import List from './pages/WeiboOperation/List';
-import Status from './pages/WeiboOperation/Status';
-import Interactive from './pages/WeiboOperation/Interactive';
 
 import ProjectList from './pages/GrowthHacker/ProjectList';
 import ProjectData from './pages/GrowthHacker/ProjectData';
@@ -41,13 +35,18 @@ import ARPUAnalysis from './pages/GrowthHacker/AdMonitor/ARPUAnalysis';
 import UserTag from './pages/ThousandFaces/UserTag';
 import Strategy from './pages/ThousandFaces/Strategy';
 
-import QueryEditor from './pages/Sql/QueryEditor';
-import MyQuery from './pages/Sql/MyQuery';
-import SaveQuery from './pages/Sql/SaveQuery';
-import HistoryRecord from './pages/Sql/HistoryRecord';
+const QueryEditor = React.lazy(() =>
+	import ('./pages/Sql/QueryEditor'));
+const MyQuery = React.lazy(() =>
+	import ('./pages/Sql/MyQuery'));
+const SaveQuery = React.lazy(() =>
+	import ('./pages/Sql/SaveQuery'));
+const HistoryRecord = React.lazy(() =>
+	import ('./pages/Sql/HistoryRecord'));
 
 import UserLogin from './pages/UserLogin';
-import UserRegister from './pages/UserRegister';
+const UserRegister = React.lazy(() =>
+	import ('./pages/UserRegister'));
 
 import NotFound from './common/components/NotFound';
 
@@ -104,30 +103,6 @@ const routerConfig = [
 		path: '/',
 		component: BasicLayout,
 		children: [{
-			id: '1001',
-			path: '/system/find',
-			component: Find,
-		}, {
-			id: '1002',
-			path: '/system/monitor',
-			component: Monitor,
-		}, {
-			id: '1003',
-			path: '/system/analysis',
-			component: Analysis,
-		}, {
-			id: '1004',
-			path: '/operation/list',
-			component: List,
-		}, {
-			id: '1005',
-			path: '/operation/status',
-			component: Status,
-		}, {
-			id: '1006',
-			path: '/operation/Interactive',
-			component: Interactive,
-		}, {
 			id: '1007',
 			path: '/growthhacker/projectlist',
 			component: ProjectList,

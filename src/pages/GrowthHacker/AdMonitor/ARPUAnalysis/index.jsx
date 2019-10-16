@@ -25,7 +25,7 @@ export default function ARPUAnalysis() {
 
 	return (
 		<Components.Wrap>
-			<Components.Title title='ARPU分析' />
+			<Components.Title title='ARPU分析' desc='对玩家点击广告的行为归因' />
 			<Tab defaultActiveKey="arpu">
 	    		{renderTab()}
 	  		</Tab>

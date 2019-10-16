@@ -90,21 +90,21 @@ export default function RecentlyRunQuery() {
 
 	return (
 		<IceContainer>
-          	<Table 
-          		loading={loading} 
-          		dataSource={data} 
-          		hasBorder={false} 
-          		onSort={onSort} 
-          		sort={sort}
-          		rowSelection={rowSelection}
-          		onRowClick={onRowClick}
-          	>
-            	<Column title="名称" dataIndex="name" sortable />
-            	<Column title="查询" dataIndex="query" sortable />
-            	<Column title="状态" dataIndex="status" sortable />
-            	<Column title="时间" dataIndex="time" sortable />
-          	</Table>
-
+			<Loading visible={loading} inline={false}>
+	          	<Table 
+	          		dataSource={data} 
+	          		hasBorder={false} 
+	          		onSort={onSort} 
+	          		sort={sort}
+	          		rowSelection={rowSelection}
+	          		onRowClick={onRowClick}
+	          	>
+	            	<Column title="名称" dataIndex="name" sortable />
+	            	<Column title="查询" dataIndex="query" sortable />
+	            	<Column title="状态" dataIndex="status" sortable />
+	            	<Column title="时间" dataIndex="time" sortable />
+	          	</Table>
+			</Loading>
           	<Pagination
            		className={styles.pagination}
             	current={curPage}

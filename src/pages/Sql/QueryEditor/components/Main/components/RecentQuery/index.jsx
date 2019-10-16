@@ -92,17 +92,18 @@ export default function RecentQuery({
 
 	return (
 		<IceContainer>
-          	<Table 
-          		loading={loading} 
-          		dataSource={data} 
-          		hasBorder={false} 
-          		onSort={onSort} 
-          		sort={sort}
-          	>	
-            	<Column title="查询" dataIndex="query" sortable />
-            	<Column title="时间" dataIndex="time" sortable />
-            	<Column title="结果" cell={renderCover} />
-          	</Table>
+			<Loading visible={loading} inline={false}>
+	          	<Table 
+	          		dataSource={data} 
+	          		hasBorder={false} 
+	          		onSort={onSort} 
+	          		sort={sort}
+	          	>	
+	            	<Column title="查询" dataIndex="query" sortable />
+	            	<Column title="时间" dataIndex="time" sortable />
+	            	<Column title="结果" cell={renderCover} />
+	          	</Table>
+          	</Loading>
 
           	<Pagination
            		className={styles.pagination}

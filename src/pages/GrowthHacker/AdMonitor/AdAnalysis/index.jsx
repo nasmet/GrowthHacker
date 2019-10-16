@@ -62,7 +62,7 @@ export default function AdAnalysis() {
 
 	return (
 		<Components.Wrap>
-			<Components.Title title='付费率分析' />
+			<Components.Title title='付费率分析' desc='用户数量，用户占活跃用户比例，平均用户总游戏时长' />
 			<Components.DateFilter filterChange={filterChange} />
 			<IceContainer>
 				<Loading visible={loading} inline={false}>

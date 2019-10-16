@@ -81,18 +81,19 @@ export default function HistoryRecord() {
 	    	</IceContainer>
 
 	    	<IceContainer>
-	          	<Table 
-	          		loading={loading} 
-	          		dataSource={data} 
-	          		hasBorder={false} 
-	          		onSort={onSort} 
-	          		sort={sort}
-	          	>
-	            	<Column title="名称" dataIndex="name" sortable />
-	            	<Column title="查询" dataIndex="query" sortable />
-	            	<Column title="用户" dataIndex="user" sortable />
-	            	<Column title="时间" dataIndex="time" sortable />
-	          	</Table>
+	    		<Loading visible={loading} inline={false}>
+		          	<Table 
+		          		dataSource={data} 
+		          		hasBorder={false} 
+		          		onSort={onSort} 
+		          		sort={sort}
+		          	>
+		            	<Column title="名称" dataIndex="name" sortable />
+		            	<Column title="查询" dataIndex="query" sortable />
+		            	<Column title="用户" dataIndex="user" sortable />
+		            	<Column title="时间" dataIndex="time" sortable />
+		          	</Table>
+	          	</Loading>
 
 	          	<Pagination
 	           		className={styles.pagination}

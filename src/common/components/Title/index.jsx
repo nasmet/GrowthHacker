@@ -5,8 +5,12 @@ import styles from './index.module.scss';
 
 export default function Title({
 	title,
+	desc,
 }) {
 	return (
-		<p className={styles.title}>{title}</p>
+		<p>
+			<span className={styles.title}>{title}</span>
+			{desc && <span className={styles.desc}>({desc})</span>}
+		</p>
 	);
 }

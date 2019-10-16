@@ -58,7 +58,7 @@ export default function AdCount() {
 
 	return (
 		<Components.Wrap>
-			<Components.Title title='生命周期广告次数' />
+			<Components.Title title='生命周期广告次数' desc='统计每天的新用户在1、2、3、7、14、30的广告累计点击次数' />
 			<Components.DateFilter filterChange={filterChange} />
 			<IceContainer>
 				<Loading visible={loading} inline={false}>

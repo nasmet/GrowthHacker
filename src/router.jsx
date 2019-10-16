@@ -4,7 +4,11 @@
 import React, {
 	Component,
 	useEffect,
+	Suspense,
 } from 'react';
+import {
+	Loading,
+} from '@alifd/next';
 import {
 	BrowserRouter,
 	Switch,
@@ -33,28 +37,28 @@ const RouteIntercept = ({
 };
 
 const RouteItem = (route) => {
-	const {
-		id,
-		redirect,
-		path,
-		component,
-		auth,
-	} = route;
-	const Component = component;
-	if (redirect) {
-		return <Redirect key={id} exact from={path} to={redirect} />;
-	}
-	if(!auth){
-		return <Route key={id} path={path} component={component} />
-	}
-	return (
-		<Route key={id} path={path} render={props=>{
-			return (
-				<RouteIntercept {...props}>
-					<Component />
-				</RouteIntercept>
-			)}
-		} />
+		const {
+			id,
+			redirect,
+			path,
+			component,
+			auth,
+		} = route;
+		const Component = component;
+		if (redirect) {
+			return <Redirect key={id} exact from={path} to={redirect} />;
+		}
+		if (!auth) {
+			return <Route key={id} path={path} render={props=><Component {...props} />} />
+		}
+		return (
+			<Route key={id} path={path} render={props=>{
+				return (
+					<RouteIntercept {...props}>
+						<Component />
+					</RouteIntercept>
+				)}
+			} />
 	);
 };
 
@@ -67,7 +71,7 @@ const traversing = function fn(route) {
 	} = route;
 	if (children) {
 		return (
-			<Route key={id} path={path} component={(props)=>{
+			<Route key={id} path={path} render={(props)=>{
 				return(
 					<RouteComponent {...props}>
 	                    <Switch>
@@ -88,9 +92,11 @@ const traversing = function fn(route) {
 const router = () => {
 	return (
 		<Router history={model.history}>
-		  	<Switch>
-				{routerConfig.map(traversing)}
-		 	</Switch>
+			<Suspense fallback={<Loading inline={false} visible={true} fullScreen tip='资源加载中' />}>
+			  	<Switch>
+					{routerConfig.map(traversing)}
+			 	</Switch>
+		 	</Suspense>
     	</Router>
 	);
 };
