@@ -20,7 +20,6 @@ function FunnelAnalysis({
 }) {
 	const [showDialog, setShowDialog] = useState(false);
 	const [loading, setLoading] = useState(false);
-	const [group, setGroup] = useState(0);
 	const [name, setName] = useState('');
 	const [values, setValues] = useState({});
 	const [disabled, setDisabled] = useState(true);
@@ -32,13 +31,21 @@ function FunnelAnalysis({
 		};
 	}, []);
 
-	const filterChange = (e) => {
-		setDisabled(e.length === 0 ? true : false);
-		setValues(e);
-	};
-
-	const groupChange = (e) => {
-		setGroup(e);
+	const filterChange = (steps, group) => {
+		let flag = false;
+		if (group === undefined) {
+			flag = true;
+		}
+		steps.forEach((v) => {
+			if (!v.values || !v.values.step) {
+				flag = true;
+			}
+		})
+		setDisabled(flag);
+		setValues({
+			steps,
+			group,
+		});
 	};
 
 	const onClose = () => {
@@ -48,10 +55,10 @@ function FunnelAnalysis({
 	const onOK = () => {
 		setLoading(true);
 		api.createBoard({
-			steps: values.map(v => v.values.step),
+			steps: values.steps.map(v => v.values.step),
 			name,
 			type: 'funnel',
-			segmentation_id: group,
+			segmentation_id: values.group,
 		}).then((res) => {
 			model.log('成功添加到看板');
 			history.push('/growthhacker/projectdata/db');
@@ -81,7 +88,7 @@ function FunnelAnalysis({
 				<span className={styles.title}>新建漏斗分析</span>
 				<Button type='primary' disabled={disabled} onClick={onSave}>保存</Button>
 			</p>
-      		<Filter filterChange={filterChange} groupChange={groupChange} />
+      		<Filter filterChange={filterChange} />
 
 			<Dialog autoFocus visible={showDialog} onClose={onClose} footer={false}>
       			<Loading visible={loading} inline={false}>

@@ -7,6 +7,7 @@ import DateFilter from './DateFilter';
 import Title from './Title';
 import Wrap from './Wrap';
 import NotData from './NotData';
+import Switch from './Switch';
 
 export default {
 	BasicColumn,
@@ -18,4 +19,5 @@ export default {
 	Title,
 	Wrap,
 	NotData,
+	Switch,
 }

@@ -132,21 +132,21 @@ export default function Main({
 
 	return (
 		<Loading visible={loading} inline={false}>
-			<div className={styles.wrap}>
-				<div className={styles.head}>
+			<Components.Wrap>
+				<IceContainer>
 	      			<Input.TextArea className={styles.input} onChange={onChange} value={value} placeholder="请输入sql语句" aria-label="TextArea" />
 	      			<div>
 	      				<Button className={styles.btn} type='primary' onClick={handleSql}>执行</Button>
 	      				<Button className={styles.btn} type='primary' onClick={resetSql}>重置</Button>
 	      			</div>
-	      		</div>
+	      		</IceContainer>
 				
-				<div className={styles.middle}>
+				<IceContainer>
 		      		<Tab defaultActiveKey="recentquery" >
 		        		{rendTab()}
 		      		</Tab>
-	      		</div>
-	    	</div>
+	      		</IceContainer>
+	    	</Components.Wrap>
     	</Loading>
 	);
 }

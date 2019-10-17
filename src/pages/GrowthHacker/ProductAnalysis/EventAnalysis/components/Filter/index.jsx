@@ -18,31 +18,16 @@ import styles from './index.module.scss';
 export default function Filter({
 	filterChange,
 }) {
-	const [values, setValues] = useState({
-		dimensions: [],
-		metrics: [],
-		segmentation_id: '',
-	});
-	const [loading, setLoading] = useState(false);
+	let metricData = [];
+	let dimensionsData = [];
+	let targetUser = [];
 	const formRef = useRef(null);
 
-	async function fetchData() {
-		setLoading(true);
-		try {
-			await api.getDataCenter().then((res) => {
-				dividingData(res.event_entities);
-			});
-			await api.getUserGroups().then((res) => {
-				dividingTargetData(res.segmentations);
-			})
-		} catch (e) {
-			model.log(e);
-		}
-		setLoading(false);
-	}
-
 	useEffect(() => {
-		fetchData();
+
+		return () => {
+			api.cancelRequest();
+		};
 	}, []);
 
 	function dividingData(data) {
@@ -65,6 +50,8 @@ export default function Filter({
 		formRef.current.state.store.setFieldProps('dimensions', {
 			dataSource: dimensions,
 		});
+		metricData = metrics;
+		dimensionsData = dimensions;
 	}
 
 	function dividingTargetData(data) {
@@ -81,6 +68,7 @@ export default function Filter({
 		formRef.current.state.store.setFieldProps('segmentation_id', {
 			dataSource: targets,
 		});
+		targetUser = targets;
 	}
 
 	const formChange = (values) => {
@@ -90,45 +78,67 @@ export default function Filter({
 			segmentation_id,
 		} = values;
 		let flag = true;
-		if (dimensions.length > 0 && metrics.length > 0 && segmentation_id !== '') {
+		if (dimensions && dimensions.length > 0 && metrics && metrics.length > 0 && segmentation_id && segmentation_id !== '') {
 			flag = false;
 		}
 		filterChange(values, flag);
 	};
 
+
+	const onFocus = () => {
+		if (metricData.length === 0) {
+			api.getDataCenter().then((res) => {
+				dividingData(res.event_entities);
+			});
+		}
+	};
+
+	const onSegmentationFocus = () => {
+		if (targetUser.length === 0) {
+			api.getUserGroups().then((res) => {
+				dividingTargetData(res.segmentations);
+			});
+		}
+	}
+
+	const notFoundContent = <span>加载中...</span>;
+
 	return (
-		<Loading visible={loading} inline={false} >
-			<Form 
-				className={styles.wrap} 
-				onChange={formChange} 
-				initialValues={values} 
-				layout={{labelAlign: 'top',labelTextAlign: 'left'}}
-				ref={formRef}
-			>	
-				<Field label='选择事件' name='metrics'>
-					<Select  
-						style={{width:'400px'}}
-						mode="multiple"
-						dataSource={[]}  
-						showSearch
-					/>
-				</Field>
-				<Field label='按以下维度拆分' name='dimensions'>
-					<Select  
-						style={{width:'400px'}}
-						mode="multiple"
-						dataSource={[]}  
-						showSearch
-					/>
-				</Field>
-				<Field label='目标用户' name='segmentation_id'>
-					<Select  
-						style={{width:'400px'}}
-						dataSource={[]} 
-						showSearch
-					/>
-				</Field>
-			</Form>
-     	</Loading>
+		<Form 
+			className={styles.wrap} 
+			onChange={formChange} 
+			layout={{labelAlign: 'top',labelTextAlign: 'left'}}
+			ref={formRef}
+		>	
+			<Field label='选择事件' name='metrics'>
+				<Select  
+					style={{width:'400px'}}
+					mode="multiple"
+					dataSource={[]}  
+					showSearch
+					onFocus={onFocus}
+					notFoundContent={notFoundContent}
+				/>
+			</Field>
+			<Field label='按以下维度拆分' name='dimensions'>
+				<Select  
+					style={{width:'400px'}}
+					mode="multiple"
+					dataSource={[]}  
+					showSearch
+					onFocus={onFocus}
+					notFoundContent={notFoundContent}
+				/>
+			</Field>
+			<Field label='目标用户' name='segmentation_id'>
+				<Select  
+					style={{width:'400px'}}
+					dataSource={[]} 
+					showSearch
+					onFocus={onSegmentationFocus}
+					notFoundContent={notFoundContent}
+				/>
+			</Field>
+		</Form>
 	);
 }

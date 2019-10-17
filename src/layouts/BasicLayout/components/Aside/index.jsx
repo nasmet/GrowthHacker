@@ -61,20 +61,19 @@ function Aside({
 	const regex = /^\/[a-zA-Z]+/;
 	const value = regex.exec(pathname);
 	const path = value ? value[0] : '/growthhacker';
+	const header = <span className={styles.fusion}>增长黑客</span>;
 
 	return (
-		<div className={styles.wrap}>
-      		<h2 className={styles.title}>增长黑客</h2>
-      		<Nav
-        		openMode="single"
-        		selectedKeys={[selectedPath]}
-        		activeDirection="right"
-        		defaultOpenKeys={[path]}
-        		type='primary'
-      		>
-        		{asideMenuConfig.map(traversing)}
-      		</Nav>
-    	</div>
+  		<Nav
+    		openMode="single"
+    		selectedKeys={[selectedPath]}
+    		activeDirection="right"
+    		defaultOpenKeys={[path]}
+    		type='primary'
+			header={header}
+  		>
+    		{asideMenuConfig.map(traversing)}
+  		</Nav>
 	);
 }
 

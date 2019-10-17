@@ -92,7 +92,7 @@ const traversing = function fn(route) {
 const router = () => {
 	return (
 		<Router history={model.history}>
-			<Suspense fallback={<Loading inline={false} visible={true} fullScreen tip='资源加载中' />}>
+			<Suspense fallback={<Loading inline={false} visible={true} tip='资源加载中' />}>
 			  	<Switch>
 					{routerConfig.map(traversing)}
 			 	</Switch>

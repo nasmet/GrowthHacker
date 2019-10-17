@@ -51,9 +51,9 @@ export default function ShareView() {
 				<span className={styles.secondTitle}>关键用户分享</span>
 			</IceContainer>
 			<div className={styles.userShare}>
-				<Top name='Top10重度用户' title='分享次数' request={api.getTop10Share} date={date} />
-				<Top name='Top10重度用户' title='回流量' request={api.getTop10Open} date={date} />
-				<Top name='Top10重度用户' title='分享新增' request={api.getTop10New} date={date} />
+				<Top name='Top10 重度用户' title='分享次数' request={api.getTop10Share} date={date} />
+				<Top name='Top10 影响力用户' title='回流量' request={api.getTop10Open} date={date} />
+				<Top name='Top10 贡献用户' title='分享新增' request={api.getTop10New} date={date} />
 			</div>
 			<IceContainer style={{padding:'10px'}}>
 				<span className={styles.secondTitle}>分享人群分布</span>

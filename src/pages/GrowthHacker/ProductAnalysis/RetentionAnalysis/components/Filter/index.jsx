@@ -18,43 +18,25 @@ import styles from './index.module.scss';
 export default function Filter({
 	filterChange,
 }) {
-	const [loading, setLoading] = useState(false);
-	const [dimensionData, setDimensionData] = useState([]);
-	const [metricData, setMetricData] = useState([]);
-	const [targetUser, setTargetUser] = useState([]);
+	let targetUser = [];
+	let metricData = [];
 	const formRef = useRef(null);
 
-	async function fetchData() {
-		setLoading(true);
-		try {
-			await api.getDataCenter().then((res) => {
-				dividingData(res.event_entities);
-			});
-			await api.getUserGroups().then((res) => {
-				dividingTargetData(res.segmentations);
-			})
-		} catch (e) {
-			model.log(e);
-		}
-		setLoading(false);
-	}
-
 	useEffect(() => {
-		fetchData();
+
+		return () => {
+			api.cancelRequest();
+		};
 	}, []);
 
 	function dividingData(data) {
-		const dimensions = [];
 		const metrics = [];
 		data.forEach((item) => {
-			const obj = {
-				label: item.name,
-				value: item.entity_key,
-			};
 			if (item.type === 'event') {
-				metrics.push(obj);
-			} else {
-				dimensions.push(obj);
+				metrics.push({
+					label: item.name,
+					value: item.entity_key,
+				});
 			}
 		});
 		formRef.current.state.store.setFieldProps('init_event', {
@@ -63,8 +45,7 @@ export default function Filter({
 		formRef.current.state.store.setFieldProps('retention_event', {
 			dataSource: metrics,
 		});
-		setMetricData(metrics);
-		setDimensionData(dimensions);
+		metricData = metrics;
 	}
 
 	function dividingTargetData(data) {
@@ -81,7 +62,7 @@ export default function Filter({
 		formRef.current.state.store.setFieldProps('segmentation_id', {
 			dataSource: targets,
 		});
-		setTargetUser(targets);
+		targetUser = targets;
 	}
 
 	const formChange = (e) => {
@@ -97,42 +78,64 @@ export default function Filter({
 		filterChange(e, flag);
 	};
 
+	const onFocus = () => {
+		if (metricData.length === 0) {
+			api.getDataCenter().then((res) => {
+				dividingData(res.event_entities);
+			});
+		}
+	};
+
+	const onSegmentationFocus = () => {
+		if (targetUser.length === 0) {
+			api.getUserGroups().then((res) => {
+				dividingTargetData(res.segmentations);
+			});
+		}
+	}
+
+	const notFoundContent = <span>加载中...</span>;
+
 	return (
-		<Loading visible={loading} inline={false}>
-			<IceContainer>
-				<div className={styles.title}>
-					显示满足如以下行为模式的用户留存情况
-				</div>
-				<Form
-					ref={formRef}
-					onChange={formChange} 
-					layout={{labelAlign: 'left',labelTextAlign: 'left',labelCol: 1, wrapperCol: 2}}
-				>
-					<Field label='初始行为是' name='init_event'>
-						<Select  
-							style={{width:'200px'}} 
-							dataSource={[]}  
-							showSearch
-						/>
-					</Field>
+		<IceContainer>
+			<div className={styles.title}>
+				显示满足如以下行为模式的用户留存情况
+			</div>
+			<Form
+				ref={formRef}
+				onChange={formChange} 
+				layout={{labelAlign: 'left',labelTextAlign: 'left',labelCol: 1, wrapperCol: 2}}
+			>
+				<Field label='初始行为是' name='init_event'>
+					<Select
+						style={{width:'200px'}} 
+						dataSource={[]}  
+						showSearch
+						onFocus={onFocus}
+						notFoundContent={notFoundContent}
+					/>
+				</Field>
 
-					<Field label='后续行为是' name='retention_event'>
-						<Select 
-							style={{width:'200px'}} 
-							dataSource={[]}  
-							showSearch
-						/>
-					</Field>
+				<Field label='后续行为是' name='retention_event'>
+					<Select
+						style={{width:'200px'}} 
+						dataSource={[]}  
+						showSearch
+						onFocus={onFocus}
+						notFoundContent={notFoundContent}
+					/>
+				</Field>
 
-					<Field label='目标用户' name='segmentation_id'>
-						<Select  
-							style={{width:'200px'}} 
-							dataSource={[]}  
-							showSearch
-						/>
-					</Field>
-				</Form>
-			</IceContainer>
-		</Loading>
+				<Field label='目标用户' name='segmentation_id'>
+					<Select  
+						style={{width:'200px'}} 
+						dataSource={[]}  
+						showSearch
+						onFocus={onSegmentationFocus}
+						notFoundContent={notFoundContent}
+					/>
+				</Field>
+			</Form>
+		</IceContainer>
 	);
 }

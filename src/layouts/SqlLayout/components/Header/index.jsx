@@ -1,8 +1,5 @@
-import React, {
-	Component,
-} from 'react';
+import React from 'react';
 import {
-	withRouter,
 	Link,
 } from 'react-router-dom';
 import {
@@ -13,37 +10,32 @@ import {
 	headerMenuConfig,
 } from '../../menuConfig';
 
-function Header({
-	location,
-}) {
-	let {
-		pathname,
-	} = location;
-	if (pathname === '/sql') {
-		pathname = '/sql/queryeditor';
-	}
-
+export default function Header() {
 	return (
-		<Nav
-  			className={styles.menu}
-  			direction="hoz"
-  			type='primary'
-  			defaultSelectedKeys={pathname}
-  			header={<span style={{margin:'0 20px'}}>SQL Query</span>}
-		>
-  			{
-    			headerMenuConfig.map((nav, index) => {
-      				return (
-        				<Nav.Item key={nav.path}>
-          					<Link to={nav.path}>
-				        		<span>{nav.name}</span>
-				      		</Link>
-        				</Nav.Item>
-      				);
-    			})
- 		 	}
-		</Nav>
+		<div className={styles.wrap}>
+			<Nav
+	  			direction="hoz"
+	  			type='primary'
+	  			defaultSelectedKeys={['/sql/queryeditor']}
+	  			header={<span style={{margin:'0 20px'}}>SQL Query</span>}
+			>
+	  			{
+	    			headerMenuConfig.map((nav, index) => {
+	      				return (
+	        				<Nav.Item key={nav.path}>
+	          					<Link to={nav.path}>
+					        		<span>{nav.name}</span>
+					      		</Link>
+	        				</Nav.Item>
+	      				);
+	    			})
+	 		 	}
+			</Nav>
+			<div className={styles.right}>
+				<Link to='/growthhacker/projectlist'>
+					<span style={{color: '#fff'}}>返回项目列表</span>
+				</Link>
+			</div>
+		</div>
 	);
 }
-
-export default withRouter(Header);

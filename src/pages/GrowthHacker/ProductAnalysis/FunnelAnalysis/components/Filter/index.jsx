@@ -2,6 +2,7 @@ import React, {
 	Component,
 	useState,
 	useEffect,
+	useRef,
 } from 'react';
 import {
 	Button,
@@ -19,35 +20,14 @@ export default function Filter({
 	filterChange,
 	groupChange,
 }) {
-	const [values, setValues] = useState({});
-	const [loading, setLoading] = useState(false);
-	const [dimensionData, setDimensionData] = useState([]);
-	const [metricData, setMetricData] = useState([]);
-	const [targetUser, setTargetUser] = useState([]);
-	const [steps, setSteps] = useState([]);
-
-	async function fetchData() {
-		setLoading(true);
-		try {
-			await api.getDataCenter().then((res) => {
-				dividingData(res.event_entities);
-			});
-			await api.getUserGroups().then((res) => {
-				dividingTargetData(res.segmentations);
-			})
-		} catch (e) {
-			model.log(e);
-		}
-		setLoading(false);
-	}
+	let metricData = [];
+	let targetUser = [];
+	const [steps, setSteps] = useState([createStep()]);
+	const formRef = useRef(null);
 
 	useEffect(() => {
-		fetchData();
-	}, []);
-
-	useEffect(() => {
-		filterChange(steps);
-	}, [steps]);
+		filterChange(steps, formRef.current.store.values.segmentation_id);
+	}, [steps])
 
 	function dividingData(data) {
 		const dimensions = [];
@@ -59,12 +39,9 @@ export default function Filter({
 			};
 			if (item.type === 'event') {
 				metrics.push(obj);
-			} else {
-				dimensions.push(obj);
 			}
 		});
-		setMetricData(metrics);
-		setDimensionData(dimensions);
+		metricData = metrics;
 	}
 
 	function dividingTargetData(data) {
@@ -78,17 +55,20 @@ export default function Filter({
 			label: '全部用户',
 			value: 0,
 		});
-		setTargetUser(targets);
+		formRef.current.state.store.setFieldProps('segmentation_id', {
+			dataSource: targets,
+		});
+		targetUser = targets;
 	}
 
 	function createStep() {
 		return {
-			values: {
-				step: metricData[0] && metricData[0].value,
-			},
 			onChange: function(e) {
-				console.log(e);
+				let temp = this.values;
 				this.values = e;
+				if (!temp) {
+					filterChange(steps, formRef.current.store.values.segmentation_id);
+				}
 			},
 		}
 	};
@@ -101,62 +81,80 @@ export default function Filter({
 
 	const onResetStep = () => {
 		setSteps([]);
-		setValues({});
-		groupChange(0);
 	};
+
+	const onFocus = (formCore) => {
+		if (metricData.length === 0) {
+			api.getDataCenter().then((res) => {
+				dividingData(res.event_entities);
+				formCore.setFieldProps('step', {
+					dataSource: metricData,
+				})
+			});
+		}
+	};
+
+	const notFoundContent = <span>加载中...</span>;
 
 	const renderStep = () => {
 		return steps.map((item, index) => {
 			const {
-				values,
 				onChange,
 			} = item;
 			return (
 				<Form
 					key={index}
 					onChange={onChange.bind(item)} 
-					initialValues={values} 
 					layout={{labelAlign: 'left',labelTextAlign: 'left',labelCol: 1, wrapperCol: 2}}
+
 				>	
-					<Field label={`步骤${index+1}`} name='step' placeholder="请选择事件">
+					{formCore=>(<Field label={`步骤${index+1}`} name='step' placeholder="请选择事件">
 						<Select  
 							style={{width:'200px'}} 
-							dataSource={metricData}  
+							dataSource={[]}  
 							showSearch
+							onFocus={onFocus.bind(this,formCore)}
+							notFoundContent={notFoundContent}
 						/>
-					</Field>
+					</Field>)}
 				</Form>
 			);
 		});
 	};
 
 	const onChange = (e) => {
-		groupChange(e.segmentation_id);
+		filterChange(steps, e.segmentation_id);
 	};
 
+	const onSegmentationFocus = () => {
+		if (targetUser.length === 0) {
+			api.getUserGroups().then((res) => {
+				dividingTargetData(res.segmentations);
+			});
+		}
+	}
+
 	return (
-		<Loading visible={loading} inline={false}>
-			<IceContainer>	
-				{renderStep()}
-				{steps.length>0 && <Form
-					onChange={onChange}
-					initialValues={{
-						segmentation_id:0,
-					}}
-					layout={{labelAlign: 'left',labelTextAlign: 'left',labelCol: 1, wrapperCol: 2}}
-				>	
-					<Field label='目标用户' name='segmentation_id'>
-						<Select  
-							dataSource={targetUser}  
-							showSearch
-						/>
-					</Field>
-				</Form>}
-				<div className={styles.btnWrap}>
-					<Button className={styles.btn} type='primary' onClick={onAddStep}>增加步骤</Button>
-					<Button type='primary' onClick={onResetStep}>重置步骤</Button>
-				</div>
-			</IceContainer>
-		</Loading>
+		<IceContainer>	
+			{renderStep()}
+			<Form
+				onChange={onChange}
+				ref={formRef}
+				layout={{labelAlign: 'left',labelTextAlign: 'left',labelCol: 1, wrapperCol: 2}}
+			>	
+				<Field label='目标用户' name='segmentation_id'>
+					<Select  
+						dataSource={targetUser}  
+						showSearch
+						onFocus={onSegmentationFocus}
+						notFoundContent={notFoundContent}
+					/>
+				</Field>
+			</Form>
+			<div className={styles.btnWrap}>
+				<Button className={styles.btn} type='primary' onClick={onAddStep}>增加步骤</Button>
+				<Button type='primary' onClick={onResetStep}>重置步骤</Button>
+			</div>
+		</IceContainer>
 	);
 }

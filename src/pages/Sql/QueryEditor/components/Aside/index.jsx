@@ -2,24 +2,12 @@ import React, {
 	Component,
 	useState,
 	useEffect,
-	useRef,
-	useContext,
-	useCallback,
-	useMemo,
 } from 'react';
 import {
 	Input,
-	Button,
-	Tab,
-	Table,
-	Message,
 	Loading,
-	Pagination,
 	Menu,
 } from '@alifd/next';
-import {
-	withRouter,
-} from 'react-router-dom';
 import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
 
@@ -31,18 +19,13 @@ const {
 export default function Aside({
 	menuSelect,
 }) {
-
 	const [total, setTotal] = useState([]);
 	const [data, setData] = useState([]);
 	const [loading, setLoading] = useState(false);
-	let cancelTask = false; // 防止内存泄露
 
 	useEffect(() => {
 		setLoading(true);
 		api.getSqlTable().then((res) => {
-			if (cancelTask) {
-				return;
-			}
 			const {
 				tables,
 			} = res;
@@ -51,11 +34,12 @@ export default function Aside({
 		}).catch((e) => {
 			model.log(e);
 		}).finally(() => {
-			if (cancelTask) {
-				return;
-			}
 			setLoading(false);
 		});
+
+		return () => {
+			api.cancelRequest();
+		};
 	}, []);
 
 	const onInputChange = (e) => {
@@ -98,14 +82,11 @@ export default function Aside({
 	return (
 		<Loading visible={loading} inline={false}>
 			<div className={styles.wrap}>
-	      		<div className={styles.title}>辅助</div>
-	      		<div>
-	      			<div className={styles.title}>数据表</div>
-	      			<Input className={styles.input} hasClear hint='search' placeholder="请输入表名" onChange={utils.debounce(onInputChange, 500)}/>
-	  			    <Menu openMode="single" selectMode="single" onSelect={onMenuSelect}>
-	  			    	{renderMenu()}
-				    </Menu>
-	      		</div>
+				<Components.Title title='数据表' />   	
+      			<Input className={styles.input} hasClear hint='search' placeholder="请输入表名" onChange={utils.debounce(onInputChange, 500)}/>
+  			    <Menu openMode="single" selectMode="single" onSelect={onMenuSelect}>
+  			    	{renderMenu()}
+			    </Menu>
 	    	</div>
     	</Loading>
 	);

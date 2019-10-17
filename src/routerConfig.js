@@ -8,22 +8,28 @@ import SqlLayout from './layouts/SqlLayout';
 
 import ProjectList from './pages/GrowthHacker/ProjectList';
 import ProjectData from './pages/GrowthHacker/ProjectData';
-import RetentionDetails from './pages/GrowthHacker/DataBoardDetails/RetentionDetails';
-import FunnelDetails from './pages/GrowthHacker/DataBoardDetails/FunnelDetails';
-import DistributeDetails from './pages/GrowthHacker/DataBoardDetails/DistributeDetails';
-import LevelDetails from './pages/GrowthHacker/DataBoardDetails/LevelDetails';
-import EventAnalysisDetails from './pages/GrowthHacker/DataBoardDetails/EventAnalysisDetails';
 import DataBoard from './pages/GrowthHacker/DataBoard';
+const RetentionDetails = React.lazy(() =>
+	import ('./pages/GrowthHacker/DataBoardDetails/RetentionDetails'));
+const FunnelDetails = React.lazy(() =>
+	import ('./pages/GrowthHacker/DataBoardDetails/FunnelDetails'));
+const DistributeDetails = React.lazy(() =>
+	import ('./pages/GrowthHacker/DataBoardDetails/DistributeDetails'));
+const LevelDetails = React.lazy(() =>
+	import ('./pages/GrowthHacker/DataBoardDetails/LevelDetails'));
+const EventAnalysisDetails = React.lazy(() =>
+	import ('./pages/GrowthHacker/DataBoardDetails/EventAnalysisDetails'));
 import EventAnalysis from './pages/GrowthHacker/ProductAnalysis/EventAnalysis';
 import RetentionAnalysis from './pages/GrowthHacker/ProductAnalysis/RetentionAnalysis';
 import FunnelAnalysis from './pages/GrowthHacker/ProductAnalysis/FunnelAnalysis';
 import UserGroup from './pages/GrowthHacker/UserAnalysis/UserGroup';
 import UserScrutiny from './pages/GrowthHacker/UserAnalysis/UserScrutiny';
 import UserPortrait from './pages/GrowthHacker/UserAnalysis/UserPortrait';
-import DataCenter from './pages/GrowthHacker/DataCenter';
-import UserScrutinyDetails from './pages/GrowthHacker/UserAnalysis/UserScrutinyDetails';
+const UserScrutinyDetails = React.lazy(() =>
+	import ('./pages/GrowthHacker/UserAnalysis/UserScrutinyDetails'));
 import CreateGroup from './pages/GrowthHacker/UserAnalysis/CreateGroup';
-import UserGroupDetails from './pages/GrowthHacker/UserAnalysis/UserGroupDetails';
+const UserGroupDetails = React.lazy(() =>
+	import ('./pages/GrowthHacker/UserAnalysis/UserGroupDetails'));
 import ShareAnalysis from './pages/GrowthHacker/ShareSpread/ShareAnalysis';
 import ShareTrend from './pages/GrowthHacker/ShareSpread/ShareTrend';
 import ShareView from './pages/GrowthHacker/ShareSpread/ShareView';
@@ -31,6 +37,7 @@ import UserShare from './pages/GrowthHacker/ShareSpread/UserShare';
 import AdAnalysis from './pages/GrowthHacker/AdMonitor/AdAnalysis';
 import AdCount from './pages/GrowthHacker/AdMonitor/AdCount';
 import ARPUAnalysis from './pages/GrowthHacker/AdMonitor/ARPUAnalysis';
+import DataCenter from './pages/GrowthHacker/DataCenter';
 
 import UserTag from './pages/ThousandFaces/UserTag';
 import Strategy from './pages/ThousandFaces/Strategy';
