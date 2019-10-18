@@ -12,6 +12,7 @@ import {
 import {
 	withRouter,
 } from 'react-router-dom';
+import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
 import Filter from './components/Filter';
 
@@ -63,8 +64,8 @@ function FunnelAnalysis({
 			model.log('成功添加到看板');
 			history.push('/growthhacker/projectdata/db');
 		}).catch((e) => {
-			setLoading(false);
 			model.log(e);
+			setLoading(false);
 		});
 	};
 
@@ -82,14 +83,20 @@ function FunnelAnalysis({
 		setShowDialog(true);
 	};
 
+	const dateChange = () => {
+
+	};
+
 	return (
 		<Components.Wrap>
 			<p className={styles.titleWrap}>
 				<span className={styles.title}>新建漏斗分析</span>
 				<Button type='primary' disabled={disabled} onClick={onSave}>保存</Button>
 			</p>
-      		<Filter filterChange={filterChange} />
-
+			<IceContainer>
+				<Components.DateFilter filterChange={dateChange} />	
+      			<Filter filterChange={filterChange} />
+      		</IceContainer>
 			<Dialog autoFocus visible={showDialog} onClose={onClose} footer={false}>
       			<Loading visible={loading} inline={false}>
 					<div style={{margin:'20px'}}>

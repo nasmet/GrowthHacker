@@ -62,7 +62,6 @@ function DataBoard({
 				pathname = '/growthhacker/projectdata/eventanalysisdetails';
 				break;
 		}
-
 		history.push({
 			pathname,
 			state: {

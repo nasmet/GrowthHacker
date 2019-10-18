@@ -28,19 +28,20 @@ function DistributeDetails({
 	const [titles, setTitles] = useState([]);
 	const [chartData, setChartData] = useState([]);
 	const [chartStyle, setChartStyle] = useState({});
+	const [date, setDate] = useState('');
 
 	function getDataBoard() {
 		setLoading(true);
 		api.getDataBoard({
 			chart_id: boardInfo.id,
+			trend: {
+				date,
+			}
 		}).then((res) => {
 			const {
 				meta,
 				data,
 			} = res;
-			if (data.length === 0) {
-				return;
-			}
 			setTitles(meta);
 			setData(assemblingTableData(data));
 			setChartStyle(assemblingChartStyle(meta));
@@ -58,7 +59,7 @@ function DistributeDetails({
 		return () => {
 			api.cancelRequest();
 		};
-	}, []);
+	}, [date]);
 
 	function assemblingTableData(data) {
 		const row = data.reduce((total, value, index, arr) => {
@@ -119,10 +120,15 @@ function DistributeDetails({
 		});
 	};
 
+	const filterChange = (e) => {
+		setDate(e);
+	};
+
 	return (
 		<Components.Wrap>
-			<Components.Title title={boardInfo.name} />
+			<Components.Title title={boardInfo.name} desc={boardInfo.desc} />
 			<IceContainer>
+				<Components.DateFilter initTabValue='NAN' initCurDateValue={model.transformDate(boardInfo.date)} filterChange={filterChange} />	
 				<Template 
 					tableData={data}
 					loading={loading}

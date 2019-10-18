@@ -37,6 +37,7 @@ function EventAnalysisDetails({
 	const [titles, setTitles] = useState([]);
 	const [chartData, setChartData] = useState([]);
 	const [chartStyle, setChartStyle] = useState({});
+	const [date, setDate] = useState('');
 
 	useEffect(() => {
 		function getDataBoard() {
@@ -46,6 +47,7 @@ function EventAnalysisDetails({
 				trend: {
 					offset: (curPage - 1) * config.LIMIT,
 					limit: config.LIMIT,
+					date,
 				}
 			}).then((res) => {
 				const {
@@ -53,9 +55,6 @@ function EventAnalysisDetails({
 					data,
 					total,
 				} = res;
-				if (data.length === 0) {
-					return;
-				}
 				setCount(total);
 				setTitles(meta);
 				setData(data);
@@ -73,7 +72,7 @@ function EventAnalysisDetails({
 		return () => {
 			api.cancelRequest();
 		};
-	}, [curPage]);
+	}, [curPage, date]);
 
 	function assemblingChartStyle(meta) {
 		return {
@@ -111,10 +110,16 @@ function EventAnalysisDetails({
 		setCurPage(e);
 	};
 
+	const filterChange = (e) => {
+		setCurPage(1);
+		setDate(e);
+	};
+
 	return (
 		<Components.Wrap>
-			<Components.Title title={boardInfo.name} />
-			<IceContainer>	
+			<Components.Title title={boardInfo.name} desc={boardInfo.desc} />
+			<IceContainer>
+				<Components.DateFilter initTabValue='NAN' initCurDateValue={model.transformDate(boardInfo.date)} filterChange={filterChange} />	
 				<Template 
 					tableData={data}
 					loading={loading}

@@ -15,10 +15,12 @@ import {
 
 export default function DateFilter({
 	filterChange,
+	initTabValue = '0',
+	initCurDateValue = [moment(), moment()],
 }) {
 	const [dateValue, setDateValue] = useState([]);
-	const [curDateValue, setCurDateValue] = useState([moment(), moment()]);
-	const [tabValue, setTabValue] = useState('0');
+	const [curDateValue, setCurDateValue] = useState(initCurDateValue);
+	const [tabValue, setTabValue] = useState(initTabValue);
 
 	useEffect(() => {
 		setDateValue(curDateValue);

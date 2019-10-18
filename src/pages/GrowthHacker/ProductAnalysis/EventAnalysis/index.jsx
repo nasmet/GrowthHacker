@@ -25,6 +25,7 @@ function EventAnalysis({
 	const [values, setValues] = useState({});
 	const [disabled, setDisabled] = useState(true);
 	const [submitDisabled, setSubmitDisabled] = useState(true);
+	const [date, setDate] = useState('day:0');
 
 	useEffect(() => {
 		return () => {
@@ -45,7 +46,8 @@ function EventAnalysis({
 		setLoading(true);
 		api.createBoard({ ...values,
 			name,
-			type: 'dashboard'
+			type: 'dashboard',
+			date,
 		}).then((res) => {
 			model.log('成功添加到看板');
 			history.push('/growthhacker/projectdata/db');
@@ -69,6 +71,10 @@ function EventAnalysis({
 		setShowDialog(true);
 	};
 
+	const dateChange = (e) => {
+		setDate(e);
+	};
+
 	return (
 		<Components.Wrap>
 			<p className={styles.titleWrap}>
@@ -76,6 +82,7 @@ function EventAnalysis({
 				<Button type='primary' disabled={disabled} onClick={onSave}>保存</Button>
 			</p>
 			<IceContainer>
+				<Components.DateFilter filterChange={dateChange} />	
 				<Filter filterChange={filterChange} />
 			</IceContainer>
 	    	<Dialog autoFocus visible={showDialog} onClose={onClose} footer={false}>

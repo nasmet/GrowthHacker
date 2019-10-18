@@ -13,12 +13,10 @@ import {
 	Form,
 	Field,
 } from '@ice/form';
-import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
 
 export default function Filter({
 	filterChange,
-	groupChange,
 }) {
 	let metricData = [];
 	let targetUser = [];
@@ -135,7 +133,7 @@ export default function Filter({
 	}
 
 	return (
-		<IceContainer>	
+		<div>	
 			{renderStep()}
 			<Form
 				onChange={onChange}
@@ -155,6 +153,6 @@ export default function Filter({
 				<Button className={styles.btn} type='primary' onClick={onAddStep}>增加步骤</Button>
 				<Button type='primary' onClick={onResetStep}>重置步骤</Button>
 			</div>
-		</IceContainer>
+		</div>
 	);
 }

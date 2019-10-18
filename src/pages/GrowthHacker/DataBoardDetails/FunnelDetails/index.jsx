@@ -26,6 +26,7 @@ function FunnelDetails({
 	const [titles, setTitles] = useState([]);
 	const [steps, setSteps] = useState([]);
 	const [totalRate, setTotalRate] = useState('');
+	const [date, setDate] = useState('');
 
 	function getDataBoard() {
 		setLoading(true);
@@ -34,6 +35,7 @@ function FunnelDetails({
 			trend: {
 				offset: 0,
 				limit: config.LIMIT,
+				date,
 			}
 		}).then((res) => {
 			const {
@@ -59,7 +61,7 @@ function FunnelDetails({
 		return () => {
 			api.cancelRequest();
 		};
-	}, []);
+	}, [date]);
 
 	function constructStep(meta, data) {
 		setTotalRate(`${meta[0]}${data[0]*100}%`);
@@ -92,10 +94,15 @@ function FunnelDetails({
 		return arr;
 	};
 
+	const filterChange = (e) => {
+		setDate(e);
+	};
+
 	return (
 		<Components.Wrap>
-			<Components.Title title={boardInfo.name} />
+			<Components.Title title={boardInfo.name} desc={boardInfo.desc} />
 			<IceContainer>
+				<Components.DateFilter initTabValue='NAN' initCurDateValue={model.transformDate(boardInfo.date)} filterChange={filterChange} />	
 				<Loading visible={loading} inline={false}>
 				{tableData.length!==0?
 					<div>

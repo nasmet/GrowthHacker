@@ -14,6 +14,11 @@ export function getSqlTable(data) {
 	return get('/sql/tables', data);
 }
 
+export function getColumns(data) {
+	console.log(`/sql/tables/${data.table}/columns`);
+	return get(`/sql/tables/${data.table}/columns`);
+}
+
 export function getSqlData(data) {
 	return post('/sql/query', data);
 }
@@ -35,6 +40,42 @@ export function deleteProject(data) {
 
 export function getDataCenter(data) {
 	return get('/event_entities', data);
+}
+
+export function getOriginData(data) {
+	return get('/metadatas', data);
+}
+
+export function createOriginData(data) {
+	return post('/metadatas', data);
+}
+
+export function deleteOriginData(data) {
+	return del(`/metadatas/${data.id}`, data);
+}
+
+export function getOriginDataValues(data) {
+	const {
+		id,
+		trend,
+	} = data;
+	return get(`/metadatas/${id}/values`, trend);
+}
+
+export function createOriginDataValues(data) {
+	const {
+		id,
+		trend,
+	} = data;
+	return post(`/metadatas/${id}/values`, trend);
+}
+
+export function deleteOriginDataValues(data) {
+	const {
+		id,
+		valueId
+	} = data;
+	return del(`/metadatas/${id}/values/${valueId}`);
 }
 
 export function deleteEvent(data) {

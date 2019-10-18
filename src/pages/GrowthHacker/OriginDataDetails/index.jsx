@@ -10,11 +10,22 @@ import {
 	Pagination,
 	Dialog,
 } from '@alifd/next';
+import {
+	withRouter,
+} from 'react-router-dom';
 import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
-import CreateBuriedPoint from '../CreateBuriedPoint';
+import CreateOriginDataValue from './components/CreateOriginDataValue';
 
-export default function BuriedPoint() {
+function OriginDataDetails({
+	location,
+}) {
+	const {
+		id,
+		name,
+		value_type,
+	} = location.state;
+
 	const [loading, setLoading] = useState(false);
 	const [tableData, setTableData] = useState([]);
 	const [count, setCount] = useState(0);
@@ -22,19 +33,21 @@ export default function BuriedPoint() {
 	const [show, setShow] = useState(false);
 
 	useEffect(() => {
-		function fetchData() {
+		function getOriginDataValues() {
 			setLoading(true);
-			api.getDataCenter({
-				limit: config.LIMIT,
-				offset: (curPage - 1) * config.LIMIT,
-				type: 'event',
+			api.getOriginDataValues({
+				id,
+				trend: {
+					limit: config.LIMIT,
+					offset: (curPage - 1) * config.LIMIT,
+				}
 			}).then((res) => {
 				const {
+					data,
 					total,
-					event_entities
 				} = res;
 				setCount(total);
-				setTableData(event_entities);
+				setTableData(data);
 			}).catch((e) => {
 				model.log(e);
 			}).finally(() => {
@@ -42,7 +55,7 @@ export default function BuriedPoint() {
 			});
 		}
 
-		fetchData();
+		getOriginDataValues();
 
 		return () => {
 			api.cancelRequest();
@@ -53,13 +66,30 @@ export default function BuriedPoint() {
 		setCurPage(e);
 	};
 
-	const onDeleteBuriedPoint = (id, index) => {
+	const onCreateOriginDataValue = () => {
+		setShow(true);
+	};
+
+	const onClose = () => {
+		setShow(false);
+	};
+
+	const onOk = (value) => {
+		setTableData((pre) => {
+			pre.splice(0, 0, value);
+			return [...pre];
+		});
+		setShow(false);
+	};
+
+	const onDeleteOriginDataValue = (valueId, index) => {
 		Dialog.confirm({
 			content: '确定删除吗？',
 			onOk: () => {
 				setLoading(true);
-				api.deleteEvent({
-					id
+				api.deleteOriginDataValues({
+					id,
+					valueId,
 				}).then((res) => {
 					setTableData((pre) => {
 						pre.splice(index, 1);
@@ -76,38 +106,20 @@ export default function BuriedPoint() {
 	};
 
 	const renderCover = (value, index, record) => {
-		const {
-			id
-		} = record;
 		return (
-			<Button type='primary' warning onClick={onDeleteBuriedPoint.bind(this, id, index)}> 
+			<Button type='primary' warning onClick={onDeleteOriginDataValue.bind(this,record.id,index)}> 
 				删除
 			</Button>
 		);
 	};
 
-	const onCreateBuriedPoint = () => {
-		setShow(true);
-	};
-
-	const onClose = () => {
-		setShow(false);
-	};
-
-	const onOk = (value) => {
-		setTableData((pre) => {
-			pre.splice(0, 0, value);
-			return [...pre];
-		});
-		setShow(false);
-	};
-
 	return (
 		<Components.Wrap>
-      		<IceContainer>
+			<Components.Title title={name} />
+			<IceContainer>
 				<div className={styles.btnWrap}>
-					<Button className={styles.btn} type="secondary" onClick={onCreateBuriedPoint}> 
-						创建埋点事件
+					<Button className={styles.btn} type="secondary" onClick={onCreateOriginDataValue}> 
+						创建元数据值
 					</Button>
 				</div>
 				<Loading visible={loading} inline={false}>
@@ -115,11 +127,8 @@ export default function BuriedPoint() {
 		          		dataSource={tableData} 
 		          		hasBorder={false}
 		          	>	
-		          		<Table.Column title="id" dataIndex="id" width={120} />
-		            	<Table.Column title="名称" dataIndex="name" width={120} />
-		            	<Table.Column title="标识符" dataIndex="entity_key" width={120} />
-		            	<Table.Column title="类型" dataIndex="value_type" width={120} />
-		            	<Table.Column title="描述" dataIndex="desc" />
+		          		<Table.Column title="id" dataIndex="id" />
+		            	<Table.Column title="元数据值" dataIndex="value" />
 		            	<Table.Column title="操作" cell={renderCover} />
 		          	</Table>
 				</Loading>
@@ -130,15 +139,16 @@ export default function BuriedPoint() {
 	            	onChange={pageChange}
 	          	/>
 		    </IceContainer>
-
 		   	<Dialog 
 		   		autoFocus
 		      	visible={show} 
 		      	onClose={onClose}
 		      	footer={false}
 		    >
-				<CreateBuriedPoint onOk={onOk} entityType='event' />
+				<CreateOriginDataValue onOk={onOk} id={id} value_type={value_type} />
 			</Dialog>
     	</Components.Wrap>
 	);
 }
+
+export default withRouter(OriginDataDetails);

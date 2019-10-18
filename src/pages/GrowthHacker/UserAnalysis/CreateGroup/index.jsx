@@ -58,28 +58,22 @@ function CreateGroup() {
 		setShowDialog(false);
 	};
 
-	const display = (data, result) => {
-		data.forEach((item) => {
-			if (utils.isArray(item)) {
-				display(item, result);
-			} else {
-				const obj = { ...item.values
+	const transformData = (result) => {
+		steps.forEach((item) => {
+			item.step.forEach(v => {
+				const obj = { ...v.values
 				};
 				const temp = obj.flag.split(',');
 				obj.flag = temp[0] === 'true' ? true : false;
 				obj.type = temp[1];
-				if (obj.id) {
-					const temp_1 = obj.id.split(',');
-					obj.id = temp_1[0];
-					obj.aggregator = temp_1[1];
-				}
-				obj.alias = item.alias;
+				obj.alias = v.alias;
 				obj.values = [obj.values];
 				const temp_2 = obj.date;
 				obj.date = `abs:${parseInt(temp_2[0].valueOf()/1000)},${parseInt(temp_2[1].valueOf()/1000)}`;
 				result.conditions.push(obj);
-			}
+			})
 		});
+		return result;
 	}
 
 	const onOK = () => {
@@ -88,7 +82,7 @@ function CreateGroup() {
 			name,
 			conditions: [],
 		};
-		display(steps, result);
+		transformData(result);
 		setLoading(true);
 		api.createUserGroup(result).then((res) => {
 			model.log('创建成功');

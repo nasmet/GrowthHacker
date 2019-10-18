@@ -12,6 +12,7 @@ import {
 import {
 	withRouter,
 } from 'react-router-dom';
+import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
 import Filter from './components/Filter';
 
@@ -20,10 +21,10 @@ function RetentionAnalysis({
 }) {
 	const [loading, setLoading] = useState(false);
 	const [showDialog, setShowDialog] = useState(false);
-	const [disabled, setDisabled] = useState(true);
 	const [name, setName] = useState('');
 	const [values, setValues] = useState({});
 	const [submitDisabled, setSubmitDisabled] = useState(true);
+	const [date, setDate] = useState('day:0');
 
 	useEffect(() => {
 		return () => {
@@ -31,8 +32,7 @@ function RetentionAnalysis({
 		};
 	}, []);
 
-	const filterChange = (value, flag) => {
-		setDisabled(flag)
+	const filterChange = (value) => {
 		setValues(value);
 	};
 
@@ -40,11 +40,21 @@ function RetentionAnalysis({
 		setShowDialog(false);
 	};
 
+	const tranformData = () => {
+		return {
+			init_event: values[0].values.init_event,
+			retention_event: values[0].values.retention_event,
+			segmentation_id: values[0].values.segmentation_id,
+		}
+	};
+
 	const onOK = () => {
 		setLoading(true);
-		api.createBoard({ ...values,
+		const temp = tranformData();
+		api.createBoard({ ...temp,
 			name,
-			type: 'retention'
+			type: 'retention',
+			date,
 		}).then((res) => {
 			model.log('成功添加到看板');
 			history.push('/growthhacker/projectdata/db');
@@ -68,13 +78,20 @@ function RetentionAnalysis({
 		setShowDialog(true);
 	};
 
+	const dateChange = (e) => {
+		setDate(e)
+	};
+
 	return (
 		<Components.Wrap>
 			<p className={styles.titleWrap}>
 				<span className={styles.title}>新建留存分析</span>
-				<Button type='primary' disabled={disabled} onClick={onSave}>保存</Button>
+				<Button type='primary' onClick={onSave}>保存</Button>
 			</p>
-      		<Filter filterChange={filterChange} />
+			<IceContainer>
+				<Components.DateFilter filterChange={dateChange} />	
+				<Filter filterChange={filterChange} />
+			</IceContainer>
 			<Dialog autoFocus visible={showDialog} onClose={onClose} footer={false}>
       			<Loading visible={loading} inline={false}>
 					<div style={{margin:'20px'}}>

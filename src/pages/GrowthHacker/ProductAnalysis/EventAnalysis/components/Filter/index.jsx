@@ -78,7 +78,7 @@ export default function Filter({
 			segmentation_id,
 		} = values;
 		let flag = true;
-		if (dimensions && dimensions.length > 0 && metrics && metrics.length > 0 && segmentation_id && segmentation_id !== '') {
+		if (dimensions && dimensions.length > 0 && metrics && metrics.length > 0 && segmentation_id !== undefined) {
 			flag = false;
 		}
 		filterChange(values, flag);

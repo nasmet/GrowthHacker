@@ -38,6 +38,8 @@ import AdAnalysis from './pages/GrowthHacker/AdMonitor/AdAnalysis';
 import AdCount from './pages/GrowthHacker/AdMonitor/AdCount';
 import ARPUAnalysis from './pages/GrowthHacker/AdMonitor/ARPUAnalysis';
 import DataCenter from './pages/GrowthHacker/DataCenter';
+const OriginDataDetails = React.lazy(() =>
+	import ('./pages/GrowthHacker/OriginDataDetails'));
 
 import UserTag from './pages/ThousandFaces/UserTag';
 import Strategy from './pages/ThousandFaces/Strategy';
@@ -255,6 +257,12 @@ const routerConfig = [
 				id: '1008023',
 				path: '/growthhacker/projectdata/ad/arpuanalysis',
 				component: ARPUAnalysis,
+				exact: true,
+				auth: true,
+			}, {
+				id: '1008024',
+				path: '/growthhacker/projectdata/origindatadetails',
+				component: OriginDataDetails,
 				exact: true,
 				auth: true,
 			}, {

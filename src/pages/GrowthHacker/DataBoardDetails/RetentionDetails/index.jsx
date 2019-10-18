@@ -27,23 +27,20 @@ function RetentionDetails({
 	const [titles, setTitles] = useState([]);
 	const [chartData, setChartData] = useState([]);
 	const [chartStyle, setChartStyle] = useState({});
+	const [date, setDate] = useState('');
 
 	function getDataBoard() {
 		setLoading(true);
 		api.getDataBoard({
 			chart_id: boardInfo.id,
 			trend: {
-				offset: 0,
-				limit: config.LIMIT,
+				date,
 			}
 		}).then((res) => {
 			const {
 				meta,
 				data,
 			} = res;
-			if (!data || data.length === 0) {
-				return;
-			}
 			setTitles(meta);
 			setData(data);
 			setChartStyle(assemblingChartStyle(meta));
@@ -61,7 +58,7 @@ function RetentionDetails({
 		return () => {
 			api.cancelRequest();
 		};
-	}, []);
+	}, [date]);
 
 	function assemblingChartStyle(meta) {
 		return {
@@ -99,7 +96,7 @@ function RetentionDetails({
 			<div className={styles.source}>
 				<span>{record[item]}</span>
 				<span style={{color:'#0AA372'}}>
-					{utils.transformPercent(record[item]/record[1])}
+					{record[1]===0?'0.00%':utils.transformPercent(record[item]/record[1])}
 				</span>
 			</div>
 		);
@@ -114,10 +111,15 @@ function RetentionDetails({
 		});
 	};
 
+	const filterChange = (e) => {
+		setDate(e);
+	};
+
 	return (
 		<Components.Wrap>
-			<Components.Title title={boardInfo.name} />
+			<Components.Title title={boardInfo.name} desc={boardInfo.desc} />
 			<IceContainer>
+				<Components.DateFilter initTabValue='NAN' initCurDateValue={model.transformDate(boardInfo.date)} filterChange={filterChange} />	
 				<Template 
 					tableData={data}
 					loading={loading}

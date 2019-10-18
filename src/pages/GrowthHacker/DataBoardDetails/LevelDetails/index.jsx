@@ -27,6 +27,7 @@ function LevelDetails({
 	const [titles, setTitles] = useState([]);
 	const [chartData, setChartData] = useState([]);
 	const [chartStyle, setChartStyle] = useState({});
+	const [date, setDate] = useState('');
 
 	function getDataBoard() {
 		setLoading(true);
@@ -35,6 +36,7 @@ function LevelDetails({
 			trend: {
 				limit: config.LIMIT,
 				offset: 0,
+				date,
 			}
 		}).then((res) => {
 			const {
@@ -61,7 +63,7 @@ function LevelDetails({
 		return () => {
 			api.cancelRequest();
 		};
-	}, []);
+	}, [date]);
 
 	function assemblingChartStyle(meta) {
 		return {
@@ -104,10 +106,15 @@ function LevelDetails({
 		});
 	};
 
+	const filterChange = (e) => {
+		setDate(e)
+	};
+
 	return (
 		<Components.Wrap>
-			<Components.Title title={boardInfo.name} />
-			<IceContainer>
+			<Components.Title title={boardInfo.name} desc={boardInfo.desc} />
+			<IceContainer> 
+				<Components.DateFilter initTabValue='NAN' initCurDateValue={model.transformDate(boardInfo.date)} filterChange={filterChange} />	
 				<Template 
 					tableData={data}
 					loading={loading}

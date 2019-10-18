@@ -94,7 +94,7 @@ export default function EventVariable() {
 		setShow(false);
 	};
 
-	const onOk = (value, cb) => {
+	const onOk = (value) => {
 		setTableData((pre) => {
 			pre.splice(0, 0, value);
 			return [...pre];
@@ -103,7 +103,7 @@ export default function EventVariable() {
 	};
 
 	return (
-		<div>
+		<Components.Wrap>
       		<IceContainer>
 				<div className={styles.btnWrap}>
 					<Button className={styles.btn} type="secondary" onClick={onCreateBuriedPoint}> 
@@ -138,6 +138,6 @@ export default function EventVariable() {
 		    >
 				<CreateBuriedPoint onOk={onOk} entityType='variable' />
 			</Dialog>
-    	</div>
+    	</Components.Wrap>
 	);
 }

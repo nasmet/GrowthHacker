@@ -33,7 +33,9 @@ import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
 import {
 	rules,
+	originRules,
 	firstColumn,
+	opMap,
 } from './stepConfig';
 moment.locale('zh-cn');
 
@@ -41,25 +43,40 @@ export default function Filter({
 	filterChange,
 }) {
 	const [loading, setLoading] = useState(false);
-	const [dimensionData, setDimensionData] = useState([]);
 	const [metricData, setMetricData] = useState([]);
+	const [originData, setOriginData] = useState([]);
 	const [combination, setCombination] = useState('');
 	const [steps, setSteps] = useState([]);
 
-	function getDataCenter() {
+	useEffect(() => {
+		if (metricData.length === 0) {
+			return;
+		}
+		setSteps([createStep(0)]);
+	}, [metricData, originData]);
+
+	async function getDataCenter() {
 		setLoading(true);
-		api.getDataCenter().then((res) => {
-			dividingData(res.event_entities);
-			setLoading(false);
-		}).catch((e) => {
+		try {
+			await api.getDataCenter().then((res) => {
+				dividingData(res.event_entities);
+			})
+
+			await api.getOriginData().then((res) => {
+				setOriginData(res.data.map(item => {
+					return {
+						label: item.name,
+						value: item.id,
+					}
+				}))
+			})
+		} catch (e) {
 			model.log(e);
-		}).finally(() => {
-			setLoading(false);
-		});
+		}
+		setLoading(false);
 	}
 
 	function dividingData(data) {
-		const dimensions = [];
 		const metrics = [];
 		data.forEach((item) => {
 			const {
@@ -70,16 +87,13 @@ export default function Filter({
 			} = item;
 			const obj = {
 				label: name,
-				value: `${id},${value_type}`,
+				value: id,
 			};
 			if (item.type === 'event') {
 				metrics.push(obj);
-			} else {
-				dimensions.push(obj);
 			}
 		});
 		setMetricData(metrics);
-		setDimensionData(dimensions);
 	}
 
 	useEffect(() => {
@@ -90,28 +104,40 @@ export default function Filter({
 		};
 	}, []);
 
-	useEffect(() => {
+	function onChangeCombination() {
 		let temp = '';
-		steps.forEach((item) => {
-			if (temp) {
-				temp += ' and '
-			}
-			if (utils.isArray(item)) {
-				temp += `(${item[0].alias} or ${item[1].alias})`;
+		steps.forEach((item, index) => {
+			let str = '';
+			item.step.forEach((v, index) => {
+				if (item.step.length - 1 !== index) {
+					str += v.alias + ' or ';
+				} else {
+					str += v.alias;
+				}
+			})
+			if (item.step.length > 1) {
+				temp += `(${str})`;
 			} else {
-				temp += item.alias;
+				temp += str;
+			}
+
+			if (index !== steps.length - 1) {
+				temp += ` ${item.op.toLowerCase()} `
 			}
 		});
-		if (metricData.length > 0) {
-
-		}
 		setCombination(temp);
+		return temp;
+	}
+
+	useEffect(() => {
+		const temp = onChangeCombination();
 		filterChange(steps, temp);
 	}, [steps]);
 
-	function createStep(alias) {
+	function createData(alias) {
 		return {
 			alias,
+			key: Date.now(),
 			values: {
 				flag: 'true,event',
 				id: metricData[0] && metricData[0].value,
@@ -133,62 +159,95 @@ export default function Filter({
 			onChange: function(e) {
 				this.values = e;
 			},
+			onFocus: function(formCore) {
+				api.getOriginDataValues({
+					id: this.values.id,
+					trend: {
+						limit: 50,
+						offset: 0,
+					}
+				}).then((res) => {
+					const data = res.data.map(item => {
+						return {
+							label: item.value,
+							value: item.id,
+						}
+					});
+					formCore.setFieldProps('value', {
+						dataSource: data,
+					});
+				});
+			},
 			effects: [{
 				field: 'flag',
 				handler: function(formCore) {
-					let visibleValues, visibleValue, dataSource;
+					let visibleValues, visibleValue, idDataSource, opDataSource;
 					if (formCore.getFieldValue('flag') === 'true,event' || formCore.getFieldValue('flag') === 'false, event') {
-						dataSource = metricData;
+						idDataSource = metricData;
+						opDataSource = rules;
 						visibleValues = true;
 						visibleValue = false;
 					} else {
-						dataSource = dimensionData;
+						idDataSource = originData;
+						opDataSource = originRules;
 						visibleValues = false;
 						visibleValue = true;
 					}
 					formCore.setFieldProps('id', {
-						dataSource,
+						dataSource: idDataSource,
 					})
-					formCore.setFieldValue('id', dataSource[0].value);
+					formCore.setFieldValue('id', idDataSource[0] && idDataSource[0].value);
+					formCore.setFieldProps('op', {
+						dataSource: opDataSource,
+					})
 					formCore.setFieldProps('values', {
 						visible: visibleValues,
 					})
 					formCore.setFieldProps('value', {
 						visible: visibleValue,
-						dataSource,
-					})
-					formCore.setFieldValue('value', '');
+					});
 				}
 			}]
 		}
-	};
+	}
 
-	const onAddOrFilter = (stepIndex) => {
-		if (utils.isArray(steps[stepIndex])) {
-			Message.success('目前只支持一条OR');
-			return;
+	function createStep(index) {
+		const alias = opMap[index];
+		return {
+			key: Date.now(),
+			op: 'AND',
+			alias,
+			step: [createData(alias)],
+			onChangeOp: function() {
+				this.op = this.op === 'AND' ? 'OR' : 'AND';
+				setSteps(pre => [...pre]);
+			},
+			onAddOrFilter: function() {
+				if (this.step.length > 3) {
+					Message.success('目前最多支持4条');
+					return;
+				}
+				if (this.step.length === 1) {
+					this.step[0].alias = `${alias}1`;
+				}
+				this.step.push(createData(`${alias}${this.step.length+1}`));
+				setSteps(pre => [...pre]);
+			},
 		}
-		setSteps((pre) => {
-			const cur = pre[stepIndex];
-			const alias = cur.alias;
-			cur.alias = `${alias}1`;
-
-			const temp = createStep(`${alias}2`);
-			pre[stepIndex] = [cur, temp];
-			return [...pre];
-		});
-	};
+	}
 
 	const onAddAndFilter = () => {
-		if (steps.length > 1) {
-			Message.success('目前最多支持两条AND');
+		if (steps.length > 3) {
+			Message.success('目前最多支持4条');
 			return;
 		}
 		setSteps((pre) => {
-			const temp = createStep(steps.length === 0 ? 'A' : 'B');
+			const temp = createStep(pre.length);
 			return [...pre, temp];
 		});
 	}
+
+	const notFoundContent = <span>加载中...</span>;
 
 	const renderForm = (item) => {
 		const {
@@ -199,10 +258,12 @@ export default function Filter({
 			onVisibleChange,
 			onOk,
 			curDate,
+			onFocus,
+			key,
 		} = item;
 		return (
 			<Form
-				key={alias}
+				key={key}
 	        	initialValues={values}
 	        	onChange={onChange.bind(item)}
 	        	effects={effects}
@@ -216,14 +277,14 @@ export default function Filter({
 							<Select style={{width:'120px'}} dataSource={firstColumn} />
 						</Field>
 						<Field name='id'>
-							<Select style={{width:'150px'}} dataSource={metricData} showSearch />
+							<Select style={{width:'200px'}} dataSource={metricData} showSearch />
 						</Field>
 						<Field name='op' dataSource={rules} component={Select} />
 						<Field name='values'>
 							<Input style={{width:'80px'}} htmlType="number" innerAfter={<span>次</span>} />
 						</Field>
 						<Field visible={false} name='value'>
-							<Select style={{width:'150px'}} dataSource={[]} />
+							<Select style={{width:'150px'}} dataSource={[]} notFoundContent={notFoundContent} onFocus={onFocus.bind(item,formCore)} />
 						</Field>
 						<Field name='date'>
 							<DatePicker.RangePicker 
@@ -253,14 +314,17 @@ export default function Filter({
 	const renderStep = () => {
 		return steps.map((item, index) => {
 			return (
-				<div className={styles.step} key={index}>
-					{
-						renderChild(item)
-					}
-					<Button className={styles.filter} onClick={onAddOrFilter.bind(this, index)} >
-						<Icon type='add' size='small' className={styles.icon} /> 
-						<span>OR</span> 
-					</Button>
+				<div key={item.key}>
+					<div className={styles.step}>
+						{
+							renderChild(item.step)
+						}
+						<Button className={styles.filter} onClick={item.onAddOrFilter.bind(item)} >
+							<Icon type='add' size='small' className={styles.icon} /> 
+							<span>OR</span> 
+						</Button>
+					</div>
+					{(steps.length-1)!==index && <p style={{display:'flex',justifyContent:'center'}}><Button onClick={item.onChangeOp.bind(item)}>{item.op}</Button></p>}
 				</div>
 			);
 		});
