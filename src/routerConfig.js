@@ -43,6 +43,10 @@ const OriginDataDetails = React.lazy(() =>
 
 import UserTag from './pages/ThousandFaces/UserTag';
 import Strategy from './pages/ThousandFaces/Strategy';
+import Plan from './pages/ThousandFaces/Plan';
+import Rule from './pages/ThousandFaces/Rule';
+const CreateRule = React.lazy(() =>
+	import ('./pages/ThousandFaces/CreateRule'));
 
 const QueryEditor = React.lazy(() =>
 	import ('./pages/Sql/QueryEditor'));
@@ -285,6 +289,24 @@ const routerConfig = [
 			id: '1010',
 			path: '/thousandfaces/strategy',
 			component: Strategy,
+			exact: true,
+			auth: true,
+		}, {
+			id: '1011',
+			path: '/thousandfaces/plan',
+			component: Plan,
+			exact: true,
+			auth: true,
+		}, {
+			id: '1012',
+			path: '/thousandfaces/rule',
+			component: Rule,
+			exact: true,
+			auth: true,
+		}, {
+			id: '1013',
+			path: '/thousandfaces/createrule',
+			component: CreateRule,
 			exact: true,
 			auth: true,
 		}, {

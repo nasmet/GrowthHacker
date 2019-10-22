@@ -15,14 +15,13 @@ import {
 } from '@ice/form';
 import styles from './index.module.scss';
 
-export default function CreateBuriedPoint({
+export default function CreateStrategy({
 	onOk,
-	entityType,
 }) {
 	const [loading, setLoading] = useState(false);
-	const type = entityType === 'event' ? 'value_type' : 'variable_type';
 
 	useEffect(() => {
+
 		return () => {
 			api.cancelRequest();
 		};
@@ -51,15 +50,19 @@ export default function CreateBuriedPoint({
       			<Form
       				onSubmit={onSubmit} 
   					rules={{
-					    name: [{
+					    view_value: [{
 					      required: true,
 					      message: '必填'
 					    }],
-					    key:  [{
+					    ad_value:  [{
 					      	required: true,
 					     	message: '必填'
 					    }],
-					    [type]:  [{
+					    num_value:[{
+ 							required: true,
+					     	message: '必填'
+					    }],
+					    action_value:  [{
 					      	required: true,
 					     	message: '必填',
 					    }],
@@ -73,37 +76,26 @@ export default function CreateBuriedPoint({
       			>
 	      			{formCore => (
 	      				<div>
-		      				<Field name='name'>
-		  						<Input 
-		       						className={styles.input} 
-		              				placeholder='请输入名称'
-		              				maxLength={32}
-		              			/>
+		      				<Field name='view_value'>
+								<Select className={styles.input} dataSource={[]} placeholder='请选择用户界面策略' >
+								</Select>
 		      				</Field>
-		      				<Field name='key'>
-								<Input 
-			              			className={styles.input} 
-			              			placeholder='请输入标识符'
-			              		/>
+
+		      				<Field name='ad_value'>
+								<Select className={styles.input} dataSource={[]} placeholder='请选择用户广告策略' >
+								</Select>
 		      				</Field>
-		      				{
-		      					entityType==='event' && 
-		      					<Field name="value_type">
-									<Select className={styles.input} placeholder='请输入类型' >
-									 	<Select.Option value="counter">计数器</Select.Option>
-									</Select>
-		      					</Field>
-		      				}
-		      				{
-		      					entityType==='variable' && 
-		      					<Field name="variable_type">
-									<Select className={styles.input} placeholder='请选择类型' >
-									 	<Select.Option value="integer">整形</Select.Option>
-								    	<Select.Option value="float">浮点型</Select.Option>
-								    	<Select.Option value="string">字符串</Select.Option>
-									</Select>
-		      					</Field>
-		      				}
+
+		      				<Field name='num_value'>
+								<Select className={styles.input} dataSource={[]} placeholder='请选择用户数值策略' >
+								</Select>
+		      				</Field>
+
+		      				<Field name='action_value'>
+								<Select className={styles.input} dataSource={[]} placeholder='请选择执行的动作' >
+								</Select>
+		      				</Field>
+
 		      				<Field name='desc'>
 		  						<Input 
 		              				className={styles.input} 

@@ -24,6 +24,7 @@ function RetentionAnalysis({
 	const [name, setName] = useState('');
 	const [values, setValues] = useState({});
 	const [submitDisabled, setSubmitDisabled] = useState(true);
+	const [disabled, setDisabled] = useState(true);
 	const [date, setDate] = useState('day:0');
 
 	useEffect(() => {
@@ -32,8 +33,9 @@ function RetentionAnalysis({
 		};
 	}, []);
 
-	const filterChange = (value) => {
-		setValues(value);
+	const filterChange = (step) => {
+		setDisabled(step.length===0? true : false);
+		setValues(step);
 	};
 
 	const onClose = () => {
@@ -43,8 +45,8 @@ function RetentionAnalysis({
 	const tranformData = () => {
 		return {
 			init_event: values[0].values.init_event,
-			retention_event: values[0].values.retention_event,
-			segmentation_id: values[0].values.segmentation_id,
+			retention_event: values[1].values.retention_event,
+			segmentation_id: values[2].values.segmentation_id,
 		}
 	};
 
@@ -86,7 +88,7 @@ function RetentionAnalysis({
 		<Components.Wrap>
 			<p className={styles.titleWrap}>
 				<span className={styles.title}>新建留存分析</span>
-				<Button type='primary' onClick={onSave}>保存</Button>
+				<Button type='primary' disabled={disabled} onClick={onSave}>保存</Button>
 			</p>
 			<IceContainer>
 				<Components.DateFilter filterChange={dateChange} />	

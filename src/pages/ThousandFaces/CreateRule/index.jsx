@@ -24,7 +24,7 @@ import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
 import Step from './components/Step';
 
-function CreateGroup({
+function CreateRule({
 	history,
 }) {
 	const [showDialog, setShowDialog] = useState(false);
@@ -48,7 +48,6 @@ function CreateGroup({
 	};
 
 	const onSave = () => {;
-		console.log(steps,combination);
 		setSubmitDisabled(true);
 		setShowDialog(true);
 	};
@@ -64,16 +63,7 @@ function CreateGroup({
 	const transformData = (result) => {
 		steps.forEach((item) => {
 			item.step.forEach(v => {
-				const obj = { ...v.values
-				};
-				const temp = obj.flag.split(',');
-				obj.flag = temp[0] === 'true' ? true : false;
-				obj.type = temp[1];
-				obj.alias = v.alias;
-				obj.values = [obj.values];
-				const temp_2 = obj.date;
-				obj.date = `abs:${parseInt(temp_2[0].valueOf()/1000)},${parseInt(temp_2[1].valueOf()/1000)}`;
-				result.conditions.push(obj);
+				result.conditions.push(v.values);
 			})
 		});
 		return result;
@@ -115,20 +105,12 @@ function CreateGroup({
       				<Button onClick={onCancel}>取消</Button>
       				<Button type='primary' disabled={disabled} onClick={onSave}>保存</Button>
       			</div>
-      			{/*<div className={styles.rateWrap}>
-      				<div className={styles.value}>0%</div>
-      				<div>占访问用户比率</div>
-      			</div>
-				<div className={styles.groupWrap}>
-					<div className={styles.value}>0</div>
-					<div>分群人数</div>
-				</div>*/}
       		</div>
 
       		<Dialog autoFocus visible={showDialog} onClose={onClose} footer={false}>
       			<Loading visible={loading} inline={false}>
 					<div style={{margin:'20px'}}>
-						<p className={styles.name}>请输入用户分群名称</p>
+						<p className={styles.name}>请输入规则名称</p>
 						<Input onChange={onInputChange} style={{marginBottom:'20px'}} />
 						<div>
 							<Button type='primary' disabled={submitDisabled} onClick={onOK} style={{marginRight:'20px'}}>确定</Button>
@@ -141,4 +123,4 @@ function CreateGroup({
 	);
 }
 
-export default withRouter(CreateGroup);
+export default withRouter(CreateRule);

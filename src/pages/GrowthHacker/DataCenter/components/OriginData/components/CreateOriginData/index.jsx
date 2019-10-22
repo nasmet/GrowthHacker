@@ -26,7 +26,6 @@ export default function CreateBuriedPoint({
 		api.getSqlTable({
 			table_schema: 1,
 		}).then((res) => {
-			console.log(res);
 			formRef.current.state.store.setFieldProps('table_name', {
 				dataSource: res.tables.map(item => item.name),
 			});
@@ -42,12 +41,13 @@ export default function CreateBuriedPoint({
 
 	const onFocus = (formCore) => {
 		const dataSource = formCore.getFieldProps('column_name').dataSource;
-		if (!dataSource) {
+		const tableName = formCore.getFieldValue('table_name');
+		if (!dataSource && tableName) {
 			api.getColumns({
-				table: formCore.getFieldValue('table_name'),
+				table: tableName,
 			}).then((res) => {
 				formCore.setFieldProps('column_name', {
-					dataSource: res.columns.map(v=>v.name),
+					dataSource: res.columns.map(v => v.name),
 				});
 			});
 		}
@@ -122,7 +122,7 @@ export default function CreateBuriedPoint({
 		      				</Field>
 		      		
 	      					<Field name="value_type">
-								<Select className={styles.input} placeholder='请输入类型' >
+								<Select className={styles.input} placeholder='请选择类型' >
 								 	<Select.Option value="integer">整形</Select.Option>
 							    	<Select.Option value="float">浮点型</Select.Option>
 							    	<Select.Option value="string">字符串</Select.Option>

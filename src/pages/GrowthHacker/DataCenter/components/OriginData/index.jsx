@@ -80,7 +80,6 @@ function OriginData({
 	};
 
 	const jumpOriginDataDetails = (id, name, value_type) => {
-		console.log(value_type);
 		history.push({
 			pathname: '/growthhacker/projectdata/origindatadetails',
 			state: {

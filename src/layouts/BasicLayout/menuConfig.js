@@ -67,8 +67,14 @@ const asideMenuConfig = [{
 		name: '用户标签',
 		path: '/thousandfaces/usertag',
 	}, {
+		name: '规则配置',
+		path: '/thousandfaces/rule',
+	}, {
 		name: '策略配置',
 		path: '/thousandfaces/strategy',
+	}, {
+		name: '方案配置',
+		path: '/thousandfaces/plan',
 	}],
 }];
 

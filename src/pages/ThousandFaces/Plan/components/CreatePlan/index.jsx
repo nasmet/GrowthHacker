@@ -15,14 +15,13 @@ import {
 } from '@ice/form';
 import styles from './index.module.scss';
 
-export default function CreateBuriedPoint({
+export default function CreatePlan({
 	onOk,
-	entityType,
 }) {
 	const [loading, setLoading] = useState(false);
-	const type = entityType === 'event' ? 'value_type' : 'variable_type';
 
 	useEffect(() => {
+
 		return () => {
 			api.cancelRequest();
 		};
@@ -51,17 +50,13 @@ export default function CreateBuriedPoint({
       			<Form
       				onSubmit={onSubmit} 
   					rules={{
-					    name: [{
+					    condition_id: [{
 					      required: true,
 					      message: '必填'
 					    }],
-					    key:  [{
+					    strategy_id:  [{
 					      	required: true,
 					     	message: '必填'
-					    }],
-					    [type]:  [{
-					      	required: true,
-					     	message: '必填',
 					    }],
 					}}
 					renderField={({label, component, error}) => (
@@ -73,37 +68,16 @@ export default function CreateBuriedPoint({
       			>
 	      			{formCore => (
 	      				<div>
-		      				<Field name='name'>
-		  						<Input 
-		       						className={styles.input} 
-		              				placeholder='请输入名称'
-		              				maxLength={32}
-		              			/>
+		      				<Field name='condition_id'>
+								<Select className={styles.input} dataSource={[]} placeholder='请选择策略' >
+								</Select>
 		      				</Field>
-		      				<Field name='key'>
-								<Input 
-			              			className={styles.input} 
-			              			placeholder='请输入标识符'
-			              		/>
+
+		      				<Field name='strategy_id'>
+								<Select className={styles.input} dataSource={[]} placeholder='请选择规则' >
+								</Select>
 		      				</Field>
-		      				{
-		      					entityType==='event' && 
-		      					<Field name="value_type">
-									<Select className={styles.input} placeholder='请输入类型' >
-									 	<Select.Option value="counter">计数器</Select.Option>
-									</Select>
-		      					</Field>
-		      				}
-		      				{
-		      					entityType==='variable' && 
-		      					<Field name="variable_type">
-									<Select className={styles.input} placeholder='请选择类型' >
-									 	<Select.Option value="integer">整形</Select.Option>
-								    	<Select.Option value="float">浮点型</Select.Option>
-								    	<Select.Option value="string">字符串</Select.Option>
-									</Select>
-		      					</Field>
-		      				}
+
 		      				<Field name='desc'>
 		  						<Input 
 		              				className={styles.input} 

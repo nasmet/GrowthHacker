@@ -32,20 +32,20 @@ function FunnelAnalysis({
 		};
 	}, []);
 
-	const filterChange = (steps, group) => {
+	const filterChange = (steps) => {
 		let flag = false;
-		if (group === undefined) {
+		if (steps.length <= 1) {
 			flag = true;
+		} else {
+			steps.forEach((v) => {
+				if (v.values.step === undefined) {
+					flag = true;
+				}
+			})
 		}
-		steps.forEach((v) => {
-			if (!v.values || !v.values.step) {
-				flag = true;
-			}
-		})
 		setDisabled(flag);
 		setValues({
 			steps,
-			group,
 		});
 	};
 
@@ -55,11 +55,14 @@ function FunnelAnalysis({
 
 	const onOK = () => {
 		setLoading(true);
+		const temp = values.steps.map(v => v.values.step);
+		console.log(temp.slice(1, temp.length), temp[0]);
+		return;
 		api.createBoard({
-			steps: values.steps.map(v => v.values.step),
+			steps: temp.slice(1, temp.length),
 			name,
 			type: 'funnel',
-			segmentation_id: values.group,
+			segmentation_id: temp[0],
 		}).then((res) => {
 			model.log('成功添加到看板');
 			history.push('/growthhacker/projectdata/db');

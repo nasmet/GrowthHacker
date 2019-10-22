@@ -15,7 +15,6 @@ export function getSqlTable(data) {
 }
 
 export function getColumns(data) {
-	console.log(`/sql/tables/${data.table}/columns`);
 	return get(`/sql/tables/${data.table}/columns`);
 }
 

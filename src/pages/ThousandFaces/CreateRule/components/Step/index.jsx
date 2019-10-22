@@ -8,69 +8,49 @@ import React, {
 	useMemo,
 } from 'react';
 import {
-	Input,
 	Button,
-	Tab,
-	Table,
-	Message,
 	Loading,
-	Pagination,
 	Icon,
-	Dialog,
 	Select,
-	Grid,
-	DatePicker,
 } from '@alifd/next';
-import {
-	withRouter,
-} from 'react-router-dom';
 import {
 	Form,
 	Field,
 } from '@ice/form';
-import moment from 'moment';
-import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
 import {
-	rules,
 	originRules,
 	firstColumn,
 	opMap,
+	tags,
 } from './stepConfig';
-moment.locale('zh-cn');
 
-export default function Filter({
+export default function Step({
 	filterChange,
 }) {
 	const [loading, setLoading] = useState(false);
-	const [metricData, setMetricData] = useState([]);
-	const [originData, setOriginData] = useState([]);
+	const [groupData, setGroupData] = useState([]);
 	const [combination, setCombination] = useState('');
 	const [steps, setSteps] = useState([]);
 
 	useEffect(() => {
-		async function getDataCenter() {
+		function getUserGroups() {
 			setLoading(true);
-			try {
-				await api.getDataCenter().then((res) => {
-					dividingData(res.event_entities);
-				})
-
-				await api.getOriginData().then((res) => {
-					setOriginData(res.data.map(item => {
-						return {
-							label: item.name,
-							value: item.id,
-						}
-					}));
-				})
-			} catch (e) {
+			api.getUserGroups().then((res) => {
+				setGroupData(res.segmentations.map(item => {
+					return {
+						label: item.name,
+						value: item.id,
+					}
+				}));
+			}).catch((e) => {
 				model.log(e);
-			}
-			setLoading(false);
+			}).finally(() => {
+				setLoading(false);
+			});
 		}
 
-		getDataCenter();
+		getUserGroups();
 
 		return () => {
 			api.cancelRequest();
@@ -78,11 +58,11 @@ export default function Filter({
 	}, []);
 
 	useEffect(() => {
-		if (metricData.length === 0 || originData.length === 0) {
+		if (groupData.length === 0) {
 			return;
 		}
 		setSteps([createStep(0)]);
-	}, [metricData, originData]);
+	}, [groupData]);
 
 	useEffect(() => {
 		if (steps.length === 0) {
@@ -93,26 +73,6 @@ export default function Filter({
 		setCombination(temp);
 		filterChange(steps, temp);
 	}, [steps]);
-
-	function dividingData(data) {
-		const metrics = [];
-		data.forEach((item) => {
-			const {
-				id,
-				entity_key,
-				value_type,
-				name,
-			} = item;
-			const obj = {
-				label: name,
-				value: id.toString(),
-			};
-			if (item.type === 'event') {
-				metrics.push(obj);
-			}
-		});
-		setMetricData(metrics);
-	}
 
 	function onChangeCombination() {
 		let temp = '';
@@ -142,72 +102,26 @@ export default function Filter({
 		return {
 			alias,
 			values: {
-				flag: 'true,event',
-				id: metricData[0] && metricData[0].value,
+				flag: 'tag',
 				op: '=',
-				values: '1',
-				value: '',
-				date: [moment(), moment()],
-			},
-			curDate: [moment(), moment()],
-			onVisibleChange: function(formCore, e) {
-				if (!e) {
-					formCore.setFieldValue('date', this.curDate);
-				}
-			},
-			onOk: function(formCore, e) {
-				formCore.setFieldValue('date', e);
-				this.curDate = e;
+				value: tags[0].value,
 			},
 			onChange: function(e) {
 				this.values = e;
 			},
-			onFocus: function(formCore) {
-				if (!formCore.getFieldValue('id')) {
-					return;
-				}
-				api.getOriginDataValues({
-					id: this.values.id,
-				}).then((res) => {
-					const data = res.data.map(item => {
-						return {
-							label: item.value,
-							value: item.id,
-						}
-					});
-					formCore.setFieldProps('value', {
-						dataSource: data,
-					});
-				});
-			},
 			effects: [{
 				field: 'flag',
 				handler: function(formCore) {
-					let visibleValues, visibleValue, idDataSource, opDataSource;
-					if (formCore.getFieldValue('flag') === 'true,event' || formCore.getFieldValue('flag') === 'false, event') {
-						idDataSource = metricData;
-						opDataSource = rules;
-						visibleValues = true;
-						visibleValue = false;
+					let dataSource;
+					if (formCore.getFieldValue('flag') === 'tag') {
+						dataSource = tags;
 					} else {
-						idDataSource = originData;
-						opDataSource = originRules;
-						visibleValues = false;
-						visibleValue = true;
+						dataSource = groupData;
 					}
-					formCore.setFieldProps('id', {
-						dataSource: idDataSource,
-					})
-					formCore.setFieldValue('id', idDataSource[0] && idDataSource[0].value);
-					formCore.setFieldProps('op', {
-						dataSource: opDataSource,
-					})
-					formCore.setFieldProps('values', {
-						visible: visibleValues,
-					})
 					formCore.setFieldProps('value', {
-						visible: visibleValue,
-					});
+						dataSource,
+					})
+					formCore.setFieldValue('value', dataSource[0] && dataSource[0].value);
 				}
 			}]
 		}
@@ -257,10 +171,6 @@ export default function Filter({
 			values,
 			onChange,
 			effects,
-			onVisibleChange,
-			onOk,
-			curDate,
-			onFocus,
 		} = item;
 		return (
 			<Form
@@ -276,24 +186,9 @@ export default function Filter({
 						<Field name='flag'>
 							<Select style={{width:'120px'}} dataSource={firstColumn} />
 						</Field>
-						<Field name='id'>
-							<Select style={{width:'200px'}} dataSource={metricData} showSearch />
-						</Field>
-						<Field name='op' dataSource={rules} component={Select} />
-						<Field name='values'>
-							<Input style={{width:'80px'}} htmlType="number" innerAfter={<span>次</span>} />
-						</Field>
-						<Field visible={false} name='value'>
-							<Select style={{width:'150px'}} dataSource={[]} notFoundContent={notFoundContent} onFocus={onFocus.bind(item,formCore)} />
-						</Field>
-						<Field name='date'>
-							<DatePicker.RangePicker 
-								style={{width:'120px'}} 
-								hasClear={false}
-								disabledDate={model.disabledDate} 
-								onVisibleChange={onVisibleChange.bind(item,formCore)}
-								onOk={onOk.bind(item,formCore)}
-							/>
+						<Field name='op' dataSource={originRules} component={Select} />
+						<Field name='value'>
+							<Select style={{width:'150px'}} dataSource={tags} />
 						</Field>
 					</div>
 				</div>
@@ -329,7 +224,7 @@ export default function Filter({
 
 	return (
 		<Loading visible={loading} inline={false}>
-			<p className={styles.title}>新建分群</p>
+			<p className={styles.title}>新建规则</p>
 			<div className={styles.combination}>{combination}</div>
 				{renderStep()}
 			<Button className={styles.filter} onClick={onAddAndFilter}>

@@ -1,0 +1,26 @@
+.wrap{
+	margin: 20px; 
+	display: flex;
+	flex-direction: column;
+}
+.btnWrap{
+	display: flex;
+	justify-content: center;
+}
+.btn{
+	width: 100px;
+	margin-right: 20px;
+}
+.field{
+	margin-bottom: 20px;
+	display: flex;
+	align-items: center;
+}
+.input{
+	width: 350px;
+	margin-right: 4px;
+}
+.error{
+	color: #ee7893;
+	font-size: 10px;
+}

@@ -12,7 +12,7 @@ import {
 } from '@alifd/next';
 import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
-import CreateStrategy from './components/CreateStrategy';
+import CreatePlan from './components/CreatePlan';
 
 export default function Strategy() {
 	const [loading, setLoading] = useState(false);
@@ -52,7 +52,7 @@ export default function Strategy() {
 		setCurPage(e);
 	};
 
-	const onDeleteStrategy = (id, index) => {
+	const onDeletePlan = (id, index) => {
 		Dialog.confirm({
 			content: '确定删除吗？',
 			onOk: () => {
@@ -79,13 +79,13 @@ export default function Strategy() {
 			id
 		} = record;
 		return (
-			<Button type='primary' warning onClick={onDeleteStrategy.bind(this, id, index)}> 
+			<Button type='primary' warning onClick={onDeletePlan.bind(this, id, index)}> 
 				删除
 			</Button>
 		);
 	};
 
-	const onCreateStrategy = () => {
+	const onCreatePlan = () => {
 		setShow(true);
 	};
 
@@ -105,8 +105,8 @@ export default function Strategy() {
 		<Components.Wrap>
       		<IceContainer>
 				<div className={styles.btnWrap}>
-					<Button className={styles.btn} type="secondary" onClick={onCreateStrategy}> 
-						创建策略
+					<Button className={styles.btn} type="secondary" onClick={onCreatePlan}> 
+						创建方案
 					</Button>
 				</div>
 				<Loading visible={loading} inline={false}>
@@ -115,10 +115,8 @@ export default function Strategy() {
 		          		hasBorder={false}
 		          	>	
 		          		<Table.Column title="id" dataIndex="id" />
-		            	<Table.Column title="用户界面策略" dataIndex="view_value" />
-		            	<Table.Column title="用户广告策略" dataIndex="ad_value" />
-		            	<Table.Column title="用户数值策略" dataIndex="num_value" />
-		            	<Table.Column title="执行的动作" dataIndex="action_value" />
+		            	<Table.Column title="规则" dataIndex="condition_id" />
+		            	<Table.Column title="策略" dataIndex="strategy_id" />
 		            	<Table.Column title="描述" dataIndex="desc" />
 		            	<Table.Column title="操作" cell={renderCover} />
 		          	</Table>
@@ -137,7 +135,7 @@ export default function Strategy() {
 		      	onClose={onClose}
 		      	footer={false}
 		    >
-				<CreateStrategy onOk={onOk} />
+				<CreatePlan onOk={onOk} />
 			</Dialog>
     	</Components.Wrap>
 	);

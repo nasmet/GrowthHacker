@@ -1,5 +1,6 @@
 import React, {
 	Component,
+	useEffect,
 } from 'react';
 import {
 	Tab,
@@ -9,6 +10,17 @@ import styles from './index.module.scss';
 import dataCenterConfig from './dataCenterConfig';
 
 export default function DataCenter() {
+	let key = '';
+	const cache = sessionStorage.getItem('DataCenter');
+	key = cache ? cache : "bp";
+
+	useEffect(() => {
+
+		return () => {
+			sessionStorage.setItem('DataCenter', key);
+		};
+	}, []);
+
 	const renderTab = () => {
 		return dataCenterConfig.map((item) => {
 			const {
@@ -24,9 +36,13 @@ export default function DataCenter() {
 		});
 	};
 
+	const onChange = (e) => {
+		key = e;
+	}
+
 	return (
 		<Components.Wrap>
-			<Tab defaultActiveKey="bp">
+			<Tab defaultActiveKey={key} onChange={onChange}>
 	      		{renderTab()}
 	      	</Tab>
 		</Components.Wrap>

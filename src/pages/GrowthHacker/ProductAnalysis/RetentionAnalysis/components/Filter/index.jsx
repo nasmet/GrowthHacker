@@ -14,19 +14,91 @@ import {
 	Field,
 } from '@ice/form';
 import styles from './index.module.scss';
+import {originRules} from './filterConfig';
 
 export default function Filter({
 	filterChange,
 }) {
-	const [steps,setSteps] = useState([createBehavior('init_event','初始行为是'),createBehavior('retention_event','后续行为是'),createUserBehavior()]);
+	const [loading,setLoading] = useState(false);
+	const [originData,setOriginData] = useState([]);
+	const [groupData,setGroupData] = useState([]);
+	const [metricData,setMetricData] = useState([]);
+	const [steps,setSteps] = useState([]);
+	
+	useEffect(()=>{
+		filterChange(steps);
+
+	},[steps]);
+
+	useEffect(()=>{
+		if(groupData.length===0){
+			return;
+		}
+
+		setSteps([createBehavior('init_event','初始行为是'),createBehavior('retention_event','后续行为是'),createUserBehavior()]);
+	},[metricData,groupData,originData]);
 
 	useEffect(() => {
-		filterChange(steps);
+		async function fetchData() {
+			setLoading(true);
+			try{
+				await api.getOriginData().then((res) => {
+					setOriginData(res.data.map(item => {
+						return {
+							label: item.name,
+							value: item.id,
+						}
+					}));
+				});
+
+				await api.getDataCenter().then((res) => {
+					dividingMetricData(res.event_entities);
+				});
+
+				await api.getUserGroups().then((res) => {
+					dividingGroupData(res.segmentations);
+				});
+
+			}catch(e){
+				model.log(e);
+			}
+			setLoading(false);
+		}
+
+		fetchData();
 
 		return () => {
 			api.cancelRequest();
 		};
 	}, []);
+
+	function dividingMetricData(data) {
+		const metrics = [];
+		data.forEach((item) => {
+			const obj = {
+				label: item.name,
+				value: item.entity_key,
+			};
+			if (item.type === 'event') {
+				metrics.push(obj);
+			}
+		});
+		setMetricData(metrics);
+	}
+
+	function dividingGroupData(data) {
+		const targets = data.map((item) => {
+			return {
+				label: item.name,
+				value: item.id,
+			};
+		});
+		targets.splice(0, 0, {
+			label: '全部用户',
+			value: 0,
+		});
+		setGroupData(targets);
+	}
 
 	const notFoundContent = <span>加载中...</span>;
 
@@ -34,29 +106,11 @@ export default function Filter({
 		return {
 			name,
 			label,
-			values: {},
+			values: {
+				[name]:metricData[0]&&metricData[0].value, 
+			},
 			onChange: function(e) {
 				this.values = e;
-			},
-			onFocus: function(){
-				const dataSource = this.ref.store.getFieldProps(name).dataSource;
-				if (!dataSource) {
-					const self = this;
-					api.getDataCenter().then((res) => {
-						const metrics = [];
-						res.event_entities.forEach((item) => {
-							if (item.type === 'event') {
-								metrics.push({
-									label: item.name,
-									value: item.entity_key,
-								});
-							}
-						});
-						self.ref.store.setFieldProps(name, {
-							dataSource: metrics,
-						});
-					});
-				}
 			},
 			filter:[],
 			onAddFilter:function(){
@@ -69,30 +123,11 @@ export default function Filter({
 
 	function createUserBehavior() {
 		return {
-			values: {},
+			values: {
+				segmentation_id:0,
+			},
 			onChange: function(e) {
 				this.values = e;
-			},
-			onFocus: function(){
-				const dataSource = this.ref.store.getFieldProps('segmentation_id').dataSource;
-				if (!dataSource) {
-					const self = this;
-					api.getUserGroups().then((res) => {
-						const targets = res.segmentations.map((item) => {
-							return {
-								label: item.name,
-								value: item.id,
-							};
-						});
-						targets.splice(0, 0, {
-							label: '全部用户',
-							value: 0,
-						});
-						self.ref.store.setFieldProps('segmentation_id', {
-							dataSource: targets,
-						});
-					});
-				}
 			},
 		}
 	}
@@ -104,25 +139,23 @@ export default function Filter({
 			onChange: function(e) {
 				this.values = e;
 			},
-			onFocus: function(){
-				const dataSource = this.ref.store.getFieldProps('key').dataSource;
-				if (!dataSource) {
-					const self = this;
-					api.getDataCenter().then((res) => {
-						const metrics = [];
-						res.event_entities.forEach((item) => {
-							if (item.type === 'event') {
-								metrics.push({
-									label: item.name,
-									value: item.entity_key,
-								});
-							}
-						});
-						self.ref.store.setFieldProps('key', {
-							dataSource: metrics,
-						});
-					});
+			onFocus: function(formCore){
+				if (!this.values.key) {
+					return;
 				}
+				api.getOriginDataValues({
+					id: this.values.key,
+				}).then((res) => {
+					const data = res.data.map(item => {
+						return {
+							label: item.value,
+							value: item.id,
+						}
+					});
+					formCore.setFieldProps('value', {
+						dataSource: data,
+					});
+				});
 			},
 		};
 	}
@@ -133,15 +166,15 @@ export default function Filter({
 				name,
 				label,
 				onChange,
-				onFocus,
 				filter,
 				onAddFilter,
+				values,
 			}= item;
 			if(index===2){
 				return( 
 					<Form 
+						initialValues={values}
 						key='segmentation_id'
-						ref={e=>{item.ref = e}}
 						onChange={onChange.bind(item)} 
 				        renderField={({label, component, error}) => (
 				            <div className={styles.field}>
@@ -153,10 +186,8 @@ export default function Filter({
 						<Field label='目标用户' name='segmentation_id'>
 							<Select  
 								style={{width:'200px'}} 
-								dataSource={[]}  
+								dataSource={groupData}  
 								showSearch
-								onFocus={onFocus.bind(item)}
-								notFoundContent={notFoundContent}
 							/>
 						</Field>
 					</Form>
@@ -165,7 +196,7 @@ export default function Filter({
 			return (
 				<div key={name} style={{marginBottom:'20px',borderBottom:'1px solid #e6e6e6'}}>
 					<Form 
-						ref={e=>{item.ref = e}}
+						initialValues={values}
 						onChange={onChange.bind(item)} 
 						renderField={({label, component, error}) => (
 				            <div className={styles.field}>
@@ -180,10 +211,8 @@ export default function Filter({
 						<Field label={label} name={name}>
 							<Select
 								style={{width:'200px'}} 
-								dataSource={[]}  
+								dataSource={metricData}  
 								showSearch
-								onFocus={onFocus.bind(item)}
-								notFoundContent={notFoundContent}
 							/>
 						</Field>
 					</Form>
@@ -196,29 +225,28 @@ export default function Filter({
 							} = item;
 							
 							return ( 
-								<Form 
-									style={{display:'flex'}}
+								<Form
 									key={key}
-									ref={(e)=>{item.ref = e}}
+									style={{display:'flex',marginBottom:'10px'}}
 									onChange={onChange.bind(item)} 
 									renderField={({label, component, error}) => (
 							        	<span style={{marginRight:'20px'}}>{component}</span>
 							        )}
-
 								>
+								{formCore=>(
+									<div>
 									<Field name='key'>
 										<Select
 											style={{width:'200px'}} 
-											dataSource={[]}  
+											dataSource={originData}  
 											showSearch
 											notFoundContent={notFoundContent}
-											onFocus={onFocus.bind(item)}
 										/>
 									</Field>
 									<Field name='op'>
 										<Select
 											style={{width:'100px'}} 
-											dataSource={[]}  
+											dataSource={originRules}  
 											showSearch
 											notFoundContent={notFoundContent}
 										/>
@@ -229,8 +257,11 @@ export default function Filter({
 											dataSource={[]}  
 											showSearch
 											notFoundContent={notFoundContent}
+											onFocus={onFocus.bind(item,formCore)}
 										/>
 									</Field>
+									</div>
+								)}
 								</Form>
 							)
 						})}
@@ -243,10 +274,12 @@ export default function Filter({
 
 	return (
 		<div>
-			<div className={styles.title}>
-				显示满足如以下行为模式的用户留存情况
-			</div>
-			{renderSteps()}
+			<Loading visible={loading} inline={false}>
+				<div className={styles.title}>
+					显示满足如以下行为模式的用户留存情况
+				</div>
+				{renderSteps()}
+			</Loading>
 		</div>
 	);
 }

@@ -62,6 +62,9 @@ function DistributeDetails({
 	}, [date]);
 
 	function assemblingTableData(data) {
+		if(data.length === 0){
+			return;
+		}
 		const row = data.reduce((total, value, index, arr) => {
 			return total.map((item, index) => item + value[index]);
 		});
