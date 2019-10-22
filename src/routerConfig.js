@@ -40,6 +40,7 @@ import ARPUAnalysis from './pages/GrowthHacker/AdMonitor/ARPUAnalysis';
 import DataCenter from './pages/GrowthHacker/DataCenter';
 const OriginDataDetails = React.lazy(() =>
 	import ('./pages/GrowthHacker/OriginDataDetails'));
+import NewEvent from './pages/GrowthHacker/NewEvent';
 
 import UserTag from './pages/ThousandFaces/UserTag';
 import Strategy from './pages/ThousandFaces/Strategy';
@@ -47,6 +48,7 @@ import Plan from './pages/ThousandFaces/Plan';
 import Rule from './pages/ThousandFaces/Rule';
 const CreateRule = React.lazy(() =>
 	import ('./pages/ThousandFaces/CreateRule'));
+import TagLibrary from './pages/ThousandFaces/TagLibrary';
 
 const QueryEditor = React.lazy(() =>
 	import ('./pages/Sql/QueryEditor'));
@@ -270,6 +272,12 @@ const routerConfig = [
 				exact: true,
 				auth: true,
 			}, {
+				id: '1008025',
+				path: '/growthhacker/projectdata/newevent',
+				component: NewEvent,
+				exact: true,
+				auth: true,
+			}, {
 				id: '10080000',
 				path: '/growthhacker/projectdata',
 				// 重定向
@@ -307,6 +315,12 @@ const routerConfig = [
 			id: '1013',
 			path: '/thousandfaces/createrule',
 			component: CreateRule,
+			exact: true,
+			auth: true,
+		}, {
+			id: '1014',
+			path: '/thousandfaces/taglibrary',
+			component: TagLibrary,
 			exact: true,
 			auth: true,
 		}, {

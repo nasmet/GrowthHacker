@@ -2,29 +2,25 @@ import React, {
 	Component,
 	useState,
 	useEffect,
+	useRef,
 } from 'react';
 import {
-	Loading,
 	Button,
-	Dialog,
-	Input,
 } from '@alifd/next';
-import {
-	withRouter,
-} from 'react-router-dom';
 import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
 import Filter from './components/Filter';
+import DataDisplay from './components/DataDisplay';
 
-function FunnelAnalysis({
-	history,
-}) {
-	const [showDialog, setShowDialog] = useState(false);
-	const [loading, setLoading] = useState(false);
-	const [name, setName] = useState('');
-	const [values, setValues] = useState({});
+export default function FunnelAnalysis() {
 	const [disabled, setDisabled] = useState(true);
-	const [submitDisabled, setSubmitDisabled] = useState(true);
+	const [boardId, setBoardId] = useState('');
+	const refDialog = useRef(null);
+	const refVariable = useRef({
+		values: {},
+		name: '',
+		date: 'day:0',
+	});
 
 	useEffect(() => {
 		return () => {
@@ -37,57 +33,47 @@ function FunnelAnalysis({
 		if (steps.length <= 1) {
 			flag = true;
 		} else {
-			steps.forEach((v) => {
-				if (v.values.step === undefined) {
-					flag = true;
-				}
-			})
+			flag = steps.some(v => v.values.step === undefined);
 		}
-		setDisabled(flag);
-		setValues({
-			steps,
-		});
+		if (flag !== disabled) {
+			setDisabled(flag);
+		}
+		refVariable.current.values = steps;
 	};
 
-	const onClose = () => {
-		setShowDialog(false);
-	};
-
-	const onOK = () => {
-		setLoading(true);
-		const temp = values.steps.map(v => v.values.step);
-		console.log(temp.slice(1, temp.length), temp[0]);
-		return;
+	const onOk = (sucess, fail) => {
+		const {
+			name,
+			date,
+			values,
+		} = refVariable.current;
+		const temp = values.map(v => v.values.step);
 		api.createBoard({
 			steps: temp.slice(1, temp.length),
 			name,
 			type: 'funnel',
 			segmentation_id: temp[0],
+			date,
 		}).then((res) => {
 			model.log('成功添加到看板');
-			history.push('/growthhacker/projectdata/db');
+			sucess();
+			setBoardId(res.id);
 		}).catch((e) => {
 			model.log(e);
-			setLoading(false);
+			fail();
 		});
 	};
 
 	const onInputChange = (e) => {
-		if (e) {
-			setSubmitDisabled(false);
-		} else {
-			setSubmitDisabled(true);
-		}
-		setName(e);
+		refVariable.current.name = e;
 	};
 
 	const onSave = () => {
-		setSubmitDisabled(true);
-		setShowDialog(true);
+		refDialog.current.onShow();
 	};
 
-	const dateChange = () => {
-
+	const dateChange = (e) => {
+		refVariable.current.date = e;
 	};
 
 	return (
@@ -100,20 +86,10 @@ function FunnelAnalysis({
 				<Components.DateFilter filterChange={dateChange} />	
       			<Filter filterChange={filterChange} />
       		</IceContainer>
-			<Dialog autoFocus visible={showDialog} onClose={onClose} footer={false}>
-      			<Loading visible={loading} inline={false}>
-					<div style={{margin:'20px'}}>
-						<p className={styles.name}>请输入看板名称</p>
-						<Input onChange={onInputChange} style={{marginBottom:'20px'}} />
-						<div>
-							<Button type='primary' disabled={submitDisabled} onClick={onOK} style={{marginRight:'20px'}}>确定</Button>
-							<Button onClick={onClose}>取消</Button>
-						</div>
-					</div>
-				</Loading>	
-			</Dialog>	
+      		<IceContainer>
+      			<DataDisplay id={boardId} />
+      		</IceContainer>
+      		<Components.BoardDialog onInputChange={onInputChange} onOk={onOk} ref={refDialog} />
     	</Components.Wrap>
 	);
 }
-
-export default withRouter(FunnelAnalysis);

@@ -15,37 +15,36 @@ export default function AdCount() {
 	const [loading, setLoading] = useState(false);
 	const [titles, setTitles] = useState([]);
 	const [tableData, setTableData] = useState([]);
-	const [date, setDate] = useState('day:0');
+
+	function getARPUDaily(date = 'day:0') {
+		setLoading(true);
+		api.getARPUDaily({
+			date,
+		}).then((res) => {
+			const {
+				meta,
+				data,
+			} = res;
+			setTitles(meta);
+			setTableData(data);
+		}).catch((e) => {
+			model.log(e);
+		}).finally(() => {
+			setLoading(false);
+		});
+	}
 
 	useEffect(() => {
-		function getARPUDaily() {
-			setLoading(true);
-			api.getARPUDaily({
-				date,
-			}).then((res) => {
-				const {
-					meta,
-					data,
-				} = res;
-				setTitles(meta);
-				setTableData(data);
-			}).catch((e) => {
-				model.log(e);
-			}).finally(() => {
-				setLoading(false);
-			});
-		}
-
 		getARPUDaily();
 
 		return () => {
 			api.cancelRequest();
 		};
-	}, [date]);
+	}, []);
 
 
 	const filterChange = (e) => {
-		setDate(e);
+		getARPUDaily(e);
 	};
 
 	const renderTitles = () => {

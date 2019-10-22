@@ -15,36 +15,35 @@ export default function AdCount() {
 	const [loading, setLoading] = useState(false);
 	const [titles, setTitles] = useState([]);
 	const [tableData, setTableData] = useState([]);
-	const [date, setDate] = useState('day:0');
+
+	function getAdCount(date = 'day:0') {
+		setLoading(true);
+		api.getAdCount({
+			date,
+		}).then((res) => {
+			const {
+				meta,
+				data,
+			} = res;
+			setTitles(meta);
+			setTableData(data);
+		}).catch((e) => {
+			model.log(e);
+		}).finally(() => {
+			setLoading(false);
+		});
+	}
 
 	useEffect(() => {
-		function getAdCount() {
-			setLoading(true);
-			api.getAdCount({
-				date,
-			}).then((res) => {
-				const {
-					meta,
-					data,
-				} = res;
-				setTitles(meta);
-				setTableData(data);
-			}).catch((e) => {
-				model.log(e);
-			}).finally(() => {
-				setLoading(false);
-			});
-		}
-
 		getAdCount();
 
 		return () => {
 			api.cancelRequest();
 		};
-	}, [date]);
+	}, []);
 
 	const filterChange = (e) => {
-		setDate(e);
+		getAdCount(e);
 	};
 
 	const renderTitles = () => {

@@ -63,7 +63,11 @@ const asideMenuConfig = [{
 	name: '千人千面',
 	path: '/thousandfaces',
 	icon: '',
+	auth: () => sessionStorage.getItem(config.PROJECTID),
 	sub: [{
+		name: '标签库',
+		path: '/thousandfaces/taglibrary',
+	}, {
 		name: '用户标签',
 		path: '/thousandfaces/usertag',
 	}, {

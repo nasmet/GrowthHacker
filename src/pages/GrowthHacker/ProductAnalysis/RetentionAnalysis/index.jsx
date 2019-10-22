@@ -2,30 +2,25 @@ import React, {
 	Component,
 	useState,
 	useEffect,
+	useRef,
 } from 'react';
 import {
-	Loading,
 	Button,
-	Dialog,
-	Input,
 } from '@alifd/next';
-import {
-	withRouter,
-} from 'react-router-dom';
 import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
 import Filter from './components/Filter';
+import DataDisplay from './components/DataDisplay';
 
-function RetentionAnalysis({
-	history,
-}) {
-	const [loading, setLoading] = useState(false);
-	const [showDialog, setShowDialog] = useState(false);
-	const [name, setName] = useState('');
-	const [values, setValues] = useState({});
-	const [submitDisabled, setSubmitDisabled] = useState(true);
+export default function RetentionAnalysis() {
 	const [disabled, setDisabled] = useState(true);
-	const [date, setDate] = useState('day:0');
+	const [boardId, setBoardId] = useState('');
+	const refDialog = useRef(null);
+	const refVariable = useRef({
+		values: {},
+		name: '',
+		date: 'day:0',
+	});
 
 	useEffect(() => {
 		return () => {
@@ -34,15 +29,15 @@ function RetentionAnalysis({
 	}, []);
 
 	const filterChange = (step) => {
-		setDisabled(step.length===0? true : false);
-		setValues(step);
-	};
-
-	const onClose = () => {
-		setShowDialog(false);
+		const flag = step.length === 0 ? true : false;
+		if (flag !== disabled) {
+			setDisabled(flag);
+		}
+		refVariable.current.values = step;
 	};
 
 	const tranformData = () => {
+		const values = refVariable.current.values;
 		return {
 			init_event: values[0].values.init_event,
 			retention_event: values[1].values.retention_event,
@@ -50,38 +45,36 @@ function RetentionAnalysis({
 		}
 	};
 
-	const onOK = () => {
-		setLoading(true);
+	const onOk = (sucess, fail) => {
 		const temp = tranformData();
+		const {
+			name,
+			date,
+		} = refVariable.current;
 		api.createBoard({ ...temp,
 			name,
 			type: 'retention',
 			date,
 		}).then((res) => {
 			model.log('成功添加到看板');
-			history.push('/growthhacker/projectdata/db');
+			sucess();
+			setBoardId(res.id);
 		}).catch((e) => {
 			model.log(e);
-			setLoading(false);
+			fail();
 		});
 	};
 
 	const onInputChange = (e) => {
-		if (e) {
-			setSubmitDisabled(false);
-		} else {
-			setSubmitDisabled(true);
-		}
-		setName(e);
+		refVariable.current.name = e;
 	};
 
 	const onSave = () => {
-		setSubmitDisabled(true);
-		setShowDialog(true);
+		refDialog.current.onShow();
 	};
 
 	const dateChange = (e) => {
-		setDate(e)
+		refVariable.current.date = e;
 	};
 
 	return (
@@ -94,20 +87,10 @@ function RetentionAnalysis({
 				<Components.DateFilter filterChange={dateChange} />	
 				<Filter filterChange={filterChange} />
 			</IceContainer>
-			<Dialog autoFocus visible={showDialog} onClose={onClose} footer={false}>
-      			<Loading visible={loading} inline={false}>
-					<div style={{margin:'20px'}}>
-						<p className={styles.name}>请输入看板名称</p>
-						<Input onChange={onInputChange} style={{marginBottom:'20px'}} />
-						<div>
-							<Button type='primary' disabled={submitDisabled} onClick={onOK} style={{marginRight:'20px'}}>确定</Button>
-							<Button onClick={onClose}>取消</Button>
-						</div>
-					</div>
-				</Loading>	
-			</Dialog>	
+			<IceContainer>
+				<DataDisplay id={boardId} />
+			</IceContainer>
+			<Components.BoardDialog onInputChange={onInputChange} onOk={onOk} ref={refDialog} />
     	</Components.Wrap>
 	);
 }
-
-export default withRouter(RetentionAnalysis);

@@ -2,30 +2,25 @@ import React, {
 	Component,
 	useEffect,
 	useState,
+	useRef,
 } from 'react';
 import {
-	Loading,
 	Button,
-	Dialog,
-	Input,
 } from '@alifd/next';
-import {
-	withRouter,
-} from 'react-router-dom';
 import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
 import Filter from './components/Filter';
+import DataDisplay from './components/DataDisplay';
 
-function EventAnalysis({
-	history,
-}) {
-	const [loading, setLoading] = useState(false);
-	const [showDialog, setShowDialog] = useState(false);
-	const [name, setName] = useState('');
-	const [values, setValues] = useState({});
+export default function EventAnalysis() {
 	const [disabled, setDisabled] = useState(true);
-	const [submitDisabled, setSubmitDisabled] = useState(true);
-	const [date, setDate] = useState('day:0');
+	const [boardId, setBoardId] = useState('');
+	const refDialog = useRef(null);
+	const refVariable = useRef({
+		values: {},
+		name: '',
+		date: 'day:0',
+	});
 
 	useEffect(() => {
 		return () => {
@@ -34,45 +29,42 @@ function EventAnalysis({
 	}, []);
 
 	const filterChange = (value, flag) => {
-		setDisabled(flag);
-		setValues(value);
+		refVariable.current.values = value;
+		if (flag !== disabled) {
+			setDisabled(flag);
+		}
 	};
 
-	const onClose = () => {
-		setShowDialog(false);
-	};
-
-	const onOK = () => {
-		setLoading(true);
+	const onOk = (success, fail) => {
+		const {
+			values,
+			date,
+			name,
+		} = refVariable.current;
 		api.createBoard({ ...values,
 			name,
 			type: 'dashboard',
 			date,
 		}).then((res) => {
 			model.log('成功添加到看板');
-			history.push('/growthhacker/projectdata/db');
+			success();
+			setBoardId(res.id);
 		}).catch((e) => {
 			model.log(e);
-			setLoading(false);
+			fail();
 		});
 	};
 
 	const onInputChange = (e) => {
-		if (e) {
-			setSubmitDisabled(false);
-		} else {
-			setSubmitDisabled(true);
-		}
-		setName(e);
+		refVariable.current.name = e;
 	};
 
 	const onSave = () => {
-		setSubmitDisabled(true);
-		setShowDialog(true);
+		refDialog.current.onShow();
 	};
 
 	const dateChange = (e) => {
-		setDate(e);
+		refVariable.current.date = e;
 	};
 
 	return (
@@ -85,20 +77,10 @@ function EventAnalysis({
 				<Components.DateFilter filterChange={dateChange} />	
 				<Filter filterChange={filterChange} />
 			</IceContainer>
-	    	<Dialog autoFocus visible={showDialog} onClose={onClose} footer={false}>
-      			<Loading visible={loading} inline={false}>
-					<div style={{margin:'20px'}}>
-						<p className={styles.name}>请输入看板名称</p>
-						<Input onChange={onInputChange} style={{marginBottom:'20px'}} />
-						<div>
-							<Button type='primary' disabled={submitDisabled} onClick={onOK} style={{marginRight:'20px'}}>确定</Button>
-							<Button onClick={onClose}>取消</Button>
-						</div>
-					</div>
-				</Loading>	
-			</Dialog>	
+			<IceContainer>
+				<DataDisplay id={boardId} />
+			</IceContainer>
+			<Components.BoardDialog onInputChange={onInputChange} onOk={onOk} ref={refDialog} />
     	</Components.Wrap>
 	);
 }
-
-export default withRouter(EventAnalysis);

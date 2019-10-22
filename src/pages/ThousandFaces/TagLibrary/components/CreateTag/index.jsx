@@ -15,12 +15,7 @@ import {
 } from '@ice/form';
 import styles from './index.module.scss';
 
-const strategies = [{
-	label: '分享',
-	value: 'share',
-}];
-
-export default function CreateStrategy({
+export default function CreateTag({
 	onOk,
 }) {
 	const [loading, setLoading] = useState(false);
@@ -35,7 +30,7 @@ export default function CreateStrategy({
 	const onSubmit = (e) => {
 		setLoading(true);
 		console.log(e);
-		api.createStrategies(e).then((res) => {
+		api.createTags(e).then((res) => {
 			model.log('创建成功');
 			onOk(res);
 		}).catch((e) => {
@@ -58,21 +53,9 @@ export default function CreateStrategy({
 					      required: true,
 					      message: '必填'
 					    }],
-					    view_value: [{
+					    rule: [{
 					      required: true,
 					      message: '必填'
-					    }],
-					    ad_value:  [{
-					      	required: true,
-					     	message: '必填'
-					    }],
-					    num_value:[{
- 							required: true,
-					     	message: '必填'
-					    }],
-					    action:  [{
-					      	required: true,
-					     	message: '必填',
 					    }],
 					}}
 					renderField={({label, component, error}) => (
@@ -92,24 +75,12 @@ export default function CreateStrategy({
 		              			/>
 		      				</Field>
 
-		      				<Field name='view_value'>
-								<Select className={styles.input} dataSource={strategies} placeholder='请选择用户界面策略' >
-								</Select>
-		      				</Field>
-
-		      				<Field name='ad_value'>
-								<Select className={styles.input} dataSource={strategies} placeholder='请选择用户广告策略' >
-								</Select>
-		      				</Field>
-
-		      				<Field name='num_value'>
-								<Select className={styles.input} dataSource={strategies} placeholder='请选择用户数值策略' >
-								</Select>
-		      				</Field>
-
-		      				<Field name='action'>
-								<Select className={styles.input} dataSource={strategies} placeholder='请选择执行的动作' >
-								</Select>
+							<Field name='rule'>
+								<Input 
+		              				className={styles.input} 
+		              				placeholder='请输入规则'
+		              				maxLength={50}
+		              			/>
 		      				</Field>
 
 		      				<Field name='desc'>

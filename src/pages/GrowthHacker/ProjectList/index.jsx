@@ -45,6 +45,7 @@ function ProjectList({
 	const jumpProjectData = (e) => {
 		sessionStorage.setItem(config.PROJECTID, e.id);
 		sessionStorage.setItem(config.PROJECTNAME, e.name);
+		sessionStorage.setItem(config.PROJECTAPPID, e.appid);
 		history.push('/growthhacker/projectdata');
 	};
 

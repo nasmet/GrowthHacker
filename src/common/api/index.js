@@ -6,6 +6,11 @@ import {
 	cancelRequestTask,
 } from './base';
 
+/**
+ * 数据分析api接口
+ * 
+ */
+
 export function cancelRequest() {
 	cancelRequestTask();
 }
@@ -232,4 +237,57 @@ export function getARPUDaily(data) {
 
 export function getARPURate(data) {
 	return get(`/projects/${sessionStorage.getItem(config.PROJECTID)}/ads/arpu_click`, data);
+}
+
+/**
+ * 千人千面api接口
+ * 
+ */
+
+export function getStrategies(data) {
+	return get(`/projects/${sessionStorage.getItem(config.PROJECTID)}/strategies`, data);
+}
+
+export function createStrategies(data) {
+	return post(`/projects/${sessionStorage.getItem(config.PROJECTID)}/strategies`, data);
+}
+
+export function deleteStrategies(data) {
+	return del(`/projects/${sessionStorage.getItem(config.PROJECTID)}/strategies/${data.id}`);
+}
+
+export function getRules(data) {
+	return get(`/projects/${sessionStorage.getItem(config.PROJECTID)}/rules`, data);
+}
+
+export function createRules(data) {
+	return post(`/projects/${sessionStorage.getItem(config.PROJECTID)}/rules`, data);
+}
+
+export function deleteRules(data) {
+	return del(`/projects/${sessionStorage.getItem(config.PROJECTID)}/rules/${data.id}`);
+}
+
+export function getSchemes(data) {
+	return get(`/projects/${sessionStorage.getItem(config.PROJECTID)}/schemes`, data);
+}
+
+export function createSchemes(data) {
+	return post(`/projects/${sessionStorage.getItem(config.PROJECTID)}/schemes`, data);
+}
+
+export function deleteSchemes(data) {
+	return del(`/projects/${sessionStorage.getItem(config.PROJECTID)}/schemes/${data.id}`);
+}
+
+export function getTags(data) {
+	return get('/labels', data);
+}
+
+export function createTags(data) {
+	return post('/labels', data);
+}
+
+export function deleteTags(data) {
+	return del(`/labels/${data.id}`);
 }

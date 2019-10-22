@@ -15,37 +15,35 @@ export default function AdRate() {
 	const [loading, setLoading] = useState(false);
 	const [titles, setTitles] = useState([]);
 	const [tableData, setTableData] = useState([]);
-	const [date, setDate] = useState('day:0');
+
+	function getARPURate(date = 'day:0') {
+		setLoading(true);
+		api.getARPURate({
+			date,
+		}).then((res) => {
+			const {
+				meta,
+				data,
+			} = res;
+			setTitles(meta);
+			setTableData(data);
+		}).catch((e) => {
+			model.log(e);
+		}).finally(() => {
+			setLoading(false);
+		});
+	}
 
 	useEffect(() => {
-		function getARPURate() {
-			setLoading(true);
-			api.getARPURate({
-				date,
-			}).then((res) => {
-				const {
-					meta,
-					data,
-				} = res;
-				setTitles(meta);
-				setTableData(data);
-			}).catch((e) => {
-				model.log(e);
-			}).finally(() => {
-				setLoading(false);
-			});
-		}
-
 		getARPURate();
 
 		return () => {
 			api.cancelRequest();
 		};
-	}, [date]);
-
+	}, []);
 
 	const filterChange = (e) => {
-		setDate(e);
+		getARPURate(e);
 	};
 
 	const renderTitles = () => {

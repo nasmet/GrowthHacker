@@ -8,6 +8,7 @@ import {
 	Loading,
 	Table,
 	Pagination,
+	Dialog,
 } from '@alifd/next';
 import {
 	withRouter,
@@ -24,19 +25,18 @@ function Rule({
 	const [curPage, setCurPage] = useState(1);
 
 	useEffect(() => {
-		function fetchData() {
+		function getRules() {
 			setLoading(true);
-			api.getDataCenter({
+			api.getRules({
 				limit: config.LIMIT,
 				offset: (curPage - 1) * config.LIMIT,
-				type: 'event',
 			}).then((res) => {
 				const {
 					total,
-					event_entities
+					labels,
 				} = res;
 				setCount(total);
-				setTableData(event_entities);
+				setTableData(labels);
 			}).catch((e) => {
 				model.log(e);
 			}).finally(() => {
@@ -44,6 +44,7 @@ function Rule({
 			});
 		}
 
+		getRules();
 
 		return () => {
 			api.cancelRequest();
@@ -59,7 +60,7 @@ function Rule({
 			content: '确定删除吗？',
 			onOk: () => {
 				setLoading(true);
-				api.deleteEvent({
+				api.deleteRules({
 					id
 				}).then((res) => {
 					setTableData((pre) => {

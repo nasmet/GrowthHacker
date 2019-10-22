@@ -22,19 +22,18 @@ export default function Strategy() {
 	const [show, setShow] = useState(false);
 
 	useEffect(() => {
-		function fetchData() {
+		function getStrategies() {
 			setLoading(true);
-			api.getDataCenter({
+			api.getStrategies({
 				limit: config.LIMIT,
 				offset: (curPage - 1) * config.LIMIT,
-				type: 'event',
 			}).then((res) => {
 				const {
 					total,
-					event_entities
+					strategies,
 				} = res;
 				setCount(total);
-				setTableData(event_entities);
+				setTableData(strategies);
 			}).catch((e) => {
 				model.log(e);
 			}).finally(() => {
@@ -42,6 +41,7 @@ export default function Strategy() {
 			});
 		}
 
+		getStrategies();
 
 		return () => {
 			api.cancelRequest();
@@ -57,7 +57,7 @@ export default function Strategy() {
 			content: '确定删除吗？',
 			onOk: () => {
 				setLoading(true);
-				api.deleteEvent({
+				api.deleteStrategies({
 					id
 				}).then((res) => {
 					setTableData((pre) => {
@@ -115,6 +115,7 @@ export default function Strategy() {
 		          		hasBorder={false}
 		          	>	
 		          		<Table.Column title="id" dataIndex="id" />
+		          		<Table.Column title="名称" dataIndex="name" />
 		            	<Table.Column title="用户界面策略" dataIndex="view_value" />
 		            	<Table.Column title="用户广告策略" dataIndex="ad_value" />
 		            	<Table.Column title="用户数值策略" dataIndex="num_value" />

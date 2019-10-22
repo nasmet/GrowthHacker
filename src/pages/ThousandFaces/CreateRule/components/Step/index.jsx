@@ -22,7 +22,6 @@ import {
 	originRules,
 	firstColumn,
 	opMap,
-	tags,
 } from './stepConfig';
 
 export default function Step({
@@ -30,27 +29,38 @@ export default function Step({
 }) {
 	const [loading, setLoading] = useState(false);
 	const [groupData, setGroupData] = useState([]);
+	const [tagData, setTagData] = useState([]);
 	const [combination, setCombination] = useState('');
 	const [steps, setSteps] = useState([]);
 
 	useEffect(() => {
-		function getUserGroups() {
+		async function fetchData() {
 			setLoading(true);
-			api.getUserGroups().then((res) => {
-				setGroupData(res.segmentations.map(item => {
-					return {
-						label: item.name,
-						value: item.id,
-					}
-				}));
-			}).catch((e) => {
+			try {
+				await api.getTags().then((res) => {
+					setTagData(res.labels.map(item => {
+						return {
+							label: item.name,
+							value: item.id,
+						}
+					}));
+				});
+
+				await api.getUserGroups().then((res) => {
+					setGroupData(res.segmentations.map(item => {
+						return {
+							label: item.name,
+							value: item.id,
+						}
+					}));
+				});
+			} catch (e) {
 				model.log(e);
-			}).finally(() => {
-				setLoading(false);
-			});
+			}
+			setLoading(false);
 		}
 
-		getUserGroups();
+		fetchData();
 
 		return () => {
 			api.cancelRequest();
@@ -62,7 +72,7 @@ export default function Step({
 			return;
 		}
 		setSteps([createStep(0)]);
-	}, [groupData]);
+	}, [tagData, groupData]);
 
 	useEffect(() => {
 		if (steps.length === 0) {
@@ -102,26 +112,26 @@ export default function Step({
 		return {
 			alias,
 			values: {
-				flag: 'tag',
+				type: 'label',
 				op: '=',
-				value: tags[0].value,
+				id: tagData[0] && tagData[0].value,
 			},
 			onChange: function(e) {
 				this.values = e;
 			},
 			effects: [{
-				field: 'flag',
+				field: 'type',
 				handler: function(formCore) {
 					let dataSource;
-					if (formCore.getFieldValue('flag') === 'tag') {
+					if (formCore.getFieldValue('type') === 'label') {
 						dataSource = tags;
 					} else {
 						dataSource = groupData;
 					}
-					formCore.setFieldProps('value', {
+					formCore.setFieldProps('id', {
 						dataSource,
 					})
-					formCore.setFieldValue('value', dataSource[0] && dataSource[0].value);
+					formCore.setFieldValue('id', dataSource[0] && dataSource[0].value);
 				}
 			}]
 		}
@@ -183,12 +193,12 @@ export default function Step({
 				<div className={styles.container}>
 					<div className={styles.item}>
 						<span className={styles.name}>{alias}</span>
-						<Field name='flag'>
+						<Field name='type'>
 							<Select style={{width:'120px'}} dataSource={firstColumn} />
 						</Field>
 						<Field name='op' dataSource={originRules} component={Select} />
-						<Field name='value'>
-							<Select style={{width:'150px'}} dataSource={tags} />
+						<Field name='id'>
+							<Select style={{width:'150px'}} dataSource={tagData} />
 						</Field>
 					</div>
 				</div>

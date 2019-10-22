@@ -61,4 +61,7 @@ export default [{
 }, {
 	name: '数据中心',
 	path: `${baseUrl}/dc`,
+}, {
+	name: '最新打点事件',
+	path: `${baseUrl}/newevent`,
 }];

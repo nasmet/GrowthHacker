@@ -2,6 +2,7 @@ import React, {
 	Component,
 	useEffect,
 	useState,
+	useRef,
 } from 'react';
 import {
 	Button,
@@ -19,8 +20,40 @@ export default function CreatePlan({
 	onOk,
 }) {
 	const [loading, setLoading] = useState(false);
+	const formRef = useRef(null);
 
 	useEffect(() => {
+		async function fetchData() {
+			setLoading(true);
+			try {
+				await api.getRules().then((res) => {
+					formRef.current.state.store.setFieldProps('rule_id', {
+						dataSource: res.labels.map(item => {
+							return {
+								value: item.id,
+								label: item.name,
+							}
+						}),
+					});
+				});
+
+				await api.getStrategies().then((res) => {
+					formRef.current.state.store.setFieldProps('strategy_id', {
+						dataSource: res.strategies.map(item => {
+							return {
+								value: item.id,
+								label: item.name,
+							}
+						}),
+					});
+				});
+			} catch (e) {
+				model.log(e);
+			}
+			setLoading(false);
+		}
+
+		fetchData();
 
 		return () => {
 			api.cancelRequest();
@@ -29,11 +62,9 @@ export default function CreatePlan({
 
 	const onSubmit = (e) => {
 		setLoading(true);
-		api.createEvent({ ...e,
-			entity_type: entityType,
-		}).then((res) => {
+		api.createSchemes(e).then((res) => {
 			model.log('创建成功');
-			onOk(res.event_entity);
+			onOk(res);
 		}).catch((e) => {
 			model.log(e);
 			setLoading(false);
@@ -48,9 +79,14 @@ export default function CreatePlan({
 		<Loading visible={loading} inline={false}>
 			<div className={styles.wrap}>
       			<Form
+      				ref={formRef}
       				onSubmit={onSubmit} 
   					rules={{
-					    condition_id: [{
+  						name:[{
+					      required: true,
+					      message: '必填'
+					    }],
+					    rule_id: [{
 					      required: true,
 					      message: '必填'
 					    }],
@@ -68,7 +104,15 @@ export default function CreatePlan({
       			>
 	      			{formCore => (
 	      				<div>
-		      				<Field name='condition_id'>
+							<Field name='name'>
+		  						<Input 
+		              				className={styles.input} 
+		              				placeholder='请输入名称'
+		              				maxLength={50}
+		              			/>
+		      				</Field>
+
+		      				<Field name='rule_id'>
 								<Select className={styles.input} dataSource={[]} placeholder='请选择策略' >
 								</Select>
 		      				</Field>

@@ -8,6 +8,7 @@ import Title from './Title';
 import Wrap from './Wrap';
 import NotData from './NotData';
 import Switch from './Switch';
+import BoardDialog from './BoardDialog';
 
 export default {
 	BasicColumn,
@@ -20,4 +21,5 @@ export default {
 	Wrap,
 	NotData,
 	Switch,
+	BoardDialog,
 }

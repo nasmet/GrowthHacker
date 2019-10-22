@@ -12,9 +12,9 @@ import {
 } from '@alifd/next';
 import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
-import CreatePlan from './components/CreatePlan';
+import CreateTag from './components/CreateTag';
 
-export default function Plan() {
+export default function TagLibrary() {
 	const [loading, setLoading] = useState(false);
 	const [tableData, setTableData] = useState([]);
 	const [count, setCount] = useState(0);
@@ -22,9 +22,9 @@ export default function Plan() {
 	const [show, setShow] = useState(false);
 
 	useEffect(() => {
-		function getSchemes() {
+		function getTags() {
 			setLoading(true);
-			api.getSchemes({
+			api.getTags({
 				limit: config.LIMIT,
 				offset: (curPage - 1) * config.LIMIT,
 			}).then((res) => {
@@ -41,7 +41,7 @@ export default function Plan() {
 			});
 		}
 
-		getSchemes();
+		getTags();
 
 		return () => {
 			api.cancelRequest();
@@ -52,12 +52,12 @@ export default function Plan() {
 		setCurPage(e);
 	};
 
-	const onDeletePlan = (id, index) => {
+	const onDeleteTag = (id, index) => {
 		Dialog.confirm({
 			content: '确定删除吗？',
 			onOk: () => {
 				setLoading(true);
-				api.deleteSchemes({
+				api.deleteTags({
 					id
 				}).then((res) => {
 					setTableData((pre) => {
@@ -79,13 +79,13 @@ export default function Plan() {
 			id
 		} = record;
 		return (
-			<Button type='primary' warning onClick={onDeletePlan.bind(this, id, index)}> 
+			<Button type='primary' warning onClick={onDeleteTag.bind(this, id, index)}> 
 				删除
 			</Button>
 		);
 	};
 
-	const onCreatePlan = () => {
+	const onCreateTag= () => {
 		setShow(true);
 	};
 
@@ -105,8 +105,8 @@ export default function Plan() {
 		<Components.Wrap>
       		<IceContainer>
 				<div className={styles.btnWrap}>
-					<Button className={styles.btn} type="secondary" onClick={onCreatePlan}> 
-						创建方案
+					<Button className={styles.btn} type="secondary" onClick={onCreateTag}> 
+						创建标签
 					</Button>
 				</div>
 				<Loading visible={loading} inline={false}>
@@ -116,8 +116,7 @@ export default function Plan() {
 		          	>	
 		          		<Table.Column title="id" dataIndex="id" />
 		          		<Table.Column title="名称" dataIndex="name" />
-		            	<Table.Column title="规则" dataIndex="rule_id" />
-		            	<Table.Column title="策略" dataIndex="strategy_id" />
+		            	<Table.Column title="规则" dataIndex="rule" />
 		            	<Table.Column title="描述" dataIndex="desc" />
 		            	<Table.Column title="操作" cell={renderCover} />
 		          	</Table>
@@ -136,7 +135,7 @@ export default function Plan() {
 		      	onClose={onClose}
 		      	footer={false}
 		    >
-				<CreatePlan onOk={onOk} />
+				<CreateTag onOk={onOk} />
 			</Dialog>
     	</Components.Wrap>
 	);

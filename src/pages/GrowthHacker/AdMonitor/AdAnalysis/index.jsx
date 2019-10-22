@@ -2,6 +2,7 @@ import React, {
 	Component,
 	useState,
 	useEffect,
+	useRef,
 } from 'react';
 import {
 	Table,
@@ -15,36 +16,35 @@ export default function AdAnalysis() {
 	const [loading, setLoading] = useState(false);
 	const [titles, setTitles] = useState([]);
 	const [tableData, setTableData] = useState([]);
-	const [date, setDate] = useState('day:0');
+
+	function getAdAnalysis(date = 'day:0') {
+		setLoading(true);
+		api.getAdAnalysis({
+			date,
+		}).then((res) => {
+			const {
+				meta,
+				data,
+			} = res;
+			setTitles(meta);
+			setTableData(data);
+		}).catch((e) => {
+			model.log(e);
+		}).finally(() => {
+			setLoading(false);
+		});
+	}
 
 	useEffect(() => {
-		function getAdAnalysis() {
-			setLoading(true);
-			api.getAdAnalysis({
-				date,
-			}).then((res) => {
-				const {
-					meta,
-					data,
-				} = res;
-				setTitles(meta);
-				setTableData(data);
-			}).catch((e) => {
-				model.log(e);
-			}).finally(() => {
-				setLoading(false);
-			});
-		}
-
 		getAdAnalysis();
 
 		return () => {
 			api.cancelRequest();
 		};
-	}, [date]);
+	}, []);
 
 	const filterChange = (e) => {
-		setDate(e);
+		getAdAnalysis(e);
 	};
 
 	const renderTwoColumn = (value, index, record) => {

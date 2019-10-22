@@ -15,37 +15,36 @@ export default function ARPUData() {
 	const [loading, setLoading] = useState(false);
 	const [titles, setTitles] = useState([]);
 	const [tableData, setTableData] = useState([]);
-	const [date, setDate] = useState('day:0');
+
+	function getARPUData(date = 'day:0') {
+		setLoading(true);
+		api.getARPUData({
+			date,
+		}).then((res) => {
+			const {
+				meta,
+				data,
+			} = res;
+			setTitles(meta);
+			setTableData(data);
+		}).catch((e) => {
+			model.log(e);
+		}).finally(() => {
+			setLoading(false);
+		});
+	}
 
 	useEffect(() => {
-		function getARPUData() {
-			setLoading(true);
-			api.getARPUData({
-				date,
-			}).then((res) => {
-				const {
-					meta,
-					data,
-				} = res;
-				setTitles(meta);
-				setTableData(data);
-			}).catch((e) => {
-				model.log(e);
-			}).finally(() => {
-				setLoading(false);
-			});
-		}
-
 		getARPUData();
 
 		return () => {
 			api.cancelRequest();
 		};
-	}, [date]);
+	}, []);
 
 
 	const filterChange = (e) => {
-		setDate(e);
+		getARPUData(e);
 	};
 
 	const renderSixColumn = (value, index, record) => {

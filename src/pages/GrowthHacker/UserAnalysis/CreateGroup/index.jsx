@@ -2,38 +2,27 @@ import React, {
 	Component,
 	useState,
 	useEffect,
+	useRef,
 } from 'react';
 import {
-	Input,
 	Button,
-	Tab,
-	Table,
-	Message,
-	Loading,
-	Pagination,
-	Icon,
-	Dialog,
-	Select,
-	Grid,
-	DatePicker,
 } from '@alifd/next';
 import {
 	withRouter,
 } from 'react-router-dom';
-import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
 import Step from './components/Step';
 
 function CreateGroup({
 	history,
 }) {
-	const [showDialog, setShowDialog] = useState(false);
-	const [name, setName] = useState('');
-	const [combination, setCombination] = useState('');
-	const [steps, setSteps] = useState([]);
-	const [loading, setLoading] = useState(false);
 	const [disabled, setDisabled] = useState(true);
-	const [submitDisabled, setSubmitDisabled] = useState(true);
+	const refDialog = useRef(null);
+	const refVariable = useRef({
+		steps: [],
+		name: '',
+		expression: '',
+	});
 
 	useEffect(() => {
 		return () => {
@@ -42,26 +31,24 @@ function CreateGroup({
 	}, []);
 
 	const filterChange = (step, expression) => {
-		setDisabled(expression ? false : true);
-		setSteps(step);
-		setCombination(expression);
+		const flag = expression ? false : true;
+		if (flag !== disabled) {
+			setDisabled(flag);
+		}
+		refVariable.current.steps = step;
+		refVariable.current.expression = expression;
 	};
 
 	const onSave = () => {;
-		console.log(steps,combination);
-		setSubmitDisabled(true);
-		setShowDialog(true);
+		refDialog.current.onShow();
 	};
 
 	const onCancel = () => {
 		history.goBack();
 	};
 
-	const onClose = () => {
-		setShowDialog(false);
-	};
-
-	const transformData = (result) => {
+	const transformData = (steps) => {
+		const conditions = [];
 		steps.forEach((item) => {
 			item.step.forEach(v => {
 				const obj = { ...v.values
@@ -73,36 +60,34 @@ function CreateGroup({
 				obj.values = [obj.values];
 				const temp_2 = obj.date;
 				obj.date = `abs:${parseInt(temp_2[0].valueOf()/1000)},${parseInt(temp_2[1].valueOf()/1000)}`;
-				result.conditions.push(obj);
+				conditions.push(obj);
 			})
 		});
-		return result;
+		return conditions;
 	}
 
-	const onOK = () => {
-		let result = {
-			condition_expr: combination,
+	const onOk = (success, fail) => {
+		const {
+			steps,
 			name,
-			conditions: [],
-		};
-		transformData(result);
-		setLoading(true);
-		api.createUserGroup(result).then((res) => {
+			expression,
+		} = refVariable.current;
+
+		api.createUserGroup({
+			condition_expr: expression,
+			name,
+			conditions: transformData(steps),
+		}).then((res) => {
 			model.log('创建成功');
 			history.goBack();
 		}).catch((e) => {
 			model.log(e);
-			setLoading(false);
+			fail();
 		});
 	};
 
 	const onInputChange = (e) => {
-		if (e) {
-			setSubmitDisabled(false);
-		} else {
-			setSubmitDisabled(true);
-		}
-		setName(e);
+		refVariable.current.name = e;
 	};
 
 	return (
@@ -124,19 +109,7 @@ function CreateGroup({
 					<div>分群人数</div>
 				</div>*/}
       		</div>
-
-      		<Dialog autoFocus visible={showDialog} onClose={onClose} footer={false}>
-      			<Loading visible={loading} inline={false}>
-					<div style={{margin:'20px'}}>
-						<p className={styles.name}>请输入用户分群名称</p>
-						<Input onChange={onInputChange} style={{marginBottom:'20px'}} />
-						<div>
-							<Button type='primary' disabled={submitDisabled} onClick={onOK} style={{marginRight:'20px'}}>确定</Button>
-							<Button onClick={onClose}>取消</Button>
-						</div>
-					</div>
-				</Loading>	
-			</Dialog>	
+      		<Components.BoardDialog onInputChange={onInputChange} onOk={onOk} ref={refDialog} />
     	</div>
 	);
 }

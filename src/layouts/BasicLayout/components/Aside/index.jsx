@@ -30,15 +30,15 @@ const icon = (url) => {
 };
 
 const traversing = function fn(nav) {
+	if (nav.auth && !nav.auth()) {
+		return;
+	}
 	if (nav.sub && utils.isArray(nav.sub)) {
 		return (
 			<Nav.SubNav key={nav.path} label={word(nav.name)} icon={icon(nav.icon)}>
         		{nav.sub.map(fn)}
       		</Nav.SubNav>
 		);
-	}
-	if (nav.auth && !nav.auth()) {
-		return;
 	}
 	return (
 		<Nav.Item key={nav.path}>
