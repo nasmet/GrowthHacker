@@ -169,12 +169,7 @@ export default function Filter({
 				api.getOriginDataValues({
 					id: this.values.id,
 				}).then((res) => {
-					const data = res.data.map(item => {
-						return {
-							label: item.value,
-							value: item.id,
-						}
-					});
+					const data = res.data.map(item => item.value);
 					formCore.setFieldProps('value', {
 						dataSource: data,
 					});

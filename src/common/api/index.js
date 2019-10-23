@@ -291,3 +291,23 @@ export function createTags(data) {
 export function deleteTags(data) {
 	return del(`/labels/${data.id}`);
 }
+
+export function getUsers(data) {
+	return get('/api/wechat_user', data);
+}
+
+export function createUserTag(data) {
+	const {
+		id,
+		trend,
+	} = data;
+	return post(`/api/wechat_user/${id}/labels`, trend);
+}
+
+export function deleteUserTag(data) {
+	const {
+		openId,
+		labelId,
+	} = data;
+	return del(`/api/wechat_user/${openId}/labels/${labelId}`);
+}

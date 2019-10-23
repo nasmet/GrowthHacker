@@ -56,8 +56,13 @@ function CreateGroup({
 				const temp = obj.flag.split(',');
 				obj.flag = temp[0] === 'true' ? true : false;
 				obj.type = temp[1];
+				obj.id = +obj.id;
 				obj.alias = v.alias;
-				obj.values = [obj.values];
+				if (obj.type === 'event') {
+					obj.values = [obj.values];
+				} else {
+					obj.values = [obj.value];
+				}
 				const temp_2 = obj.date;
 				obj.date = `abs:${parseInt(temp_2[0].valueOf()/1000)},${parseInt(temp_2[1].valueOf()/1000)}`;
 				conditions.push(obj);

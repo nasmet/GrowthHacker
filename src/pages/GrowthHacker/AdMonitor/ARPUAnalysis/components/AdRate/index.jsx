@@ -12,42 +12,22 @@ import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
 
 export default function AdRate() {
-	const [loading, setLoading] = useState(false);
-	const [titles, setTitles] = useState([]);
-	const [tableData, setTableData] = useState([]);
+	const {
+		response,
+		loading,
+		updateParameter,
+	} = hooks.useRequest(api.getARPURate,{date:'day:0'});
+	const {
+		meta=[],
+		data=[],
+	} = response;
 
-	function getARPURate(date = 'day:0') {
-		setLoading(true);
-		api.getARPURate({
-			date,
-		}).then((res) => {
-			const {
-				meta,
-				data,
-			} = res;
-			setTitles(meta);
-			setTableData(data);
-		}).catch((e) => {
-			model.log(e);
-		}).finally(() => {
-			setLoading(false);
-		});
-	}
-
-	useEffect(() => {
-		getARPURate();
-
-		return () => {
-			api.cancelRequest();
-		};
-	}, []);
-
-	const filterChange = (e) => {
-		getARPURate(e);
+	const filterChange = e => {
+		updateParameter({date:e});
 	};
 
 	const renderTitles = () => {
-		return titles.map((item, index) => {
+		return meta.map((item, index) => {
 			return <Table.Column key={index} title={item} dataIndex={index.toString()} lock={index>0?false:true} width={index>0?120:140} />;
 		});
 	};
@@ -57,7 +37,7 @@ export default function AdRate() {
       		<Components.DateFilter filterChange={filterChange} />
 			<IceContainer>
 				<Loading visible={loading} inline={false}>
-					<Table dataSource={tableData} hasBorder={false} fixedHeader maxBodyHeight={400} >
+					<Table dataSource={data} hasBorder={false} fixedHeader maxBodyHeight={400} >
 						{renderTitles()}
 					</Table>
 				</Loading>

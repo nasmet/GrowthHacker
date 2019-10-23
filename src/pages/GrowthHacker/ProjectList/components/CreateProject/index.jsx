@@ -2,12 +2,15 @@ import React, {
 	Component,
 	useState,
 	useEffect,
+	forwardRef,
+	useImperativeHandle,
 } from 'react';
 import {
 	Input,
 	Button,
 	Select,
 	Loading,
+	Dialog,
 } from '@alifd/next';
 import {
 	Form,
@@ -15,16 +18,27 @@ import {
 } from '@ice/form';
 import styles from './index.module.scss';
 
-export default function CreateProject({
-	onOk,
-}) {
+function CreateProject({
+	addProject,
+}, ref) {
 	const [loading, setLoading] = useState(false);
+	const [show, setShow] = useState(false);
+
+	useImperativeHandle(ref, () => ({
+		onShow: () => {
+			setShow(true);
+		}
+	}));
 
 	const onSubmit = (e) => {
 		setLoading(true);
 		api.createProject(e).then((res) => {
 			model.log('创建成功');
-			onOk(res.id, e);
+			addProject({
+				id: res.id,
+				...e,
+			});
+			setShow(false);
 		}).catch((e) => {
 			model.log(e);
 			setLoading(false);
@@ -35,7 +49,17 @@ export default function CreateProject({
 		formCore.reset();
 	};
 
+	const onClose = () => {
+		setShow(false);
+	};
+
 	return (
+		<Dialog 
+	   		autoFocus
+	      	visible={show} 
+	      	onClose={onClose}
+	      	footer={false}
+	    >
 		<Loading visible={loading} inline={false}>
       		<div className={styles.wrap}>
       			<Form
@@ -115,5 +139,8 @@ export default function CreateProject({
       			</Form>
       		</div>
    		</Loading>
+   		</Dialog>
 	);
 }
+
+export default forwardRef(CreateProject);

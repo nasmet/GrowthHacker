@@ -17,27 +17,16 @@ import styles from './index.module.scss';
 function DataBoard({
 	history,
 }) {
-	const [loading, setLoading] = useState(false);
-	const [data, setData] = useState([]);
-
-	function getBoards() {
-		setLoading(true);
-		api.getBoards().then((res) => {
-			setData(res.charts);
-		}).catch((e) => {
-			model.log(e);
-		}).finally(() => {
-			setLoading(false);
-		});
-	}
-
-	useEffect(() => {
-		getBoards();
-
-		return () => {
-			api.cancelRequest();
-		};
-	}, []);
+	const {
+		response,
+		loading,
+		updateParameter,
+		showLoading,
+		closeLoading,
+	} = hooks.useRequest(api.getBoards);
+	const {
+		charts=[],
+	} = response;
 
 	const jumpDataBoardDetails = (item) => {
 		const {
@@ -70,31 +59,32 @@ function DataBoard({
 		});
 	};
 
+	function deleteBoard(id, index) {
+		showLoading();
+		api.deleteBoard({
+			id,
+		}).then((res) => {
+			charts.splice(index, 1);
+			model.log('删除成功');
+		}).catch((e) => {
+			model.log(e);
+		}).finally(() => {
+			closeLoading();
+		});
+	}
+
 	const onDeleteBoard = (id, index, e) => {
 		e.stopPropagation();
 		Dialog.confirm({
 			content: '确定删除吗？',
 			onOk: () => {
-				setLoading(true);
-				api.deleteBoard({
-					id,
-				}).then((res) => {
-					setData((pre) => {
-						pre.splice(index, 1);
-						return [...pre];
-					});
-					model.log('删除成功');
-				}).catch((e) => {
-					model.log(e);
-				}).finally(() => {
-					setLoading(false);
-				});
+				deleteBoard(id, index);
 			}
 		});
 	}
 
 	const renderList = () => {
-		return data.map((item, index) => {
+		return charts.map((item, index) => {
 			const {
 				id,
 				name,
@@ -116,7 +106,7 @@ function DataBoard({
 				<div className={styles.content}>
 					{renderList()}
 				</div>
-	      		{data.length===0 && <Components.NotData style={{height:'200px'}} />}
+	      		{charts.length===0 && <Components.NotData style={{height:'200px'}} />}
     		</Components.Wrap>
     	</Loading>
 	);

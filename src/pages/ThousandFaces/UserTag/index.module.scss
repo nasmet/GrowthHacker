@@ -1,5 +1,4 @@
 .tagWrap{
-	max-width: 400px;
 	display: flex;
 	flex-wrap: wrap;
 	align-items: center;
@@ -7,12 +6,23 @@
 .tag{
 	float:left;
 	min-width: 60px;
-	margin-right: 8px;
-	margin-bottom: 10px;
-	padding: 6px 10px;
-	background: #ea6947;
-	border-radius: 20px;
+	padding: 14px 20px;
+	background: #722ED1;
+	border-radius: 4px;
 	color: #fff;
 	font-size: 12px;
 	text-align: center;
+}
+.pagination {
+  	margin-top: 10px;
+  	text-align: right;
+};
+.close{
+	position: absolute;
+	top: 0;
+	right: 4px;
+	color: #fff;
+	&:hover{
+		color: red;
+	}
 }

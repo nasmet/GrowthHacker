@@ -13,38 +13,18 @@ import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
 
 export default function AdAnalysis() {
-	const [loading, setLoading] = useState(false);
-	const [titles, setTitles] = useState([]);
-	const [tableData, setTableData] = useState([]);
-
-	function getAdAnalysis(date = 'day:0') {
-		setLoading(true);
-		api.getAdAnalysis({
-			date,
-		}).then((res) => {
-			const {
-				meta,
-				data,
-			} = res;
-			setTitles(meta);
-			setTableData(data);
-		}).catch((e) => {
-			model.log(e);
-		}).finally(() => {
-			setLoading(false);
-		});
-	}
-
-	useEffect(() => {
-		getAdAnalysis();
-
-		return () => {
-			api.cancelRequest();
-		};
-	}, []);
+	const {
+		response,
+		loading,
+		updateParameter,
+	} = hooks.useRequest(api.getAdAnalysis,{date:'day:0'});
+	const {
+		meta=[],
+		data=[],
+	} = response;
 
 	const filterChange = (e) => {
-		getAdAnalysis(e);
+		updateParameter({date:e});
 	};
 
 	const renderTwoColumn = (value, index, record) => {
@@ -52,7 +32,7 @@ export default function AdAnalysis() {
 	};
 
 	const renderTitles = () => {
-		return titles.map((item, index) => {
+		return meta.map((item, index) => {
 			if (index === 2) {
 				return <Table.Column key={index} title={item} cell={renderTwoColumn} />;
 			}
@@ -66,7 +46,7 @@ export default function AdAnalysis() {
 			<Components.DateFilter filterChange={filterChange} />
 			<IceContainer>
 				<Loading visible={loading} inline={false}>
-					<Table dataSource={tableData} hasBorder={false} fixedHeader maxBodyHeight={400} >
+					<Table dataSource={data} hasBorder={false} fixedHeader maxBodyHeight={400} >
 						{renderTitles()}
 					</Table>
 				</Loading>

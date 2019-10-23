@@ -11,6 +11,3 @@ export const PROJECTID = 'PROJECTID';
 export const PROJECTNAME = 'PROJECTNAME';
 export const PROJECTIDAPPID = 'PROJECTIDAPPID';
 export const COLOR = '#722ED1';
-export const UserTags = [
-	'A', 'B', 'C', 'D', 'E', 'F',
-];

@@ -12,42 +12,22 @@ import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
 
 export default function AdCount() {
-	const [loading, setLoading] = useState(false);
-	const [titles, setTitles] = useState([]);
-	const [tableData, setTableData] = useState([]);
-
-	function getAdCount(date = 'day:0') {
-		setLoading(true);
-		api.getAdCount({
-			date,
-		}).then((res) => {
-			const {
-				meta,
-				data,
-			} = res;
-			setTitles(meta);
-			setTableData(data);
-		}).catch((e) => {
-			model.log(e);
-		}).finally(() => {
-			setLoading(false);
-		});
-	}
-
-	useEffect(() => {
-		getAdCount();
-
-		return () => {
-			api.cancelRequest();
-		};
-	}, []);
+	const {
+		response,
+		loading,
+		updateParameter,
+	} = hooks.useRequest(api.getAdCount,{date:'day:0'});
+	const {
+		meta=[],
+		data=[],
+	} = response;
 
 	const filterChange = (e) => {
-		getAdCount(e);
+		updateParameter({date:e});
 	};
 
 	const renderTitles = () => {
-		return titles.map((item, index) => {
+		return meta.map((item, index) => {
 			if (index === 0) {
 				return <Table.Column key={index} title={item} dataIndex={index.toString()} lock width={120} />;
 			}
@@ -61,7 +41,7 @@ export default function AdCount() {
 			<Components.DateFilter filterChange={filterChange} />
 			<IceContainer>
 				<Loading visible={loading} inline={false}>
-					<Table dataSource={tableData} hasBorder={false} fixedHeader maxBodyHeight={400} >
+					<Table dataSource={data} hasBorder={false} fixedHeader maxBodyHeight={400} >
 						{renderTitles()}
 					</Table>
 				</Loading>
