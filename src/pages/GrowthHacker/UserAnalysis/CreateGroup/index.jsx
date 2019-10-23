@@ -77,7 +77,6 @@ function CreateGroup({
 			name,
 			expression,
 		} = refVariable.current;
-
 		api.createUserGroup({
 			condition_expr: expression,
 			name,

@@ -78,7 +78,7 @@ export default function Filter({
 	}, []);
 
 	useEffect(() => {
-		if (metricData.length === 0 || originData.length === 0) {
+		if (originData.length === 0) {
 			return;
 		}
 		setSteps([createStep(0)]);
@@ -140,6 +140,7 @@ export default function Filter({
 
 	function createData(alias) {
 		return {
+			key: Date.now(),
 			alias,
 			values: {
 				flag: 'true,event',
@@ -256,10 +257,11 @@ export default function Filter({
 			onOk,
 			curDate,
 			onFocus,
+			key,
 		} = item;
 		return (
 			<Form
-				key={alias}
+				key={key}
 	        	initialValues={values}
 	        	onChange={onChange.bind(item)}
 	        	effects={effects}

@@ -124,7 +124,7 @@ export default function Step({
 				handler: function(formCore) {
 					let dataSource;
 					if (formCore.getFieldValue('type') === 'label') {
-						dataSource = tags;
+						dataSource = tagData;
 					} else {
 						dataSource = groupData;
 					}
