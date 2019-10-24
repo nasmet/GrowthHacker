@@ -75,41 +75,45 @@ export default function Step({
 	}, [tagData, groupData]);
 
 	useEffect(() => {
+		function onChangeCombination() {
+			let temp = '';
+			steps.forEach((item, index) => {
+				let str = '';
+				item.step.forEach((v, index) => {
+					if (item.step.length - 1 !== index) {
+						str += v.alias + ' or ';
+					} else {
+						str += v.alias;
+					}
+				})
+				if (item.step.length > 1) {
+					temp += `(${str})`;
+				} else {
+					temp += str;
+				}
+
+				if (index !== steps.length - 1) {
+					temp += ` ${item.op.toLowerCase()} `
+				}
+			});
+			return temp;
+		}
 		if (steps.length === 0) {
 			return;
 		}
-
+		steps.map(item => {
+			item.step.map(v => {
+				v.refForm.store.setValues(v.values);
+			})
+		})
 		const temp = onChangeCombination();
 		setCombination(temp);
 		filterChange(steps, temp);
 	}, [steps]);
 
-	function onChangeCombination() {
-		let temp = '';
-		steps.forEach((item, index) => {
-			let str = '';
-			item.step.forEach((v, index) => {
-				if (item.step.length - 1 !== index) {
-					str += v.alias + ' or ';
-				} else {
-					str += v.alias;
-				}
-			})
-			if (item.step.length > 1) {
-				temp += `(${str})`;
-			} else {
-				temp += str;
-			}
-
-			if (index !== steps.length - 1) {
-				temp += ` ${item.op.toLowerCase()} `
-			}
-		});
-		return temp;
-	}
-
 	function createData(alias) {
 		return {
+			key: Date.now(),
 			alias,
 			values: {
 				type: 'label',
@@ -177,6 +181,7 @@ export default function Step({
 
 	const renderForm = (item) => {
 		const {
+			key,
 			alias,
 			values,
 			onChange,
@@ -184,21 +189,19 @@ export default function Step({
 		} = item;
 		return (
 			<Form
-				key={alias}
-	        	initialValues={values}
+				key={key}
 	        	onChange={onChange.bind(item)}
 	        	effects={effects}
+	        	ref={e=>{item.refForm = e}}
 			>	
 			{formCore=>(
 				<div className={styles.container}>
 					<div className={styles.item}>
 						<span className={styles.name}>{alias}</span>
-						<Field name='type'>
-							<Select style={{width:'120px'}} dataSource={firstColumn} />
-						</Field>
+						<Field name='type' dataSource={firstColumn} component={Select} />
 						<Field name='op' dataSource={originRules} component={Select} />
 						<Field name='id'>
-							<Select style={{width:'150px'}} dataSource={tagData} />
+							<Select style={{width:'200px'}} dataSource={tagData} />
 						</Field>
 					</div>
 				</div>
@@ -234,8 +237,8 @@ export default function Step({
 
 	return (
 		<Loading visible={loading} inline={false}>
-			<p className={styles.title}>新建规则</p>
-			<div className={styles.combination}>{combination}</div>
+			<Components.Title title='新建规则' />
+			<p className={styles.combination}>{combination}</p>
 				{renderStep()}
 			<Button className={styles.filter} onClick={onAddAndFilter}>
       			<Icon type='add' size='small' className={styles.icon} />

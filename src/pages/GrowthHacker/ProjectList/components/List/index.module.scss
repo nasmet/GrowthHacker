@@ -1,21 +1,21 @@
 .wrap{
-	margin: 10px;
 	display: flex;
-	flex-direction: row;
 	flex-wrap: wrap;
 }
-.item{
+.common{
 	width: 200px;
-	min-height: 180px;
-	margin: 0 10px 10px 0;
-	padding: 10px;
-	border-radius: 20px;
+	min-height: 200px;
+	max-height: 200px;
+	margin: 4px;
 	display: flex;
+}
+.item{
+	@extend .common;
 	flex-direction: column;
 	overflow: hidden;
 }
 .create{
-	flex-direction: row;
+	@extend .common;
 	justify-content: center;
 }
 .name{
@@ -23,16 +23,12 @@
 }
 .value{
 	font-size: 12px;
-	font-weight: bold;
 	text-overflow: ellipsis; 
     white-space: pre-wrap;
     display: -webkit-box;
 	-webkit-box-orient: vertical;
 	-webkit-line-clamp: 3;
 	overflow: hidden;
-}
-.icon{
-	margin-right: 4px; 
 }
 .close{
 	position: absolute;

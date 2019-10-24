@@ -135,7 +135,11 @@ export default function Filter({
 	function createFilter(){
 		return {
 			key: Date.now(),
-			values: {},
+			values: {
+				key: originData[0] && originData[0].value,
+				op: '=',
+				value: '',
+			},
 			onChange: function(e) {
 				this.values = e;
 			},
@@ -222,11 +226,13 @@ export default function Filter({
 								key,
 								onChange,
 								onFocus,
+								values,
 							} = item;
 							
 							return ( 
 								<Form
 									key={key}
+									initialValues={values}
 									style={{display:'flex',marginBottom:'10px'}}
 									onChange={onChange.bind(item)} 
 									renderField={({label, component, error}) => (

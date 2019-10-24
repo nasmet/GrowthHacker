@@ -1,12 +1,8 @@
-import React, {
-	Component,
-	useState,
-	useEffect
-} from 'react';
+import React from 'react';
 import {
 	Tab,
 	Table,
-	Loading
+	Loading,
 } from '@alifd/next';
 import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
@@ -25,7 +21,7 @@ export default function Template({
 				dataSource={tableData} 
 				hasBorder={false} 
 			>
-			   	{renderTitle()}     		
+				{renderTitle()}			   	   		
 			</Table>
 		);
 	};
@@ -42,34 +38,33 @@ export default function Template({
 				return <Components.BasicColumn data={chartData} forceFit transpose {...chartStyle} />
 			default:
 				return null;
-		};
-
+		}
 	};
 
 	const renderTab = () => {
 		return templateConfig.chartTypes.map((item) => {
 			const {
 				name,
-				key
+				key,
 			} = item;
 			return (
 				<Tab.Item 
 					key={key}
-          			title={name}
-        		>
-	        		<Loading visible={loading} inline={false}>
-	        			<IceContainer className={styles.chartWrap}>
+					title={name}          			
+				>        		
+					<Loading visible={loading} inline={false}>	        		
+						<IceContainer className={styles.chartWrap}>	        			
 							{rendTabComponent(key)}
 						</IceContainer>  
 					</Loading>
-        		</Tab.Item>
+				</Tab.Item>        		
 			);
 		});
 	};
 
 	return (
 		<Tab defaultActiveKey="0">
-      		{renderTab()}
-      	</Tab>
+			{renderTab()}      		
+		</Tab>      	
 	);
 }

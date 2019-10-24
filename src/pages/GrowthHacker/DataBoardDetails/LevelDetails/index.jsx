@@ -1,27 +1,21 @@
 import React, {
-	Component,
 	useState,
-	useEffect
+	useEffect,
 } from 'react';
 import {
-	Tab,
 	Table,
-	Loading
 } from '@alifd/next';
 import {
-	withRouter
+	withRouter,
 } from 'react-router-dom';
 import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
 import Template from '../Template';
 
 function LevelDetails({
-	location
+	location,
 }) {
-	const {
-		boardInfo,
-	} = location.state;
-
+	const boardInfo = location.state.boardInfo;
 	const [loading, setLoading] = useState(false);
 	const [data, setData] = useState([]);
 	const [titles, setTitles] = useState([]);
@@ -29,41 +23,41 @@ function LevelDetails({
 	const [chartStyle, setChartStyle] = useState({});
 	const [date, setDate] = useState('');
 
-	function getDataBoard() {
-		setLoading(true);
-		api.getDataBoard({
-			chart_id: boardInfo.id,
-			trend: {
-				limit: config.LIMIT,
-				offset: 0,
-				date,
-			}
-		}).then((res) => {
-			const {
-				meta,
-				data
-			} = res;
-			if (data.length === 0) {
-				return;
-			}
-			setTitles(meta);
-			setData(data);
-			setChartStyle(assemblingChartStyle(meta));
-			setChartData(assemblingChartData(data, meta));
-		}).catch((e) => {
-			model.log(e);
-		}).finally(() => {
-			setLoading(false);
-		});
-	}
-
 	useEffect(() => {
+		function getDataBoard() {
+			setLoading(true);
+			api.getDataBoard({
+				chart_id: boardInfo.id,
+				trend: {
+					limit: config.LIMIT,
+					offset: 0,
+					date,
+				},
+			}).then((res) => {
+				const {
+					meta,
+					data,
+				} = res;
+				if (data.length === 0) {
+					return;
+				}
+				setTitles(meta);
+				setData(data);
+				setChartStyle(assemblingChartStyle(meta));
+				setChartData(assemblingChartData(data, meta));
+			}).catch((e) => {
+				model.log(e);
+			}).finally(() => {
+				setLoading(false);
+			});
+		}
+
 		getDataBoard();
 
 		return () => {
 			api.cancelRequest();
 		};
-	}, [date]);
+	}, [date, boardInfo.id]);
 
 	function assemblingChartStyle(meta) {
 		return {

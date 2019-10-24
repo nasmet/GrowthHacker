@@ -1,16 +1,9 @@
-import React, {
-	Component,
-	useState,
-	useEffect,
-	useRef,
-} from 'react';
+import React from 'react';
 import {
 	Table,
 	Loading,
-	Pagination,
 } from '@alifd/next';
 import IceContainer from '@icedesign/container';
-import styles from './index.module.scss';
 
 export default function AdAnalysis() {
 	const {
@@ -31,10 +24,17 @@ export default function AdAnalysis() {
 		return <span>{utils.transformPercent(record[2])}</span>
 	};
 
+	const renderThreeColumn = (value, index, record) => {
+		return <span>{utils.formatTime(record[3])}</span>
+	};
+
 	const renderTitles = () => {
 		return meta.map((item, index) => {
 			if (index === 2) {
 				return <Table.Column key={index} title={item} cell={renderTwoColumn} />;
+			}
+			if(index === 3){
+				return <Table.Column key={index} title={item} cell={renderThreeColumn} />;
 			}
 			return <Table.Column key={index} title={item} dataIndex={index.toString()} />;
 		});
@@ -51,6 +51,6 @@ export default function AdAnalysis() {
 					</Table>
 				</Loading>
 			</IceContainer>
-    	</Components.Wrap>
+		</Components.Wrap>    	
 	);
 }

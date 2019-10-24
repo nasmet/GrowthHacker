@@ -28,6 +28,7 @@ export default function Plan() {
 				limit: config.LIMIT,
 				offset: (curPage - 1) * config.LIMIT,
 			}).then((res) => {
+				console.log(res);
 				const {
 					total,
 					labels,

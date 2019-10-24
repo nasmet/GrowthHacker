@@ -1,15 +1,12 @@
 import React, {
-	Component,
 	useState,
-	useEffect
+	useEffect,
 } from 'react';
 import {
-	Tab,
 	Table,
-	Loading
 } from '@alifd/next';
 import {
-	withRouter
+	withRouter,
 } from 'react-router-dom';
 import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
@@ -18,10 +15,7 @@ import Template from '../Template';
 function RetentionDetails({
 	location,
 }) {
-	const {
-		boardInfo,
-	} = location.state;
-
+	const boardInfo = location.state.boardInfo;
 	const [loading, setLoading] = useState(false);
 	const [data, setData] = useState([]);
 	const [titles, setTitles] = useState([]);
@@ -29,36 +23,36 @@ function RetentionDetails({
 	const [chartStyle, setChartStyle] = useState({});
 	const [date, setDate] = useState('');
 
-	function getDataBoard() {
-		setLoading(true);
-		api.getDataBoard({
-			chart_id: boardInfo.id,
-			trend: {
-				date,
-			}
-		}).then((res) => {
-			const {
-				meta,
-				data,
-			} = res;
-			setTitles(meta);
-			setData(data);
-			setChartStyle(assemblingChartStyle(meta));
-			setChartData(assemblingChartData(data, meta));
-		}).catch((e) => {
-			model.log(e);
-		}).finally(() => {
-			setLoading(false);
-		});
-	}
-
 	useEffect(() => {
+		function getDataBoard() {
+			setLoading(true);
+			api.getDataBoard({
+				chart_id: boardInfo.id,
+				trend: {
+					date,
+				},
+			}).then((res) => {
+				const {
+					meta,
+					data,
+				} = res;
+				setTitles(meta);
+				setData(data);
+				setChartStyle(assemblingChartStyle(meta));
+				setChartData(assemblingChartData(data, meta));
+			}).catch((e) => {
+				model.log(e);
+			}).finally(() => {
+				setLoading(false);
+			});
+		}
+
 		getDataBoard();
 
 		return () => {
 			api.cancelRequest();
 		};
-	}, [date]);
+	}, [date, boardInfo.id]);
 
 	function assemblingChartStyle(meta) {
 		return {
@@ -68,7 +62,7 @@ function RetentionDetails({
 			cols: {
 				[meta[0]]: {
 					type: 'timeCat',
-				}
+				},
 			},
 		};
 	}

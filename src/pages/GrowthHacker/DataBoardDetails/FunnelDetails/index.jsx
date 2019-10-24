@@ -1,26 +1,22 @@
 import React, {
-	Component,
 	useState,
-	useEffect
+	useEffect,
 } from 'react';
 import {
 	Table,
-	Loading
+	Loading,
 } from '@alifd/next';
 import {
-	withRouter
+	withRouter,
 } from 'react-router-dom';
 import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
 import Step from './components/Step';
 
 function FunnelDetails({
-	location
+	location,
 }) {
-	const {
-		boardInfo,
-	} = location.state;
-
+	const boardInfo = location.state.boardInfo;
 	const [loading, setLoading] = useState(false);
 	const [tableData, setTableData] = useState([]);
 	const [titles, setTitles] = useState([]);
@@ -28,40 +24,39 @@ function FunnelDetails({
 	const [totalRate, setTotalRate] = useState('');
 	const [date, setDate] = useState('');
 
-	function getDataBoard() {
-		setLoading(true);
-		api.getDataBoard({
-			chart_id: boardInfo.id,
-			trend: {
-				offset: 0,
-				limit: config.LIMIT,
-				date,
-			}
-		}).then((res) => {
-			const {
-				meta,
-				data
-			} = res;
-			if (data.length === 0) {
-				return;
-			}
-			constructStep(meta, data[0]);
-			setTableData(data);
-			setTitles(meta);
-		}).catch((e) => {
-			model.log(e);
-		}).finally(() => {
-			setLoading(false);
-		});
-	}
-
 	useEffect(() => {
+		function getDataBoard() {
+			setLoading(true);
+			api.getDataBoard({
+				chart_id: boardInfo.id,
+				trend: {
+					offset: 0,
+					limit: config.LIMIT,
+					date,
+				},
+			}).then((res) => {
+				const {
+					meta,
+					data,
+				} = res;
+				if (data.length === 0) {
+					return;
+				}
+				constructStep(meta, data[0]);
+				setTableData(data);
+				setTitles(meta);
+			}).catch((e) => {
+				model.log(e);
+			}).finally(() => {
+				setLoading(false);
+			});
+		}
 		getDataBoard();
 
 		return () => {
 			api.cancelRequest();
 		};
-	}, [date]);
+	}, [date, boardInfo.id]);
 
 	function constructStep(meta, data) {
 		setTotalRate(`${meta[0]}${data[0]*100}%`);
@@ -69,7 +64,7 @@ function FunnelDetails({
 		for (let i = 1, len = meta.length; i < len; i += 2) {
 			const obj = {
 				name: meta[i],
-				count: data[i]
+				count: data[i],
 			};
 			if (i !== len - 1) obj.rate = data[i + 1];
 			arr.push(obj);
@@ -108,7 +103,7 @@ function FunnelDetails({
 					<div>
 						<Step  totalRate={totalRate} steps={steps} /> 
 						<Table dataSource={tableData} hasBorder={false} >
-						   	{renderTitle()}     		
+							{renderTitle()}						   	     		
 						</Table>
 					</div> : <Components.NotData />
 				}

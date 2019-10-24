@@ -84,6 +84,7 @@ export default function Filter({
 		formRef.current.state.store.setFieldProps('segmentation_id', {
 			dataSource: targets,
 		});
+		formRef.current.state.store.setFieldValue('segmentation_id', targets[0].value);
 	}
 
 	const formChange = (values) => {

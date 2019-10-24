@@ -1,31 +1,31 @@
-import React, {
-	Component,
-	useState,
-	useEffect
-} from 'react';
+import React, {} from 'react';
 import {
 	Button,
 	Loading,
 	Icon,
-	Dialog
+	Dialog,
 } from '@alifd/next';
 import {
-	withRouter
+	withRouter,
 } from 'react-router-dom';
 import styles from './index.module.scss';
 
 function DataBoard({
 	history,
 }) {
+	const btnStyle = {
+		padding: '10px',
+		borderRadius: '10px',
+	};
+
 	const {
 		response,
 		loading,
-		updateParameter,
 		showLoading,
 		closeLoading,
 	} = hooks.useRequest(api.getBoards);
 	const {
-		charts=[],
+		charts = [],
 	} = response;
 
 	const jumpDataBoardDetails = (item) => {
@@ -63,7 +63,7 @@ function DataBoard({
 		showLoading();
 		api.deleteBoard({
 			id,
-		}).then((res) => {
+		}).then(() => {
 			charts.splice(index, 1);
 			model.log('删除成功');
 		}).catch((e) => {
@@ -79,7 +79,7 @@ function DataBoard({
 			content: '确定删除吗？',
 			onOk: () => {
 				deleteBoard(id, index);
-			}
+			},
 		});
 	}
 
@@ -88,11 +88,10 @@ function DataBoard({
 			const {
 				id,
 				name,
-				desc,
 			} = item;
 
 			return (
-				<Button type='secondary' className={styles.item} key={id} onClick={jumpDataBoardDetails.bind(this,item)}>
+				<Button type='secondary' className={styles.item} style={btnStyle} key={id} onClick={jumpDataBoardDetails.bind(this,item)}>
 					<Icon className={styles.close} type='close' onClick={onDeleteBoard.bind(this,id,index)} />
 					<span className={styles.name}>{name}</span>	
 				</Button>
@@ -102,13 +101,13 @@ function DataBoard({
 
 	return (
 		<Loading visible={loading} inline={false}>
-			<Components.Wrap>
-				<div className={styles.content}>
-					{renderList()}
-				</div>
-	      		{charts.length===0 && <Components.NotData style={{height:'200px'}} />}
-    		</Components.Wrap>
-    	</Loading>
+			<Components.Wrap>			
+				<div className={styles.wrap}>				
+					{renderList()}					
+				</div>				
+				{charts.length === 0 && <Components.NotData style={{height:'200px'}} />}	      		
+			</Components.Wrap> 	   		
+		</Loading>
 	);
 }
 

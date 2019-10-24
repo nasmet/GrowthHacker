@@ -1,12 +1,9 @@
 import React, {
-	Component,
 	useEffect,
 } from 'react';
 import {
 	Tab,
 } from '@alifd/next';
-import IceContainer from '@icedesign/container';
-import styles from './index.module.scss';
 import dataCenterConfig from './dataCenterConfig';
 
 export default function DataCenter() {
@@ -30,8 +27,8 @@ export default function DataCenter() {
 			} = item;
 			return (
 				<Tab.Item key={key} title={tab} >
-          			<Component />
-        		</Tab.Item>
+					<Component />
+				</Tab.Item>
 			);
 		});
 	};
@@ -43,8 +40,8 @@ export default function DataCenter() {
 	return (
 		<Components.Wrap>
 			<Tab defaultActiveKey={key} onChange={onChange}>
-	      		{renderTab()}
-	      	</Tab>
+				{renderTab()}
+			</Tab>
 		</Components.Wrap>
 	);
 }

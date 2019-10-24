@@ -1,5 +1,4 @@
 import React, {
-	Component,
 	useState,
 	useEffect,
 } from 'react';
@@ -8,7 +7,6 @@ import {
 	Loading,
 } from '@alifd/next';
 import IceContainer from '@icedesign/container';
-import styles from './index.module.scss';
 
 export default function NewEvent() {
 	const appid = sessionStorage.getItem(config.PROJECTAPPID);
@@ -40,7 +38,7 @@ export default function NewEvent() {
 		return () => {
 			api.cancelRequest();
 		};
-	}, [])
+	}, [appid])
 
 	const renderTitle = () => {
 		return titles.map((item, index) => {
@@ -53,10 +51,10 @@ export default function NewEvent() {
 			<IceContainer>
 				<Loading visible={loading} inline={false}>
 					<Table dataSource={tableData} hasBorder={false}>
-					    {renderTitle()}       		
+						{renderTitle()}       		
 					</Table>
 				</Loading>
-	    	</IceContainer>
-    	</Components.Wrap>
+			</IceContainer>
+		</Components.Wrap>
 	);
 }

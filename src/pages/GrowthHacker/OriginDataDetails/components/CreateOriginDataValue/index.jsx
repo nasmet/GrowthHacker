@@ -1,5 +1,4 @@
 import React, {
-	Component,
 	useEffect,
 	useState,
 } from 'react';
@@ -7,7 +6,7 @@ import {
 	Button,
 	Input,
 	Loading,
-	Select
+	Select,
 } from '@alifd/next';
 import {
 	Form,

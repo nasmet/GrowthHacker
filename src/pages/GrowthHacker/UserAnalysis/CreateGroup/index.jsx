@@ -63,8 +63,7 @@ function CreateGroup({
 				} else {
 					obj.values = [obj.value];
 				}
-				const temp_2 = obj.date;
-				obj.date = `abs:${parseInt(temp_2[0].valueOf()/1000)},${parseInt(temp_2[1].valueOf()/1000)}`;
+				obj.date = `abs:${parseInt(obj.date[0].valueOf()/1000)},${parseInt(obj.date[1].valueOf()/1000)}`;
 				conditions.push(obj);
 			})
 		});
@@ -77,6 +76,7 @@ function CreateGroup({
 			name,
 			expression,
 		} = refVariable.current;
+
 		api.createUserGroup({
 			condition_expr: expression,
 			name,
@@ -104,14 +104,6 @@ function CreateGroup({
       				<Button onClick={onCancel}>取消</Button>
       				<Button type='primary' disabled={disabled} onClick={onSave}>保存</Button>
       			</div>
-      			{/*<div className={styles.rateWrap}>
-      				<div className={styles.value}>0%</div>
-      				<div>占访问用户比率</div>
-      			</div>
-				<div className={styles.groupWrap}>
-					<div className={styles.value}>0</div>
-					<div>分群人数</div>
-				</div>*/}
       		</div>
       		<Components.BoardDialog onInputChange={onInputChange} onOk={onOk} ref={refDialog} />
     	</div>

@@ -1,15 +1,9 @@
-import React, {
-	Component,
-	useState,
-	useEffect,
-} from 'react';
+import React from 'react';
 import {
 	Table,
 	Loading,
-	Pagination,
 } from '@alifd/next';
 import IceContainer from '@icedesign/container';
-import styles from './index.module.scss';
 
 export default function AdRate() {
 	const {
@@ -34,7 +28,7 @@ export default function AdRate() {
 
 	return (
 		<Components.Wrap>
-      		<Components.DateFilter filterChange={filterChange} />
+			<Components.DateFilter filterChange={filterChange} />      		
 			<IceContainer>
 				<Loading visible={loading} inline={false}>
 					<Table dataSource={data} hasBorder={false} fixedHeader maxBodyHeight={400} >
@@ -42,6 +36,6 @@ export default function AdRate() {
 					</Table>
 				</Loading>
 			</IceContainer>
-    	</Components.Wrap>
+		</Components.Wrap>    	
 	);
 }

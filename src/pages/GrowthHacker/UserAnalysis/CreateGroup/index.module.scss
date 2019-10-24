@@ -13,8 +13,8 @@
 	flex-direction: column;
 }
 .rightContent{
-	min-width: 280px;
-	min-height: 500px;
+	width: 240px;
+	height: 500px;
 	background: #fff;
 	display: flex;
 	flex-direction: column;
@@ -23,16 +23,6 @@
 	margin: 10px; 
 	display: flex;
 	justify-content: space-between;
-}
-.rateWrap,.groupWrap{
-	height: 100px;
-	display: flex;
-	flex-direction: column;
-	justify-content: space-around;
-	align-items: center;
-}
-.value{
-	font-weight: bold;
 }
 .name::after{
 	content: '*';

@@ -112,13 +112,13 @@ export default function CreatePlan({
 		              			/>
 		      				</Field>
 
-		      				<Field name='rule_id'>
-								<Select className={styles.input} dataSource={[]} placeholder='请选择策略' >
+		      				<Field name='strategy_id'>
+								<Select className={styles.input} dataSource={[]} placeholder='请选择规则' >
 								</Select>
 		      				</Field>
 
-		      				<Field name='strategy_id'>
-								<Select className={styles.input} dataSource={[]} placeholder='请选择规则' >
+		      				<Field name='rule_id'>
+								<Select className={styles.input} dataSource={[]} placeholder='请选择策略' >
 								</Select>
 		      				</Field>
 

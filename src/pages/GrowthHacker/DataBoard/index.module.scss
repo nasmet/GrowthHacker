@@ -1,26 +1,25 @@
-.content{
+.wrap{
 	display: flex;
 	flex-direction: row;
 	flex-wrap: wrap;
-	.item{
-		position: relative;
-		width: 200px;
-		height: 200px;
-		margin: 0 10px 10px 0;
-		padding: 10px;
-		border-radius: 10px;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		overflow: hidden;
-		.close{
-			position: absolute;
-			top: 10px;
-			right: 10px;
-			&:hover{
-				color: red;
-			}
-		}
+}
+.item{
+	position: relative;
+	width: 200px;
+	min-height: 200px;
+	max-height: 200px;
+	margin: 4px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	overflow: hidden;
+}
+.close{
+	position: absolute;
+	top: 0;
+	right: 10px;
+	&:hover{
+		color: red;
 	}
 }
 .name{

@@ -1,20 +1,10 @@
 import React, {
-	Component,
 	useState,
 	useEffect,
 } from 'react';
 import {
-	Input,
-	Button,
-	Tab,
 	Table,
-	Loading,
 	Pagination,
-	Icon,
-	Dialog,
-	Select,
-	Grid,
-	DatePicker,
 } from '@alifd/next';
 import {
 	withRouter,
@@ -26,10 +16,7 @@ import Template from '../Template';
 function EventAnalysisDetails({
 	location,
 }) {
-	const {
-		boardInfo
-	} = location.state;
-
+	const boardInfo = location.state.boardInfo;
 	const [count, setCount] = useState(0);
 	const [curPage, setCurPage] = useState(1);
 	const [loading, setLoading] = useState(false);
@@ -48,7 +35,7 @@ function EventAnalysisDetails({
 					offset: (curPage - 1) * config.LIMIT,
 					limit: config.LIMIT,
 					date,
-				}
+				},
 			}).then((res) => {
 				const {
 					meta,
@@ -72,7 +59,7 @@ function EventAnalysisDetails({
 		return () => {
 			api.cancelRequest();
 		};
-	}, [curPage, date]);
+	}, [curPage, date, boardInfo.id]);
 
 	function assemblingChartStyle(meta) {
 		return {
@@ -127,14 +114,14 @@ function EventAnalysisDetails({
 					chartStyle={chartStyle}
 					renderTitle={renderTitle} 
 				/>
-		        <Pagination
-		       		className={styles.pagination}
-		        	current={curPage}
-		        	total={count}
-		        	onChange={pageChange}
-		      	/>	
-	      	</IceContainer>
-		</Components.Wrap>
+				<Pagination
+					className={styles.pagination}
+					current={curPage}
+					total={count}
+					onChange={pageChange}
+				/>		      	
+			</IceContainer>      	
+		</Components.Wrap>	
 	);
 }
 

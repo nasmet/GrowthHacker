@@ -13,6 +13,7 @@ import {
 	Select,
 	Balloon,
 	Icon,
+	Input,
 } from '@alifd/next';
 import {
 	Form,
@@ -41,6 +42,16 @@ export default function UserTag() {
 		return null;
 	}
 
+	function findUserLabel(id, labels) {
+		const len = labels.length;
+		for (let index = 0; index < len; index++) {
+			if (labels[index].user_label_id === id) {
+				return index;
+			}
+		}
+		return -1;
+	}
+
 	function createUserTag(record, value) {
 		setLoading(true);
 		api.createUserTag({
@@ -62,12 +73,13 @@ export default function UserTag() {
 		});
 	}
 
-	function deleteUserTag(record, labelId, index) {
+	function deleteUserTag(record, value) {
 		setLoading(true);
 		api.deleteUserTag({
 			openId: record.wechat_openid,
-			labelId,
-		}).then((res) => {
+			labelId: value.tags,
+		}).then(() => {
+			const index = findUserLabel(value.tags, record.labels);
 			record.labels.splice(index, 1);
 		}).catch((e) => {
 			model.log(e);
@@ -119,9 +131,7 @@ export default function UserTag() {
 		setCurPage(e);
 	};
 
-	const clickTarget = <Button size='small' style={{borderRadius: '50%'}}>+</Button>;
-
-	const onBalloonVisibleChange = (value, visible) => {
+	const onAddBalloonVisibleChange = (value, visible) => {
 		const values = value.map(v => v.label_id);
 		if (visible) {
 			const temp = refVarible.current.userTagData.filter(item => !values.includes(item.value));
@@ -129,54 +139,136 @@ export default function UserTag() {
 		}
 	};
 
-	const onSubmitUserTag = (record, value) => {
+	const onDeleteBalloonVisibleChange = (value, visible) => {
+		if (visible) {
+			const temp = value.map(v => {
+				return {
+					label: v.label_name,
+					value: v.user_label_id,
+				}
+			});
+			setSelectData(temp);
+		}
+	};
+
+
+	const onAddUserTag = (record, value) => {
 		createUserTag(record, value);
 	};
 
-	const onDeleteUserTag = (record, labelId, index) => {
-		deleteUserTag(record, labelId, index);
+	const onDeleteUserTag = (record, value) => {
+		deleteUserTag(record, value);
+	};
+
+	const modifyTag = () => {
+
+	};
+
+	const editTag = (item, index, record) => {
+		return (
+			<Balloon
+				key={item.user_label_id}
+				trigger={<span className={styles.tag}>{item.label_name}</span>}
+				triggerType="click"
+			>
+				<Form
+					onSubmit={modifyTag.bind(this, record,index)}
+					effects={[
+					    {
+					      	field: 'tag',
+					      	handler: formCore => {
+					      		let disabled = false;
+					      		const value = formCore.getFieldValue('tag');
+					        	if (!value || value === item.label_name) {
+						    		disabled = true;
+					        	}
+				          		formCore.setFieldProps('btn', {
+									disabled,
+								});
+					      	}
+					    }
+					]}
+				>
+					<Field name='tag' defaultValue={item.label_name} >
+						<Input style={{width: '200px'}} />
+					</Field>
+					<Field name='btn'>
+						<Button disabled type='primary' htmlType="submit">提交</Button>
+					</Field>
+				</Form>
+			</Balloon>
+		);
 	};
 
 	const renderThreeColumn = (value, index, record) => {
 		return (
 			<div className={styles.tagWrap}>
 				{record.labels.map((item,index) => {
-					return (
-						<div key={item.user_label_id} style={{position:'relative',marginRight: '8px'}}>
-							<span className={styles.tag}>{item.label_name}</span>
-							<Icon className={styles.close} type='close' size='xs' onClick={onDeleteUserTag.bind(this,record,item.user_label_id,index)} />
-						</div>
-					)
+					return <span key={item.user_label_id} className={styles.tag}>{item.label_name}</span>;
 				})}
-				<Balloon trigger={clickTarget} triggerType="click" onVisibleChange={onBalloonVisibleChange.bind(this,record.labels)}>
-    				<Form 
-    					onSubmit={onSubmitUserTag.bind(this, record)}
-    					effects={[
-						    {
-						      	field: 'tags',
-						      	handler: formCore => {
-						      		let disabled =false;
-						        	if (!formCore.getFieldValue('tags')) {
-							    		disabled = true;
-						        	}
-					          		formCore.setFieldProps('btn', {
-										disabled,
-									});
-						      	}
-						    }
-						]}
-    				>
-    					<Field name='tags'>
-							<Select placeholder='请选择标签' followTrigger dataSource={selectData} style={{width:'200px'}} />
-						</Field>
-						<Field name='btn'>
-				            <Button disabled type='primary' htmlType="submit">提交</Button>
-				        </Field>
-				    </Form>
-    			</Balloon>
 			</div>
 		)
 	};
+
+	const renderForm = (cb, record) => {
+		return (
+			<Form 
+				onSubmit={cb.bind(this, record)}
+				effects={[
+				    {
+				      	field: 'tags',
+				      	handler: formCore => {
+				      		let disabled =false;
+				        	if (!formCore.getFieldValue('tags')) {
+					    		disabled = true;
+				        	}
+			          		formCore.setFieldProps('btn', {
+								disabled,
+							});
+				      	}
+				    }
+				]}
+			>
+				<Field name='tags'>
+					<Select placeholder='请选择标签' followTrigger dataSource={selectData} style={{width:'200px'}} />
+				</Field>
+				<Field name='btn'>
+		            <Button disabled type='primary' htmlType="submit">提交</Button>
+		        </Field>
+		    </Form>
+		);
+	};
+
+	const addTagBtn = (record) => {
+		return (
+			<Balloon 
+				trigger={<Button type='primary' style={{marginRight:'6px'}}>增加标签</Button>}
+				triggerType="click"
+				onVisibleChange={onAddBalloonVisibleChange.bind(this,record.labels)}>
+				{renderForm(onAddUserTag,record)}
+			</Balloon>
+		);
+	};
+
+	const deleteTagBtn = (record) => {
+		return (
+			<Balloon 
+				trigger={<Button type='primary' warning>删除标签</Button>}
+				triggerType="click"
+				onVisibleChange={onDeleteBalloonVisibleChange.bind(this,record.labels)}>
+				{renderForm(onDeleteUserTag,record)}
+			</Balloon>
+		);
+	}
+
+	const renderFourColumn = (value, index, record) => {
+		return (
+			<div >
+				{addTagBtn(record)}
+				{deleteTagBtn(record)}
+			</div>
+		);
+	}
 
 	return (
 		<Components.Wrap>
@@ -185,6 +277,7 @@ export default function UserTag() {
       				<Table.Column title='用户id' dataIndex='user_id' lock width={120} />
       				<Table.Column title='用户openid' dataIndex='wechat_openid' lock width={300} />
       				<Table.Column title='用户标签' cell={renderThreeColumn} />
+      				<Table.Column title='操作' cell={renderFourColumn} />
       			</Table>
       			<Pagination
 	           		className={styles.pagination}

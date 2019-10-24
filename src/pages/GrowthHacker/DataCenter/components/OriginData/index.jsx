@@ -1,5 +1,4 @@
 import React, {
-	Component,
 	useState,
 	useEffect,
 } from 'react';
@@ -63,8 +62,8 @@ function OriginData({
 			onOk: () => {
 				setLoading(true);
 				api.deleteOriginData({
-					id
-				}).then((res) => {
+					id,
+				}).then(() => {
 					setTableData((pre) => {
 						pre.splice(index, 1);
 						return [...pre];
@@ -85,8 +84,8 @@ function OriginData({
 			state: {
 				id,
 				name,
-				value_type
-			}
+				value_type,
+			},
 		});
 	}
 
@@ -133,34 +132,34 @@ function OriginData({
 					</Button>
 				</div>
 				<Loading visible={loading} inline={false}>
-		          	<Table 
-		          		dataSource={tableData} 
-		          		hasBorder={false}
-		          	>	
-		          		<Table.Column title="id" dataIndex="id" width={120} />
-		            	<Table.Column title="名称" dataIndex="name" width={120} />
-		            	<Table.Column title="标识符" dataIndex="key" width={120} />
-		            	<Table.Column title="类型" dataIndex="value_type" width={120} />
-		            	<Table.Column title="描述" dataIndex="desc" />
-		            	<Table.Column title="操作" cell={renderCover} />
-		          	</Table>
+					<Table 
+						dataSource={tableData} 
+						hasBorder={false}
+					>	
+						<Table.Column title="id" dataIndex="id" width={120} />
+						<Table.Column title="名称" dataIndex="name" width={120} />
+						<Table.Column title="标识符" dataIndex="key" width={120} />
+						<Table.Column title="类型" dataIndex="value_type" width={120} />
+						<Table.Column title="描述" dataIndex="desc" />
+						<Table.Column title="操作" cell={renderCover} />
+					</Table>
 				</Loading>
-	          	<Pagination
-	           		className={styles.pagination}
-	            	current={curPage}
-	            	total={count}
-	            	onChange={pageChange}
-	          	/>
-		    </IceContainer>
-		   	<Dialog 
-		   		autoFocus
-		      	visible={show} 
-		      	onClose={onClose}
-		      	footer={false}
-		    >
+				<Pagination
+					className={styles.pagination}
+					current={curPage}
+					total={count}
+					onChange={pageChange}
+				/>
+			</IceContainer>
+			<Dialog 
+				autoFocus
+				visible={show} 
+				onClose={onClose}
+				footer={false}
+			>
 				<CreateOriginData onOk={onOk} />
 			</Dialog>
-    	</Components.Wrap>
+		</Components.Wrap>
 	);
 }
 

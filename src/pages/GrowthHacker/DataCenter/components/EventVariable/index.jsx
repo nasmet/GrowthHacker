@@ -1,5 +1,4 @@
 import React, {
-	Component,
 	useState,
 	useEffect,
 } from 'react';
@@ -31,7 +30,7 @@ export default function EventVariable() {
 			}).then((res) => {
 				const {
 					total,
-					event_entities
+					event_entities,
 				} = res;
 				setCount(total);
 				setTableData(event_entities);
@@ -59,8 +58,8 @@ export default function EventVariable() {
 			onOk: () => {
 				setLoading(true);
 				api.deleteEvent({
-					id
-				}).then((res) => {
+					id,
+				}).then(() => {
 					setTableData((pre) => {
 						pre.splice(index, 1);
 						return [...pre];
@@ -76,11 +75,8 @@ export default function EventVariable() {
 	};
 
 	const renderCover = (value, index, record) => {
-		const {
-			id
-		} = record;
 		return (
-			<Button type='primary' warning onClick={onDeleteBuriedPoint.bind(this, id, index)}> 
+			<Button type='primary' warning onClick={onDeleteBuriedPoint.bind(this, record.id, index)}> 
 				删除
 			</Button>
 		);
@@ -104,40 +100,40 @@ export default function EventVariable() {
 
 	return (
 		<Components.Wrap>
-      		<IceContainer>
+			<IceContainer>
 				<div className={styles.btnWrap}>
 					<Button className={styles.btn} type="secondary" onClick={onCreateBuriedPoint}> 
 						创建事件变量
 					</Button>
 				</div>
 				<Loading visible={loading} inline={false}>
-		          	<Table 
-		          		dataSource={tableData} 
-		          		hasBorder={false} 
-		          	>	
-		          		<Table.Column title="id" dataIndex="id" />
-		            	<Table.Column title="名称" dataIndex="name" />
-		            	<Table.Column title="标识符" dataIndex="entity_key" />
-		            	<Table.Column title="类型" dataIndex="variable_type" />
-		            	<Table.Column title="操作" cell={renderCover} />
-		          	</Table>
+					<Table 
+						dataSource={tableData} 
+						hasBorder={false} 
+					>	
+						<Table.Column title="id" dataIndex="id" />
+						<Table.Column title="名称" dataIndex="name" />
+						<Table.Column title="标识符" dataIndex="entity_key" />
+						<Table.Column title="类型" dataIndex="variable_type" />
+						<Table.Column title="操作" cell={renderCover} />
+					</Table>
 				</Loading>
-	          	<Pagination
-	           		className={styles.pagination}
-	            	current={curPage}
-	            	total={count}
-	            	onChange={pageChange}
-	          	/>
-		    </IceContainer>
+				<Pagination
+					className={styles.pagination}
+					current={curPage}
+					total={count}
+					onChange={pageChange}
+				/>
+			</IceContainer>
 
-		   	<Dialog 
-		   		autoFocus
-		      	visible={show} 
-		      	onClose={onClose}
-		      	footer={false}
-		    >
+			<Dialog 
+				autoFocus
+				visible={show} 
+				onClose={onClose}
+				footer={false}
+			>
 				<CreateBuriedPoint onOk={onOk} entityType='variable' />
 			</Dialog>
-    	</Components.Wrap>
+		</Components.Wrap>
 	);
 }

@@ -13,7 +13,7 @@
     	"browser": true,
     	"mocha": true
   	},
-  	"plugins": ["react", "babel"],
+  	"plugins": ["react", "babel","react-hooks"],
   	"rules": {
     	"react/prefer-stateless-function": 0,
 	    "no-console": 0,
@@ -51,7 +51,9 @@
 	    "no-restricted-globals": 0,
 	    "react/jsx-no-bind": 0,
 	    "no-mixed-operators": 0,
-	    "global-require": 0
+	    "global-require": 0,
+	    "react-hooks/rules-of-hooks": "error",
+    	"react-hooks/exhaustive-deps": "warn"
   	},
   	"globals": {
     	"utils": true,
@@ -59,5 +61,6 @@
     	"model": true,
     	"config": true,
     	"Components": true,
+    	"hooks": true,
   	},
 }

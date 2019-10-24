@@ -107,6 +107,7 @@ function Rule({
 		          	>	
 		          		<Table.Column title="id" dataIndex="id" />
 		          		<Table.Column title="名字" dataIndex="name" />
+		          		<Table.Column title="表达式" dataIndex="expr" />
 		            	<Table.Column title="操作" cell={renderCover} />
 		          	</Table>
 				</Loading>

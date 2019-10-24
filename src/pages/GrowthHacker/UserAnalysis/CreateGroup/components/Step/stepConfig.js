@@ -40,13 +40,13 @@ export const firstColumn = [{
 	value: 'true,event',
 }, {
 	label: '用户没做过',
-	value: 'false, event',
+	value: 'false,event',
 }, {
 	label: '用户是',
 	value: 'true,dimension',
 }, {
 	label: '用户不是',
-	value: 'false, dimension',
+	value: 'false,dimension',
 }]
 
 export const opMap = {

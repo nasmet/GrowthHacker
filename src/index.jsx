@@ -1,5 +1,7 @@
 // 载入默认全局样式 normalize 、.clearfix 和一些 mixin 方法等
 import ReactDOM from 'react-dom';
+import moment from 'moment';
+moment.locale('zh-cn');
 import '@alifd/next/reset.scss';
 import router from './router';
 import utils from './common/utils/index';

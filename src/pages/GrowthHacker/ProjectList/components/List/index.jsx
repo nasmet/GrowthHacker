@@ -1,7 +1,4 @@
 import React, {
-	Component,
-	useState,
-	useEffect,
 	forwardRef,
 	useImperativeHandle,
 } from 'react';
@@ -14,22 +11,24 @@ import {
 import styles from './index.module.scss';
 
 function List({
-	history,
 	createProject,
 	jump,
 }, ref) {
+	const btnStyle = {
+		padding: '10px',
+		borderRadius: '10px',
+	};
 
 	useImperativeHandle(ref, () => ({
 		addProject: (e) => {
 			projects.splice(0, 0, e);
 			updateResponse();
-		}
+		},
 	}));
 
 	const {
 		response,
 		loading,
-		updateParameter,
 		showLoading,
 		closeLoading,
 		updateResponse,
@@ -49,7 +48,7 @@ function List({
 		showLoading();
 		api.deleteProject({
 			id,
-		}).then((res) => {
+		}).then(() => {
 			projects.splice(index, 1);
 			model.log('删除成功');
 		}).catch((e) => {
@@ -65,7 +64,7 @@ function List({
 			content: '确定删除吗？',
 			onOk: () => {
 				deleteProject(id, index);
-			}
+			},
 		});
 	}
 
@@ -88,7 +87,7 @@ function List({
 				desc,
 			} = item;
 			return (
-				<Button type='primary' className={styles.item} key={id} onClick={jumpProjectData.bind(this,item)}>
+				<Button type='primary' className={styles.item} key={id} style={btnStyle} onClick={jumpProjectData.bind(this,item)}>
 					{renderItem('名称：',name)}
 					{renderItem('域名：',domain_name)}
 					{renderItem('类型：',type)}
@@ -102,15 +101,15 @@ function List({
 	return (
 		<Components.Wrap>
 			<Loading visible={loading} inline={false}>
-	      		<div className={styles.wrap}>
-		      		{renderList()}
-		      		<Button className={`${styles.item} ${styles.create}`} onClick={createProject}>
-	      				<Icon type='add' className={styles.icon} />
-	      				<span>新建项目</span>
-		      		</Button>
-		    	</div>
-	    	</Loading>
-    	</Components.Wrap>
+				<div className={styles.wrap}>
+					{renderList()}
+					<Button className={styles.create} style={btnStyle} onClick={createProject}>
+						<Icon type='add' style={{marginRight: '4px'}} />
+						<span>新建项目</span>						
+					</Button>		      		
+				</div>		    	
+			</Loading>		   	
+		</Components.Wrap>
 	);
 }
 

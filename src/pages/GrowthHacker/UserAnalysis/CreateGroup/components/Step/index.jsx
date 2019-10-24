@@ -1,24 +1,14 @@
 import React, {
-	Component,
 	useState,
 	useEffect,
-	useRef,
-	useContext,
-	useCallback,
-	useMemo,
 } from 'react';
 import {
 	Input,
 	Button,
-	Tab,
-	Table,
 	Message,
 	Loading,
-	Pagination,
 	Icon,
-	Dialog,
 	Select,
-	Grid,
 	DatePicker,
 } from '@alifd/next';
 import {
@@ -37,7 +27,6 @@ import {
 	firstColumn,
 	opMap,
 } from './stepConfig';
-moment.locale('zh-cn');
 
 export default function Filter({
 	filterChange,
@@ -85,22 +74,47 @@ export default function Filter({
 	}, [metricData, originData]);
 
 	useEffect(() => {
+		function onChangeCombination() {
+			let temp = '';
+			steps.forEach((item, index) => {
+				let str = '';
+				item.step.forEach((v, index) => {
+					if (item.step.length - 1 !== index) {
+						str += v.alias + ' or ';
+					} else {
+						str += v.alias;
+					}
+				})
+				if (item.step.length > 1) {
+					temp += `(${str})`;
+				} else {
+					temp += str;
+				}
+
+				if (index !== steps.length - 1) {
+					temp += ` ${item.op.toLowerCase()} `
+				}
+			});
+			return temp;
+		}
 		if (steps.length === 0) {
 			return;
 		}
-
+		steps.map(item => {
+			item.step.map(v => {
+				v.refForm.store.setValues(v.values);
+			})
+		})
 		const temp = onChangeCombination();
 		setCombination(temp);
 		filterChange(steps, temp);
-	}, [steps]);
+	}, [steps, filterChange]);
 
 	function dividingData(data) {
 		const metrics = [];
 		data.forEach((item) => {
 			const {
 				id,
-				entity_key,
-				value_type,
 				name,
 			} = item;
 			const obj = {
@@ -112,30 +126,6 @@ export default function Filter({
 			}
 		});
 		setMetricData(metrics);
-	}
-
-	function onChangeCombination() {
-		let temp = '';
-		steps.forEach((item, index) => {
-			let str = '';
-			item.step.forEach((v, index) => {
-				if (item.step.length - 1 !== index) {
-					str += v.alias + ' or ';
-				} else {
-					str += v.alias;
-				}
-			})
-			if (item.step.length > 1) {
-				temp += `(${str})`;
-			} else {
-				temp += str;
-			}
-
-			if (index !== steps.length - 1) {
-				temp += ` ${item.op.toLowerCase()} `
-			}
-		});
-		return temp;
 	}
 
 	function createData(alias) {
@@ -170,9 +160,8 @@ export default function Filter({
 				api.getOriginDataValues({
 					id: this.values.id,
 				}).then((res) => {
-					const data = res.data.map(item => item.value);
 					formCore.setFieldProps('value', {
-						dataSource: data,
+						dataSource: res.data.map(item => item.value),
 					});
 				});
 			},
@@ -204,8 +193,8 @@ export default function Filter({
 					formCore.setFieldProps('value', {
 						visible: visibleValue,
 					});
-				}
-			}]
+				},
+			}],
 		}
 	}
 
@@ -240,8 +229,7 @@ export default function Filter({
 			return;
 		}
 		setSteps((pre) => {
-			const temp = createStep(pre.length);
-			return [...pre, temp];
+			return [...pre, createStep(pre.length)];
 		});
 	}
 
@@ -250,21 +238,19 @@ export default function Filter({
 	const renderForm = (item) => {
 		const {
 			alias,
-			values,
 			onChange,
 			effects,
 			onVisibleChange,
 			onOk,
-			curDate,
 			onFocus,
 			key,
 		} = item;
 		return (
 			<Form
 				key={key}
-	        	initialValues={values}
-	        	onChange={onChange.bind(item)}
-	        	effects={effects}
+				ref={e=>{item.refForm = e}}
+				onChange={onChange.bind(item)}
+				effects={effects}
 			>	
 			{formCore=>(
 				<div className={styles.container}>
@@ -299,19 +285,15 @@ export default function Filter({
 		);
 	}
 
-	const renderChild = (item) => {
-		return item.map((v) => {
-			return renderForm(v);
-		});
-	}
-
 	const renderStep = () => {
 		return steps.map((item, index) => {
 			return (
 				<div key={item.key}>
 					<div className={styles.step}>
 						{
-							renderChild(item.step)
+							item.step.map((v) => {
+								return renderForm(v);
+							})
 						}
 						<Button className={styles.filter} onClick={item.onAddOrFilter.bind(item)} >
 							<Icon type='add' size='small' className={styles.icon} /> 
@@ -330,8 +312,8 @@ export default function Filter({
 			<div className={styles.combination}>{combination}</div>
 				{renderStep()}
 			<Button className={styles.filter} onClick={onAddAndFilter}>
-      			<Icon type='add' size='small' className={styles.icon} />
-      			<span>AND</span>
+				<Icon type='add' size='small' className={styles.icon} />
+				<span>AND</span>
 			</Button>
 		</Loading>
 	);

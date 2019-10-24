@@ -21,8 +21,8 @@ export const dateMap = (arg) => {
 /**
  * 时间戳格式化
  * @date   2019-07-04
- * @param  {[type]}   unix 时间戳
- * @param  {[type]}   fmt  时间格式  Y-M-D h:m:s
+ * @param  {[number]}   unix 时间戳
+ * @param  {[string]}   fmt  时间格式  Y-M-D h:m:s
  * @return {string}
  */
 export function formatUnix(unix, fmt) {
@@ -37,4 +37,33 @@ export function formatUnix(unix, fmt) {
 
 function addZero(num) {
 	return num < 10 ? `0${num}` : num;
+}
+
+/**
+ * 时间格式化
+ * @date   2019-10-23
+ * @param  {[number]}   秒
+ * @return {string}
+ */
+const day = 24 * 3600;
+const hour = 3600;
+const minute = 60;
+
+export function formatTime(time) {
+	let d, h, m, s;
+	d = parseInt(time / day)
+	h = parseInt((time % day) / hour);
+	m = parseInt((time % hour) / minute);
+	s = time % minute;
+	if (d !== 0) {
+		return `${d}d ${h}h:${m}m:${s}s`
+	}
+	if (h !== 0) {
+		return `${h}h:${m}m:${s}s`
+	}
+	if (m !== 0) {
+		return `${m}m:${s}s`;
+	}
+
+	return `${s}s`;
 }
