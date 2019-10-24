@@ -25,7 +25,10 @@ export default function Aside({
 
 	useEffect(() => {
 		setLoading(true);
-		api.getSqlTable().then((res) => {
+		api.getSqlTable({
+			with_columns: true,
+			with_type: true,
+		}).then((res) => {
 			const {
 				tables,
 			} = res;
@@ -64,8 +67,8 @@ export default function Aside({
 				return (
 					<SubMenu key={nav.name} label={nav.name}>	
         				{nav.columns.map((item, index) =>
-        					<Item key={nav.name + ',' + item[0]}>
-								{item[0]} ({item[1]})
+        					<Item key={nav.name + ',' + item.name}>
+								{item.name} ({item.type})
 			   				</Item>
         				)}
       				</SubMenu>

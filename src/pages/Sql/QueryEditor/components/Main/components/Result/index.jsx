@@ -30,7 +30,7 @@ export default function Result({
 	const renderTitle = () => {
 		return titles.map((item, index) => {
 			if (index === 0) {
-				return <Table.Column key={index} title={item} dataIndex={index.toString()} lock width={120} />
+				return <Table.Column key={index} title={item} dataIndex={index.toString()} lock='left' width={120} />
 			}
 			return <Table.Column key={index} title={item} dataIndex={index.toString()} width={120} />
 		})
