@@ -32,7 +32,7 @@ export default function Header() {
 	 		 	}
 			</Nav>
 			<div className={styles.right}>
-				<Link to='/growthhacker/projectlist'>
+				<Link style={{textDecoration:'none'}} to='/growthhacker/projectlist'>
 					<span style={{color: '#fff'}}>返回项目列表</span>
 				</Link>
 			</div>

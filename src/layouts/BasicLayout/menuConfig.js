@@ -12,7 +12,7 @@ const headerMenuConfig = [{
 		name: '退出',
 		path: '',
 		onClick: (e) => {
-			e.preventdefault();
+			e.preventDefault();
 			api.loginOut().then(() => {
 				model.history.push('/user/login');
 			}).catch(e => {

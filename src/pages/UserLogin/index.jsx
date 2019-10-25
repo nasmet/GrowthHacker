@@ -99,7 +99,7 @@ function UserLogin({
 			  			<Field valueName='checked' label="记住密码：" name="flag" component={Checkbox} />
 						<div className={styles.btnWrap}>
 							<Button className={styles.btn} type='primary' htmlType="submit">登录</Button>
-							<Link to='/user/register'>注册</Link>
+							{/*<Link to='/user/register'>注册</Link>*/}
 						</div>
 			  		</Form>
 		  		</div>

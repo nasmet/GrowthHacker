@@ -7,12 +7,11 @@ axios.defaults.baseURL = config.BASEURL;
 
 // http request 拦截器（所有发送的请求都要从这儿过一次），通过这个，我们就可以把token传到后台，我这里是使用sessionStorage来存储token等权限信息和用户信息，若要使用cookie可以自己封装一个函数并import便可使用
 axios.interceptors.request.use((configs) => {
-	// const token = sessionStorage.getItem(config.TOKENKEY);
 	configs.data = JSON.stringify(configs.data);
 	configs.headers = {
 		'Content-Type': 'application/json',
 	};
-
+	// const token = sessionStorage.getItem(config.TOKENKEY);
 	// if (token) {
 	// 	configs.headers.Authorization = token;
 	// }
