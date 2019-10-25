@@ -77,14 +77,25 @@ function Rule({
 		});
 	};
 
+	const jumpRuleDetails = (record) => {
+		history.push({
+			pathname: '/thousandfaces/ruledetails',
+			state: {
+				data: record,
+			}
+		})
+	}
+
 	const renderCover = (value, index, record) => {
-		const {
-			id
-		} = record;
 		return (
-			<Button type='primary' warning onClick={onDeletePlan.bind(this, id, index)}> 
-				删除
-			</Button>
+			<div>
+				<Button style={{marginRight: '6px'}} type='primary' onClick={jumpRuleDetails.bind(this, record)}> 
+					查看详情
+				</Button>
+				<Button type='primary' warning onClick={onDeletePlan.bind(this, record.id, index)}> 
+					删除
+				</Button>
+			</div>
 		);
 	};
 

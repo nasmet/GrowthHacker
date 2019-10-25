@@ -74,25 +74,21 @@ function UserGroup({
 		});
 	};
 
-	const jumpUserGroupDetails = (e) => {
+	const jumpUserGroupDetails = (record) => {
 		history.push({
 			pathname: '/growthhacker/projectdata/ua/usergroupdetails',
 			state: {
-				id: e,
+				data: record,
 			}
 		});
 	};
 
-	const renderFirstCell = (value, index, record) => {
-		const val = record.id;
-		return (
-			<span className={styles.user} onClick={jumpUserGroupDetails.bind(this,val)}>{val}</span>
-		);
-	}
-
 	const renderLastCell = (value, index, record) => {
 		return (
-			<Button type='primary' warning onClick={onDeleteGroup.bind(this,record.id,index)}>删除</Button>
+			<div>
+				<Button type='primary' style={{marginRight: '6px'}} onClick={jumpUserGroupDetails.bind(this,record)}>查看详情</Button>
+				<Button type='primary' warning onClick={onDeleteGroup.bind(this,record.id,index)}>删除</Button>
+			</div>
 		);
 	};
 
@@ -106,7 +102,7 @@ function UserGroup({
 						dataSource={tableData} 
 						hasBorder={false}
 					>
-						<Table.Column title='id' cell={renderFirstCell} />
+						<Table.Column title='id' dataIndex='id' />
 						<Table.Column title='名称' dataIndex='name' />
 						<Table.Column title='操作' cell={renderLastCell} />
 					</Table>

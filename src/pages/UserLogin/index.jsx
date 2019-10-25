@@ -38,7 +38,7 @@ function UserLogin({
 	useEffect(() => {
 		sessionStorage.removeItem(config.PROJECTID);
 		sessionStorage.removeItem(config.TOKENKEY);
-		
+
 		const username = localStorage.getItem(config.ACCOUNT);
 		if (username) {
 			const password = localStorage.getItem(config.PASSWORD);
@@ -57,7 +57,10 @@ function UserLogin({
 			flag,
 		} = e;
 		setLoading(true);
-		setTimeout(() => {
+		api.login({
+			username,
+			password,
+		}).then((res) => {
 			if (flag) {
 				localStorage.setItem(config.ACCOUNT, username);
 				localStorage.setItem(config.PASSWORD, password);
@@ -65,9 +68,12 @@ function UserLogin({
 				localStorage.removeItem(config.ACCOUNT);
 				localStorage.removeItem(config.PASSWORD);
 			}
-			sessionStorage.setItem(config.TOKENKEY, 123);
+			sessionStorage.setItem(config.TOKENKEY, res.id);
 			history.push('/');
-		}, 500);
+		}).catch(e => {
+			model.log(e);
+			setLoading(false);
+		});
 	};
 
 	return (

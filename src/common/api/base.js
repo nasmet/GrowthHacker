@@ -7,15 +7,15 @@ axios.defaults.baseURL = config.BASEURL;
 
 // http request 拦截器（所有发送的请求都要从这儿过一次），通过这个，我们就可以把token传到后台，我这里是使用sessionStorage来存储token等权限信息和用户信息，若要使用cookie可以自己封装一个函数并import便可使用
 axios.interceptors.request.use((configs) => {
-	const token = sessionStorage.getItem(config.TOKENKEY);
+	// const token = sessionStorage.getItem(config.TOKENKEY);
 	configs.data = JSON.stringify(configs.data);
 	configs.headers = {
 		'Content-Type': 'application/json',
 	};
 
-	if (token) {
-		configs.headers.Authorization = token;
-	}
+	// if (token) {
+	// 	configs.headers.Authorization = token;
+	// }
 	return configs;
 }, (err) => {
 	return Promise.reject(err);
@@ -26,6 +26,11 @@ axios.interceptors.response.use((response) => {
 	switch (response.data.code) {
 		case 0:
 			return response.data;
+		case 20103:
+			setTimeout(() => {
+				model.history.push('/user/login');
+			});
+			return Promise.reject(response.data.message);
 		default:
 			return Promise.reject(response.data.message);
 	}

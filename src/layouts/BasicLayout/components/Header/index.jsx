@@ -31,7 +31,7 @@ const traversing = function fn(nav) {
 	}
 	return (
 		<Nav.Item key={nav.path}>
-      		<Link to={nav.path} className="ice-menu-link">
+      		<Link to={nav.path} onClick={nav.onClick} className="ice-menu-link">
         		{word(nav.name)}
       		</Link>
    		</Nav.Item>

@@ -101,6 +101,14 @@ export default function Plan() {
 		setShow(false);
 	};
 
+	const renderThreeColumn = (value, index, record) => {
+		return <span>{record.rule.name}</span>;
+	}
+
+	const renderFourColumn = (value, index, record) => {
+		return <span>{record.strategy.name}</span>;
+	};
+
 	return (
 		<Components.Wrap>
       		<IceContainer>
@@ -116,8 +124,8 @@ export default function Plan() {
 		          	>	
 		          		<Table.Column title="id" dataIndex="id" />
 		          		<Table.Column title="名称" dataIndex="name" />
-		            	<Table.Column title="规则" dataIndex="rule_id" />
-		            	<Table.Column title="策略" dataIndex="strategy_id" />
+		            	<Table.Column title="规则" cell={renderThreeColumn} />
+		            	<Table.Column title="策略" cell={renderFourColumn} />
 		            	<Table.Column title="描述" dataIndex="desc" />
 		            	<Table.Column title="操作" cell={renderCover} />
 		          	</Table>

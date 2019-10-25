@@ -311,3 +311,15 @@ export function deleteUserTag(data) {
 	} = data;
 	return del(`/api/wechat_user/${openId}/labels/${labelId}`);
 }
+
+export function createAccount(data) {
+	return post('/admins', data);
+}
+
+export function login(data) {
+	return post('/sessions', data);
+}
+
+export function loginOut() {
+	return del('/sessions');
+}

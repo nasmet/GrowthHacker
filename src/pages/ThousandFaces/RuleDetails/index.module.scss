@@ -1,0 +1,22 @@
+.container{
+	margin-bottom: 10px;
+	padding: 10px 10px;
+}
+.item{
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	align-items: center;
+}
+.name{
+	margin-right: 10px;
+	font-weight: bold;
+}
+.combination{
+	text-align: center;
+	font-weight: bold;
+}
+.step{
+	padding: 10px;
+	border: 1px solid #e6e6e6;
+}

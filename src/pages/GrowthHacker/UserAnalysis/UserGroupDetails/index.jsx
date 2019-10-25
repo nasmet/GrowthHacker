@@ -4,29 +4,24 @@ import React, {
 	useEffect,
 } from 'react';
 import {
-	Input,
-	Button,
-	Tab,
-	Table,
-	Message,
 	Loading,
 	Pagination,
-	Icon,
-	Dialog,
-	Select,
-	Grid,
-	DatePicker,
+	Table,
 } from '@alifd/next';
 import {
 	withRouter,
 } from 'react-router-dom';
 import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
+import Step from './components/Step';
 
 function UserGroupDetails({
 	location,
 }) {
-	const id = location.state.id;
+	const {
+		id,
+		name,
+	} = location.state.data;
 
 	const [curPage, setCurPage] = useState(1);
 	const [count, setCount] = useState(0);
@@ -42,7 +37,7 @@ function UserGroupDetails({
 				trend: {
 					limit: config.LIMIT,
 					offset: (curPage - 1) * config.LIMIT,
-				}
+				},
 			}).then((res) => {
 				const {
 					data,
@@ -64,7 +59,7 @@ function UserGroupDetails({
 		return () => {
 			api.cancelRequest();
 		};
-	}, [curPage]);
+	}, [curPage, id]);
 
 	const renderTitle = () => {
 		return titles.map((item, index) => {
@@ -76,15 +71,13 @@ function UserGroupDetails({
 		setCurPage(e);
 	};
 
-	const onBack = () => {
-		history.back();
-	};
-
 	return (
 		<Components.Wrap>
-			<Components.Title title='用户分群详情' />
+			<Components.Title title={name} />
 			<IceContainer>
-				<Button style={{marginBottom:'20px',borderRadius:'10px'}} onClick={onBack}>返回用户分群</Button>
+				<Step {...location.state.data} />
+			</IceContainer>
+			<IceContainer>
 				<Table 
 					loading={loading} 
 					dataSource={tableData} 
@@ -92,14 +85,14 @@ function UserGroupDetails({
 				>
 					{renderTitle()}
 				</Table>
-			     <Pagination
-	           		className={styles.pagination}
-	            	current={curPage}
-	            	total={count}
-	            	onChange={pageChange}
-	          	/>
-          	</IceContainer>
-    	</Components.Wrap>
+				<Pagination
+					className={styles.pagination}
+					current={curPage}
+					total={count}
+					onChange={pageChange}
+				/>
+			</IceContainer>
+		</Components.Wrap>
 	);
 }
 

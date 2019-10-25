@@ -24,12 +24,28 @@ function UserRegister({
 	const [loading, setLoading] = useState(false);
 	const [values, setValues] = useState({});
 
-	const onRegister = (e) => {
-		setLoading(true)
-		setTimeout(() => {
-			model.log('注册成功');
+	useEffect(() => {
+		return () => {
+			api.cancelRequest();
+		};
+	}, []);
+
+	function createAccount(username, password) {
+		setLoading(true);
+		api.createAccount({
+			password,
+			username,
+		}).then(() => {
+			model.log('创建成功');
 			history.goBack();
-		}, 500);
+		}).catch(e => {
+			model.log(e);
+			setLoading(false);
+		});
+	}
+
+	const onRegister = (e) => {
+		createAccount(e.username, e.password);
 	};
 
 	const onBack = () => {

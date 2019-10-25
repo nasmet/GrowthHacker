@@ -2,7 +2,9 @@ import React, {
 	useState,
 	useEffect,
 } from 'react';
-import {Table,} from '@alifd/next';
+import {
+	Table,
+} from '@alifd/next';
 import {
 	withRouter,
 } from 'react-router-dom';
@@ -53,7 +55,7 @@ function DistributeDetails({
 	}, [date, boardInfo.id]);
 
 	function assemblingTableData(data) {
-		if (data.length === 0) {
+		if (!data || data.length === 0) {
 			return;
 		}
 		const row = data.reduce((total, value) => {
@@ -80,9 +82,12 @@ function DistributeDetails({
 		};
 	}
 
-	function assemblingChartData(arg, meta) {
+	function assemblingChartData(data, meta) {
+		if (!data || data.length === 0) {
+			return;
+		}
 		const arr = [];
-		arg.forEach(item => {
+		data.forEach(item => {
 			const value = item[0];
 			const name = meta[0];
 			item.forEach((v, index) => {

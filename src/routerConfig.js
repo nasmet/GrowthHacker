@@ -49,6 +49,8 @@ import Rule from './pages/ThousandFaces/Rule';
 const CreateRule = React.lazy(() =>
 	import ('./pages/ThousandFaces/CreateRule'));
 import TagLibrary from './pages/ThousandFaces/TagLibrary';
+const RuleDetails = React.lazy(() =>
+	import ('./pages/ThousandFaces/RuleDetails'));
 
 const QueryEditor = React.lazy(() =>
 	import ('./pages/Sql/QueryEditor'));
@@ -321,6 +323,12 @@ const routerConfig = [
 			id: '1014',
 			path: '/thousandfaces/taglibrary',
 			component: TagLibrary,
+			exact: true,
+			auth: true,
+		}, {
+			id: '1015',
+			path: '/thousandfaces/ruledetails',
+			component: RuleDetails,
 			exact: true,
 			auth: true,
 		}, {

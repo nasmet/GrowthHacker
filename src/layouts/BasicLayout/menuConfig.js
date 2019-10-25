@@ -9,8 +9,16 @@ const headerMenuConfig = [{
 	name: '用户',
 	path: '/user',
 	sub: [{
-		name: '切换用户',
-		path: '/user/login',
+		name: '退出',
+		path: '',
+		onClick: (e) => {
+			e.preventdefault();
+			api.loginOut().then(() => {
+				model.history.push('/user/login');
+			}).catch(e => {
+				model.log(e);
+			})
+		},
 	}],
 }];
 
