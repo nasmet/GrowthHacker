@@ -10,14 +10,28 @@ export default function AdCount() {
 		response,
 		loading,
 		updateParameter,
-	} = hooks.useRequest(api.getARPUDaily,{date:'day:0'});
+		parameter,
+	} = hooks.useRequest(api.getARPUDaily, {
+		date: 'day:0',
+		seg_id: 0,
+	});
 	const {
-		meta=[],
-		data=[],
+		meta = [],
+		data = [],
 	} = response;
 
-	const filterChange = e => {
-		updateParameter({date:e});
+	const dateChange = (e) => {
+		updateParameter({
+			date: e,
+			seg_id: parameter.seg_id,
+		});
+	};
+
+	const groupChange = e => {
+		updateParameter({
+			date: parameter.date,
+			seg_id: e,
+		});
 	};
 
 	const renderTitles = () => {
@@ -28,7 +42,10 @@ export default function AdCount() {
 
 	return (
 		<Components.Wrap>
-			<Components.DateFilter filterChange={filterChange} />      		
+			<IceContainer>
+				<Components.DateFilter filterChange={dateChange} />
+				<Components.GroupFilter filterChange={groupChange} />
+			</IceContainer>	
 			<IceContainer>
 				<Loading visible={loading} inline={false}>
 					<Table dataSource={data} hasBorder={false} fixedHeader maxBodyHeight={400}>
@@ -36,6 +53,6 @@ export default function AdCount() {
 					</Table>					
 				</Loading>
 			</IceContainer>
-		</Components.Wrap>    	
+		</Components.Wrap>
 	);
 }

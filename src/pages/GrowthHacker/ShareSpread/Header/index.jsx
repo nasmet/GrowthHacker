@@ -44,7 +44,7 @@ export default function Header({
 		return () => {
 			api.cancelRequest();
 		};
-	}, [date]);
+	}, []);
 
 	const renderItem = (name, value) => {
 		return (

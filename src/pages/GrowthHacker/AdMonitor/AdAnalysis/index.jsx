@@ -10,14 +10,28 @@ export default function AdAnalysis() {
 		response,
 		loading,
 		updateParameter,
-	} = hooks.useRequest(api.getAdAnalysis,{date:'day:0'});
+		parameter,
+	} = hooks.useRequest(api.getAdAnalysis, {
+		date: 'day:0',
+		seg_id: 0,
+	});
 	const {
-		meta=[],
-		data=[],
+		meta = [],
+		data = [],
 	} = response;
 
-	const filterChange = (e) => {
-		updateParameter({date:e});
+	const dateChange = (e) => {
+		updateParameter({
+			date: e,
+			seg_id: parameter.seg_id,
+		});
+	};
+
+	const groupChange = e => {
+		updateParameter({
+			date: parameter.date,
+			seg_id: e,
+		});
 	};
 
 	const renderTwoColumn = (value, index, record) => {
@@ -33,7 +47,7 @@ export default function AdAnalysis() {
 			if (index === 2) {
 				return <Table.Column key={index} title={item} cell={renderTwoColumn} />;
 			}
-			if(index === 3){
+			if (index === 3) {
 				return <Table.Column key={index} title={item} cell={renderThreeColumn} />;
 			}
 			return <Table.Column key={index} title={item} dataIndex={index.toString()} />;
@@ -43,7 +57,10 @@ export default function AdAnalysis() {
 	return (
 		<Components.Wrap>
 			<Components.Title title='付费率分析' desc='用户数量，用户占活跃用户比例，平均用户总游戏时长' />
-			<Components.DateFilter filterChange={filterChange} />
+			<IceContainer>
+				<Components.DateFilter filterChange={dateChange} />
+				<Components.GroupFilter filterChange={groupChange} />	
+			</IceContainer>
 			<IceContainer>
 				<Loading visible={loading} inline={false}>
 					<Table dataSource={data} hasBorder={false} fixedHeader maxBodyHeight={400} >
@@ -51,6 +68,6 @@ export default function AdAnalysis() {
 					</Table>
 				</Loading>
 			</IceContainer>
-		</Components.Wrap>    	
+		</Components.Wrap>
 	);
 }

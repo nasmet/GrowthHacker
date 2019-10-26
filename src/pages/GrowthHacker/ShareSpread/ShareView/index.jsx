@@ -1,22 +1,6 @@
 import React, {
-	Component,
 	useState,
-	useEffect,
 } from 'react';
-import {
-	Input,
-	Button,
-	Tab,
-	Table,
-	Message,
-	Loading,
-	Pagination,
-	Icon,
-	Dialog,
-	Select,
-	Grid,
-	DatePicker,
-} from '@alifd/next';
 import {
 	withRouter,
 } from 'react-router-dom';
@@ -40,12 +24,13 @@ export default function ShareView() {
 			<Components.DateFilter filterChange={filterChange} />
 			<IceContainer>
 				<Header date={date} />
+				{/*
 				<div>
 					<p>Top30用户裂变效果图</p>
 					<div className={styles.level}>
 						<Components.BasicColumn data={[]} />
 					</div>
-				</div>
+				</div>*/}
 			</IceContainer>
 			<IceContainer style={{padding:'10px'}}>
 				<span className={styles.secondTitle}>关键用户分享</span>
@@ -59,12 +44,8 @@ export default function ShareView() {
 				<span className={styles.secondTitle}>分享人群分布</span>
 			</IceContainer>
 			<div className={styles.userShare}>
-				<ShareDistribute name='性别分布' request={api.getGenderDistribute} date={date} />
 				<ShareDistribute name='分享对象分布'	request={api.getShareDistribute} date={date} />
 			</div>
-
-			<AreaDistribute name='层级分享' request={api.getAreaDistribute} date={date} />
-			<AreaDistribute name='地域分布' request={api.getAreaDistribute} date={date} />
     	</Components.Wrap>
 	);
 }

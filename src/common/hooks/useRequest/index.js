@@ -43,6 +43,7 @@ export default function useRequest(request, param = {}) {
 	}
 
 	return {
+		parameter,
 		response,
 		updateResponse,
 		loading,

@@ -6,6 +6,7 @@ export const TOKENKEY = 'Token';
 export const LIMIT = 10;
 export const ACCOUNT = 'ACCOUNT';
 export const PASSWORD = 'PASSWORD';
+export const USERNAME = 'USERNAME';
 export const PROJECTID = 'PROJECTID';
 export const PROJECTNAME = 'PROJECTNAME';
 export const PROJECTIDAPPID = 'PROJECTIDAPPID';

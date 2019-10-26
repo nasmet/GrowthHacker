@@ -7,17 +7,31 @@ import IceContainer from '@icedesign/container';
 
 export default function AdCount() {
 	const {
+		parameter,
 		response,
 		loading,
 		updateParameter,
-	} = hooks.useRequest(api.getAdCount,{date:'day:0'});
+	} = hooks.useRequest(api.getAdCount, {
+		date: 'day:0',
+		seg_id: 0,
+	});
 	const {
-		meta=[],
-		data=[],
+		meta = [],
+		data = [],
 	} = response;
 
-	const filterChange = (e) => {
-		updateParameter({date:e});
+	const dateChange = (e) => {
+		updateParameter({
+			date: e,
+			seg_id: parameter.seg_id,
+		});
+	};
+
+	const groupChange = e => {
+		updateParameter({
+			date: parameter.date,
+			seg_id: e,
+		});
 	};
 
 	const renderTitles = () => {
@@ -32,7 +46,10 @@ export default function AdCount() {
 	return (
 		<Components.Wrap>
 			<Components.Title title='生命周期广告次数' desc='统计每天的新用户在1、2、3、7、14、30的广告累计点击次数' />
-			<Components.DateFilter filterChange={filterChange} />
+			<IceContainer>
+				<Components.DateFilter filterChange={dateChange} />
+				<Components.GroupFilter filterChange={groupChange} />
+			</IceContainer>
 			<IceContainer>
 				<Loading visible={loading} inline={false}>
 					<Table dataSource={data} hasBorder={false} fixedHeader maxBodyHeight={400} >
@@ -40,6 +57,6 @@ export default function AdCount() {
 					</Table>
 				</Loading>
 			</IceContainer>
-		</Components.Wrap>    	
+		</Components.Wrap>
 	);
 }

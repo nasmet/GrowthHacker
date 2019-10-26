@@ -32,7 +32,7 @@ export default function Top({
 		return () => {
 			api.cancelRequest();
 		};
-	}, [date]);
+	}, []);
 
 	return (
 		<div className={styles.userShareItem}>

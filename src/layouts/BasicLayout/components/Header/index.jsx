@@ -24,11 +24,12 @@ const word = (name) => {
 const traversing = function fn(nav) {
 	if (nav.sub && utils.isArray(nav.sub)) {
 		return (
-			<Nav.SubNav key={nav.path} selectable label={word(nav.name)}>
+			<Nav.SubNav key={nav.path} selectable style={{color: nav.color}} label={word(nav.name)}>
         		{nav.sub.map(fn)}
       		</Nav.SubNav>
 		);
 	}
+
 	return (
 		<Nav.Item key={nav.path}>
       		<Link to={nav.path} onClick={nav.onClick} className="ice-menu-link">

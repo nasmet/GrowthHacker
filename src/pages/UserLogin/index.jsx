@@ -68,7 +68,8 @@ function UserLogin({
 				localStorage.removeItem(config.ACCOUNT);
 				localStorage.removeItem(config.PASSWORD);
 			}
-			sessionStorage.setItem(config.TOKENKEY, res.id);
+			sessionStorage.setItem(config.TOKENKEY, res.token);
+			sessionStorage.setItem(config.USERNAME, username);
 			history.push('/');
 		}).catch(e => {
 			model.log(e);

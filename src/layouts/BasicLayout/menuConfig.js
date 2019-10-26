@@ -1,12 +1,13 @@
 // 菜单配置
 // headerMenuConfig：头部导航配置
 // asideMenuConfig：侧边导航配置
-
+// 
 const headerMenuConfig = [{
 	name: '自定义sql查询',
 	path: '/sql',
 }, {
-	name: '用户',
+	color: '#ea6947',
+	name: sessionStorage.getItem('USERNAME') || '用户',
 	path: '/user',
 	sub: [{
 		name: '退出',

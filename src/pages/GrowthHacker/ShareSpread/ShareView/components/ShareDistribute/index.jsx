@@ -52,7 +52,7 @@ export default function ShareDistribute({
 		return () => {
 			api.cancelRequest();
 		};
-	}, [date]);
+	}, []);
 
 
 	return (

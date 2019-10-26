@@ -10,16 +10,29 @@ export default function AdRate() {
 		response,
 		loading,
 		updateParameter,
-	} = hooks.useRequest(api.getARPURate,{date:'day:0'});
+		parameter,
+	} = hooks.useRequest(api.getARPURate, {
+		date: 'day:0',
+		seg_id: 0,
+	});
 	const {
-		meta=[],
-		data=[],
+		meta = [],
+		data = [],
 	} = response;
 
-	const filterChange = e => {
-		updateParameter({date:e});
+	const dateChange = (e) => {
+		updateParameter({
+			date: e,
+			seg_id: parameter.seg_id,
+		});
 	};
 
+	const groupChange = e => {
+		updateParameter({
+			date: parameter.date,
+			seg_id: e,
+		});
+	};
 	const renderTitles = () => {
 		return meta.map((item, index) => {
 			return <Table.Column key={index} title={item} dataIndex={index.toString()} lock={index>0?false:true} width={index>0?120:140} />;
@@ -28,7 +41,10 @@ export default function AdRate() {
 
 	return (
 		<Components.Wrap>
-			<Components.DateFilter filterChange={filterChange} />      		
+			<IceContainer>
+				<Components.DateFilter filterChange={dateChange} />
+				<Components.GroupFilter filterChange={groupChange} />
+			</IceContainer>  		
 			<IceContainer>
 				<Loading visible={loading} inline={false}>
 					<Table dataSource={data} hasBorder={false} fixedHeader maxBodyHeight={400} >
@@ -36,6 +52,6 @@ export default function AdRate() {
 					</Table>
 				</Loading>
 			</IceContainer>
-		</Components.Wrap>    	
+		</Components.Wrap>
 	);
 }

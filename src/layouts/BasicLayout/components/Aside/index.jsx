@@ -11,7 +11,6 @@ import {
 import FoundationSymbol from '@icedesign/foundation-symbol';
 import {
 	asideMenuConfig,
-	asideMenuConfig2,
 } from '../../menuConfig';
 import styles from './index.module.scss';
 

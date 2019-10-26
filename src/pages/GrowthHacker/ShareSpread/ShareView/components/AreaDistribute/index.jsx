@@ -53,7 +53,7 @@ export default function AreaDistribute({
 		return () => {
 			api.cancelRequest();
 		};
-	}, [date]);
+	}, []);
 
 	return (
 		<Loading visible={loading} inline={false}>

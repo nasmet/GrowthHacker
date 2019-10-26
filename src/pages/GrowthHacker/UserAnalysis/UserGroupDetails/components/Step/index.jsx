@@ -60,11 +60,7 @@ export default function Step({
 
 	useEffect(() => {
 		function assembleSteps() {
-			const steps = [];
-			let step = [];
-			const opChars = [];
-			const valueChars = [];
-			const arr = condition_expr.split(' ');
+			const expArr = model.reversePoland(condition_expr);
 
 			function findCondition(alias) {
 				for (let item of conditions) {
@@ -99,58 +95,37 @@ export default function Step({
 				}
 				delete values['type'];
 				delete values['alias'];
-				step.push({
-					values,
+				return {
 					alias,
-					idData,
-					opData,
-					valueShow,
-					valuesShow,
-				});
+					step: [{
+						values,
+						alias,
+						idData,
+						opData,
+						valueShow,
+						valuesShow,
+					}],
+				};
+
 			}
 
-			function addStep(opChar) {
-				steps.push({
-					op: opChar && opChar.toUpperCase(),
-					step,
-				});
-				step = [];
-			}
-
-			arr.forEach(item => {
-				if (item === 'and' || item === 'or' || item.includes('(') || item.includes(')')) {
-					opChars.push(item);
-				} else {
-					valueChars.push(item);
-				}
-			});
-
-			while (opChars.length > 0) {
-				const opChar = opChars.shift();
-				if (opChar === 'and' || opChar === 'or') {
-					const valueChar = valueChars.shift();
-					createStep(valueChar)
-					addStep(opChar);
-					step = [];
-				} else if (opChar.includes('(')) {
-					createStep(opChar.split('(')[1]);
-					while (opChars.length > 0) {
-						const opChar = opChars.shift();
-						if (opChar.includes(')')) {
-							createStep(opChar.split(')')[0]);
-							addStep(opChars.shift());
-							step = [];
-							break;
-						}
+			const steps = [];
+			for (let v of expArr) {
+				if (v === 'or' || v === 'and') {
+					const temp = steps.pop();
+					const temp_1 = steps.pop();
+					if (temp_1.alias[0] === temp.alias[0]) {
+						temp_1.step.push(...temp.step);
+						steps.push(temp_1);
+					} else {
+						temp_1.op = v;
+						steps.push(temp_1);
+						steps.push(temp);
 					}
+				} else {
+					steps.push(createStep(v));
 				}
 			}
-
-			if (valueChars.length > 0) {
-				createStep(valueChars[0]);
-				addStep('and');
-			}
-
 			return steps;
 		}
 		if (originData.length === 0) {
@@ -255,7 +230,7 @@ export default function Step({
 							})
 						}
 					</div>
-					{(steps.length-1)!==index && <p style={{display:'flex',justifyContent:'center'}}>{item.op}</p>}
+					{(steps.length-1)!==index && <p style={{display:'flex',justifyContent:'center'}}>{item.op.toUpperCase()}</p>}
 				</div>
 			);
 		});
