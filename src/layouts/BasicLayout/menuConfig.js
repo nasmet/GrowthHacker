@@ -3,14 +3,14 @@
 // asideMenuConfig：侧边导航配置
 // 
 const headerMenuConfig = [{
-	name: '自定义sql查询',
+	name: () => '自定义sql查询',
 	path: '/sql',
 }, {
 	color: '#ea6947',
-	name: sessionStorage.getItem('USERNAME') || '用户',
+	name: () => sessionStorage.getItem('USERNAME') || '用户',
 	path: '/user',
 	sub: [{
-		name: '退出',
+		name: () => '退出',
 		path: '',
 		onClick: (e) => {
 			e.preventDefault();

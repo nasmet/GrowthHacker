@@ -16,7 +16,7 @@ import {
 const word = (name) => {
 	return (
 		<span className="ice-menu-item-text">
-      		{name}
+      		{name()}
     	</span>
 	);
 };
