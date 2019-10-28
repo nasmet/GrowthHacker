@@ -1,38 +1,33 @@
 import React, {
-	Component,
 	useState,
 	useEffect,
+	forwardRef,
+	useImperativeHandle,
 } from 'react';
 import {
-	Input,
-	Button,
-	Tab,
 	Table,
-	Message,
 	Loading,
-	Pagination,
-	Icon,
-	Dialog,
 	Select,
-	Grid,
-	DatePicker,
 } from '@alifd/next';
-import {
-	withRouter,
-} from 'react-router-dom';
 import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
 
-export default function Template({
+function Template({
 	type,
 	request,
 	date,
-}) {
+}, ref) {
 	const [tableData, setTableData] = useState([]);
 	const [titles, setTitles] = useState([]);
 	const [loading, setLoading] = useState(false);
 	const [chartData, setChartData] = useState([]);
 	const [chartStyle, setChartStyle] = useState({});
+
+	useImperativeHandle(ref, () => ({
+		update: (e) => {
+			fetchData(e);
+		},
+	}));
 
 	function assemblingChartStyle(meta) {
 		return {
@@ -58,37 +53,37 @@ export default function Template({
 		return arr;
 	}
 
-	useEffect(() => {
-		function fetchData() {
-			setLoading(true);
-			request({
-				type,
-				date,
-			}).then((res) => {
-				const {
-					meta,
-					data,
-				} = res;
-				if (data.length === 0) {
-					return;
-				}
-				setTitles(meta);
-				setTableData(data);
-				setChartStyle(assemblingChartStyle(meta));
-				setChartData(assemblingChartData(data, meta));
-			}).catch((e) => {
-				model.log(e);
-			}).finally(() => {
-				setLoading(false);
-			});
-		}
+	function fetchData(date) {
+		setLoading(true);
+		request({
+			type,
+			date,
+		}).then((res) => {
+			const {
+				meta,
+				data,
+			} = res;
+			if (data.length === 0) {
+				return;
+			}
+			setTitles(meta);
+			setTableData(data);
+			setChartStyle(assemblingChartStyle(meta));
+			setChartData(assemblingChartData(data, meta));
+		}).catch((e) => {
+			model.log(e);
+		}).finally(() => {
+			setLoading(false);
+		});
+	}
 
-		fetchData();
+	useEffect(() => {
+		fetchData(date);
 
 		return () => {
 			api.cancelRequest();
 		};
-	}, [date]);
+	}, []);
 
 	const renderTitle = () => {
 		return titles.map((item, index) => {
@@ -101,20 +96,17 @@ export default function Template({
 	};
 
 	return (
-		<Loading visible={loading} inline={false}>
-			<div className={styles.wrap}>
-				<div>
-					<Select 
-						className={styles.select} 
-						defaultValue={1}
-						onChange={onSelectChange}
-					>
-						<Select.Option value={1}>新用户数</Select.Option>
-						<Select.Option value={2}>访问人数</Select.Option>
-					</Select>
-					
-					<Components.BasicSector data={chartData} {...chartStyle} forceFit />
-				</div>
+		<Components.Wrap>
+			<Select 
+				style={{width: '200px'}}
+				defaultValue={1}
+				onChange={onSelectChange}
+			>
+				<Select.Option value={1}>新用户数</Select.Option>
+				<Select.Option value={2}>访问人数</Select.Option>
+			</Select>
+			<Loading visible={loading} inline={false}>
+				<Components.BasicSector data={chartData} {...chartStyle} forceFit />
 
 				<Table 
 					dataSource={tableData} 
@@ -122,7 +114,10 @@ export default function Template({
 				>
 				 	{renderTitle()}	
 				</Table>
-			</div>
-		</Loading>
+			</Loading>
+		</Components.Wrap>
+
 	);
 }
+
+export default forwardRef(Template);

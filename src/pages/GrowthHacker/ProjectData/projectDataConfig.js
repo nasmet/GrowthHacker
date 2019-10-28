@@ -59,6 +59,13 @@ export default [{
 		path: `${baseUrl}/ad/arpuanalysis`,
 	}],
 }, {
+	name: '获客分析',
+	path: `${baseUrl}/ca`,
+	sub: [{
+		name: '单用户价值评估',
+		path: `${baseUrl}/ca/userworth`,
+	}],
+}, {
 	name: '数据中心',
 	path: `${baseUrl}/dc`,
 }, {

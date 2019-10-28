@@ -1,27 +1,7 @@
-import React, {
-	Component,
-	useState,
-	useEffect,
-} from 'react';
+import React from 'react';
 import {
-	Input,
-	Button,
 	Tab,
-	Table,
-	Message,
-	Loading,
-	Pagination,
-	Icon,
-	Dialog,
-	Select,
-	Grid,
-	DatePicker,
 } from '@alifd/next';
-import {
-	withRouter,
-} from 'react-router-dom';
-import IceContainer from '@icedesign/container';
-import styles from './index.module.scss';
 import userPortraitConfig from './userPortraitConfig';
 
 export default function UserPortrait() {
@@ -34,9 +14,7 @@ export default function UserPortrait() {
 			} = item;
 			return (
 				<Tab.Item key={key} title={tab} >
-          			<div className={styles.marginTop10}>
-            			<Component />
-          			</div>
+        			<Component />
         		</Tab.Item>
 			);
 		});

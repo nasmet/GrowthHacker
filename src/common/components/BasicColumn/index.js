@@ -1,6 +1,4 @@
-import React, {
-	Component,
-} from "react";
+import React from "react";
 import {
 	Chart,
 	Geom,
@@ -33,18 +31,18 @@ export default function BasicColumn({
 			scale={cols} 
 			forceFit={forceFit}
 		>
-  			<Coord transpose={transpose} />
-    		<Axis key={x} name={x} />
-    		<Axis key={y} name={y} label={yLabel} />
+			<Coord transpose={transpose} />
+			<Axis key={x} name={x} />
+			<Axis key={y} name={y} label={yLabel} />
 			<Legend />
-    		<Tooltip showTitle={showTitle} />
+			<Tooltip showTitle={showTitle} />
 			<Geom 
 				type="interval" 
 				tooltip={tooltip}
 				position={pos} 
 				color={color}
 				adjust={{ type: 'dodge', marginRatio: 0.05 }}
-			 />
- 		</Chart> : <Components.NotData style={{height:`${height}px`}} />
+			/>
+		</Chart> : <Components.NotData style={{height:`${height}px`}} />
 	);
 }

@@ -104,8 +104,8 @@ function DataBoard({
 			<Components.Wrap>			
 				<div className={styles.wrap}>				
 					{renderList()}					
-				</div>				
-				{charts.length === 0 && <Components.NotData style={{height:'200px'}} />}	      		
+				</div>
+				{charts.length === 0 && <Components.NotData style={{height:'200px'}} />}      		
 			</Components.Wrap> 	   		
 		</Loading>
 	);

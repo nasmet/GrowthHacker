@@ -1,32 +1,18 @@
 import React, {
-	Component,
 	useState,
 	useEffect,
 } from 'react';
 import {
 	Input,
-	Button,
-	Tab,
 	Table,
-	Message,
 	Loading,
 	Pagination,
-	Icon,
-	Dialog,
-	Select,
-	Grid,
-	DatePicker,
 } from '@alifd/next';
-import {
-	withRouter,
-} from 'react-router-dom';
 import IceContainer from '@icedesign/container';
-import styles from './index.module.scss';
 
 export default function ShareAnalysis() {
 	const [loading, setLoading] = useState(false);
 	const [tableData, setTableData] = useState([]);
-	const [titles, setTitles] = useState([]);
 	const [date, setDate] = useState('day:0');
 	const [search, setSearch] = useState('');
 	const [emptyContent, setEmptyContent] = useState(1);
@@ -94,6 +80,6 @@ export default function ShareAnalysis() {
 					</Table>
 				</Loading>
 			</IceContainer>
-    	</Components.Wrap>
+		</Components.Wrap>
 	);
 }

@@ -1,25 +1,12 @@
 import React, {
-	Component,
 	useState,
 	useEffect,
 } from 'react';
 import {
-	Input,
-	Button,
-	Tab,
 	Table,
-	Message,
 	Loading,
 	Pagination,
-	Icon,
-	Dialog,
-	Select,
-	Grid,
-	DatePicker,
 } from '@alifd/next';
-import {
-	withRouter,
-} from 'react-router-dom';
 import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
 
@@ -59,7 +46,7 @@ export default function CityDistribute({
 		}
 
 		getUserShare();
-	}, [date, curPage]);
+	}, [date, curPage, type]);
 
 	function assembleChartData(arg) {
 		const temp = [];
@@ -110,12 +97,10 @@ export default function CityDistribute({
 	};
 
 	return (
-		<div className={styles.content}>
-			<div style={{background:'#fff'}}>
-				<Components.BasicColumn data={chartData} {...chartStyle} forceFit />
-			</div>
-			<IceContainer>
-				<Loading visible={loading} inline={false}>
+		<Components.Wrap>
+			<Loading visible={loading} inline={false}>					
+				<IceContainer>
+					<Components.BasicColumn data={chartData} {...chartStyle} forceFit />
 					<Table dataSource={tableData} hasBorder={false}>
 						<Table.Column title='城市' dataIndex='city' />
 						<Table.Column title='分享人数' dataIndex='share_user_count' />
@@ -124,14 +109,14 @@ export default function CityDistribute({
 						<Table.Column title='回流量占比' cell={renderFiveColumn} />
 						<Table.Column title='分享新增' dataIndex='new_count' />
 					</Table>
-				</Loading>
-			    <Pagination
-	           		className={styles.pagination}
-	            	current={curPage}
-	            	total={count}
-	            	onChange={pageChange}
-	          	/>
-          	</IceContainer>
-		</div>
+					<Pagination
+						className={styles.pagination}
+						current={curPage}
+						total={count}
+						onChange={pageChange}
+					/>
+				</IceContainer>
+			</Loading>
+		</Components.Wrap>
 	);
 }

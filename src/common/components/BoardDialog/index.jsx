@@ -1,7 +1,5 @@
 import React, {
-	Component,
 	useState,
-	useEffect,
 	forwardRef,
 	useImperativeHandle,
 } from 'react';
@@ -16,7 +14,7 @@ import styles from './index.module.scss';
 function BoardDialog({
 	onOk,
 	onInputChange,
-	title='请输入名称'
+	title='请输入名称',
 }, ref) {
 	const [visible, setVisible] = useState(false);
 	const [loading, setLoading] = useState(false);
@@ -25,7 +23,7 @@ function BoardDialog({
 	useImperativeHandle(ref, () => ({
 		onShow: () => {
 			setVisible(true);
-		}
+		},
 	}));
 
 	const onChange = (e) => {
@@ -53,7 +51,7 @@ function BoardDialog({
 
 	return (
 		<Dialog autoFocus visible={visible} closeable={false} onClose={onClose} footer={false}>
-  			<Loading visible={loading} inline={false}>
+			<Loading visible={loading} inline={false}>
 				<div style={{margin:'20px'}}>
 					<p className={styles.name}>{title}</p>
 					<Input onChange={onChange} style={{marginBottom:'20px'}} />

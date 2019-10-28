@@ -1,6 +1,4 @@
-import React, {
-	Component,
-} from "react";
+import React from "react";
 import {
 	Chart,
 	Geom,
@@ -29,19 +27,19 @@ export default function BasicPolyline({
 			height={height}
 			data={data} 
 			scale={cols} 
-			forceFit
+			forceFit={forceFit}
 		>
 			<Axis name={x} />
-        	<Axis name={y} label={yLabel} />
-        	<Legend />
-        	<Tooltip />
-        	<Geom 
-        		shape={"smooth"} 
-        		type="line" 
-        		tooltip={tooltip} 
-        		position={pos} 
-        		size={2} 
-        		color={color} />
+			<Axis name={y} label={yLabel} />
+			<Legend />
+			<Tooltip />
+			<Geom 
+				shape={"smooth"} 
+				type="line" 
+				tooltip={tooltip} 
+				position={pos} 
+				size={2} 
+				color={color} />
 			<Geom 
 				type="point" 
 				shape={'circle'} 
@@ -49,6 +47,6 @@ export default function BasicPolyline({
 				size={4} 
 				color={color} 
 			/>
-      	</Chart> : <Components.NotData style={{height:`${height}px`}} />
+		</Chart> : <Components.NotData style={{height:`${height}px`}} />
 	);
 }

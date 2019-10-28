@@ -1,33 +1,19 @@
 import React, {
-	Component,
-	useState,
-	useEffect,
+	useRef,
 } from 'react';
 import {
-	Input,
-	Button,
 	Tab,
-	Table,
-	Message,
-	Loading,
-	Pagination,
-	Icon,
-	Dialog,
-	Select,
-	Grid,
-	DatePicker,
 } from '@alifd/next';
-import {
-	withRouter,
-} from 'react-router-dom';
 import IceContainer from '@icedesign/container';
-import styles from './index.module.scss';
 import {
 	tabs,
 } from './areaAnalysisConfig';
 
 export default function AreaAnalysis() {
-	const [date, setDate] = useState('day:0');
+	const refTab = useRef({
+		curKey: 'province',
+		date: 'day:0',
+	});
 
 	const renderTab = (e) => {
 		return tabs.map((item) => {
@@ -37,28 +23,33 @@ export default function AreaAnalysis() {
 				Component,
 			} = item;
 			return (
-				<Tab.Item key={key} title={tab}>
-					<Component type={key} request={api.getPortraitArea} date={date} />
+				<Tab.Item key={key} title={tab} >
+					<Component ref={e=>{refTab.current[key] = e}} type={key} request={api.getPortraitArea} date={refTab.current.date} />
 				</Tab.Item>
 			);
 		});
 	};
 
 	const filterChange = (e) => {
-		setDate(e);
+		refTab.current[refTab.current.curKey].update(e);
+	};
+
+	const onChange = e => {
+		refTab.current.curKey = e;
 	};
 
 	return (
-		<div className={styles.wrap}>
+		<Components.Wrap>
 			<Components.DateFilter filterChange={filterChange} />
 		    <IceContainer>
 			  	<Tab 
-	  				defaultActiveKey='province' 
-	  				size="small" 
+	  				defaultActiveKey={refTab.current.curKey}
+	  				size="small"
+	  				onChange={onChange} 
 		  		>
 		  			{renderTab()}
 			    </Tab>
 		    </IceContainer>
-	    </div>
+	    </Components.Wrap>
 	);
 }

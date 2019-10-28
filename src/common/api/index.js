@@ -77,7 +77,7 @@ export function createOriginDataValues(data) {
 export function deleteOriginDataValues(data) {
 	const {
 		id,
-		valueId
+		valueId,
 	} = data;
 	return del(`/metadatas/${id}/values/${valueId}`);
 }
@@ -93,7 +93,7 @@ export function createEvent(data) {
 	return post('/event_entities', data);
 }
 
-export function getBoards(data) {
+export function getBoards() {
 	return get(`/projects/${sessionStorage.getItem(config.PROJECTID)}/charts`);
 }
 
@@ -159,7 +159,7 @@ export function createUserGroup(data) {
 	return post(`/projects/${sessionStorage.getItem(config.PROJECTID)}/segmentations`, data);
 }
 
-export function getUserGroups(data) {
+export function getUserGroups() {
 	return get(`/projects/${sessionStorage.getItem(config.PROJECTID)}/segmentations`);
 }
 
@@ -237,6 +237,10 @@ export function getARPUDaily(data) {
 
 export function getARPURate(data) {
 	return get(`/projects/${sessionStorage.getItem(config.PROJECTID)}/ads/arpu_click`, data);
+}
+
+export function getUserWorth(data) {
+	return get(`/projects/${sessionStorage.getItem(config.PROJECTID)}/ca/userworth`, data);
 }
 
 /**

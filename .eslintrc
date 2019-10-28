@@ -62,5 +62,6 @@
     	"config": true,
     	"Components": true,
     	"hooks": true,
+    	"Promise": true,
   	},
 }

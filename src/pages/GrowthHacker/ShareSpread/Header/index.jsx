@@ -1,16 +1,17 @@
 import React, {
-	Component,
 	useState,
 	useEffect,
+	forwardRef,
+	useImperativeHandle,
 } from 'react';
 import {
 	Loading,
 } from '@alifd/next';
 import styles from './index.module.scss';
 
-export default function Header({
+function Header({
 	date,
-}) {
+}, ref) {
 	const [loading, setLoading] = useState(false);
 	const [userCount, setUserCount] = useState(0);
 	const [count, setCount] = useState(0);
@@ -18,7 +19,13 @@ export default function Header({
 	const [openCount, setOpenCount] = useState(0);
 	const [rate, setRate] = useState(0);
 
-	useEffect(() => {
+	useImperativeHandle(ref, () => ({
+		update: (e) => {
+			getShareHeader(e);
+		},
+	}));
+
+	function getShareHeader(date) {
 		setLoading(true);
 		api.getShareHeader({
 			date,
@@ -40,6 +47,10 @@ export default function Header({
 		}).finally(() => {
 			setLoading(false);
 		});
+	}
+
+	useEffect(() => {
+		getShareHeader(date);
 
 		return () => {
 			api.cancelRequest();
@@ -67,3 +78,5 @@ export default function Header({
 		</Loading>
 	);
 }
+
+export default forwardRef(Header);

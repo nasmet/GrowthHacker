@@ -37,6 +37,7 @@ import UserShare from './pages/GrowthHacker/ShareSpread/UserShare';
 import AdAnalysis from './pages/GrowthHacker/AdMonitor/AdAnalysis';
 import AdCount from './pages/GrowthHacker/AdMonitor/AdCount';
 import ARPUAnalysis from './pages/GrowthHacker/AdMonitor/ARPUAnalysis';
+import UserWorth from './pages/GrowthHacker/CustomerAnalysis/UserWorth';
 import DataCenter from './pages/GrowthHacker/DataCenter';
 const OriginDataDetails = React.lazy(() =>
 	import ('./pages/GrowthHacker/OriginDataDetails'));
@@ -277,6 +278,12 @@ const routerConfig = [
 				id: '1008025',
 				path: '/growthhacker/projectdata/newevent',
 				component: NewEvent,
+				exact: true,
+				auth: true,
+			}, {
+				id: '1008026',
+				path: '/growthhacker/projectdata/ca/userworth',
+				component: UserWorth,
 				exact: true,
 				auth: true,
 			}, {

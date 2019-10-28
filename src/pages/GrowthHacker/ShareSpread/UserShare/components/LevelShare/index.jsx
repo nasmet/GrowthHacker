@@ -42,11 +42,7 @@ export default function LevelShare({
 			setLoading(false);
 		});
 	}
-
-	useEffect(() => {
-
-	}, []);
-
+	
 	return (
 		<div className={styles.content}>
 			<IceContainer>

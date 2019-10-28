@@ -1,35 +1,25 @@
 import React, {
-	Component,
 	useState,
 	useEffect,
+	useRef,
 } from 'react';
 import {
-	Input,
-	Button,
-	Tab,
 	Table,
-	Message,
 	Loading,
 	Pagination,
-	Icon,
-	Dialog,
-	Select,
-	Grid,
-	DatePicker,
 } from '@alifd/next';
-import {
-	withRouter,
-} from 'react-router-dom';
 import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
 import Header from '../Header';
 
 export default function ShareTrend() {
+	const refVarible = useRef({
+		date: 'day:0',
+		curPage: 1,
+	});
+	const headRef = useRef(null);
 	const [loading, setLoading] = useState(false);
 	const [tableData, setTableData] = useState([]);
-	const [titles, setTitles] = useState([]);
-	const [date, setDate] = useState('day:0');
-	const [curPage, setCurPage] = useState(1);
 	const [count, setCount] = useState(0);
 	const [chartData, setChartData] = useState([]);
 	const chartStyle = {
@@ -37,35 +27,6 @@ export default function ShareTrend() {
 		y: 'count',
 		color: 'event',
 	};
-
-	useEffect(() => {
-		function getShareTrend() {
-			setLoading(true);
-			api.getShareTrend({
-				date,
-				limit: config.LIMIT,
-				offset: (curPage - 1) * config.LIMIT,
-			}).then((res) => {
-				const {
-					share_overview,
-					total,
-				} = res;
-				setTableData(share_overview);
-				setCount(total);
-				setChartData(assembleChartData(share_overview));
-			}).catch((e) => {
-				model.log(e);
-			}).finally(() => {
-				setLoading(false);
-			});
-		}
-
-		getShareTrend();
-
-		return () => {
-			api.cancelRequest();
-		};
-	}, [date, curPage]);
 
 	function assembleChartData(arg) {
 		const temp = [];
@@ -76,7 +37,7 @@ export default function ShareTrend() {
 				share_open_count,
 				share_reflux_ratio,
 				share_user_count,
-				time_range
+				time_range,
 			} = item;
 			const time = formatTime(time_range);
 			temp.push({
@@ -108,20 +69,44 @@ export default function ShareTrend() {
 		return temp;
 	}
 
-	const filterChange = (e) => {
-		setDate(e);
-	};
-
-	const renderTitles = () => {
-		return titles.map((item, index) => {
-			return (
-				<Column key={index} title={item} dataIndex={index.toString()} />
-			);
+	function getShareTrend() {
+		setLoading(true);
+		api.getShareTrend({
+			date: refVarible.current.date,
+			limit: config.LIMIT,
+			offset: (refVarible.current.curPage - 1) * config.LIMIT,
+		}).then((res) => {
+			const {
+				share_overview,
+				total,
+			} = res;
+			setTableData(share_overview);
+			setCount(total);
+			setChartData(assembleChartData(share_overview));
+		}).catch((e) => {
+			model.log(e);
+		}).finally(() => {
+			setLoading(false);
 		});
+	}
+
+	useEffect(() => {
+
+		getShareTrend();
+
+		return () => {
+			api.cancelRequest();
+		};
+	}, []);
+	const filterChange = (e) => {
+		refVarible.current.date = e;
+		getShareTrend();
+		headRef.current.update(e);
 	};
 
 	const pageChange = (e) => {
-		setCurPage(e);
+		refVarible.current.curPage = e;
+		getShareTrend();
 	};
 
 	const renderFirstColumn = (value, index, record) => {
@@ -147,12 +132,10 @@ export default function ShareTrend() {
 		<Components.Wrap>
 			<Components.Title title='分享趋势' />
 			<Components.DateFilter filterChange={filterChange} />
-			<div style={{background:'#fff'}}>
-				<Header date={date} />
-				<Components.BasicColumn data={chartData} {...chartStyle} forceFit />
-			</div>
 			<IceContainer>
+				<Header date={refVarible.current.date} ref={headRef} />
 				<Loading visible={loading} inline={false}>
+					<Components.BasicColumn data={chartData} {...chartStyle} forceFit />
 					<Table 
 						dataSource={tableData} 
 						hasBorder={false}
@@ -165,13 +148,12 @@ export default function ShareTrend() {
 						<Table.Column title='分享新增' dataIndex='new_count' />
 					</Table>
 				</Loading>
-	          	<Pagination
-	           		className={styles.pagination}
-	            	current={curPage}
-	            	total={count}
-	            	onChange={pageChange}
-	          	/>
+				<Pagination
+					className={styles.pagination}
+					total={count}
+					onChange={pageChange}
+				/>
 			</IceContainer>
-    	</Components.Wrap>
+		</Components.Wrap>
 	);
 }

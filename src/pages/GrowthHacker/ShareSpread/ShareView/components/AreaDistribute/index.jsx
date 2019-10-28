@@ -1,33 +1,17 @@
 import React, {
-	Component,
 	useState,
 	useEffect,
+	forwardRef,
+	useImperativeHandle,
 } from 'react';
-import {
-	Input,
-	Button,
-	Tab,
-	Table,
-	Message,
-	Loading,
-	Pagination,
-	Icon,
-	Dialog,
-	Select,
-	Grid,
-	DatePicker,
-} from '@alifd/next';
-import {
-	withRouter,
-} from 'react-router-dom';
 import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
 
-export default function AreaDistribute({
+function AreaDistribute({
 	name,
 	date,
 	request,
-}) {
+}, ref) {
 	const chartStyle = {
 		x: 'desc',
 		y: 'count',
@@ -38,7 +22,13 @@ export default function AreaDistribute({
 	const [chartData, setChartData] = useState([]);
 	const [loading, setLoading] = useState(false);
 
-	useEffect(() => {
+	useImperativeHandle(ref, () => ({
+		update: (e) => {
+			getDistribute(e);
+		},
+	}));
+
+	function getDistribute(date) {
 		setLoading(true);
 		request({
 			date,
@@ -49,6 +39,10 @@ export default function AreaDistribute({
 		}).finally(() => {
 			setLoading(false);
 		});
+	}
+
+	useEffect(() => {
+		getDistribute(date);
 
 		return () => {
 			api.cancelRequest();
@@ -66,3 +60,5 @@ export default function AreaDistribute({
 		</Loading>
 	);
 }
+
+export default forwardRef(AreaDistribute);

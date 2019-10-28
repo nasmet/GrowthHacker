@@ -1,6 +1,4 @@
-import React, {
-	Component,
-} from "react";
+import React from "react";
 import {
 	Chart,
 	Geom,
@@ -11,7 +9,6 @@ import {
 	Legend,
 	Guide,
 } from "bizcharts";
-import DataSet from "@antv/data-set";
 
 export default function BasicHeatMap({
 	data,
@@ -20,6 +17,7 @@ export default function BasicHeatMap({
 	x = 'name',
 	y = 'value',
 	color,
+	cols={},
 	yLabel,
 	tooltip,
 	gLabel,

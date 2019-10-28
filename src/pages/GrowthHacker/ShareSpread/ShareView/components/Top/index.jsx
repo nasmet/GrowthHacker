@@ -1,23 +1,30 @@
 import React, {
-	Component,
 	useState,
 	useEffect,
+	forwardRef,
+	useImperativeHandle,
 } from 'react';
 import {
 	Table,
 } from '@alifd/next';
 import styles from './index.module.scss';
 
-export default function Top({
+function Top({
 	request,
 	title,
 	date,
 	name,
-}) {
+}, ref) {
 	const [loading, setLoading] = useState(false);
 	const [tableData, setTableData] = useState([]);
 
-	useEffect(() => {
+	useImperativeHandle(ref, () => ({
+		update: (e) => {
+			getTop(e);
+		},
+	}));
+
+	function getTop(date) {
 		setLoading(true);
 		request({
 			date,
@@ -28,10 +35,14 @@ export default function Top({
 		}).finally(() => {
 			setLoading(false);
 		});
+	}
+
+	useEffect(() => {
+		getTop(date);
 
 		return () => {
 			api.cancelRequest();
-		};
+		}
 	}, []);
 
 	return (
@@ -47,3 +58,5 @@ export default function Top({
 		</div>
 	);
 }
+
+export default forwardRef(Top);

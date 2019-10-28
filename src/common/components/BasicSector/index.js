@@ -1,6 +1,4 @@
-import React, {
-	Component,
-} from "react";
+import React from "react";
 import {
 	Chart,
 	Geom,
@@ -27,12 +25,12 @@ export default function BasicSector({
 	return (
 		data.length !== 0 ?
 		<Chart height={height} data={data} forceFit={forceFit} >
-    		<Coord type="theta" innerRadius={0.3} radius={1} />
-    		<Tooltip />
-    		<Legend />
-	        <Geom type="intervalStack" position={pos} color={color} >
-	        	<Label content={pos} formatter={gLabel} />
-    		</Geom>
- 		</Chart> : <Components.NotData style={{height:`${height}px`}} />
+			<Coord type="theta" innerRadius={0.3} radius={1} />
+			<Tooltip />
+			<Legend />
+			<Geom type="intervalStack" position={pos} color={color} >
+				<Label content={pos} formatter={gLabel} />
+			</Geom>
+		</Chart> : <Components.NotData style={{height:`${height}px`}} />
 	);
 }

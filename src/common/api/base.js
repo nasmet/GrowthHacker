@@ -53,11 +53,10 @@ export function get(url, params = {}) {
 			params,
 			cancelToken: new CancelToken(function executor(c) {
 				cancelRequestTask = c;
-			})
+			}),
 		}).then((response) => {
 			resolve(response.data);
 		}).catch((err) => {
-			console.log(err);
 			if (!err) {
 				return;
 			}
@@ -77,7 +76,7 @@ export function post(url, data = {}) {
 		axios.post(url, data, {
 			cancelToken: new CancelToken(function executor(c) {
 				cancelRequestTask = c;
-			})
+			}),
 		}).then((response) => {
 			resolve(response.data);
 		}, (err) => {
@@ -100,7 +99,7 @@ export function put(url, data = {}) {
 		axios.put(url, data, {
 			cancelToken: new CancelToken(function executor(c) {
 				cancelRequestTask = c;
-			})
+			}),
 		}).then((response) => {
 			resolve(response.data);
 		}, (err) => {
@@ -124,7 +123,7 @@ export function del(url, params = {}) {
 			params,
 			cancelToken: new CancelToken(function executor(c) {
 				cancelRequestTask = c;
-			})
+			}),
 		}).then((response) => {
 			resolve(response.data);
 		}, (err) => {

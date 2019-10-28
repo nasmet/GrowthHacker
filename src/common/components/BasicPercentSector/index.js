@@ -1,6 +1,4 @@
-import React, {
-	Component,
-} from "react";
+import React from "react";
 import {
 	Chart,
 	Geom,
@@ -31,7 +29,7 @@ export default function BasicPercentSector({
 		type: "percent",
 		field: y,
 		dimension: x,
-		as: "percent"
+		as: "percent",
 	});
 
 	const cols = {
@@ -39,34 +37,34 @@ export default function BasicPercentSector({
 			formatter: val => {
 				val = utils.transformPercent(val);
 				return val;
-			}
-		}
+			},
+		},
 	};
 
 	return (
 		data.length !== 0 ?
 		<Chart height={height} data={dv} scale={cols} forceFit={forceFit} >
-    		<Coord type="theta" innerRadius={0.3} radius={1} />
-    		<Axis name="percent" />
-    		<Tooltip showTitle={false} />
-    		<Legend />
-	        <Geom
-	          	type="intervalStack"
-	          	position="percent"
-	          	color={color}
-	          	tooltip={[
-	              `${x}*percent`,
-	              (item, percent) => {
-					percent = utils.transformPercent(percent);
-	                return {
-	                  name: item,
-	                  value: percent
-	                };
-	              }
-	            ]}
-	        >
-	        	<Label content='percent' formatter={gLabel} />
-    		</Geom>
-  		</Chart> : <Components.NotData style={{height:`${height}px`}} />
+			<Coord type="theta" innerRadius={0.3} radius={1} />
+			<Axis name="percent" />
+			<Tooltip showTitle={false} />
+			<Legend />
+			<Geom
+				type="intervalStack"
+				position="percent"
+				color={color}
+				tooltip={[
+					`${x}*percent`,
+					(item, percent) => {
+						percent = utils.transformPercent(percent);
+						return {
+							name: item,
+							value: percent,
+						};
+					},
+				]}
+			>
+				<Label content='percent' formatter={gLabel} />
+			</Geom>
+		</Chart> : <Components.NotData style={{height:`${height}px`}} />
 	);
 }
