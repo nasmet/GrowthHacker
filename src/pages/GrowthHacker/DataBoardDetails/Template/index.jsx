@@ -1,4 +1,6 @@
-import React from 'react';
+import React, {
+	useEffect
+} from 'react';
 import {
 	Tab,
 	Table,
@@ -14,12 +16,15 @@ export default function Template({
 	chartStyle,
 	chartData,
 	loading,
+	fixedHeader = false,
 }) {
 	const renderTable = () => {
 		return (
 			<Table 
 				dataSource={tableData} 
-				hasBorder={false} 
+				hasBorder={false}
+				maxBodyHeight={400}
+				fixedHeader={fixedHeader}
 			>
 				{renderTitle()}			   	   		
 			</Table>
@@ -57,7 +62,7 @@ export default function Template({
 							{rendTabComponent(key)}
 						</IceContainer>  
 					</Loading>
-				</Tab.Item>        		
+				</Tab.Item>
 			);
 		});
 	};
@@ -65,6 +70,6 @@ export default function Template({
 	return (
 		<Tab defaultActiveKey="0">
 			{renderTab()}      		
-		</Tab>      	
+		</Tab>
 	);
 }

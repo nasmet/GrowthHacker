@@ -26,7 +26,6 @@ import styles from './index.module.scss';
 export default function Template({
 	openId,
 	tab,
-	onEventDetals,
 }) {
 	const [curPage, setCurPage] = useState(1);
 	const [total, setTotal] = useState(0);
@@ -73,17 +72,12 @@ export default function Template({
 		return <span>{utils.formatUnix(val,'Y-M-D h:m:s')}</span>
 	};
 
-	const onRowClick = (record) => {
-		onEventDetals(record);
-	};
-
 	return (
 		<IceContainer>
       		<Table 
 				loading={loading} 
 				dataSource={tableData} 
 				hasBorder={false}
-				onRowClick={onRowClick}
 			>
 				<Table.Column title='事件名称' dataIndex='name' />
 				<Table.Column title='事件标识符' dataIndex='event' />

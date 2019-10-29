@@ -1,6 +1,5 @@
 import React, {
-	useState,
-	useEffect,
+	useRef,
 } from 'react';
 import {
 	Table,
@@ -16,47 +15,26 @@ function DistributeDetails({
 	location,
 }) {
 	const boardInfo = location.state.boardInfo;
-	const [loading, setLoading] = useState(false);
-	const [data, setData] = useState([]);
-	const [titles, setTitles] = useState([]);
-	const [chartData, setChartData] = useState([]);
-	const [chartStyle, setChartStyle] = useState({});
-	const [date, setDate] = useState('');
 
-	useEffect(() => {
-		function getDataBoard() {
-			setLoading(true);
-			api.getDataBoard({
-				chart_id: boardInfo.id,
-				trend: {
-					date,
-				},
-			}).then((res) => {
-				const {
-					meta,
-					data,
-				} = res;
-				setTitles(meta);
-				setData(assemblingTableData(data));
-				setChartStyle(assemblingChartStyle(meta));
-				setChartData(assemblingChartData(data, meta));
-			}).catch((e) => {
-				model.log(e);
-			}).finally(() => {
-				setLoading(false);
-			});
-		}
-
-		getDataBoard();
-
-		return () => {
-			api.cancelRequest();
-		};
-	}, [date, boardInfo.id]);
+	const {
+		parameter,
+		response,
+		loading,
+		updateParameter,
+	} = hooks.useRequest(api.getDataBoard, {
+		chart_id: boardInfo.id,
+		trend: {
+			date: boardInfo.date,
+		},
+	});
+	const {
+		meta = [],
+			data = [],
+	} = response;
 
 	function assemblingTableData(data) {
-		if (!data || data.length === 0) {
-			return;
+		if (data.length < 2) {
+			return data;
 		}
 		const row = data.reduce((total, value) => {
 			return total.map((item, index) => item + value[index]);
@@ -84,7 +62,7 @@ function DistributeDetails({
 
 	function assemblingChartData(data, meta) {
 		if (!data || data.length === 0) {
-			return;
+			return [];
 		}
 		const arr = [];
 		data.forEach(item => {
@@ -110,7 +88,7 @@ function DistributeDetails({
 	}
 
 	const renderTitle = () => {
-		return titles.map((item, index) => {
+		return meta.map((item, index) => {
 			if (index > 1) {
 				return <Table.Column key={index} title={item} cell={renderColumn.bind(this, index)} />
 			}
@@ -119,7 +97,11 @@ function DistributeDetails({
 	};
 
 	const filterChange = (e) => {
-		setDate(e);
+		updateParameter(Object.assign({}, parameter, {
+			trend: {
+				date: e,
+			}
+		}));
 	};
 
 	return (
@@ -128,10 +110,10 @@ function DistributeDetails({
 			<IceContainer>
 				<Components.DateFilter initTabValue='NAN' initCurDateValue={model.transformDate(boardInfo.date)} filterChange={filterChange} />	
 				<Template 
-					tableData={data}
+					tableData={assemblingTableData(data)}
 					loading={loading}
-					chartData={chartData} 
-					chartStyle={chartStyle}
+					chartData={assemblingChartData(data, meta)} 
+					chartStyle={assemblingChartStyle(meta)}
 					renderTitle={renderTitle} 
 				/>
 			</IceContainer>

@@ -1,12 +1,15 @@
 import React, {
 	useEffect,
 	useState,
+	forwardRef,
+	useImperativeHandle,
 } from 'react';
 import {
 	Button,
 	Input,
 	Loading,
 	Select,
+	Dialog,
 } from '@alifd/next';
 import {
 	Form,
@@ -14,12 +17,19 @@ import {
 } from '@ice/form';
 import styles from './index.module.scss';
 
-export default function CreateOriginDataValue({
+function CreateOriginDataValue({
 	onOk,
 	id,
 	value_type,
-}) {
+}, ref) {
 	const [loading, setLoading] = useState(false);
+	const [show, setShow] = useState(false);
+
+	useImperativeHandle(ref, () => ({
+		onShow: () => {
+			setShow(true);
+		},
+	}));
 
 	useEffect(() => {
 		return () => {
@@ -35,6 +45,8 @@ export default function CreateOriginDataValue({
 		}).then((res) => {
 			model.log('创建成功');
 			onOk(res);
+			setLoading(false);
+			setShow(false);
 		}).catch((e) => {
 			model.log(e);
 			setLoading(false);
@@ -45,8 +57,17 @@ export default function CreateOriginDataValue({
 		formCore.reset();
 	};
 
+	const onClose = () => {
+		setShow(false);
+	};
+
 	return (
-		<Loading visible={loading} inline={false}>
+		<Dialog		   	 
+			autoFocus		   		
+			visible={show}		      	 
+			onClose={onClose}		      	
+			footer={false}		      	
+		>	
 			<div className={styles.wrap}>
       			<Form
       				onSubmit={onSubmit} 
@@ -74,7 +95,7 @@ export default function CreateOriginDataValue({
 		              			/>
 		      				</Field>
 		      				<div className={styles.btnWrap}>
-			          			<Button className={styles.btn} type="primary" htmlType="submit">
+			          			<Button className={styles.btn} loading={loading} type="primary" htmlType="submit">
 				            		确定
 				          		</Button>
 				          		<Button className={styles.btn} type="primary" onClick={onReset.bind(this,formCore)}>
@@ -85,6 +106,8 @@ export default function CreateOriginDataValue({
 		          	)}
       			</Form>
       		</div>
-   		</Loading>
+		</Dialog>
 	);
 }
+
+export default forwardRef(CreateOriginDataValue);

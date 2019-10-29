@@ -1,11 +1,9 @@
 import React, {
-	useState,
-	useEffect,
+	useRef,
 } from 'react';
 import {
 	Button,
 	Table,
-	Loading,
 	Pagination,
 	Dialog,
 } from '@alifd/next';
@@ -19,60 +17,47 @@ import CreateOriginData from './components/CreateOriginData';
 function OriginData({
 	history,
 }) {
-	const [loading, setLoading] = useState(false);
-	const [tableData, setTableData] = useState([]);
-	const [count, setCount] = useState(0);
-	const [curPage, setCurPage] = useState(1);
-	const [show, setShow] = useState(false);
+	const refDialog = useRef(null);
 
-	useEffect(() => {
-		function getOriginData() {
-			setLoading(true);
-			api.getOriginData({
-				limit: config.LIMIT,
-				offset: (curPage - 1) * config.LIMIT,
-			}).then((res) => {
-				const {
-					data,
-					total,
-				} = res;
-				setCount(total);
-				setTableData(data);
-			}).catch((e) => {
-				model.log(e);
-			}).finally(() => {
-				setLoading(false);
-			});
-		}
+	const {
+		parameter,
+		response,
+		loading,
+		updateParameter,
+		updateResponse,
+		showLoading,
+		closeLoading,
+	} = hooks.useRequest(api.getOriginData, {
+		limit: config.LIMIT,
+		offset: 0,
+	});
 
-		getOriginData();
+	const {
+		data = [],
+			total = 0,
+	} = response;
 
-		return () => {
-			api.cancelRequest();
-		};
-	}, [curPage]);
-
-	const pageChange = (e) => {
-		setCurPage(e);
+	const pageChange = e => {
+		updateParameter(Object.assign({}, parameter, {
+			offset: (e - 1) * config.LIMIT,
+		}));
 	};
 
 	const onDeleteOriginData = (id, index) => {
 		Dialog.confirm({
 			content: '确定删除吗？',
 			onOk: () => {
-				setLoading(true);
+				showLoading();
 				api.deleteOriginData({
 					id,
 				}).then(() => {
-					setTableData((pre) => {
-						pre.splice(index, 1);
-						return [...pre];
-					});
+					data.splice(index, 1);
+					updateResponse();
 					model.log('删除成功');
 				}).catch((e) => {
 					model.log(e);
 				}).finally(() => {
-					setLoading(false);
+					closeLoading();
 				});
 			},
 		});
@@ -108,19 +93,12 @@ function OriginData({
 	};
 
 	const onCreateOriginData = () => {
-		setShow(true);
-	};
-
-	const onClose = () => {
-		setShow(false);
+		refDialog.current.onShow();
 	};
 
 	const onOk = (value) => {
-		setTableData((pre) => {
-			pre.splice(0, 0, value);
-			return [...pre];
-		});
-		setShow(false);
+		data.splice(0, 0, value);
+		updateResponse();
 	};
 
 	return (
@@ -131,34 +109,28 @@ function OriginData({
 						创建元数据
 					</Button>
 				</div>
-				<Loading visible={loading} inline={false}>
-					<Table 
-						dataSource={tableData} 
-						hasBorder={false}
-					>	
-						<Table.Column title="id" dataIndex="id" width={120} />
-						<Table.Column title="名称" dataIndex="name" width={120} />
-						<Table.Column title="标识符" dataIndex="key" width={120} />
-						<Table.Column title="类型" dataIndex="value_type" width={120} />
-						<Table.Column title="描述" dataIndex="desc" />
-						<Table.Column title="操作" cell={renderCover} />
-					</Table>
-				</Loading>
+
+				<Table 
+					loading={loading}
+					dataSource={data} 
+					hasBorder={false}
+				>	
+					<Table.Column title="id" dataIndex="id" width={120} />
+					<Table.Column title="名称" dataIndex="name" width={120} />
+					<Table.Column title="标识符" dataIndex="key" width={120} />
+					<Table.Column title="类型" dataIndex="value_type" width={120} />
+					<Table.Column title="描述" dataIndex="desc" />
+					<Table.Column title="操作" cell={renderCover} />
+				</Table>
+
 				<Pagination
 					className={styles.pagination}
-					current={curPage}
-					total={count}
+					total={total}
 					onChange={pageChange}
 				/>
 			</IceContainer>
-			<Dialog 
-				autoFocus
-				visible={show} 
-				onClose={onClose}
-				footer={false}
-			>
-				<CreateOriginData onOk={onOk} />
-			</Dialog>
+
+			<CreateOriginData ref={refDialog} onOk={onOk} />
 		</Components.Wrap>
 	);
 }

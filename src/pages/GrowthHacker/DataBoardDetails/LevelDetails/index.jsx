@@ -16,48 +16,24 @@ function LevelDetails({
 	location,
 }) {
 	const boardInfo = location.state.boardInfo;
-	const [loading, setLoading] = useState(false);
-	const [data, setData] = useState([]);
-	const [titles, setTitles] = useState([]);
-	const [chartData, setChartData] = useState([]);
-	const [chartStyle, setChartStyle] = useState({});
-	const [date, setDate] = useState('');
 
-	useEffect(() => {
-		function getDataBoard() {
-			setLoading(true);
-			api.getDataBoard({
-				chart_id: boardInfo.id,
-				trend: {
-					limit: config.LIMIT,
-					offset: 0,
-					date,
-				},
-			}).then((res) => {
-				const {
-					meta,
-					data,
-				} = res;
-				if (data.length === 0) {
-					return;
-				}
-				setTitles(meta);
-				setData(data);
-				setChartStyle(assemblingChartStyle(meta));
-				setChartData(assemblingChartData(data, meta));
-			}).catch((e) => {
-				model.log(e);
-			}).finally(() => {
-				setLoading(false);
-			});
-		}
-
-		getDataBoard();
-
-		return () => {
-			api.cancelRequest();
-		};
-	}, [date, boardInfo.id]);
+	const {
+		parameter,
+		response,
+		loading,
+		updateParameter,
+	} = hooks.useRequest(api.getDataBoard, {
+		chart_id: boardInfo.id,
+		trend: {
+			date: boardInfo.date,
+			offset: 0,
+			limit: config.LIMIT,
+		},
+	});
+	const {
+		meta = [],
+			data = [],
+	} = response;
 
 	function assemblingChartStyle(meta) {
 		return {
@@ -67,9 +43,9 @@ function LevelDetails({
 		};
 	}
 
-	function assemblingChartData(arg, meta) {
+	function assemblingChartData(data, meta) {
 		const arr = [];
-		arg.forEach((item) => {
+		data.forEach((item) => {
 			const value = item[0];
 			const name = meta[0];
 			item.forEach((v, index) => {
@@ -92,7 +68,7 @@ function LevelDetails({
 	}
 
 	const renderTitle = () => {
-		return titles.map((item, index) => {
+		return meta.map((item, index) => {
 			if (index === 3 || index === 6) {
 				return <Table.Column key={index} title={item} cell={renderColumn.bind(this, index)} />
 			}
@@ -101,7 +77,12 @@ function LevelDetails({
 	};
 
 	const filterChange = (e) => {
-		setDate(e)
+		updateParameter(Object.assign({}, parameter, {
+			trend: {
+				date: e,
+				offset: 0,
+			}
+		}));
 	};
 
 	return (
@@ -112,9 +93,10 @@ function LevelDetails({
 				<Template 
 					tableData={data}
 					loading={loading}
-					chartData={chartData} 
-					chartStyle={chartStyle}
+					chartData={assemblingChartData(data, meta)} 
+					chartStyle={assemblingChartStyle(meta)}
 					renderTitle={renderTitle} 
+					fixedHeader
 				/>
 			</IceContainer>
 		</Components.Wrap>

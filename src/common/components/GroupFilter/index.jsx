@@ -1,16 +1,20 @@
 import React, {
-	useState,
 	useEffect,
+	useRef,
 } from 'react';
 import {
 	Select,
 } from '@alifd/next';
+import {
+	Form,
+	Field,
+} from '@ice/form';
 import styles from './index.module.scss';
 
 export default function GroupFilter({
 	filterChange,
 }) {
-	const [groupData, setGroupData] = useState([]);
+	const refForm = useRef(null);
 
 	useEffect(() => {
 		function fetchData() {
@@ -30,27 +34,46 @@ export default function GroupFilter({
 
 
 	function dividingGroupData(data) {
-		const targets = data.map((item) => {
+		const groups = data.map((item) => {
 			return {
 				label: item.name,
 				value: item.id,
 			};
 		});
-		targets.splice(0, 0, {
+		groups.splice(0, 0, {
 			label: '全部用户',
 			value: 0,
 		});
-		setGroupData(targets);
+		refForm.current.state.store.setFieldProps('id', {
+			dataSource: groups,
+		});
+		refForm.current.state.store.setFieldValue('id', groups[0].value);
 	}
 
 	const onChange = (e) => {
-		filterChange(e);
+		filterChange(e.id);
 	};
 
 	return (
 		<div className={styles.wrap}>
-			<span>目标用户：</span>
-			<Select style={{width: '200px'}} defaultValue={0} dataSource={groupData} onChange={onChange} />
-		</div>
+			<Form
+				ref={refForm}
+				onChange={onChange}
+				renderField={({label, component}) => (
+					<div className={styles.field}>
+						<span>{label}</span>
+						<span>{component}</span>
+					</div>
+				)
+			} >
+				<Field label='目标用户：' name='id'>
+					<Select  
+						style={{width:'200px'}}
+						dataSource={[]} 
+						showSearch
+					/>
+				</Field>
+		 	</Form>  
+	 	</div>
 	);
 }

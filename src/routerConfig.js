@@ -38,6 +38,7 @@ import AdAnalysis from './pages/GrowthHacker/AdMonitor/AdAnalysis';
 import AdCount from './pages/GrowthHacker/AdMonitor/AdCount';
 import ARPUAnalysis from './pages/GrowthHacker/AdMonitor/ARPUAnalysis';
 import UserWorth from './pages/GrowthHacker/CustomerAnalysis/UserWorth';
+import GroupWorth from './pages/GrowthHacker/CustomerAnalysis/GroupWorth';
 import DataCenter from './pages/GrowthHacker/DataCenter';
 const OriginDataDetails = React.lazy(() =>
 	import ('./pages/GrowthHacker/OriginDataDetails'));
@@ -284,6 +285,12 @@ const routerConfig = [
 				id: '1008026',
 				path: '/growthhacker/projectdata/ca/userworth',
 				component: UserWorth,
+				exact: true,
+				auth: true,
+			}, {
+				id: '1008027',
+				path: '/growthhacker/projectdata/ca/groupworth',
+				component: GroupWorth,
 				exact: true,
 				auth: true,
 			}, {

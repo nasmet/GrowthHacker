@@ -1,70 +1,41 @@
 import React, {
-	Component,
 	useState,
-	useEffect,
 } from 'react';
 import {
 	Input,
-	Button,
-	Tab,
 	Table,
-	Message,
 	Loading,
 	Pagination,
-	Icon,
-	Dialog,
-	Select,
-	Grid,
-	DatePicker,
-	Balloon,
-	Checkbox,
 } from '@alifd/next';
 import {
 	withRouter,
 } from 'react-router-dom';
 import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
-import Filter from './components/Filter';
 
 function UserScrutiny({
 	history,
 }) {
-	const [titles, setTitles] = useState([]);
-	const [tableData, setTableData] = useState([]);
-	const [curPage, setCurPage] = useState(1);
-	const [total, setTotal] = useState(0);
-	const [loading, setLoading] = useState(false);
-	const [search, setSearch] = useState('');
 	const [emptyContent, setEmptyContent] = useState(1);
 
-	useEffect(() => {
-		function getUserScrutiny() {
-			setLoading(true);
-			api.getUserScrutiny({
-				limit: config.LIMIT,
-				offset: (curPage - 1) * config.LIMIT,
-				search,
-			}).then((res) => {
-				const {
-					meta,
-					data,
-				} = res;
-				setEmptyContent(search ? 0 : 1);
-				setTitles(meta);
-				setTableData(data);
-			}).catch((e) => {
-				model.log(e);
-			}).finally(() => {
-				setLoading(false);
-			});
-		}
-
-		getUserScrutiny();
-
-		return () => {
-			api.cancelRequest();
-		};
-	}, [curPage, search]);
+	const {
+		showLoading,
+		closeLoading,
+		updateResponse,
+		parameter,
+		response,
+		loading,
+		updateParameter,
+	} = hooks.useRequest(api.getUserScrutiny, {
+		offset: 0,
+		limit: config.LIMIT,
+		search: '',
+	});
+	const {
+		total = 0,
+			meta = [],
+			data = [],
+	} = response;
 
 	const jumpUserDetails = (e) => {
 		history.push({
@@ -90,7 +61,7 @@ function UserScrutiny({
 	}
 
 	const renderTitle = () => {
-		return titles.map((item, index) => {
+		return meta.map((item, index) => {
 			if (index === 1) {
 				return <Table.Column key={index} title={item} cell={renderFirstCell} />
 			}
@@ -102,12 +73,17 @@ function UserScrutiny({
 	};
 
 	const pageChange = (e) => {
-		setCurPage(e);
+		updateParameter(Object.assign({}, parameter, {
+			offset: (e - 1) * config.LIMIT,
+		}))
 	};
 
 	const onInputChange = (e) => {
-		setCurPage(1);
-		setSearch(e);
+		updateParameter(Object.assign({}, parameter, {
+			search: e,
+			offset: 0,
+		}));
+		setEmptyContent(e ? 0 : 1);
 	};
 
 	return (
@@ -123,7 +99,7 @@ function UserScrutiny({
 				/>
 				<Loading visible={loading} inline={false}>
 					<Table 
-						dataSource={tableData} 
+						dataSource={data} 
 						hasBorder={false}
 						emptyContent={<span>{emptyContent?'暂无数据':'查询结果为空'}</span>}
 					>
@@ -132,7 +108,6 @@ function UserScrutiny({
 				</Loading>
 			 	<Pagination
 	            	className={styles.pagination}
-	           		current={curPage}
 	            	total={total}
 	            	onChange={pageChange}
 			    />

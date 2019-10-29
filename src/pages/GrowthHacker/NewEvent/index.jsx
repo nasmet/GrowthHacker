@@ -1,7 +1,4 @@
-import React, {
-	useState,
-	useEffect,
-} from 'react';
+import React from 'react';
 import {
 	Table,
 	Loading,
@@ -10,50 +7,32 @@ import IceContainer from '@icedesign/container';
 
 export default function NewEvent() {
 	const appid = sessionStorage.getItem(config.PROJECTAPPID);
-	const [titles, setTitles] = useState([]);
-	const [tableData, setTableData] = useState([]);
-	const [loading, setLoading] = useState(false);
+	const {
+		parameter,
+		response,
+		loading,
+		updateParameter,
+	} = hooks.useRequest(api.getSqlData, {
+		query: model.sql.eventSql(appid),
+	});
 
-	useEffect(() => {
-		function fetchData() {
-			setLoading(true);
-			api.getSqlData({
-				query: model.sql.eventSql(appid),
-			}).then((res) => {
-				const {
-					columns,
-					data,
-				} = res;
-				setTitles(columns);
-				setTableData(data);
-			}).catch((e) => {
-				model.log(e);
-			}).finally(() => {
-				setLoading(false);
-			});
-		}
-
-		fetchData();
-
-		return () => {
-			api.cancelRequest();
-		};
-	}, [appid])
+	const {
+		columns = [],
+		data = [],
+	} = response;
 
 	const renderTitle = () => {
-		return titles.map((item, index) => {
+		return columns.map((item, index) => {
 			return <Table.Column key={index} title={item} dataIndex={index.toString()}/>
-		})
+		});
 	};
 
 	return (
 		<Components.Wrap>
 			<IceContainer>
-				<Loading visible={loading} inline={false}>
-					<Table dataSource={tableData} hasBorder={false}>
-						{renderTitle()}       		
-					</Table>
-				</Loading>
+				<Table loading={loading} dataSource={data} hasBorder={false}>
+					{renderTitle()}       		
+				</Table>
 			</IceContainer>
 		</Components.Wrap>
 	);

@@ -64,6 +64,9 @@ export default [{
 	sub: [{
 		name: '单用户价值评估',
 		path: `${baseUrl}/ca/userworth`,
+	}, {
+		name: '分群用户价值评估',
+		path: `${baseUrl}/ca/groupworth`,
 	}],
 }, {
 	name: '数据中心',

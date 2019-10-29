@@ -1,21 +1,8 @@
-import React, {
-	Component,
-	useState,
-	useEffect,
-} from 'react';
+import React from 'react';
 import {
-	Input,
 	Button,
-	Tab,
 	Table,
-	Message,
-	Loading,
-	Pagination,
-	Icon,
 	Dialog,
-	Select,
-	Grid,
-	DatePicker,
 } from '@alifd/next';
 import {
 	withRouter,
@@ -26,27 +13,16 @@ import styles from './index.module.scss';
 function UserGroup({
 	history,
 }) {
-	const [loading, setLoading] = useState(false);
-	const [tableData, setTableData] = useState([]);
-
-	function getUserGroups() {
-		setLoading(true);
-		api.getUserGroups().then((res) => {
-			setTableData(res.segmentations);
-		}).catch((e) => {
-			model.log(e);
-		}).finally(() => {
-			setLoading(false);
-		});
-	}
-
-	useEffect(() => {
-		getUserGroups();
-
-		return () => {
-			api.cancelRequest();
-		};
-	}, []);
+	const {
+		showLoading,
+		closeLoading,
+		updateResponse,
+		response,
+		loading,
+	} = hooks.useRequest(api.getUserGroups);
+	const {
+		segmentations = [],
+	} = response;
 
 	const onCreateGroup = () => {
 		history.push('/growthhacker/projectdata/ua/creategroup');
@@ -56,19 +32,17 @@ function UserGroup({
 		Dialog.confirm({
 			content: '确认删除吗',
 			onOk: () => {
-				setLoading(true);
+				showLoading();
 				api.deleteUserGroup({
 					id,
 				}).then((res) => {
-					setTableData((pre) => {
-						pre.splice(index, 1);
-						return [...pre];
-					});
+					segmentations.splice(index, 1);
+					updateResponse();
 					model.log('删除成功');
 				}).catch((e) => {
 					model.log(e);
 				}).finally(() => {
-					setLoading(false);
+					closeLoading();
 				});
 			}
 		});
@@ -97,16 +71,15 @@ function UserGroup({
 			<Components.Title title='用户分群列表' />
 			<IceContainer>
 				<Button type='primary' style={{borderRadius:'10px',marginBottom:'20px'}} onClick={onCreateGroup}>新建分群</Button>
-				<Loading visible={loading} inline={false}>
-					<Table 
-						dataSource={tableData} 
-						hasBorder={false}
-					>
-						<Table.Column title='id' dataIndex='id' />
-						<Table.Column title='名称' dataIndex='name' />
-						<Table.Column title='操作' cell={renderLastCell} />
-					</Table>
-				</Loading>
+				<Table 
+					loading={loading}
+					dataSource={segmentations} 
+					hasBorder={false}
+				>
+					<Table.Column title='id' dataIndex='id' />
+					<Table.Column title='名称' dataIndex='name' />
+					<Table.Column title='操作' cell={renderLastCell} />
+				</Table>
 			</IceContainer>
     	</Components.Wrap>
 	);

@@ -4,7 +4,6 @@ import React, {
 } from 'react';
 import {
 	Table,
-	Loading,
 } from '@alifd/next';
 import {
 	withRouter,
@@ -17,49 +16,26 @@ function FunnelDetails({
 	location,
 }) {
 	const boardInfo = location.state.boardInfo;
-	const [loading, setLoading] = useState(false);
-	const [tableData, setTableData] = useState([]);
-	const [titles, setTitles] = useState([]);
-	const [steps, setSteps] = useState([]);
-	const [totalRate, setTotalRate] = useState('');
-	const [date, setDate] = useState('');
 
-	useEffect(() => {
-		function getDataBoard() {
-			setLoading(true);
-			api.getDataBoard({
-				chart_id: boardInfo.id,
-				trend: {
-					offset: 0,
-					limit: config.LIMIT,
-					date,
-				},
-			}).then((res) => {
-				const {
-					meta,
-					data,
-				} = res;
-				if (data.length === 0) {
-					return;
-				}
-				constructStep(meta, data[0]);
-				setTableData(data);
-				setTitles(meta);
-			}).catch((e) => {
-				model.log(e);
-			}).finally(() => {
-				setLoading(false);
-			});
-		}
-		getDataBoard();
-
-		return () => {
-			api.cancelRequest();
-		};
-	}, [date, boardInfo.id]);
+	const {
+		parameter,
+		response,
+		loading,
+		updateParameter,
+	} = hooks.useRequest(api.getDataBoard, {
+		chart_id: boardInfo.id,
+		trend: {
+			date: boardInfo.date,
+			offset: 0,
+			limit: config.LIMIT,
+		},
+	});
+	const {
+		meta = [],
+			data = [],
+	} = response;
 
 	function constructStep(meta, data) {
-		setTotalRate(`${meta[0]}${data[0]*100}%`);
 		const arr = [];
 		for (let i = 1, len = meta.length; i < len; i += 2) {
 			const obj = {
@@ -69,7 +45,10 @@ function FunnelDetails({
 			if (i !== len - 1) obj.rate = data[i + 1];
 			arr.push(obj);
 		}
-		setSteps(arr);
+		return {
+			totalRate: `${meta[0]}${data[0]*100}%`,
+			steps: arr,
+		};
 	}
 
 	const renderColumn = (item, value, index, record) => {
@@ -83,14 +62,19 @@ function FunnelDetails({
 
 	const renderTitle = () => {
 		const arr = [];
-		for (let i = 0, len = titles.length; i < len; i += 2) {
-			arr.push(<Table.Column key={i} title={titles[i]} cell={renderColumn.bind(this, i)} />);
+		for (let i = 0, len = meta.length; i < len; i += 2) {
+			arr.push(<Table.Column key={i} title={meta[i]} cell={renderColumn.bind(this, i)} />);
 		}
 		return arr;
 	};
 
 	const filterChange = (e) => {
-		setDate(e);
+		updateParameter(Object.assign({}, parameter, {
+			trend: {
+				date: e,
+				offset: 0,
+			}
+		}));
 	};
 
 	return (
@@ -98,16 +82,12 @@ function FunnelDetails({
 			<Components.Title title={boardInfo.name} desc={boardInfo.desc} />
 			<IceContainer>
 				<Components.DateFilter initTabValue='NAN' initCurDateValue={model.transformDate(boardInfo.date)} filterChange={filterChange} />	
-				<Loading visible={loading} inline={false}>
-				{tableData.length!==0?
-					<div>
-						<Step  totalRate={totalRate} steps={steps} /> 
-						<Table dataSource={tableData} hasBorder={false} >
-							{renderTitle()}						   	     		
-						</Table>
-					</div> : <Components.NotData />
+				{data.length !==0 ?
+					<Step  {...constructStep(meta, data[0])} /> : null
 				}
-				</Loading>
+				<Table loading={loading} dataSource={data} hasBorder={false} >
+					{renderTitle()}						   	     		
+				</Table>
 			</IceContainer>
 		</Components.Wrap>
 	);

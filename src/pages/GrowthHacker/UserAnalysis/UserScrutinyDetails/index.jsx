@@ -1,21 +1,9 @@
 import React, {
-	Component,
 	useState,
 	useEffect,
 } from 'react';
 import {
-	Input,
-	Button,
 	Tab,
-	Table,
-	Message,
-	Loading,
-	Pagination,
-	Icon,
-	Dialog,
-	Select,
-	Grid,
-	DatePicker,
 } from '@alifd/next';
 import {
 	withRouter,
@@ -104,7 +92,6 @@ function UserScrutinyDetails({
             			<Component 
             				openId={id} 
             				tab={key} 
-            				onEventDetals={onEventDetals} 
             			/>
           			</Components.Wrap>
         		</Tab.Item>
@@ -112,27 +99,17 @@ function UserScrutinyDetails({
 		});
 	};
 
-	const onEventDetals = (e) => {
-		console.log(e);
-	};
-
 	const onTabChange = (e) => {
 		creatChartStyle(e);
-	};
-
-	const onBack = () => {
-		history.back();
 	};
 
 	return (
 		<div className={styles.wrap}>
       		<div className={styles.leftContent}>
-      			<div style={{background:'#fff'}}>
-					<Button style={{borderRadius:'10px',margin:'10px'}} onClick={onBack}>返回今日访问用户</Button>
-	      			<Loading visible={loading} inline={false}>
-	      				<Components.BasicColumn data={chartData} {...chartStyle} forceFit />
-	      			</Loading>
-      			</div>
+  				<Components.Title title='用户细查详情' />
+      			<IceContainer>
+      				<Components.BasicColumn data={chartData} {...chartStyle} forceFit />
+				</IceContainer>
       			<Tab defaultActiveKey="all" onChange={onTabChange}>
 		      		{renderTab()}
 		      	</Tab>

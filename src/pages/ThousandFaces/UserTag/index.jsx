@@ -160,45 +160,45 @@ export default function UserTag() {
 		deleteUserTag(record, value);
 	};
 
-	const modifyTag = () => {
+	// const modifyTag = () => {
 
-	};
+	// };
 
-	const editTag = (item, index, record) => {
-		return (
-			<Balloon
-				key={item.user_label_id}
-				trigger={<span className={styles.tag}>{item.label_name}</span>}
-				triggerType="click"
-			>
-				<Form
-					onSubmit={modifyTag.bind(this, record,index)}
-					effects={[
-					    {
-					      	field: 'tag',
-					      	handler: formCore => {
-					      		let disabled = false;
-					      		const value = formCore.getFieldValue('tag');
-					        	if (!value || value === item.label_name) {
-						    		disabled = true;
-					        	}
-				          		formCore.setFieldProps('btn', {
-									disabled,
-								});
-					      	}
-					    }
-					]}
-				>
-					<Field name='tag' defaultValue={item.label_name} >
-						<Input style={{width: '200px'}} />
-					</Field>
-					<Field name='btn'>
-						<Button disabled type='primary' htmlType="submit">提交</Button>
-					</Field>
-				</Form>
-			</Balloon>
-		);
-	};
+	// const editTag = (item, index, record) => {
+	// 	return (
+	// 		<Balloon
+	// 			key={item.user_label_id}
+	// 			trigger={<span className={styles.tag}>{item.label_name}</span>}
+	// 			triggerType="click"
+	// 		>
+	// 			<Form
+	// 				onSubmit={modifyTag.bind(this, record,index)}
+	// 				effects={[
+	// 				    {
+	// 				      	field: 'tag',
+	// 				      	handler: formCore => {
+	// 				      		let disabled = false;
+	// 				      		const value = formCore.getFieldValue('tag');
+	// 				        	if (!value || value === item.label_name) {
+	// 					    		disabled = true;
+	// 				        	}
+	// 			          		formCore.setFieldProps('btn', {
+	// 								disabled,
+	// 							});
+	// 				      	}
+	// 				    }
+	// 				]}
+	// 			>
+	// 				<Field name='tag' defaultValue={item.label_name} >
+	// 					<Input style={{width: '200px'}} />
+	// 				</Field>
+	// 				<Field name='btn'>
+	// 					<Button disabled type='primary' htmlType="submit">提交</Button>
+	// 				</Field>
+	// 			</Form>
+	// 		</Balloon>
+	// 	);
+	// };
 
 	const renderThreeColumn = (value, index, record) => {
 		return (
@@ -274,8 +274,8 @@ export default function UserTag() {
 		<Components.Wrap>
       		<IceContainer>
       			<Table loading={loading} dataSource={tableData} hasBorder={false} >
-      				<Table.Column title='用户id' dataIndex='user_id' lock width={120} />
-      				<Table.Column title='用户openid' dataIndex='wechat_openid' lock width={300} />
+      				<Table.Column title='用户id' dataIndex='user_id' />
+      				<Table.Column title='用户openid' dataIndex='wechat_openid' />
       				<Table.Column title='用户标签' cell={renderThreeColumn} />
       				<Table.Column title='操作' cell={renderFourColumn} />
       			</Table>

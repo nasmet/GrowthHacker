@@ -2,12 +2,15 @@ import React, {
 	useEffect,
 	useState,
 	useRef,
+	forwardRef,
+	useImperativeHandle,
 } from 'react';
 import {
 	Button,
 	Input,
 	Loading,
 	Select,
+	Dialog,
 } from '@alifd/next';
 import {
 	Form,
@@ -15,13 +18,27 @@ import {
 } from '@ice/form';
 import styles from './index.module.scss';
 
-export default function CreateBuriedPoint({
+function CreateOriginData({
 	onOk,
-}) {
+}, ref) {
+	const message = [{
+		required: true,
+		message: '必填',
+	}];
+	const [show, setShow] = useState(false);
 	const [loading, setLoading] = useState(false);
 	const formRef = useRef(null);
 
+	useImperativeHandle(ref, () => ({
+		onShow: () => {
+			setShow(true);
+		},
+	}));
+
 	useEffect(() => {
+		if(!show){
+			return;
+		}
 		api.getSqlTable({
 			table_schema: 1,
 		}).then((res) => {
@@ -30,13 +47,12 @@ export default function CreateBuriedPoint({
 			});
 		}).catch((e) => {
 			model.log(e);
-			setLoading(false);
 		});
 
 		return () => {
 			api.cancelRequest();
 		};
-	}, []);
+	}, [show]);
 
 	const onFocus = (formCore) => {
 		const dataSource = formCore.getFieldProps('column_name').dataSource;
@@ -57,6 +73,8 @@ export default function CreateBuriedPoint({
 		api.createOriginData(e).then((res) => {
 			model.log('创建成功');
 			onOk(res);
+			setLoading(false);
+			setShow(false);
 		}).catch((e) => {
 			model.log(e);
 			setLoading(false);
@@ -67,35 +85,29 @@ export default function CreateBuriedPoint({
 		formCore.reset();
 	};
 
+	const onClose = () => {
+		setShow(false);
+	};
+
 	const notFoundContent = <span>加载中...</span>;
 
 	return (
-		<Loading visible={loading} inline={false}>
+		<Dialog		   	 
+			autoFocus		   		
+			visible={show}		      	 
+			onClose={onClose}		      	
+			footer={false}		      	
+		>	
 			<div className={styles.wrap}>
 				<Form
 					onSubmit={onSubmit}
 					ref={formRef} 
 					rules={{
-						name: [{
-							required: true,
-							message: '必填',
-						}],
-						key:  [{
-							required: true,
-							message: '必填',
-						}],
-						table_name:  [{
-							required: true,
-							message: '必填',
-						}],
-						column_name: [{
-							required: true,
-							message: '必填',
-						}],
-						value_type:  [{
-							required: true,
-							message: '必填',
-						}],
+						name:  message,
+						key:   message,
+						table_name:   message,
+						column_name:  message,
+						value_type:   message,
 					}}
 					renderField={({component, error}) => (
 						<div className={styles.field}>
@@ -154,7 +166,7 @@ export default function CreateBuriedPoint({
 							</Field>
 
 							<div className={styles.btnWrap}>
-								<Button className={styles.btn} type="primary" htmlType="submit">
+								<Button className={styles.btn} loading={loading} type="primary" htmlType="submit">
 									确定
 								</Button>
 								<Button className={styles.btn} type="primary" onClick={onReset.bind(this,formCore)}>
@@ -165,6 +177,8 @@ export default function CreateBuriedPoint({
 					)}
 				</Form>
 			</div>
-		</Loading>
+		</Dialog>
 	);
 }
+
+export default forwardRef(CreateOriginData)

@@ -1,12 +1,15 @@
 import React, {
 	useEffect,
 	useState,
+	forwardRef,
+	useImperativeHandle,
 } from 'react';
 import {
 	Button,
 	Input,
 	Loading,
 	Select,
+	Dialog,
 } from '@alifd/next';
 import {
 	Form,
@@ -14,12 +17,23 @@ import {
 } from '@ice/form';
 import styles from './index.module.scss';
 
-export default function CreateBuriedPoint({
+function CreateBuriedPoint({
 	onOk,
 	entityType,
-}) {
-	const [loading, setLoading] = useState(false);
+}, ref) {
 	const type = entityType === 'event' ? 'value_type' : 'variable_type';
+	const message = [{
+		required: true,
+		message: '必填',
+	}];
+	const [loading, setLoading] = useState(false);
+	const [show, setShow] = useState(false);
+
+	useImperativeHandle(ref, () => ({
+		onShow: () => {
+			setShow(true);
+		},
+	}));
 
 	useEffect(() => {
 		return () => {
@@ -34,6 +48,8 @@ export default function CreateBuriedPoint({
 		}).then((res) => {
 			model.log('创建成功');
 			onOk(res.event_entity);
+			setLoading(false);
+			setShow(false);
 		}).catch((e) => {
 			model.log(e);
 			setLoading(false);
@@ -44,24 +60,24 @@ export default function CreateBuriedPoint({
 		formCore.reset();
 	};
 
+	const onClose = () => {
+		setShow(false);
+	};
+
 	return (
-		<Loading visible={loading} inline={false}>
+		<Dialog		   	 
+			autoFocus		   		
+			visible={show}		      	 
+			onClose={onClose}		      	
+			footer={false}		      	
+		>	
 			<div className={styles.wrap}>
 				<Form
 					onSubmit={onSubmit}      				 
 					rules={{  					
-						name: [{
-							required: true,
-							message: '必填',
-						}],
-						key:  [{
-							required: true,
-							message: '必填',
-						}],
-						[type]:  [{
-							required: true,
-							message: '必填',
-						}],
+						name: message,
+						key: message,
+						[type]:  message,
 					}}
 					renderField={({component, error}) => (
 						<div className={styles.field}>
@@ -111,7 +127,7 @@ export default function CreateBuriedPoint({
 								/>
 							</Field>
 							<div className={styles.btnWrap}>
-								<Button className={styles.btn} type="primary" htmlType="submit">
+								<Button className={styles.btn} loading={loading} type="primary" htmlType="submit">
 									确定
 								</Button>
 								<Button className={styles.btn} type="primary" onClick={onReset.bind(this,formCore)}>
@@ -122,6 +138,8 @@ export default function CreateBuriedPoint({
 					)}
 				</Form>
 			</div>
-		</Loading>
+		</Dialog>
 	);
 }
+
+export default forwardRef(CreateBuriedPoint);
