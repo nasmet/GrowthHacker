@@ -48,7 +48,7 @@ function DataBoard({
 				pathname = '/growthhacker/projectdata/leveldetails';
 				break;
 			case 'dashboard':
-				pathname = '/growthhacker/projectdata/eventanalysisdetails';
+				pathname = '/growthhacker/projectdata/pa/eventanalysis';
 				break;
 		}
 		history.push({

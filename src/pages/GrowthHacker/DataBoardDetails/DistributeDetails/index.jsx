@@ -97,7 +97,7 @@ function DistributeDetails({
 	};
 
 	const filterChange = (e) => {
-		updateParameter(Object.assign({}, parameter, {
+		updateParameter(utils.deepObject(parameter, {
 			trend: {
 				date: e,
 			}

@@ -118,12 +118,9 @@ export default function UserTag() {
 
 	useEffect(() => {
 		api.getTags().then((res) => {
-			refVarible.current.userTagData = res.labels.map(v => {
-				return {
-					label: v.name,
-					value: v.id,
-				}
-			});
+			refVarible.current.userTagData = model.assembleTagData(res.labels);
+		}).catch(e=>{
+			console.error(e);
 		});
 	}, []);
 

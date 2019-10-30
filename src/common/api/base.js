@@ -3,7 +3,19 @@ import * as config from '../config';
 
 // axios 配置
 axios.defaults.timeout = config.TIMEOUT;
-axios.defaults.baseURL = config.BASEURL;
+let baseURL;
+switch (process.env.NODE_ENV) {
+	case 'development':
+		baseURL = config.DEVBASEURL;
+		break;
+	case 'production':
+		baseURL = config.BUILDBASEURL;
+		break;
+	default:
+		baseURL = config.TESTBASEURL;
+		break;
+}
+axios.defaults.baseURL = baseURL;
 // axios.defaults.withCredentials = true;
 
 // http request 拦截器（所有发送的请求都要从这儿过一次），通过这个，我们就可以把token传到后台，我这里是使用sessionStorage来存储token等权限信息和用户信息，若要使用cookie可以自己封装一个函数并import便可使用

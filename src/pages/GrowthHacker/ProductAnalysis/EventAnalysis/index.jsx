@@ -6,33 +6,92 @@ import React, {
 } from 'react';
 import {
 	Button,
+	Pagination,
+	Table,
 } from '@alifd/next';
+import {
+	withRouter,
+} from 'react-router-dom';
 import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
+import Condition from './components/Condition';
 import Filter from './components/Filter';
-import DataDisplay from './components/DataDisplay';
+import Template from '../../DataBoardDetails/Template';
 
-export default function EventAnalysis() {
-	const [disabled, setDisabled] = useState(true);
-	const [boardId, setBoardId] = useState('');
+function EventAnalysis({
+	location,
+}) {
+	let initValues = {};
+	let initDateFilter = {};
+	let initSave = {
+		title: '新建事件分析',
+		desc: '',
+	}
+	let initRequest = false;
+	let initChartId = 0;
+	let initDate = 'day:0';
+
+	function init() {
+		if (location.state && location.state.boardInfo) {
+			const {
+				name,
+				desc,
+				id,
+				date,
+				segmentation_id,
+				metrics,
+				dimensions,
+			} = location.state.boardInfo;
+			initValues = {
+				segmentation_id,
+				dimensions,
+				metrics,
+			};
+			initDateFilter = {
+				initTabValue: 'NAN',
+				initCurDateValue: model.transformDate(date)
+			};
+			initSave.title = name;
+			initSave.desc = desc;
+			initSave.disable = false;
+			initRequest = true;
+			initChartId = id;
+			initDate = date;
+		}
+	}
+
+	init();
+
+	const saveRef = useRef(null);
 	const refDialog = useRef(null);
 	const refVariable = useRef({
-		values: {},
+		values: initValues,
 		name: '',
-		date: 'day:0',
+		date: initDate,
 	});
 
-	useEffect(() => {
-		return () => {
-			api.cancelRequest();
-		};
-	}, []);
+	const {
+		parameter,
+		response,
+		loading,
+		updateParameter,
+	} = hooks.useRequest(api.getDataBoard, {
+		chart_id: initChartId,
+		trend: {
+			date: initDate,
+			limit: config.LIMIT,
+			offset: 0,
+		},
+	}, initRequest);
+	const {
+		meta = [],
+			data = [],
+			total = 0,
+	} = response;
 
-	const filterChange = (value, flag) => {
+	const conditionChange = (value, flag) => {
 		refVariable.current.values = value;
-		if (flag !== disabled) {
-			setDisabled(flag);
-		}
+		saveRef.current.setButtonStatus(flag);
 	};
 
 	const onOk = (success, fail) => {
@@ -48,7 +107,12 @@ export default function EventAnalysis() {
 		}).then((res) => {
 			model.log('成功添加到看板');
 			success();
-			setBoardId(res.id);
+			updateParameter(utils.deepObject(parameter, {
+				chart_id: res.id,
+				trend: {
+					date,
+				}
+			}));
 		}).catch((e) => {
 			model.log(e);
 			fail();
@@ -63,24 +127,89 @@ export default function EventAnalysis() {
 		refDialog.current.onShow();
 	};
 
+	function assemblingChartStyle(meta) {
+		return {
+			x: meta[0],
+			y: 'count',
+			color: 'event',
+		};
+	}
+
+	function assemblingChartData(data, meta) {
+		const arr = [];
+		data.forEach((item) => {
+			const value = item[0];
+			const name = meta[0];
+			item.forEach((v, index) => {
+				if (index !== 0 && meta[index]) {
+					arr.push({
+						[name]: `${name}${value}`,
+						event: meta[index],
+						count: v,
+					})
+				}
+			})
+		});
+		return arr;
+	}
+
+	const renderTitle = () => {
+		return meta.map((item, index) => {
+			return <Table.Column key={index} title={item} dataIndex={index.toString()} />
+		});
+	};
+
+	const pageChange = (e) => {
+		updateParameter(utils.deepObject(parameter, {
+			trend: {
+				offset: (e - 1) * config.LIMIT,
+			}
+		}));
+	};
+
 	const dateChange = (e) => {
+		if (initRequest) {
+			updateParameter(utils.deepObject(parameter, {
+				trend: {
+					date: e,
+				}
+			}));
+		}
 		refVariable.current.date = e;
+	};
+
+	const filterChange = e => {
+
 	};
 
 	return (
 		<Components.Wrap>
-			<p className={styles.titleWrap}>
-				<span className={styles.title}>新建事件分析</span>
-				<Button type='primary' disabled={disabled} onClick={onSave}>保存</Button>
-			</p>
+			<Components.Save ref={saveRef} {...initSave} onSave={onSave} />
+
 			<IceContainer>
-				<Components.DateFilter filterChange={dateChange} />	
+				<Components.DateFilter filterChange={dateChange} {...initDateFilter} />	
+				<Condition filterChange={conditionChange} initValues={initValues} />
 				<Filter filterChange={filterChange} />
 			</IceContainer>
-			<IceContainer>
-				<DataDisplay id={boardId} />
+
+			<IceContainer style={{minHeight: '600px'}}>
+				<Template 
+					tableData={data}
+					loading={loading}
+					chartData={assemblingChartData(data, meta)} 
+					chartStyle={assemblingChartStyle(meta)}
+					renderTitle={renderTitle} 
+				/>
+				<Pagination
+					className={styles.pagination}
+					total={total}
+					onChange={pageChange}
+				/>		      	
 			</IceContainer>
+
 			<Components.BoardDialog onInputChange={onInputChange} onOk={onOk} ref={refDialog} />
     	</Components.Wrap>
 	);
 }
+
+export default withRouter(EventAnalysis);

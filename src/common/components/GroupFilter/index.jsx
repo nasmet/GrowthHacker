@@ -17,15 +17,15 @@ export default function GroupFilter({
 	const refForm = useRef(null);
 
 	useEffect(() => {
-		function fetchData() {
+		function getUserGroups() {
 			api.getUserGroups().then((res) => {
-				dividingGroupData(res.segmentations);
+				assembleGroupData(res.segmentations);
 			}).catch(e => {
 				console.error(e);
 			});
 		}
 
-		fetchData();
+		getUserGroups();
 
 		return () => {
 			api.cancelRequest();
@@ -33,17 +33,8 @@ export default function GroupFilter({
 	}, []);
 
 
-	function dividingGroupData(data) {
-		const groups = data.map((item) => {
-			return {
-				label: item.name,
-				value: item.id,
-			};
-		});
-		groups.splice(0, 0, {
-			label: '全部用户',
-			value: 0,
-		});
+	function assembleGroupData(data) {
+		const groups = model.assembleGroupData(data);
 		refForm.current.state.store.setFieldProps('id', {
 			dataSource: groups,
 		});
@@ -68,7 +59,7 @@ export default function GroupFilter({
 			} >
 				<Field label='目标用户：' name='id'>
 					<Select  
-						style={{width:'200px'}}
+						style={{minWidth:'200px'}}
 						dataSource={[]} 
 						showSearch
 					/>

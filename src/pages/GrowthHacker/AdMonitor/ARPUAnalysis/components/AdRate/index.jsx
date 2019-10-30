@@ -21,18 +21,17 @@ export default function AdRate() {
 	} = response;
 
 	const dateChange = (e) => {
-		updateParameter({
+		updateParameter(Object.assign({
 			date: e,
-			seg_id: parameter.seg_id,
-		});
+		}));
 	};
 
 	const groupChange = e => {
-		updateParameter({
-			date: parameter.date,
+		updateParameter(Object.assign({
 			seg_id: e,
-		});
+		}));
 	};
+	
 	const renderTitles = () => {
 		return meta.map((item, index) => {
 			return <Table.Column key={index} title={item} dataIndex={index.toString()} lock={index>0?false:true} width={index>0?120:140} />;

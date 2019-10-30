@@ -3,6 +3,7 @@ import {
 	Button,
 	Table,
 	Dialog,
+	Loading,
 } from '@alifd/next';
 import {
 	withRouter,
@@ -69,8 +70,10 @@ function UserGroup({
 	return (
 		<Components.Wrap>
 			<Components.Title title='用户分群列表' />
-			<IceContainer>
+			<p>
 				<Button type='primary' style={{borderRadius:'10px',marginBottom:'20px'}} onClick={onCreateGroup}>新建分群</Button>
+			</p>
+			<IceContainer>				
 				<Table 
 					loading={loading}
 					dataSource={segmentations} 

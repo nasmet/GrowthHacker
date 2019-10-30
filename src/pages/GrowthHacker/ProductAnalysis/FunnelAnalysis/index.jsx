@@ -8,14 +8,13 @@ import {
 	Button,
 } from '@alifd/next';
 import IceContainer from '@icedesign/container';
-import styles from './index.module.scss';
 import Filter from './components/Filter';
 import DataDisplay from './components/DataDisplay';
 
 export default function FunnelAnalysis() {
-	const [disabled, setDisabled] = useState(true);
-	const [boardId, setBoardId] = useState('');
+	const displayRef = useRef(null);
 	const refDialog = useRef(null);
+	const saveRef = useRef(null);
 	const refVariable = useRef({
 		values: {},
 		name: '',
@@ -35,9 +34,7 @@ export default function FunnelAnalysis() {
 		} else {
 			flag = steps.some(v => v.values.step === undefined);
 		}
-		if (flag !== disabled) {
-			setDisabled(flag);
-		}
+		saveRef.current.setButtonStatus(flag);
 		refVariable.current.values = steps;
 	};
 
@@ -57,7 +54,7 @@ export default function FunnelAnalysis() {
 		}).then((res) => {
 			model.log('成功添加到看板');
 			sucess();
-			setBoardId(res.id);
+			displayRef.current.fetchData(res.id);
 		}).catch((e) => {
 			model.log(e);
 			fail();
@@ -78,17 +75,15 @@ export default function FunnelAnalysis() {
 
 	return (
 		<Components.Wrap>
-			<p className={styles.titleWrap}>
-				<span className={styles.title}>新建漏斗分析</span>
-				<Button type='primary' disabled={disabled} onClick={onSave}>保存</Button>
-			</p>
+			<Components.Save ref={saveRef} title='新建漏斗分析' onSave={onSave} />
+
 			<IceContainer>
 				<Components.DateFilter filterChange={dateChange} />	
       			<Filter filterChange={filterChange} />
       		</IceContainer>
-      		<IceContainer>
-      			<DataDisplay id={boardId} />
-      		</IceContainer>
+
+      		<DataDisplay ref={displayRef} />
+
       		<Components.BoardDialog onInputChange={onInputChange} onOk={onOk} ref={refDialog} />
     	</Components.Wrap>
 	);

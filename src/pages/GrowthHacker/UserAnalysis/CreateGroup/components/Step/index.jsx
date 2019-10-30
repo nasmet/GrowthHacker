@@ -42,16 +42,11 @@ export default function Filter({
 			setLoading(true);
 			try {
 				await api.getDataCenter().then((res) => {
-					dividingData(res.event_entities);
+					assembleEventData(res.event_entities);
 				})
 
 				await api.getOriginData().then((res) => {
-					setOriginData(res.data.map(item => {
-						return {
-							label: item.name,
-							value: item.id,
-						}
-					}));
+					setOriginData(model.assembleOriginData(res.data));
 				})
 			} catch (e) {
 				model.log(e);
@@ -110,21 +105,8 @@ export default function Filter({
 		filterChange(steps, temp);
 	}, [steps, filterChange]);
 
-	function dividingData(data) {
-		const metrics = [];
-		data.forEach((item) => {
-			const {
-				id,
-				name,
-			} = item;
-			const obj = {
-				label: name,
-				value: id.toString(),
-			};
-			if (item.type === 'event') {
-				metrics.push(obj);
-			}
-		});
+	function assembleEventData(data) {
+		const {metrics} = model.assembleEventData(data);
 		setMetricData(metrics);
 	}
 
@@ -169,7 +151,8 @@ export default function Filter({
 				field: 'flag',
 				handler: function(formCore) {
 					let visibleValues, visibleValue, idDataSource, opDataSource;
-					if (formCore.getFieldValue('flag') === 'true,event' || formCore.getFieldValue('flag') === 'false, event') {
+					const flag = formCore.getFieldValue('flag');
+					if (flag=== 'true,event' || flag === 'false, event') {
 						idDataSource = metricData;
 						opDataSource = rules;
 						visibleValues = true;
@@ -194,6 +177,15 @@ export default function Filter({
 						visible: visibleValue,
 					});
 				},
+			},{
+				field: 'id',
+				handler: function(formCore){
+					const flag = formCore.getFieldValue('flag');
+					if (flag=== 'true,event' || flag === 'false, event') {
+						return;
+					}
+					formCore.setFieldValue('value', '');
+				}
 			}],
 		}
 	}

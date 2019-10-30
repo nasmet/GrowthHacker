@@ -21,17 +21,15 @@ export default function ARPUData() {
 	} = response;
 
 	const dateChange = (e) => {
-		updateParameter({
+		updateParameter(Object.assign({
 			date: e,
-			seg_id: parameter.seg_id,
-		});
+		}));
 	};
 
 	const groupChange = e => {
-		updateParameter({
-			date: parameter.date,
+		updateParameter(Object.assign({
 			seg_id: e,
-		});
+		}));
 	};
 
 	const renderSixColumn = (value, index, record) => {

@@ -94,7 +94,7 @@ function EventAnalysisDetails({
 	};
 
 	const pageChange = (e) => {
-		updateParameter(Object.assign({}, parameter, {
+		updateParameter(utils.deepObject(parameter, {
 			trend: {
 				offset: (e - 1) * config.LIMIT,
 			}
@@ -102,7 +102,7 @@ function EventAnalysisDetails({
 	};
 
 	const dateChange = e => {
-		updateParameter(Object.assign({}, parameter, {
+		updateParameter(utils.deepObject(parameter, {
 			trend: {
 				date: e,
 				offset: 0,

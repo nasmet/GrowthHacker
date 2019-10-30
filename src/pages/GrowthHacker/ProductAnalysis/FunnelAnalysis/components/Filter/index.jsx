@@ -30,20 +30,16 @@ export default function Filter({
 			setLoading(true);
 			try{
 				await api.getOriginData().then((res) => {
-					setOriginData(res.data.map(item => {
-						return {
-							label: item.name,
-							value: item.id,
-						}
-					}));
+					const originData = model.assembleOriginData(res.data);
+					setOriginData(originData);
 				});
 
 				await api.getDataCenter().then((res) => {
-					dividingMetricData(res.event_entities);
+					assembleEventData(res.event_entities);
 				});
 
 				await api.getUserGroups().then((res) => {
-					dividingGroupData(res.segmentations);
+					assembleGroupData(res.segmentations);
 				});
 
 			}catch(e){
@@ -63,7 +59,6 @@ export default function Filter({
 		if(groupData.length===0){
 			return;
 		}
-
 		setSteps([createStep({step: 0}),createStep({step: metricData[0] && metricData[0].value})]);
 	},[metricData,groupData,originData]);
 
@@ -72,32 +67,14 @@ export default function Filter({
 
 	},[steps]);
 
-	function dividingMetricData(data) {
-		const metrics = [];
-		data.forEach((item) => {
-			const obj = {
-				label: item.name,
-				value: item.entity_key,
-			};
-			if (item.type === 'event') {
-				metrics.push(obj);
-			}
-		});
+	function assembleEventData(data) {
+		const {metrics} = model.assembleEventData(data);
 		setMetricData(metrics);
 	}
 
-	function dividingGroupData(data) {
-		const targets = data.map((item) => {
-			return {
-				label: item.name,
-				value: item.id,
-			};
-		});
-		targets.splice(0, 0, {
-			label: '全部用户',
-			value: 0,
-		});
-		setGroupData(targets);
+	function assembleGroupData(data) {
+		const groups = model.assembleGroupData(data);
+		setGroupData(groups);
 	}
 
 	function createStep(values) {
@@ -132,17 +109,18 @@ export default function Filter({
 				api.getOriginDataValues({
 					id: this.values.key,
 				}).then((res) => {
-					const data = res.data.map(item => {
-						return {
-							label: item.value,
-							value: item.id,
-						}
-					});
+					const data = model.assembleOriginDataValues(res.data);
 					formCore.setFieldProps('value', {
 						dataSource: data,
 					});
 				});
 			},
+			effects: [{
+				field: 'key',
+				handler: function(formCore) {
+					formCore.setFieldValue('value', '');
+				},
+			}],
 		};
 	}
 
@@ -214,6 +192,7 @@ export default function Filter({
 							onChange,
 							onFocus,
 							values,
+							effects,
 						} = item;
 						
 						return ( 
@@ -225,6 +204,7 @@ export default function Filter({
 								renderField={({label, component, error}) => (
 						        	<span style={{marginRight:'20px'}}>{component}</span>
 						        )}
+						        effects={effects}
 							>
 							{formCore=>(
 								<div>

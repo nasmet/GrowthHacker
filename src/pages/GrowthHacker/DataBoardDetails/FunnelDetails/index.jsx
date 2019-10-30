@@ -69,7 +69,7 @@ function FunnelDetails({
 	};
 
 	const filterChange = (e) => {
-		updateParameter(Object.assign({}, parameter, {
+		updateParameter(utils.deepObject(parameter, {
 			trend: {
 				date: e,
 				offset: 0,

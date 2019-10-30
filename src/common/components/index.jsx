@@ -11,6 +11,8 @@ import NotData from './NotData';
 import Switch from './Switch';
 import BoardDialog from './BoardDialog';
 import GroupFilter from './GroupFilter';
+import Save from './Save';
+import ChartsDisplay from './ChartsDisplay';
 
 export default {
 	BasicColumn,
@@ -26,4 +28,5 @@ export default {
 	Switch,
 	BoardDialog,
 	GroupFilter,
+	Save,
 }

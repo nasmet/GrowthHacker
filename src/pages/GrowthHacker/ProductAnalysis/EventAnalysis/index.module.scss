@@ -1,34 +1,4 @@
-.titleWrap{
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-}
-.title{
-	font-weight: bold;
-	font-size: 16px;
-}
 .pagination {
   	margin-top: 10px;
   	text-align: right;
 };
-.item{
-	margin-bottom: 20px; 
-	display: flex;
-	flex-direction: row;
-	align-items: center;
-	.name{
-		min-width: 150px;
-	}
-	.value{
-		margin-right: 20px;
-		font-weight: bold;
-	}
-}
-.tabWrap{
-	flex: 1;
-	margin-left: 20px;
-}
-.name::after{
-	content: '*';
-	color: red;
-}

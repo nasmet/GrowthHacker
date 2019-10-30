@@ -1,142 +1,174 @@
 import React, {
 	Component,
-	useEffect,
 	useState,
+	useEffect,
 	useRef,
 } from 'react';
 import {
-	Select,
+	Button,
 	Loading,
+	Select,
 } from '@alifd/next';
 import {
 	Form,
 	Field,
 } from '@ice/form';
-import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
+import {
+	originRules
+} from './filterConfig';
 
 export default function Filter({
 	filterChange,
 }) {
-	const formRef = useRef(null);
-	const [loading, setLoading] = useState(false);
-	const [groupData, setGroupData] = useState([]);
-	const [metricData, setMetricData] = useState([]);
-	const [dimensionData, setDimensionData] = useState([]);
+	const [originData, setOriginData] = useState([]);
+	const [steps, setSteps] = useState([]);
 
 	useEffect(() => {
-		async function fetchData() {
-			setLoading(true);
-			try {
-				await api.getDataCenter().then((res) => {
-					dividingData(res.event_entities);
-				});
-
-				await api.getUserGroups().then((res) => {
-					dividingGroupData(res.segmentations);
-				});
-			} catch (e) {
-				model.log(e);
-			}
-			setLoading(false);
+		function getOriginData() {
+			api.getOriginData().then((res) => {
+				const originData = model.assembleOriginData(res.data);
+				setOriginData(originData);
+			}).catch(e => {
+				console.error(e);
+			});
 		}
 
-		fetchData();
+		getOriginData();
 
 		return () => {
 			api.cancelRequest();
 		};
 	}, []);
 
-	function dividingData(data) {
-		const dimensions = [];
-		const metrics = [];
-		data.forEach((item) => {
-			const obj = {
-				label: item.name,
-				value: item.entity_key,
-			};
-			if (item.type === 'event') {
-				metrics.push(obj);
-			} else {
-				dimensions.push(obj);
-			}
-		});
-		formRef.current.state.store.setFieldProps('metrics', {
-			dataSource: metrics,
-		});
-		formRef.current.state.store.setFieldProps('dimensions', {
-			dataSource: dimensions,
-		});
-	}
-
-	function dividingGroupData(data) {
-		const targets = data.map((item) => {
-			return {
-				label: item.name,
-				value: item.id,
-			};
-		});
-		targets.splice(0, 0, {
-			label: '全部用户',
-			value: 0,
-		});
-		formRef.current.state.store.setFieldProps('segmentation_id', {
-			dataSource: targets,
-		});
-		formRef.current.state.store.setFieldValue('segmentation_id', targets[0].value);
-	}
-
-	const formChange = (values) => {
-		const {
-			dimensions,
-			metrics,
-			segmentation_id,
-		} = values;
-		let flag = true;
-		if (dimensions && dimensions.length > 0 && metrics && metrics.length > 0 && segmentation_id !== undefined) {
-			flag = false;
+	useEffect(() => {
+		if (steps.length === 0) {
+			return;
 		}
-		filterChange(values, flag);
+		steps.map(item => {
+			item.refForm.store.setValues(item.values);
+		});
+		filterChange(steps);
+	}, [steps]);
+
+	function createStep() {
+		return {
+			key: Date.now(),
+			values: {
+				key: originData[0] && originData[0].value,
+				op: '=',
+				value: '',
+			},
+			effects: [{
+				field: 'key',
+				handler: function(formCore) {
+					formCore.setFieldValue('value', '');
+				},
+			}],
+			onChange: function(e) {
+				this.values = e;
+			},
+			onFocus: function(formCore) {
+				if (!this.values.key) {
+					return;
+				}
+				api.getOriginDataValues({
+					id: this.values.key,
+				}).then((res) => {
+					const data = model.assembleOriginDataValues(res.data);
+					formCore.setFieldProps('value', {
+						dataSource: data,
+					});
+				});
+			},
+			onDelete: function(e) {
+				setSteps(pre => {
+					pre.splice(e, 1);
+					return [...pre];
+				});
+			},
+		};
+	}
+
+	const onAddStep = () => {
+		if (steps.length === 4) {
+			model.log('最多支持4条过滤！');
+			return;
+		}
+		setSteps((pre) => {
+			return [...pre, createStep()];
+		});
+	};
+
+	const notFoundContent = <span>加载中...</span>;
+
+	const renderStep = () => {
+		return steps.map((item, index) => {
+			const {
+				key,
+				onChange,
+				onFocus,
+				values,
+				effects,
+				onDelete,
+			} = item;
+
+			return (
+				<div key={key} style={{display:'flex',marginBottom:'10px', alignItems: 'center'}}>
+					<div>
+						<Form
+							style={{display:'flex'}}
+							onChange={onChange.bind(item)} 
+							renderField={({label, component, error}) => (
+					        	<span style={{marginRight:'20px'}}>{component}</span>
+					        )}
+					        effects={effects}
+					        ref={e=>{item.refForm=e}}					   	
+						>
+						{formCore=>(
+							<div>
+							<Field name='key'>
+								<Select
+									style={{minWidth:'200px'}} 
+									dataSource={originData}  
+									showSearch
+								/>
+							</Field>
+							<Field name='op'>
+								<Select
+									style={{minWidth:'100px'}} 
+									dataSource={originRules}  
+									showSearch
+								/>
+							</Field>
+							<Field name='value'>
+								<Select
+									style={{minWidth:'200px'}} 
+									dataSource={[]}  
+									showSearch
+									notFoundContent={notFoundContent}
+									onFocus={onFocus.bind(item,formCore)}
+								/>
+							</Field>
+							</div>
+						)}
+						</Form>
+					</div>
+					<Button size='small' style={{marginLeft:'4px',borderRadius:'50%'}} onClick={onDelete.bind(item,index)}>x</Button>
+				</div>
+			)
+		});
 	};
 
 	return (
-		<Loading visible={loading} inline={false}>
-			<Form 
-				className={styles.wrap} 
-				onChange={formChange} 
-				ref={formRef}
-				renderField={({label, component, error}) => (
-		            <div className={styles.field}>
-		              	<span style={{marginBottom: '4px'}}>{label}</span>
-		              	<span>{component}</span>
-		            </div>
-		        )}
-			>	
-				<Field label='选择事件' name='metrics'>
-					<Select  
-						style={{width:'400px'}}
-						mode="multiple"
-						dataSource={[]}  
-						showSearch
-					/>
-				</Field>
-				<Field label='按以下维度拆分' name='dimensions'>
-					<Select  
-						style={{width:'400px'}}
-						mode="multiple"
-						dataSource={[]}  
-						showSearch
-					/>
-				</Field>
-				<Field label='目标用户' name='segmentation_id'>
-					<Select  
-						style={{width:'400px'}}
-						dataSource={[]} 
-						showSearch
-					/>
-				</Field>
-			</Form>
-		</Loading>
+		<div>
+			<div className={styles.wrap}>
+				<span>全局过滤(AND)</span>
+				<Button size='small' style={{marginLeft:'4px',borderRadius:'50%'}} onClick={onAddStep}>+</Button>
+			</div>
+			<div className={styles.stepContainer}>													
+				{renderStep()}
+			</div>
+		</div>
 	);
 }

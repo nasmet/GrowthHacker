@@ -43,20 +43,16 @@ export default function Filter({
 			setLoading(true);
 			try{
 				await api.getOriginData().then((res) => {
-					setOriginData(res.data.map(item => {
-						return {
-							label: item.name,
-							value: item.id,
-						}
-					}));
+					const originData = model.assembleOriginData(res.data);
+					setOriginData(originData);
 				});
 
 				await api.getDataCenter().then((res) => {
-					dividingMetricData(res.event_entities);
+					assembleEventData(res.event_entities);
 				});
 
 				await api.getUserGroups().then((res) => {
-					dividingGroupData(res.segmentations);
+					assembleGroupData(res.segmentations);
 				});
 
 			}catch(e){
@@ -72,32 +68,14 @@ export default function Filter({
 		};
 	}, []);
 
-	function dividingMetricData(data) {
-		const metrics = [];
-		data.forEach((item) => {
-			const obj = {
-				label: item.name,
-				value: item.entity_key,
-			};
-			if (item.type === 'event') {
-				metrics.push(obj);
-			}
-		});
+	function assembleEventData(data) {
+		const {metrics} = model.assembleEventData(data);
 		setMetricData(metrics);
 	}
 
-	function dividingGroupData(data) {
-		const targets = data.map((item) => {
-			return {
-				label: item.name,
-				value: item.id,
-			};
-		});
-		targets.splice(0, 0, {
-			label: '全部用户',
-			value: 0,
-		});
-		setGroupData(targets);
+	function assembleGroupData(data) {
+		const groups = model.assembleGroupData(data);
+		setGroupData(groups);
 	}
 
 	const notFoundContent = <span>加载中...</span>;
@@ -107,7 +85,7 @@ export default function Filter({
 			name,
 			label,
 			values: {
-				[name]:metricData[0]&&metricData[0].value, 
+				[name]: metricData[0] && metricData[0].value, 
 			},
 			onChange: function(e) {
 				this.values = e;
@@ -150,17 +128,20 @@ export default function Filter({
 				api.getOriginDataValues({
 					id: this.values.key,
 				}).then((res) => {
-					const data = res.data.map(item => {
-						return {
-							label: item.value,
-							value: item.id,
-						}
-					});
+					const originDataValues = model.assembleOriginDataValues(res.data);
 					formCore.setFieldProps('value', {
-						dataSource: data,
+						dataSource: originDataValues,
 					});
+				}).catch(e=>{
+					console.log(e);
 				});
 			},
+			effects: [{
+				field: 'key',
+				handler: function(formCore) {
+					formCore.setFieldValue('value', '');
+				},
+			}],
 		};
 	}
 	
@@ -189,7 +170,7 @@ export default function Filter({
 					>
 						<Field label='目标用户' name='segmentation_id'>
 							<Select  
-								style={{width:'200px'}} 
+								style={{width:'300px'}} 
 								dataSource={groupData}  
 								showSearch
 							/>
@@ -214,7 +195,7 @@ export default function Filter({
 					>
 						<Field label={label} name={name}>
 							<Select
-								style={{width:'200px'}} 
+								style={{width:'300px'}} 
 								dataSource={metricData}  
 								showSearch
 							/>
@@ -227,17 +208,19 @@ export default function Filter({
 								onChange,
 								onFocus,
 								values,
+								effects,
 							} = item;
 							
 							return ( 
 								<Form
 									key={key}
-									initialValues={values}
-									style={{display:'flex',marginBottom:'10px'}}
-									onChange={onChange.bind(item)} 
+									initialValues={values}									
+									onChange={onChange.bind(item)}
+									effects={effects}
 									renderField={({label, component, error}) => (
 							        	<span style={{marginRight:'20px'}}>{component}</span>
 							        )}
+							        style={{display:'flex',marginBottom:'10px'}}						        
 								>
 								{formCore=>(
 									<div>

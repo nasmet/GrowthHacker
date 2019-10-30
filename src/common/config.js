@@ -1,6 +1,9 @@
-export const PUBHOST = 'http://129.204.217.116:8090';
-export const HOST = 'http://10.16.117.92:8080';
-export const BASEURL = `${HOST}/v1`;
+export const DEVHOST = 'http://10.16.117.92:8080';
+export const TESTHOST = 'http://10.16.98.212:30010';
+export const BUILDHOST = 'https://api.dw.cloudmaptech.com';
+export const DEVBASEURL = `${DEVHOST}/v1`;
+export const TESTBASEURL = `${TESTHOST}/v1`;
+export const BUILDBASEURL = `${BUILDHOST}/v1`;
 export const TIMEOUT = 10000;
 export const TOKENKEY = 'Token';
 export const LIMIT = 10;

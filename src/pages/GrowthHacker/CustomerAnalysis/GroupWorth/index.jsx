@@ -24,13 +24,8 @@ export default function GroupWorth() {
 	const [loading, setLoading] = useState(false);
 	const [tableData, setTableData] = useState([]);
 
-	function dividingGroupData(data) {
-		const groups = data.map(item => {
-			return {
-				label: item.name,
-				value: item.id,
-			};
-		});
+	function assembleGroupData(data) {
+		const groups = model.assembleGroupData(data, false);
 		refForm.current.state.store.setFieldProps('id', {
 			dataSource: groups,
 		});
@@ -62,7 +57,7 @@ export default function GroupWorth() {
 			setLoading(true);
 			try {
 				await api.getUserGroups().then(res => {
-					dividingGroupData(res.segmentations);
+					assembleGroupData(res.segmentations);
 				});
 
 				await api.getGroupWorth({
@@ -107,15 +102,15 @@ export default function GroupWorth() {
 						ref={refForm}
 						onChange={onFormChange}
 						renderField={({label, component}) => (
-							<div className={styles.field}>
-								<span style={{marginBottom: '4px'}}>{label}</span>
+							<div>
+								<span>{label}</span>
 								<span>{component}</span>
 							</div>
 						)}
 					>
 						<Field label='目标用户：' name='id'>
 							<Select  
-								style={{width:'200px'}}
+								style={{minWidth:'200px'}}
 								dataSource={[]} 
 								showSearch
 							/>

@@ -104,7 +104,7 @@ function RetentionDetails({
 	};
 
 	const dateChange = (e) => {
-		updateParameter(Object.assign({}, parameter, {
+		updateParameter(utils.deepObject(parameter, {
 			trend: {
 				date: e,
 			}
@@ -153,7 +153,7 @@ function RetentionDetails({
 				<Components.DateFilter initTabValue='NAN' initCurDateValue={model.transformDate(date)} filterChange={dateChange} />
 				{/*<Filter filterChange={filterChange} />*/}
 			</IceContainer>
-			<IceContainer>	
+			<IceContainer style={{minHeight: '600px'}}>	
 				<Template 
 					tableData={data}
 					loading={loading}

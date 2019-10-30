@@ -1,14 +1,21 @@
 import React, {
 	useState,
 	useEffect,
+	useRef,
 } from 'react';
 
-export default function useRequest(request, param = {}) {
+export default function useRequest(request, param = {}, init = true) {
 	const [response, setResponse] = useState({});
 	const [loading, setLoading] = useState(false);
 	const [parameter, setParameter] = useState(param);
-
+	const refVarible = useRef({
+		initRun: init,
+	});
 	useEffect(() => {
+		if (!refVarible.current.initRun) {
+			refVarible.current.initRun = true;
+			return;
+		}
 		setLoading(true);
 		request(parameter).then(res => {
 			setResponse(res);

@@ -38,21 +38,11 @@ export default function Step({
 			setLoading(true);
 			try {
 				await api.getTags().then((res) => {
-					setTagData(res.labels.map(item => {
-						return {
-							label: item.name,
-							value: item.id,
-						}
-					}));
+					setTagData(model.assembleTagData(res.labels));
 				});
 
 				await api.getUserGroups().then((res) => {
-					setGroupData(res.segmentations.map(item => {
-						return {
-							label: item.name,
-							value: item.id,
-						}
-					}));
+					setGroupData(model.assembleGroupData(res.segmentations, false));
 				});
 			} catch (e) {
 				model.log(e);

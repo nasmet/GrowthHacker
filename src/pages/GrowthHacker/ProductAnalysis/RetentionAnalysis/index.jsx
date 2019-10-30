@@ -6,21 +6,37 @@ import React, {
 } from 'react';
 import {
 	Button,
+	Table,
 } from '@alifd/next';
 import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
 import Filter from './components/Filter';
-import DataDisplay from './components/DataDisplay';
+import Template from '../../DataBoardDetails/Template';
 
 export default function RetentionAnalysis() {
-	const [disabled, setDisabled] = useState(true);
-	const [boardId, setBoardId] = useState('');
 	const refDialog = useRef(null);
+	const saveRef = useRef(null);
 	const refVariable = useRef({
 		values: {},
 		name: '',
 		date: 'day:0',
 	});
+
+	const {
+		parameter,
+		response,
+		loading,
+		updateParameter,
+	} = hooks.useRequest(api.getDataBoard, {
+		chart_id: 0,
+		trend: {
+			date: '',
+		},
+	}, false);
+	const {
+		meta = [],
+			data = [],
+	} = response;
 
 	useEffect(() => {
 		return () => {
@@ -30,9 +46,7 @@ export default function RetentionAnalysis() {
 
 	const filterChange = (step) => {
 		const flag = step.length === 0 ? true : false;
-		if (flag !== disabled) {
-			setDisabled(flag);
-		}
+		saveRef.current.setButtonStatus(flag);
 		refVariable.current.values = step;
 	};
 
@@ -58,7 +72,9 @@ export default function RetentionAnalysis() {
 		}).then((res) => {
 			model.log('成功添加到看板');
 			sucess();
-			setBoardId(res.id);
+			updateParameter(Object.assign({}, parameter, {
+				chart_id: res.id,
+			}));
 		}).catch((e) => {
 			model.log(e);
 			fail();
@@ -77,19 +93,76 @@ export default function RetentionAnalysis() {
 		refVariable.current.date = e;
 	};
 
+	function assemblingChartStyle(meta) {
+		return {
+			x: meta[0],
+			y: 'count',
+			color: 'event',
+			cols: {
+				[meta[0]]: {
+					type: 'timeCat',
+				},
+			},
+		};
+	}
+
+	function assemblingChartData(data, meta) {
+		const arr = [];
+		data.forEach((item) => {
+			const value = item[0];
+			const name = meta[0];
+			item.forEach((v, index) => {
+				if (index !== 0 && meta[index]) {
+					arr.push({
+						[name]: value,
+						event: meta[index],
+						count: v,
+					})
+				}
+			})
+		});
+		return arr;
+	}
+
+	const renderColumn = (item, value, index, record) => {
+		return (
+			<div style={{display: 'flex', flexDirection: 'column'}}>
+				<span>{record[item]}</span>
+				<span style={{color:'#0AA372'}}>
+					{record[1]===0?'0.00%':utils.transformPercent(record[item]/record[1])}
+				</span>
+			</div>
+		);
+	}
+
+	const renderTitle = () => {
+		return meta.map((item, index) => {
+			if (index > 1) {
+				return <Table.Column key={index} title={item} cell={renderColumn.bind(this, index)} width={100} />
+			}
+			return <Table.Column key={index} title={item} dataIndex={index.toString()} lock width={120} />
+		});
+	};
+
 	return (
 		<Components.Wrap>
-			<p className={styles.titleWrap}>
-				<span className={styles.title}>新建留存分析</span>
-				<Button type='primary' disabled={disabled} onClick={onSave}>保存</Button>
-			</p>
+			<Components.Save ref={saveRef} title='新建留存分析' onSave={onSave} />
+
 			<IceContainer>
 				<Components.DateFilter filterChange={dateChange} />	
 				<Filter filterChange={filterChange} />
 			</IceContainer>
-			<IceContainer>
-				<DataDisplay id={boardId} />
+
+			<IceContainer style={{minHeight: '600px'}}>	
+				<Template 
+					tableData={data}
+					loading={loading}
+					chartData={assemblingChartData(data, meta)} 
+					chartStyle={assemblingChartStyle(meta)}
+					renderTitle={renderTitle}
+				/>
 			</IceContainer>
+
 			<Components.BoardDialog onInputChange={onInputChange} onOk={onOk} ref={refDialog} />
     	</Components.Wrap>
 	);
