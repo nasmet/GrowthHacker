@@ -38,6 +38,7 @@ function BoardDialog({
 	const submit = () => {
 		setLoading(true);
 		onOk(() => {
+			setDisabled(true);
 			setLoading(false);
 			setVisible(false);
 		}, () => {
@@ -46,6 +47,7 @@ function BoardDialog({
 	};
 
 	const onClose = () => {
+		setDisabled(true);
 		setVisible(false);
 	};
 
