@@ -12,7 +12,6 @@ import {
 } from 'react-router-dom';
 import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
-import Template from '../Template';
 import Filter from './components/Filter';
 
 function RetentionDetails({
@@ -154,7 +153,7 @@ function RetentionDetails({
 				{/*<Filter filterChange={filterChange} />*/}
 			</IceContainer>
 			<IceContainer style={{minHeight: '600px'}}>	
-				<Template 
+				<Components.ChartsDisplay 
 					tableData={data}
 					loading={loading}
 					chartData={assemblingChartData(data, meta)} 

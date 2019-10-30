@@ -11,7 +11,6 @@ import {
 import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
 import Filter from './components/Filter';
-import Template from '../../DataBoardDetails/Template';
 
 export default function RetentionAnalysis() {
 	const refDialog = useRef(null);
@@ -154,7 +153,7 @@ export default function RetentionAnalysis() {
 			</IceContainer>
 
 			<IceContainer style={{minHeight: '600px'}}>	
-				<Template 
+				<Components.ChartsDisplay 
 					tableData={data}
 					loading={loading}
 					chartData={assemblingChartData(data, meta)} 

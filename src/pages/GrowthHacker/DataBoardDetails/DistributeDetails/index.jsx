@@ -9,7 +9,6 @@ import {
 } from 'react-router-dom';
 import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
-import Template from '../Template';
 
 function DistributeDetails({
 	location,
@@ -33,7 +32,7 @@ function DistributeDetails({
 	} = response;
 
 	function assemblingTableData(data) {
-		if (data.length < 2) {
+		if (!data || data.length < 2) {
 			return data;
 		}
 		const row = data.reduce((total, value) => {
@@ -109,8 +108,8 @@ function DistributeDetails({
 			<Components.Title title={boardInfo.name} desc={boardInfo.desc} />
 			<IceContainer>
 				<Components.DateFilter initTabValue='NAN' initCurDateValue={model.transformDate(boardInfo.date)} filterChange={filterChange} />	
-				<Template 
-					tableData={assemblingTableData(data)}
+				<Components.ChartsDisplay 
+					tableData={assemblingTableData(data||[])}
 					loading={loading}
 					chartData={assemblingChartData(data, meta)} 
 					chartStyle={assemblingChartStyle(meta)}

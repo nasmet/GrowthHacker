@@ -10,7 +10,6 @@ import {
 } from 'react-router-dom';
 import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
-import Template from '../Template';
 
 function LevelDetails({
 	location,
@@ -90,7 +89,7 @@ function LevelDetails({
 			<Components.Title title={boardInfo.name} desc={boardInfo.desc} />
 			<IceContainer> 
 				<Components.DateFilter initTabValue='NAN' initCurDateValue={model.transformDate(boardInfo.date)} filterChange={filterChange} />	
-				<Template 
+				<Components.ChartsDisplay 
 					tableData={data}
 					loading={loading}
 					chartData={assemblingChartData(data, meta)} 

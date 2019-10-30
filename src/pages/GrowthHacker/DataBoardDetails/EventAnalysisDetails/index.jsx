@@ -13,7 +13,6 @@ import {
 } from 'react-router-dom';
 import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
-import Template from '../Template';
 import Filter from './components/Filter';
 
 function EventAnalysisDetails({
@@ -158,7 +157,7 @@ function EventAnalysisDetails({
 			</IceContainer>
 
 			<IceContainer>
-				<Template 
+				<Components.ChartsDisplay 
 					tableData={data}
 					loading={loading}
 					chartData={assemblingChartData(data, meta)} 
