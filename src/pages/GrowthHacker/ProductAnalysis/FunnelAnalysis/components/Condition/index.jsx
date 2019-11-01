@@ -14,17 +14,17 @@ import {
 	Field,
 } from '@ice/form';
 import styles from './index.module.scss';
-import {originRules} from './filterConfig';
 
-export default function Filter({
+export default function Condition({
 	filterChange,
+	initCondition,
 }) {
 	const [originData,setOriginData] = useState([]);
 	const [groupData,setGroupData] = useState([]);
 	const [metricData,setMetricData] = useState([]);
 	const [steps, setSteps] = useState([]);
 	const [loading,setLoading] = useState(false);
-	
+
 	useEffect(() => {
 		async function fetchData() {
 			setLoading(true);
@@ -59,12 +59,16 @@ export default function Filter({
 		if(groupData.length===0){
 			return;
 		}
+		if(initCondition.steps){
+			const temp = initCondition.steps.map(item=>(createStep({step:item})));
+			setSteps([createStep({step: initCondition.segmentation_id}),...temp]);
+			return;
+		}
 		setSteps([createStep({step: 0}),createStep({step: metricData[0] && metricData[0].value})]);
 	},[metricData,groupData,originData]);
 
 	useEffect(()=>{
 		filterChange(steps);
-
 	},[steps]);
 
 	function assembleEventData(data) {
@@ -85,8 +89,9 @@ export default function Filter({
 			},
 			filter: [],
 			onAddFilter: function() {
-				this.filter.push(createFilter());
-				setSteps(pre => [...pre]);
+				model.log('暂不支持!');
+				// this.filter.push(createFilter());
+				// setSteps(pre => [...pre]);
 			}
 		}
 	}
@@ -218,7 +223,7 @@ export default function Filter({
 								<Field name='op'>
 									<Select
 										style={{width:'100px'}} 
-										dataSource={originRules}  
+										dataSource={config.originRules}  
 										showSearch
 									/>
 								</Field>

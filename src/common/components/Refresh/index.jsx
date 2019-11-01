@@ -6,6 +6,7 @@ import {
 
 export default function Refresh({
 	onClick,
+	style={}
 }) {
 	const btnStyle = {
 		width: '32px',
@@ -20,6 +21,10 @@ export default function Refresh({
 	};
 
 	return (
-		<Button onClick={onRefresh} style={btnStyle} ><Icon type='refresh' /></Button>
+		<div style={style}>
+			<Button onClick={onRefresh} style={btnStyle} >
+				<Icon type='refresh' />
+			</Button>
+		</div>
 	);
 }

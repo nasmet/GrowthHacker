@@ -23,6 +23,7 @@ function DistributeDetails({
 	} = hooks.useRequest(api.getDataBoard, {
 		chart_id: boardInfo.id,
 		date: boardInfo.date,
+		type: boardInfo.type,
 	});
 	const {
 		meta = [],

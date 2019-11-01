@@ -14,10 +14,10 @@ import {
 	Field,
 } from '@ice/form';
 import styles from './index.module.scss';
-import {originRules} from './filterConfig';
 
-export default function Filter({
+export default function Condition({
 	filterChange,
+	initValues,
 }) {
 	const [loading,setLoading] = useState(false);
 	const [originData,setOriginData] = useState([]);
@@ -34,8 +34,20 @@ export default function Filter({
 		if(groupData.length===0){
 			return;
 		}
+		if(initValues.init_event){
+			setSteps([
+				createBehavior({name:'init_event',label:'初始行为是',values:{init_event:initValues.init_event }}),
+				createBehavior({name:'retention_event',label:'后续行为是',values:{retention_event:initValues.retention_event }}),
+				createUserBehavior({values:{segmentation_id:initValues.segmentation_id}})]
+			);
+			return;
+		}
 
-		setSteps([createBehavior('init_event','初始行为是'),createBehavior('retention_event','后续行为是'),createUserBehavior()]);
+		setSteps([
+			createBehavior({name:'init_event',label:'初始行为是',values:{init_event: metricData[0] && metricData[0].value }}),
+			createBehavior({name:'retention_event',label:'后续行为是',values:{retention_event: metricData[0] && metricData[0].value}}),
+			createUserBehavior({values:{segmentation_id:0}})]
+		);
 	},[metricData,groupData,originData]);
 
 	useEffect(() => {
@@ -80,30 +92,27 @@ export default function Filter({
 
 	const notFoundContent = <span>加载中...</span>;
 
-	function createBehavior(name,label) {
+	function createBehavior({name,label,values={}}) {
 		return {
 			name,
 			label,
-			values: {
-				[name]: metricData[0] && metricData[0].value, 
-			},
+			values,
 			onChange: function(e) {
 				this.values = e;
 			},
 			filter:[],
 			onAddFilter:function(){
-				this.filter.push(createFilter());
-				setSteps(pre=>[...pre]);
+				model.log('暂不支持！');
+				// this.filter.push(createFilter());
+				// setSteps(pre=>[...pre]);
 			}
 		}
 	}
 
 
-	function createUserBehavior() {
+	function createUserBehavior({values}) {
 		return {
-			values: {
-				segmentation_id:0,
-			},
+			values,
 			onChange: function(e) {
 				this.values = e;
 			},
@@ -235,7 +244,7 @@ export default function Filter({
 									<Field name='op'>
 										<Select
 											style={{width:'100px'}} 
-											dataSource={originRules}  
+											dataSource={config.originRules}  
 											showSearch
 											notFoundContent={notFoundContent}
 										/>

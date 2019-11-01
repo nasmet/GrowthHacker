@@ -9,16 +9,10 @@ import SqlLayout from './layouts/SqlLayout';
 import ProjectList from './pages/GrowthHacker/ProjectList';
 import ProjectData from './pages/GrowthHacker/ProjectData';
 import DataBoard from './pages/GrowthHacker/DataBoard';
-const RetentionDetails = React.lazy(() =>
-	import ('./pages/GrowthHacker/DataBoardDetails/RetentionDetails'));
-const FunnelDetails = React.lazy(() =>
-	import ('./pages/GrowthHacker/DataBoardDetails/FunnelDetails'));
 const DistributeDetails = React.lazy(() =>
 	import ('./pages/GrowthHacker/DataBoardDetails/DistributeDetails'));
 const LevelDetails = React.lazy(() =>
 	import ('./pages/GrowthHacker/DataBoardDetails/LevelDetails'));
-const EventAnalysisDetails = React.lazy(() =>
-	import ('./pages/GrowthHacker/DataBoardDetails/EventAnalysisDetails'));
 import EventAnalysis from './pages/GrowthHacker/ProductAnalysis/EventAnalysis';
 import RetentionAnalysis from './pages/GrowthHacker/ProductAnalysis/RetentionAnalysis';
 import FunnelAnalysis from './pages/GrowthHacker/ProductAnalysis/FunnelAnalysis';
@@ -132,33 +126,15 @@ const routerConfig = [
 			path: '/growthhacker/projectdata',
 			component: ProjectData,
 			children: [{
-				id: '1008000',
-				path: '/growthhacker/projectdata/retentiondetails',
-				component: RetentionDetails,
-				exact: true,
-				auth: true,
-			}, {
-				id: '1008001',
-				path: '/growthhacker/projectdata/funneldetails',
-				component: FunnelDetails,
-				exact: true,
-				auth: true,
-			}, {
 				id: '1008002',
-				path: '/growthhacker/projectdata/distributedetails',
+				path: '/growthhacker/projectdata/pa/distributedetails',
 				component: DistributeDetails,
 				exact: true,
 				auth: true,
 			}, {
 				id: '1008003',
-				path: '/growthhacker/projectdata/leveldetails',
+				path: '/growthhacker/projectdata/pa/leveldetails',
 				component: LevelDetails,
-				exact: true,
-				auth: true,
-			}, {
-				id: '1008004',
-				path: '/growthhacker/projectdata/eventanalysisdetails',
-				component: EventAnalysisDetails,
 				exact: true,
 				auth: true,
 			}, {

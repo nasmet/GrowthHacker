@@ -28,15 +28,9 @@ export default function ExportExcel({
 		refVarible.current.name = e;
 	};
 
-	const handTableData = () => {
+	const handTableData_1 = () => {
 		const sheetHeader = meta.map(item => item.name);
-		const sheetData = data.map(item => {
-			const obj = {};
-			item.map((item, index) => {
-				obj[sheetHeader[index]] = item;
-			})
-			return obj;
-		});
+		const sheetData = data;
 		return [{
 			sheetName,
 			sheetData,
@@ -44,11 +38,24 @@ export default function ExportExcel({
 		}];
 	}
 
+	const handTableData_2 = () => {
+		const sheetHeader = meta;
+		const sheetData = data;
+		return [{
+			sheetName,
+			sheetData,
+			sheetHeader,
+		}];
+	};
+
 	const getHandData = () => {
 		const option = {};
 		switch (type) {
 			case 1:
-				option.datas = handTableData();
+				option.datas = handTableData_1();
+				break;
+			case 2:
+				option.datas = handTableData_2();
 				break;
 		}
 		option.fileName = refVarible.current.name;
@@ -56,10 +63,10 @@ export default function ExportExcel({
 	}
 
 	const onOk = (success, fail) => {
-		success();
 		const option = getHandData();
 		const toExcel = new ExportJsonExcel(option);
 		toExcel.saveExcel();
+		success();
 	};
 
 	return (

@@ -165,10 +165,12 @@ function EventAnalysis({
 			index: +dataIndex,
 			orderType: order,
 		};
+		onRefresh();
 	};
 
-	const onRefresh = () => {
-		updateParameter({ ...refVariable.current
+	function onRefresh() {
+		updateParameter({ ...refVariable.current,
+			offset: 0,
 		});
 	};
 

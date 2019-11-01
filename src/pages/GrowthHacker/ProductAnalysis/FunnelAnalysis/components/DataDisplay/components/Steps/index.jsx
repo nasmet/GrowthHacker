@@ -2,7 +2,7 @@ import React from 'react';
 import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
 
-export default function Step({
+export default function Steps({
 	steps,
 	totalRate,
 }) {

@@ -25,6 +25,7 @@ function LevelDetails({
 		date: boardInfo.date,
 		offset: 0,
 		limit: config.LIMIT,
+		type: boardInfo.type,
 	});
 	const {
 		meta = [],

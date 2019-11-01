@@ -8,38 +8,73 @@ import {
 	Button,
 	Table,
 } from '@alifd/next';
+import {
+	withRouter,
+} from 'react-router-dom';
 import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
-import Filter from './components/Filter';
+import Condition from './components/Condition';
 
-export default function RetentionAnalysis() {
-	const refDialog = useRef(null);
+function RetentionAnalysis({
+	location,
+	history,
+}) {
+	let initRequest = false;
+	let initSave = {
+		title: '新建留存分析',
+		desc: '',
+	}
+	let initDate = 'day:0';
+	let initDateFilter = {};
+	let initCondition = {};
+	let initOrders = {};
+	if (location.state && location.state.boardInfo) {
+		const {
+			name,
+			desc,
+			date,
+			segmentation_id,
+			init_event,
+			retention_event,
+			orders,
+		} = location.state.boardInfo;
+		initRequest = true;
+		initSave.title = name;
+		initSave.desc = desc;
+		initSave.disable = false;
+		initDate = date || initDate;
+		initDateFilter = {
+			initTabValue: 'NAN',
+			initCurDateValue: model.transformDate(initDate),
+		};
+		initCondition = {
+			segmentation_id,
+			init_event,
+			retention_event,
+		};
+		initOrders = orders || initOrders;
+	}
+
 	const saveRef = useRef(null);
-	const refVariable = useRef({
-		values: {},
+	const refDialog = useRef(null);
+	const refVariable = useRef(Object.assign({
+		type: 'retention',
 		name: '',
-		date: 'day:0',
-	});
+		date: initDate,
+		orders: initOrders,
+	}, initCondition));
 
 	const {
 		parameter,
 		response,
 		loading,
 		updateParameter,
-	} = hooks.useRequest(api.getDataBoard, {
-		chart_id: 0,
-		date: '',
-	}, false);
+	} = hooks.useRequest(api.getDataBoard, refVariable.current, initRequest);
 	const {
 		meta = [],
 			data = [],
+			total = 0,
 	} = response;
-
-	useEffect(() => {
-		return () => {
-			api.cancelRequest();
-		};
-	}, []);
 
 	const filterChange = (step) => {
 		const flag = step.length === 0 ? true : false;
@@ -47,31 +82,25 @@ export default function RetentionAnalysis() {
 		refVariable.current.values = step;
 	};
 
-	const tranformData = () => {
-		const values = refVariable.current.values;
-		return {
-			init_event: values[0].values.init_event,
-			retention_event: values[1].values.retention_event,
-			segmentation_id: values[2].values.segmentation_id,
+	function assembleParam() {
+		if (!refVariable.current.values) {
+			return refVariable.current;
 		}
-	};
+		const param = { ...refVariable.current
+		};
+		delete param.values;
+		const values = refVariable.current.values;
+		param.init_event = values[0].values.init_event;
+		param.retention_event = values[1].values.retention_event;
+		param.segmentation_id = values[2].values.segmentation_id;
+		return param;
+	}
 
 	const onOk = (sucess, fail) => {
-		const temp = tranformData();
-		const {
-			name,
-			date,
-		} = refVariable.current;
-		api.createBoard({ ...temp,
-			name,
-			type: 'retention',
-			date,
-		}).then((res) => {
+		api.createBoard(assembleParam()).then((res) => {
 			model.log('成功添加到看板');
 			sucess();
-			updateParameter(Object.assign({}, parameter, {
-				chart_id: res.id,
-			}));
+			history.push('/growthhacker/projectdata/db');
 		}).catch((e) => {
 			model.log(e);
 			fail();
@@ -88,6 +117,12 @@ export default function RetentionAnalysis() {
 
 	const dateChange = (e) => {
 		refVariable.current.date = e;
+	};
+
+	function onRefresh() {
+		updateParameter({ ...assembleParam(),
+			offset: 0,
+		});
 	};
 
 	function assemblingChartStyle(meta) {
@@ -143,11 +178,11 @@ export default function RetentionAnalysis() {
 
 	return (
 		<Components.Wrap>
-			<Components.Save ref={saveRef} title='新建留存分析' onSave={onSave} />
+			<Components.Save ref={saveRef} {...initSave} onSave={onSave} />
 
 			<IceContainer>
 				<Components.DateFilter filterChange={dateChange} />	
-				<Filter filterChange={filterChange} />
+				<Condition filterChange={filterChange} initValues={initCondition} />
 			</IceContainer>
 
 			<IceContainer style={{minHeight: '600px'}}>	
@@ -157,6 +192,10 @@ export default function RetentionAnalysis() {
 					chartData={assemblingChartData(data, meta)} 
 					chartStyle={assemblingChartStyle(meta)}
 					renderTitle={renderTitle}
+					meta={meta}
+					showBtn
+					onRefresh={onRefresh}
+					type={2}
 				/>
 			</IceContainer>
 
@@ -164,3 +203,6 @@ export default function RetentionAnalysis() {
     	</Components.Wrap>
 	);
 }
+
+
+export default withRouter(RetentionAnalysis);

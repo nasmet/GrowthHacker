@@ -36,16 +36,16 @@ function DataBoard({
 		switch (type) {
 			case 'active_user':
 			case 'distribute':
-				pathname = '/growthhacker/projectdata/distributedetails';
+				pathname = '/growthhacker/projectdata/pa/distributedetails';
 				break;
 			case 'retention':
-				pathname = '/growthhacker/projectdata/retentiondetails';
+				pathname = '/growthhacker/projectdata/pa/retentionanalysis';
 				break;
 			case 'funnel':
-				pathname = '/growthhacker/projectdata/funneldetails';
+				pathname = '/growthhacker/projectdata/pa/funnelanalysis';
 				break;
 			case 'analysis':
-				pathname = '/growthhacker/projectdata/leveldetails';
+				pathname = '/growthhacker/projectdata/pa/leveldetails';
 				break;
 			case 'dashboard':
 				pathname = '/growthhacker/projectdata/pa/eventanalysis';

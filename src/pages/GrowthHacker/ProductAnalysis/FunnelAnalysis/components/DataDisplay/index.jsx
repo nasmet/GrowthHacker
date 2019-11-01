@@ -1,43 +1,16 @@
-import React, {
-	Component,
-	useState,
-	useEffect,
-	forwardRef,
-	useImperativeHandle,
-} from 'react';
+import React from 'react';
 import {
 	Table,
 	Loading
 } from '@alifd/next';
-import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
-import Step from '../../../../DataBoardDetails/FunnelDetails/components/Step';
+import Steps from './components/Steps';
 
-function DataDisplay({
-	id,
-}, ref) {
-	const {
-		parameter,
-		response,
-		loading,
-		updateParameter,
-	} = hooks.useRequest(api.getDataBoard, {
-		chart_id: 0,
-		date: '',
-	}, false);
-	const {
-		meta = [],
-			data = [],
-	} = response;
-
-	useImperativeHandle(ref, () => ({
-		fetchData: e => {
-			updateParameter(Object.assign({}, parameter, {
-				chart_id: e,
-			}));
-		},
-	}));
-
+export default function DataDisplay({
+	meta,
+	data,
+	loading,
+}) {
 	function constructStep(meta, data) {
 		if (data.length === 0 || meta.length === 0) {
 			return;
@@ -76,15 +49,15 @@ function DataDisplay({
 	};
 
 	return (
-		<IceContainer>
+		<div>
 			{data.length !==0 ?
-				<Step  {...constructStep(meta, data[0])} /> : null
+				<Steps  {...constructStep(meta, data[0])} /> : null
 			}
-			<Table loading={loading} dataSource={data} hasBorder={false} >
-			   	{renderTitle()}     		
-			</Table>
-		</IceContainer>
+			<Loading visible={loading} inline={false}>
+				<Table dataSource={data} hasBorder={false} >
+				   	{renderTitle()}     		
+				</Table>
+			</Loading>
+		</div>
 	);
 }
-
-export default forwardRef(DataDisplay);
