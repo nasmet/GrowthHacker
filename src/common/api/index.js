@@ -93,6 +93,22 @@ export function createEvent(data) {
 	return post('/event_entities', data);
 }
 
+export function addBindVariables(data) {
+	const {
+		id,
+		trend,
+	} = data;
+	return post(`/event_entities/${id}/variables`, trend);
+}
+
+export function deleteBindVariables(data) {
+	const {
+		eventId,
+		variableId,
+	} = data;
+	return del(`/event_entities/${eventId}/variables/${variableId}`);
+}
+
 export function getBoards() {
 	return get(`/projects/${sessionStorage.getItem(config.PROJECTID)}/charts`);
 }

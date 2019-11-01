@@ -9,7 +9,7 @@ import dataCenterConfig from './dataCenterConfig';
 export default function DataCenter() {
 	let key = '';
 	const cache = sessionStorage.getItem('DataCenter');
-	key = cache ? cache : "bp";
+	key = cache ? cache : "event";
 
 	useEffect(() => {
 

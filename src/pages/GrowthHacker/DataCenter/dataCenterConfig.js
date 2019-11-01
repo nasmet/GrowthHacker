@@ -1,15 +1,15 @@
-import BuriedPoint from './components/BuriedPoint';
-import EventVariable from './components/EventVariable';
+import Event from './components/Event';
+import EventVarible from './components/EventVarible';
 import OriginData from './components/OriginData';
 
 export default [{
-	key: 'bp',
+	key: 'event',
 	tab: '埋点事件',
-	Component: BuriedPoint,
+	Component: Event,
 }, {
-	key: 'ev',
+	key: 'varible',
 	tab: '事件变量',
-	Component: EventVariable,
+	Component: EventVarible,
 }, {
 	key: 'origin',
 	tab: '元数据',

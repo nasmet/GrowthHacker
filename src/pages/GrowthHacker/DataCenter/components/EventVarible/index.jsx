@@ -10,9 +10,9 @@ import {
 } from '@alifd/next';
 import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
-import CreateBuriedPoint from '../CreateBuriedPoint';
+import CreateVarible from './components/CreateVarible';
 
-export default function BuriedPoint() {
+export default function EventVarible() {
 	const refDialog = useRef(null);
 
 	const {
@@ -26,7 +26,7 @@ export default function BuriedPoint() {
 	} = hooks.useRequest(api.getDataCenter, {
 		limit: config.LIMIT,
 		offset: 0,
-		type: 'event',
+		type: 'variable',
 	});
 	const {
 		event_entities = [],
@@ -67,7 +67,7 @@ export default function BuriedPoint() {
 		);
 	};
 
-	const onCreateBuriedPoint = () => {
+	const onCreate = () => {
 		refDialog.current.onShow();
 	};
 
@@ -78,34 +78,36 @@ export default function BuriedPoint() {
 
 	return (
 		<Components.Wrap>
-			<IceContainer>      		
+			<IceContainer>
 				<div className={styles.btnWrap}>
-					<Button className={styles.btn} type="secondary" onClick={onCreateBuriedPoint}> 
-						创建埋点事件
+					<Button className={styles.btn} type="secondary" onClick={onCreate}> 
+						创建事件变量
 					</Button>
 				</div>
 				
 				<Loading visible={loading} inline={false}>
-					<Table		         	 
-						dataSource={event_entities}		          		 
-						hasBorder={false}		          		
-					>		          		
-						<Table.Column title="id" dataIndex="id" width={120} />		          		
-						<Table.Column title="名称" dataIndex="name" width={120} />		            	
-						<Table.Column title="标识符" dataIndex="entity_key" width={120} />		            	
-						<Table.Column title="类型" dataIndex="value_type" width={120} />		            	
-						<Table.Column title="描述" dataIndex="desc" />		            	
-						<Table.Column title="操作" cell={renderCover} />		            	
+					<Table 
+						dataSource={event_entities} 
+						hasBorder={false} 
+					>	
+						<Table.Column title="id" dataIndex="id" width={120} />
+						<Table.Column title="名称" dataIndex="name" width={120} />
+						<Table.Column title="标识符" dataIndex="entity_key" width={120} />
+						<Table.Column title="类型" dataIndex="variable_type" width={120} />
+						<Table.Column title="描述" dataIndex="desc" />	
+						<Table.Column title="操作" cell={renderCover} width={120} />
 					</Table>
-				</Loading>	          	
-			
-				<Pagination	          	
-					className={styles.pagination}            	
-					total={total}		            	
-					onChange={pageChange}	            	
-				/>	          	
-			</IceContainer>		    
-			<CreateBuriedPoint ref={refDialog} onOk={onOk} entityType='event' />
+				</Loading>
+
+				<Pagination
+					className={styles.pagination}
+					total={total}
+					onChange={pageChange}
+				/>
+			</IceContainer>
+
+			<CreateVarible ref={refDialog} onOk={onOk} />
+
 		</Components.Wrap>
 	);
 }

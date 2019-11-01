@@ -58,3 +58,12 @@ export function assembleTagData(data) {
 		}
 	})
 }
+
+export function assembleEventVaribleData(data) {
+	return data.map(item => {
+		return {
+			label: item.name,
+			value: item.id,
+		}
+	})
+}

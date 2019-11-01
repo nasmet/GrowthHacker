@@ -133,6 +133,12 @@ export function del(url, params = {}) {
 	return new Promise((resolve, reject) => {
 		axios.delete(url, {
 			params,
+			paramsSerializer: params => {
+				if (typeof params === 'object') {
+					return JSON.stringify(params);
+				}
+				return params;
+			},
 			cancelToken: new CancelToken(function executor(c) {
 				cancelRequestTask = c;
 			}),

@@ -17,21 +17,24 @@ import {
 } from '@ice/form';
 import styles from './index.module.scss';
 
-function CreateBuriedPoint({
+function CreateEvent({
 	onOk,
-	entityType,
 }, ref) {
-	const type = entityType === 'event' ? 'value_type' : 'variable_type';
 	const message = [{
 		required: true,
 		message: '必填',
 	}];
+
 	const [loading, setLoading] = useState(false);
 	const [show, setShow] = useState(false);
+	const [varibleData, setVaribleData] = useState([]);
 
 	useImperativeHandle(ref, () => ({
 		onShow: () => {
 			setShow(true);
+		},
+		updateVaribleData: e => {
+			setVaribleData(e);
 		},
 	}));
 
@@ -44,7 +47,7 @@ function CreateBuriedPoint({
 	const onSubmit = (e) => {
 		setLoading(true);
 		api.createEvent({ ...e,
-			entity_type: entityType,
+			entity_type: 'event',
 		}).then((res) => {
 			model.log('创建成功');
 			onOk(res.event_entity);
@@ -77,7 +80,8 @@ function CreateBuriedPoint({
 					rules={{  					
 						name: message,
 						key: message,
-						[type]:  message,
+						value_type: message,
+						bind_variables: message,
 					}}
 					renderField={({component, error}) => (
 						<div className={styles.field}>
@@ -100,25 +104,23 @@ function CreateBuriedPoint({
 									className={styles.input} 
 									placeholder='请输入标识符'
 								/>
-							</Field>
-							{
-								entityType==='event' && 
-								<Field name="value_type">
-								<Select className={styles.input} placeholder='请输入类型' >
+							</Field>							
+							<Field name="value_type">
+								<Select className={styles.input} placeholder='请选择类型' >
 									<Select.Option value="counter">计数器</Select.Option>
 								</Select>
-								</Field>
-							}
-							{
-								entityType==='variable' && 
-								<Field name="variable_type">
-								<Select className={styles.input} placeholder='请选择类型' >
-									<Select.Option value="integer">整形</Select.Option>
-									<Select.Option value="float">浮点型</Select.Option>
-									<Select.Option value="string">字符串</Select.Option>
-								</Select>
-								</Field>
-							}
+							</Field>
+							
+							<Field name="bind_variables">
+								<Select 
+									className={styles.input} 
+									mode='multiple' 
+									dataSource={varibleData} 
+									placeholder='请关联事件变量' 
+									showSearch
+							/>
+							</Field>
+							
 							<Field name='desc'>
 								<Input 
 									className={styles.input} 
@@ -142,4 +144,4 @@ function CreateBuriedPoint({
 	);
 }
 
-export default forwardRef(CreateBuriedPoint);
+export default forwardRef(CreateEvent);
