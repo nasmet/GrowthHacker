@@ -48,11 +48,9 @@ function EventAnalysisDetails({
 		updateParameter,
 	} = hooks.useRequest(api.getDataBoard, {
 		chart_id: id,
-		trend: {
-			date,
-			limit: config.LIMIT,
-			offset: 0,
-		},
+		date,
+		limit: config.LIMIT,
+		offset: 0,
 	});
 	const {
 		meta = [],
@@ -93,19 +91,15 @@ function EventAnalysisDetails({
 	};
 
 	const pageChange = (e) => {
-		updateParameter(utils.deepObject(parameter, {
-			trend: {
-				offset: (e - 1) * config.LIMIT,
-			}
+		updateParameter(Object.assign({}, parameter, {
+			offset: (e - 1) * config.LIMIT,
 		}));
 	};
 
 	const dateChange = e => {
-		updateParameter(utils.deepObject(parameter, {
-			trend: {
-				date: e,
-				offset: 0,
-			}
+		updateParameter(Object.assign({}, parameter, {
+			date: e,
+			offset: 0,
 		}));
 	};
 

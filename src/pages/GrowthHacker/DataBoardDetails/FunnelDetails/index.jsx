@@ -24,11 +24,9 @@ function FunnelDetails({
 		updateParameter,
 	} = hooks.useRequest(api.getDataBoard, {
 		chart_id: boardInfo.id,
-		trend: {
-			date: boardInfo.date,
-			offset: 0,
-			limit: config.LIMIT,
-		},
+		date: boardInfo.date,
+		offset: 0,
+		limit: config.LIMIT,
 	});
 	const {
 		meta = [],
@@ -69,11 +67,9 @@ function FunnelDetails({
 	};
 
 	const filterChange = (e) => {
-		updateParameter(utils.deepObject(parameter, {
-			trend: {
-				date: e,
-				offset: 0,
-			}
+		updateParameter(Object.assign({}, parameter, {
+			date: e,
+			offset: 0,
 		}));
 	};
 

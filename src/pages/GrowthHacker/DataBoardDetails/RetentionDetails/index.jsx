@@ -42,9 +42,7 @@ function RetentionDetails({
 		updateParameter,
 	} = hooks.useRequest(api.getDataBoard, {
 		chart_id: id,
-		trend: {
-			date,
-		},
+		date,
 	});
 	const {
 		meta = [],
@@ -103,15 +101,13 @@ function RetentionDetails({
 	};
 
 	const dateChange = (e) => {
-		updateParameter(utils.deepObject(parameter, {
-			trend: {
-				date: e,
-			}
+		updateParameter(Object.assign({}, parameter, {
+			date: e,
 		}));
 	};
 
 	const filterChange = e => {
-		
+
 	};
 
 	const onInputChange = (e) => {

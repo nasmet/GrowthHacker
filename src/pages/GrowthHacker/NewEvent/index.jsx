@@ -30,9 +30,11 @@ export default function NewEvent() {
 	return (
 		<Components.Wrap>
 			<IceContainer>
-				<Table loading={loading} dataSource={data} hasBorder={false}>
-					{renderTitle()}       		
-				</Table>
+				<Loading visible={loading} inline={false}>
+					<Table dataSource={data} hasBorder={false}>
+						{renderTitle()}       		
+					</Table>
+				</Loading>
 			</IceContainer>
 		</Components.Wrap>
 	);

@@ -6,6 +6,7 @@ import {
 	Table,
 	Pagination,
 	Dialog,
+	Loading,
 } from '@alifd/next';
 import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
@@ -83,19 +84,20 @@ export default function BuriedPoint() {
 						创建埋点事件
 					</Button>
 				</div>
-	
-				<Table		
-					loading={loading}          	 
-					dataSource={event_entities}		          		 
-					hasBorder={false}		          		
-				>		          		
-					<Table.Column title="id" dataIndex="id" width={120} />		          		
-					<Table.Column title="名称" dataIndex="name" width={120} />		            	
-					<Table.Column title="标识符" dataIndex="entity_key" width={120} />		            	
-					<Table.Column title="类型" dataIndex="value_type" width={120} />		            	
-					<Table.Column title="描述" dataIndex="desc" />		            	
-					<Table.Column title="操作" cell={renderCover} />		            	
-				</Table>		          	
+				
+				<Loading visible={loading} inline={false}>
+					<Table		         	 
+						dataSource={event_entities}		          		 
+						hasBorder={false}		          		
+					>		          		
+						<Table.Column title="id" dataIndex="id" width={120} />		          		
+						<Table.Column title="名称" dataIndex="name" width={120} />		            	
+						<Table.Column title="标识符" dataIndex="entity_key" width={120} />		            	
+						<Table.Column title="类型" dataIndex="value_type" width={120} />		            	
+						<Table.Column title="描述" dataIndex="desc" />		            	
+						<Table.Column title="操作" cell={renderCover} />		            	
+					</Table>
+				</Loading>	          	
 			
 				<Pagination	          	
 					className={styles.pagination}            	

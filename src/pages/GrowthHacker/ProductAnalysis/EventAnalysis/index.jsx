@@ -19,69 +19,67 @@ import Filter from './components/Filter';
 
 function EventAnalysis({
 	location,
+	history,
 }) {
-	let initValues = {};
-	let initDateFilter = {};
+	let initRequest = false;
 	let initSave = {
 		title: '新建事件分析',
 		desc: '',
 	}
-	let initRequest = false;
-	let initChartId = 0;
 	let initDate = 'day:0';
+	let initDateFilter = {};
+	let initCondition = {};
+	let initFilter = [];
+	let initOrders = {};
 
-	function init() {
-		if (location.state && location.state.boardInfo) {
-			const {
-				name,
-				desc,
-				id,
-				date,
-				segmentation_id,
-				metrics,
-				dimensions,
-			} = location.state.boardInfo;
-			initValues = {
-				segmentation_id,
-				dimensions,
-				metrics,
-			};
-			initDateFilter = {
-				initTabValue: 'NAN',
-				initCurDateValue: model.transformDate(date)
-			};
-			initSave.title = name;
-			initSave.desc = desc;
-			initSave.disable = false;
-			initRequest = true;
-			initChartId = id;
-			initDate = date;
-		}
+	if (location.state && location.state.boardInfo) {
+		const {
+			name,
+			desc,
+			date,
+			segmentation_id,
+			metrics,
+			dimensions,
+			filter,
+			orders,
+		} = location.state.boardInfo;
+		initRequest = true;
+		initSave.title = name;
+		initSave.desc = desc;
+		initSave.disable = false;
+		initDate = date || initDate;
+		initDateFilter = {
+			initTabValue: 'NAN',
+			initCurDateValue: model.transformDate(initDate),
+		};
+		initCondition = {
+			segmentation_id,
+			dimensions,
+			metrics,
+		};
+		initFilter = filter || initFilter;
+		initOrders = orders || initOrders;
 	}
 
-	init();
 
 	const saveRef = useRef(null);
 	const refDialog = useRef(null);
-	const refVariable = useRef({
-		values: initValues,
+	const refVariable = useRef(Object.assign({
+		type: 'dashboard',
 		name: '',
 		date: initDate,
-	});
+		orders: initOrders,
+		filter: initFilter,
+		limit: config.LIMIT,
+		offset: 0,
+	}, initCondition));
 
 	const {
 		parameter,
 		response,
 		loading,
 		updateParameter,
-	} = hooks.useRequest(api.getDataBoard, {
-		chart_id: initChartId,
-		trend: {
-			date: initDate,
-			limit: config.LIMIT,
-			offset: 0,
-		},
-	}, initRequest);
+	} = hooks.useRequest(api.getDataBoard, refVariable.current, initRequest);
 	const {
 		meta = [],
 			data = [],
@@ -89,29 +87,15 @@ function EventAnalysis({
 	} = response;
 
 	const conditionChange = (value, flag) => {
-		refVariable.current.values = value;
+		Object.assign(refVariable.current, value);
 		saveRef.current.setButtonStatus(flag);
 	};
 
 	const onOk = (success, fail) => {
-		const {
-			values,
-			date,
-			name,
-		} = refVariable.current;
-		api.createBoard({ ...values,
-			name,
-			type: 'dashboard',
-			date,
-		}).then((res) => {
+		api.createBoard(refVariable.current).then((res) => {
 			model.log('成功添加到看板');
 			success();
-			updateParameter(utils.deepObject(parameter, {
-				chart_id: res.id,
-				trend: {
-					date,
-				}
-			}));
+			history.push('/growthhacker/projectdata/db');
 		}).catch((e) => {
 			model.log(e);
 			fail();
@@ -127,8 +111,11 @@ function EventAnalysis({
 	};
 
 	function assemblingChartStyle(meta) {
+		if (meta.length === 0) {
+			return;
+		}
 		return {
-			x: meta[0],
+			x: meta[0].name,
 			y: 'count',
 			color: 'event',
 		};
@@ -138,12 +125,12 @@ function EventAnalysis({
 		const arr = [];
 		data.forEach((item) => {
 			const value = item[0];
-			const name = meta[0];
+			const name = meta[0].name;
 			item.forEach((v, index) => {
 				if (index !== 0 && meta[index]) {
 					arr.push({
 						[name]: `${name}${value}`,
-						event: meta[index],
+						event: meta[index].name,
 						count: v,
 					})
 				}
@@ -154,31 +141,35 @@ function EventAnalysis({
 
 	const renderTitle = () => {
 		return meta.map((item, index) => {
-			return <Table.Column key={index} title={item} dataIndex={index.toString()} />
+			return <Table.Column key={item.id} title={item.name} dataIndex={index.toString()} sortable />
 		});
 	};
 
 	const pageChange = (e) => {
-		updateParameter(utils.deepObject(parameter, {
-			trend: {
-				offset: (e - 1) * config.LIMIT,
-			}
+		updateParameter(Object.assign(refVariable.current, {
+			offset: (e - 1) * config.LIMIT,
 		}));
 	};
 
 	const dateChange = (e) => {
-		if (initRequest) {
-			updateParameter(utils.deepObject(parameter, {
-				trend: {
-					date: e,
-				}
-			}));
-		}
 		refVariable.current.date = e;
 	};
 
 	const filterChange = e => {
+		refVariable.current.filter = e.map(item => item.values);
+	};
 
+	const onSort = (dataIndex, order) => {
+		refVariable.current.orders = {
+			isDim: meta[dataIndex].is_dim,
+			index: +dataIndex,
+			orderType: order,
+		};
+	};
+
+	const onRefresh = () => {
+		updateParameter({ ...refVariable.current
+		});
 	};
 
 	return (
@@ -187,17 +178,21 @@ function EventAnalysis({
 
 			<IceContainer>
 				<Components.DateFilter filterChange={dateChange} {...initDateFilter} />	
-				<Condition filterChange={conditionChange} initValues={initValues} />
-				<Filter filterChange={filterChange} />
+				<Condition filterChange={conditionChange} initValues={initCondition} />
+				<Filter filterChange={filterChange} initFilter={initFilter} />
 			</IceContainer>
 
 			<IceContainer style={{minHeight: '600px'}}>
 				<Components.ChartsDisplay
 					tableData={data}
 					loading={loading}
+					meta={meta}
 					chartData={assemblingChartData(data, meta)} 
 					chartStyle={assemblingChartStyle(meta)}
-					renderTitle={renderTitle} 
+					renderTitle={renderTitle}
+					onSort={onSort} 
+					showBtn
+					onRefresh={onRefresh}
 				/>
 				<Pagination
 					className={styles.pagination}

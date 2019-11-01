@@ -143,7 +143,7 @@ export default function Filter({
 					id: this.values.id,
 				}).then((res) => {
 					formCore.setFieldProps('value', {
-						dataSource: res.data.map(item => item.value),
+						dataSource: model.assembleOriginDataValues(res.data),
 					});
 				});
 			},

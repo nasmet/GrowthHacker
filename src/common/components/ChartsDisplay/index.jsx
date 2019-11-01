@@ -17,6 +17,11 @@ export default function ChartsDisplay({
 	chartData,
 	loading,
 	fixedHeader = false,
+	onSort,
+	onRefresh,
+	showBtn = false,
+	type = 1,
+	meta = [],
 }) {
 	const renderTable = () => {
 		return (
@@ -25,6 +30,7 @@ export default function ChartsDisplay({
 				hasBorder={false}
 				maxBodyHeight={400}
 				fixedHeader={fixedHeader}
+				onSort={onSort}
 			>
 				{renderTitle()}			   	   		
 			</Table>
@@ -68,8 +74,14 @@ export default function ChartsDisplay({
 	};
 
 	return (
-		<Tab defaultActiveKey="0">
-			{renderTab()}      		
-		</Tab>
+		<div>
+			{showBtn && <div className={styles.btnWrap}>
+				<Components.Refresh onClick={onRefresh} />
+				{tableData.length > 0 && <Components.ExportExcel data={tableData} meta={meta} type={type} />}
+			</div>}
+			<Tab defaultActiveKey="0">
+				{renderTab()}      		
+			</Tab>
+		</div>
 	);
 }

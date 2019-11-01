@@ -47,12 +47,7 @@ export function assembleOriginData(data) {
 }
 
 export function assembleOriginDataValues(data) {
-	return data.map(item => {
-		return {
-			label: item.value,
-			value: item.id,
-		}
-	})
+	return data.map(item => item.value);
 }
 
 export function assembleTagData(data) {

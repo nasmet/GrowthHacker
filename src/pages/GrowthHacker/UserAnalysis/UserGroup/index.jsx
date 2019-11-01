@@ -73,16 +73,17 @@ function UserGroup({
 			<p>
 				<Button type='primary' style={{borderRadius:'10px',marginBottom:'20px'}} onClick={onCreateGroup}>新建分群</Button>
 			</p>
-			<IceContainer>				
-				<Table 
-					loading={loading}
-					dataSource={segmentations} 
-					hasBorder={false}
-				>
-					<Table.Column title='id' dataIndex='id' />
-					<Table.Column title='名称' dataIndex='name' />
-					<Table.Column title='操作' cell={renderLastCell} />
-				</Table>
+			<IceContainer>
+				<Loading visible={loading} inline={false}>		
+					<Table 
+						dataSource={segmentations} 
+						hasBorder={false}
+					>
+						<Table.Column title='id' dataIndex='id' />
+						<Table.Column title='名称' dataIndex='name' />
+						<Table.Column title='操作' cell={renderLastCell} />
+					</Table>
+				</Loading>
 			</IceContainer>
     	</Components.Wrap>
 	);

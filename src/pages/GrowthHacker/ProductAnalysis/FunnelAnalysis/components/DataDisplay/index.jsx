@@ -23,9 +23,7 @@ function DataDisplay({
 		updateParameter,
 	} = hooks.useRequest(api.getDataBoard, {
 		chart_id: 0,
-		trend: {
-			date: '',
-		},
+		date: '',
 	}, false);
 	const {
 		meta = [],

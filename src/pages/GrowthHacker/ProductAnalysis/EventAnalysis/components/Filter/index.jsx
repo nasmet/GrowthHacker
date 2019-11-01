@@ -20,6 +20,7 @@ import {
 
 export default function Filter({
 	filterChange,
+	initFilter,
 }) {
 	const [originData, setOriginData] = useState([]);
 	const [steps, setSteps] = useState([]);
@@ -42,31 +43,70 @@ export default function Filter({
 	}, []);
 
 	useEffect(() => {
-		if (steps.length === 0) {
-			return;
+		if (initFilter.length > 0) {
+			setSteps(initStep());
 		}
+	}, [originData]);
+
+	useEffect(() => {
 		steps.map(item => {
 			item.refForm.store.setValues(item.values);
 		});
 		filterChange(steps);
 	}, [steps]);
 
-	function createStep() {
+	function initStep() {
+		return initFilter.map(item => (createStep(item)));
+	}
+
+	function createStep(values = {
+		key: originData[0] && originData[0].value,
+		op: '=',
+		value: '',
+	}) {
 		return {
 			key: Date.now(),
-			values: {
-				key: originData[0] && originData[0].value,
-				op: '=',
-				value: '',
-			},
+			values,
 			effects: [{
 				field: 'key',
+				handler: formCore => {
+					const op = formCore.getFieldValue('op');
+					let value = '';
+					if (op === 'in' || op === 'not in') {
+						value = [];
+					}
+					Object.assign(values, {
+						value,
+					});
+					formCore.setFieldValue('value', value);
+				},
+			}, {
+				field: 'op',
 				handler: function(formCore) {
-					formCore.setFieldValue('value', '');
+					const op = formCore.getFieldValue('op');
+					let mode = 'single';
+					let value = values.value;
+					if (op === 'in' || op === 'not in') {
+						if (typeof values.value === 'string') {
+							value = values.value ? [values.value] : [];
+						}
+						mode = 'multiple';
+					} else {
+						if (typeof values.value !== 'string') {
+							value = values.value.length === 0 ? '' : values.value[0];
+						}
+					}
+					Object.assign(values, {
+						value,
+					});
+					formCore.setFieldProps('value', {
+						mode,
+					});
+					formCore.setFieldValue('value', value);
 				},
 			}],
 			onChange: function(e) {
-				this.values = e;
+				Object.assign(this.values, e);
 			},
 			onFocus: function(formCore) {
 				if (!this.values.key) {

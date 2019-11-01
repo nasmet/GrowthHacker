@@ -1,0 +1,71 @@
+import React, {
+	useRef,
+} from 'react';
+import {
+	Input,
+	Button,
+	Dialog,
+	Icon,
+} from '@alifd/next';
+import ExportJsonExcel from 'js-export-excel';
+
+export default function ExportExcel({
+	data = [],
+	meta = [],
+	type = 1,
+}) {
+	const refDialog = useRef(null);
+	const refVarible = useRef({
+		name: '',
+	});
+	const sheetName = 'sheet';
+
+	const click = () => {
+		refDialog.current.onShow();
+	};
+
+	const onInputChange = e => {
+		refVarible.current.name = e;
+	};
+
+	const handTableData = () => {
+		const sheetHeader = meta.map(item => item.name);
+		const sheetData = data.map(item => {
+			const obj = {};
+			item.map((item, index) => {
+				obj[sheetHeader[index]] = item;
+			})
+			return obj;
+		});
+		return [{
+			sheetName,
+			sheetData,
+			sheetHeader,
+		}];
+	}
+
+	const getHandData = () => {
+		const option = {};
+		switch (type) {
+			case 1:
+				option.datas = handTableData();
+				break;
+		}
+		option.fileName = refVarible.current.name;
+		return option;
+	}
+
+	const onOk = (success, fail) => {
+		success();
+		const option = getHandData();
+		const toExcel = new ExportJsonExcel(option);
+		toExcel.saveExcel();
+	};
+
+	return (
+		<div>
+			<Button onClick={click} ><Icon type='download' /></Button>
+			<Components.BoardDialog onInputChange={onInputChange} onOk={onOk} ref={refDialog} />
+		</div>
+	);
+}

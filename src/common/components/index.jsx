@@ -13,6 +13,8 @@ import BoardDialog from './BoardDialog';
 import GroupFilter from './GroupFilter';
 import Save from './Save';
 import ChartsDisplay from './ChartsDisplay';
+import ExportExcel from './ExportExcel';
+import Refresh from './Refresh';
 
 export default {
 	BasicColumn,
@@ -30,4 +32,6 @@ export default {
 	GroupFilter,
 	Save,
 	ChartsDisplay,
+	ExportExcel,
+	Refresh,
 }

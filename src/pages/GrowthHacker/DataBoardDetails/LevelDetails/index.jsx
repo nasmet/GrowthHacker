@@ -15,7 +15,6 @@ function LevelDetails({
 	location,
 }) {
 	const boardInfo = location.state.boardInfo;
-
 	const {
 		parameter,
 		response,
@@ -23,11 +22,9 @@ function LevelDetails({
 		updateParameter,
 	} = hooks.useRequest(api.getDataBoard, {
 		chart_id: boardInfo.id,
-		trend: {
-			date: boardInfo.date,
-			offset: 0,
-			limit: config.LIMIT,
-		},
+		date: boardInfo.date,
+		offset: 0,
+		limit: config.LIMIT,
 	});
 	const {
 		meta = [],
@@ -76,19 +73,19 @@ function LevelDetails({
 	};
 
 	const filterChange = (e) => {
-		updateParameter(utils.deepObject(parameter, {
-			trend: {
-				date: e,
-				offset: 0,
-			}
+		updateParameter(Object.assign(parameter, {
+			date: e,
+			offset: 0,
 		}));
 	};
 
 	return (
 		<Components.Wrap>
 			<Components.Title title={boardInfo.name} desc={boardInfo.desc} />
-			<IceContainer> 
+			<IceContainer>
 				<Components.DateFilter initTabValue='NAN' initCurDateValue={model.transformDate(boardInfo.date)} filterChange={filterChange} />	
+			</IceContainer>
+			<IceContainer> 
 				<Components.ChartsDisplay 
 					tableData={data}
 					loading={loading}

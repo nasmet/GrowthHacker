@@ -109,11 +109,7 @@ export function deleteBoard(data) {
 }
 
 export function getDataBoard(data) {
-	const {
-		chart_id,
-		trend,
-	} = data;
-	return post(`/projects/${sessionStorage.getItem(config.PROJECTID)}/charts/${chart_id}/chartdata`, trend);
+	return post(`/projects/${sessionStorage.getItem(config.PROJECTID)}/charts/chartdata`, data);
 }
 
 export function getPortraitArea(data) {

@@ -22,9 +22,7 @@ function DistributeDetails({
 		updateParameter,
 	} = hooks.useRequest(api.getDataBoard, {
 		chart_id: boardInfo.id,
-		trend: {
-			date: boardInfo.date,
-		},
+		date: boardInfo.date,
 	});
 	const {
 		meta = [],

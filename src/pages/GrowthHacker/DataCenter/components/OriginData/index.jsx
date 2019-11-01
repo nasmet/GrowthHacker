@@ -6,6 +6,7 @@ import {
 	Table,
 	Pagination,
 	Dialog,
+	Loading,
 } from '@alifd/next';
 import {
 	withRouter,
@@ -109,19 +110,20 @@ function OriginData({
 						创建元数据
 					</Button>
 				</div>
-
-				<Table 
-					loading={loading}
-					dataSource={data} 
-					hasBorder={false}
-				>	
-					<Table.Column title="id" dataIndex="id" width={120} />
-					<Table.Column title="名称" dataIndex="name" width={120} />
-					<Table.Column title="标识符" dataIndex="key" width={120} />
-					<Table.Column title="类型" dataIndex="value_type" width={120} />
-					<Table.Column title="描述" dataIndex="desc" />
-					<Table.Column title="操作" cell={renderCover} />
-				</Table>
+				
+				<Loading visible={loading} inline={false}>
+					<Table 
+						dataSource={data} 
+						hasBorder={false}
+					>	
+						<Table.Column title="id" dataIndex="id" width={120} />
+						<Table.Column title="名称" dataIndex="name" width={120} />
+						<Table.Column title="标识符" dataIndex="key" width={120} />
+						<Table.Column title="类型" dataIndex="value_type" width={120} />
+						<Table.Column title="描述" dataIndex="desc" />
+						<Table.Column title="操作" cell={renderCover} />
+					</Table>
+				</Loading>
 
 				<Pagination
 					className={styles.pagination}

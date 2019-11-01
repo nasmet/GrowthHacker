@@ -49,7 +49,13 @@ function Top({
 		<div className={styles.userShareItem}>
 			<p style={{paddingLeft:'20px'}}>{name}</p>
 			<div className={styles.userShareItemChart}>
-				<Table loading={loading} dataSource={tableData} hasBorder={false} >
+				<Table 
+					loading={loading} 
+					dataSource={tableData} 
+					hasBorder={false}
+					maxBodyHeight={260}
+					fixedHeader
+				>
 					<Table.Column style={{background: 'transparent'}} className={styles.column} title='Top排名' dataIndex='ranking_num' />
 					<Table.Column style={{background: 'transparent'}} className={styles.column} title='openId' dataIndex='wechat_openid' />
 					<Table.Column style={{background: 'transparent'}} className={styles.column} title={title} dataIndex='count' />
