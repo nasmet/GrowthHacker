@@ -16,16 +16,16 @@ import DataDisplay from './components/DataDisplay';
 
 function FunnelAnalysis({
 	location,
-	history,
 }) {
 	let initRequest = false;
-	let initSave = {
-		title: '新建漏斗分析',
-		desc: '',
-	}
+	let initSave = {};
+	let initTitle = '新建漏斗分析';
 	let initDate = 'day:0';
 	let initDateFilter = {};
-	let initCondition = {};
+	let initCondition = {
+		steps: [],
+		segmentation_id: 0,
+	};
 	let initOrders = {};
 	if (location.state && location.state.boardInfo) {
 		const {
@@ -37,8 +37,7 @@ function FunnelAnalysis({
 			orders,
 		} = location.state.boardInfo;
 		initRequest = true;
-		initSave.title = name;
-		initSave.desc = desc;
+		initTitle = name;
 		initSave.disable = false;
 		initDate = date || initDate;
 		initDateFilter = {
@@ -52,16 +51,20 @@ function FunnelAnalysis({
 		initOrders = orders || initOrders;
 	}
 
+	const [title, setTitle] = useState(initTitle);
 	const saveRef = useRef(null);
 	const refDialog = useRef(null);
 	const refVariable = useRef(Object.assign({
 		type: 'funnel',
-		name: '',
+		name: initTitle,
 		date: initDate,
 		orders: initOrders,
 		limit: config.LIMIT,
 		offset: 0,
 	}, initCondition));
+	const refSteps = useRef({
+		steps: [],
+	})
 
 	const {
 		parameter,
@@ -75,35 +78,24 @@ function FunnelAnalysis({
 			total = 0,
 	} = response;
 
-	const filterChange = (steps) => {
-		let flag = false;
-		if (steps.length <= 1) {
-			flag = true;
-		} else {
-			flag = steps.some(v => v.values.step === undefined);
-		}
+	const conditionChange = (steps, values) => {
+		refSteps.current.steps = steps;
+		Object.assign(refVariable.current, values);
+		const flag = steps.length !== 0? false : true;
 		saveRef.current.setButtonStatus(flag);
-		refVariable.current.values = steps;
 	};
 
-	function assembleParam() {
-		if (!refVariable.current.values) {
-			return refVariable.current;
-		}
-		const param = { ...refVariable.current
-		};
-		delete param.values;
-		const temp = refVariable.current.values.map(v => v.values.step);
-		param.steps = temp.slice(1, temp.length);
-		param.segmentation_id = temp[0];
-		return param;
-	}
-
 	const onOk = (sucess, fail) => {
-		api.createBoard(assembleParam()).then((res) => {
+		Object.assign(refVariable.current, {
+			steps: assembleMetrics(refSteps.current.steps)
+		});
+		api.createBoard(refVariable.current).then((res) => {
 			model.log('成功添加到看板');
 			sucess();
-			history.push('/growthhacker/projectdata/db');
+			setTitle(refVariable.current.name);
+			updateParameter({ ...refVariable.current,
+				offset: 0,
+			});
 		}).catch((e) => {
 			model.log(e);
 			fail();
@@ -131,19 +123,48 @@ function FunnelAnalysis({
 		onRefresh();
 	};
 
+	function assembleMetrics(steps) {
+		return steps.map(item => {
+			const {
+				values,
+				filters,
+			} = item
+			const temp = values.event.split(',');
+			return {
+				event_id: +temp[1],
+				event_key: temp[0],
+				filter: {
+					relation: 'and',
+					conditions: filters.map(item => ({
+						key: item.values.key,
+						op: item.values.op,
+						values: [item.values.value],
+					}))
+				},
+			}
+		})
+	}
+	
 	function onRefresh() {
-		updateParameter({ ...assembleParam(),
+		if (refSteps.current.steps === 0) {
+			model.log('步骤不能为空！');
+			return;
+		}
+		Object.assign(refVariable.current, {
+			steps: assembleMetrics(refSteps.current.steps)
+		});
+		updateParameter({ ...refVariable.current,
 			offset: 0,
 		});
 	};
 
 	return (
 		<Components.Wrap>
-			<Components.Save ref={saveRef} {...initSave} onSave={onSave} />
+			<Components.Save ref={saveRef} title={title} {...initSave} onSave={onSave} />
 
 			<IceContainer>
 				<Components.DateFilter filterChange={dateChange} />	
-      			<Condition filterChange={filterChange} initCondition={initCondition} />
+      			<Condition conditionChange={conditionChange} initCondition={initCondition} />
       		</IceContainer>
 
       		<IceContainer>

@@ -14,15 +14,11 @@ import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
 import CreateOriginDataValue from './components/CreateOriginDataValue';
 
-function OriginDataDetails({
-	location,
+export default function OriginDataDetails({
+	id,
+	name,
+	value_type,
 }) {
-	const {
-		id,
-		name,
-		value_type,
-	} = location.state;
-
 	const refDialog = useRef(null);
 	const {
 		showLoading,
@@ -121,5 +117,3 @@ function OriginDataDetails({
     	</Components.Wrap>
 	);
 }
-
-export default withRouter(OriginDataDetails);

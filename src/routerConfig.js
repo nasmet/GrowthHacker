@@ -34,8 +34,6 @@ import ARPUAnalysis from './pages/GrowthHacker/AdMonitor/ARPUAnalysis';
 import UserWorth from './pages/GrowthHacker/CustomerAnalysis/UserWorth';
 import GroupWorth from './pages/GrowthHacker/CustomerAnalysis/GroupWorth';
 import DataCenter from './pages/GrowthHacker/DataCenter';
-const OriginDataDetails = React.lazy(() =>
-	import ('./pages/GrowthHacker/OriginDataDetails'));
 import NewEvent from './pages/GrowthHacker/NewEvent';
 
 import UserTag from './pages/ThousandFaces/UserTag';
@@ -157,13 +155,25 @@ const routerConfig = [
 				auth: true,
 			}, {
 				id: '1008007',
-				path: '/growthhacker/projectdata/pa/retentionanalysis',
+				path: '/growthhacker/projectdata/pa/retentionanalysis/new',
+				component: RetentionAnalysis,
+				exact: true,
+				auth: true,
+			}, {
+				id: '1008000',
+				path: '/growthhacker/projectdata/pa/retentionanalysis/details',
 				component: RetentionAnalysis,
 				exact: true,
 				auth: true,
 			}, {
 				id: '1008008',
-				path: '/growthhacker/projectdata/pa/funnelanalysis',
+				path: '/growthhacker/projectdata/pa/funnelanalysis/new',
+				component: FunnelAnalysis,
+				exact: true,
+				auth: true,
+			}, {
+				id: '1008001',
+				path: '/growthhacker/projectdata/pa/funnelanalysis/details',
 				component: FunnelAnalysis,
 				exact: true,
 				auth: true,
@@ -249,12 +259,6 @@ const routerConfig = [
 				id: '1008023',
 				path: '/growthhacker/projectdata/ad/arpuanalysis',
 				component: ARPUAnalysis,
-				exact: true,
-				auth: true,
-			}, {
-				id: '1008024',
-				path: '/growthhacker/projectdata/origindatadetails',
-				component: OriginDataDetails,
 				exact: true,
 				auth: true,
 			}, {

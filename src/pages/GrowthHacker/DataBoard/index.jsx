@@ -39,10 +39,10 @@ function DataBoard({
 				pathname = '/growthhacker/projectdata/pa/distributedetails';
 				break;
 			case 'retention':
-				pathname = '/growthhacker/projectdata/pa/retentionanalysis';
+				pathname = '/growthhacker/projectdata/pa/retentionanalysis/details';
 				break;
 			case 'funnel':
-				pathname = '/growthhacker/projectdata/pa/funnelanalysis';
+				pathname = '/growthhacker/projectdata/pa/funnelanalysis/details';
 				break;
 			case 'analysis':
 				pathname = '/growthhacker/projectdata/pa/leveldetails';

@@ -1,23 +1,10 @@
-import React, {
-	useEffect,
-} from 'react';
+import React from 'react';
 import {
 	Tab,
 } from '@alifd/next';
 import dataCenterConfig from './dataCenterConfig';
 
 export default function DataCenter() {
-	let key = '';
-	const cache = sessionStorage.getItem('DataCenter');
-	key = cache ? cache : "event";
-
-	useEffect(() => {
-
-		return () => {
-			sessionStorage.setItem('DataCenter', key);
-		};
-	}, []);
-
 	const renderTab = () => {
 		return dataCenterConfig.map((item) => {
 			const {
@@ -33,13 +20,9 @@ export default function DataCenter() {
 		});
 	};
 
-	const onChange = (e) => {
-		key = e;
-	}
-
 	return (
 		<Components.Wrap>
-			<Tab defaultActiveKey={key} onChange={onChange}>
+			<Tab defaultActiveKey='event'>
 				{renderTab()}
 			</Tab>
 		</Components.Wrap>

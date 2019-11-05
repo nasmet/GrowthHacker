@@ -21,7 +21,7 @@ function EventAnalysis({
 }) {
 	let initRequest = false;
 	let initSave = {};
-	let titleName = '新建事件分析';
+	let initTitle = '新建事件分析';
 	let initDate = 'day:0';
 	let initDateFilter = {};
 	let initCondition = {
@@ -43,7 +43,7 @@ function EventAnalysis({
 		} = location.state.boardInfo;
 
 		initRequest = true;
-		titleName = name;
+		initTitle = name;
 		initSave.disable = false;
 		initDate = date || initDate;
 		initDateFilter = {
@@ -58,12 +58,12 @@ function EventAnalysis({
 		initOrders = orders || initOrders;
 	}
 
-	const [title, setTitle] = useState(titleName);
+	const [title, setTitle] = useState(initTitle);
 	const saveRef = useRef(null);
 	const refDialog = useRef(null);
 	const refVariable = useRef(Object.assign({
 		type: 'dashboard',
-		name: titleName,
+		name: initTitle,
 		date: initDate,
 		orders: initOrders,
 		limit: config.LIMIT,
@@ -86,6 +86,9 @@ function EventAnalysis({
 	} = response;
 
 	const onOk = (success, fail) => {
+		Object.assign(refVariable.current, {
+			metrics: assembleMetrics(refSteps.current.steps)
+		});
 		api.createBoard(refVariable.current).then((res) => {
 			model.log(`已保存看板${refVariable.current.name}`);
 			setTitle(refVariable.current.name);

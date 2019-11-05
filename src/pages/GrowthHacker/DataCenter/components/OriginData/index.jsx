@@ -1,5 +1,6 @@
 import React, {
 	useRef,
+	useState,
 } from 'react';
 import {
 	Button,
@@ -7,17 +8,16 @@ import {
 	Pagination,
 	Dialog,
 	Loading,
+	Drawer,
 } from '@alifd/next';
-import {
-	withRouter,
-} from 'react-router-dom';
 import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
 import CreateOriginData from './components/CreateOriginData';
+import OriginDataDetails from './components/OriginDataDetails';
 
-function OriginData({
-	history,
-}) {
+export default  function OriginData() {
+	const [showDrawer, setShowDrawer] = useState(false);
+	const [values, setValues] = useState({});
 	const refDialog = useRef(null);
 
 	const {
@@ -65,14 +65,12 @@ function OriginData({
 	};
 
 	const jumpOriginDataDetails = (id, name, value_type) => {
-		history.push({
-			pathname: '/growthhacker/projectdata/origindatadetails',
-			state: {
-				id,
-				name,
-				value_type,
-			},
+		setValues({
+			id,
+			name,
+			value_type,
 		});
+		setShowDrawer(true);
 	}
 
 	const renderCover = (value, index, record) => {
@@ -81,6 +79,7 @@ function OriginData({
 			value_type,
 			name,
 		} = record;
+		console.log(record);
 		return (
 			<div>
 				<Button type='primary' style={{marginRight:'10px'}} onClick={jumpOriginDataDetails.bind(this,id,name,value_type)}> 
@@ -100,6 +99,10 @@ function OriginData({
 	const onOk = (value) => {
 		data.splice(0, 0, value);
 		updateResponse();
+	};
+
+	const onCloseDrawer = () => {
+		setShowDrawer(false);
 	};
 
 	return (
@@ -133,8 +136,14 @@ function OriginData({
 			</IceContainer>
 
 			<CreateOriginData ref={refDialog} onOk={onOk} />
+            <Drawer
+                visible={showDrawer}
+                placement='right'
+                onClose={onCloseDrawer}
+                width={600}
+            >
+				<OriginDataDetails {...values} />
+            </Drawer>
 		</Components.Wrap>
 	);
 }
-
-export default withRouter(OriginData);

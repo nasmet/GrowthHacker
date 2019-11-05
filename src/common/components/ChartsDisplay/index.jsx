@@ -38,11 +38,11 @@ export default function ChartsDisplay({
 			case '0':
 				return renderTable();
 			case '1':
-				return <Components.BasicPolyline data={chartData} forceFit {...chartStyle} />
+				return <Components.BasicPolyline data={chartData} forceFit height={500} {...chartStyle} />
 			case '2':
-				return <Components.BasicColumn data={chartData} forceFit {...chartStyle} />
+				return <Components.BasicColumn data={chartData} forceFit height={500} {...chartStyle} />
 			case '3':
-				return <Components.BasicColumn data={chartData} forceFit transpose {...chartStyle} />
+				return <Components.BasicColumn data={chartData} forceFit height={500} transpose {...chartStyle} />
 			default:
 				return null;
 		}

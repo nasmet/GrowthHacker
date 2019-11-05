@@ -11,10 +11,10 @@ export default [{
 		path: `${baseUrl}/pa/eventanalysis/new`,
 	}, {
 		name: '留存分析',
-		path: `${baseUrl}/pa/retentionanalysis`,
+		path: `${baseUrl}/pa/retentionanalysis/new`,
 	}, {
 		name: '漏斗分析',
-		path: `${baseUrl}/pa/funnelanalysis`,
+		path: `${baseUrl}/pa/funnelanalysis/new`,
 	}],
 }, {
 	name: '用户分析',
