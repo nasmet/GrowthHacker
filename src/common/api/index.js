@@ -93,6 +93,10 @@ export function createEvent(data) {
 	return post('/event_entities', data);
 }
 
+export function getEventDetails(data) {
+	return get(`/event_entities/${data.id}`);
+}
+
 export function addBindVariables(data) {
 	const {
 		id,

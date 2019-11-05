@@ -16,12 +16,8 @@ export default function ChartsDisplay({
 	chartStyle,
 	chartData,
 	loading,
-	fixedHeader = false,
 	onSort,
-	onRefresh,
-	showBtn = false,
-	type = 1,
-	meta = [],
+	fixedHeader = false,
 }) {
 	const renderTable = () => {
 		return (
@@ -75,10 +71,6 @@ export default function ChartsDisplay({
 
 	return (
 		<div>
-			{showBtn && <div className={styles.btnWrap}>
-				<Components.Refresh onClick={onRefresh} />
-				{tableData.length > 0 && <Components.ExportExcel data={tableData} meta={meta} type={type} />}
-			</div>}
 			<Tab defaultActiveKey="0">
 				{renderTab()}      		
 			</Tab>

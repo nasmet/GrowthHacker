@@ -1,6 +1,7 @@
 import React, {
 	useRef,
 	useEffect,
+	useState,
 } from 'react';
 import {
 	Button,
@@ -8,6 +9,7 @@ import {
 	Pagination,
 	Dialog,
 	Loading,
+	Drawer,
 } from '@alifd/next';
 import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
@@ -17,6 +19,9 @@ import EditVarible from './components/EditVarible';
 export default function Event() {
 	const refCE = useRef(null);
 	const refEV = useRef(null);
+	const [showDrawer,setShowDrawer] = useState(false);
+	const [eventName,setEventName] = useState('');
+	const [bindVariableData,setBindVariableData] = useState([]);
 
 	const {
 		parameter,
@@ -113,12 +118,23 @@ export default function Event() {
 			},
 		});
 	};
+	
+	const onBindDetails=record=>{
+		setEventName(record.name);
+		setBindVariableData(record.bind_variables);
+		setShowDrawer(true);
+	};
 
 	const renderBind = (value, index, record) => {
 		return (
-			<div>
-				{record.bind_variables.map((item, index) => <Button key={item.id} onClick={onDeteleVarible.bind(this,record,item.id,index)} style={{marginRight: '4px',marginBottom: '4px'}} >{item.entity_key}</Button>)}
-				<Button size='small' style={{borderRadius:'50%'}} onClick={onAddVarible.bind(this,record)}>+</Button>
+			<div className={styles.variableWrap}>
+				{record.bind_variables.map((item, index) => 
+					<span key={item.id} className={styles.variable} onClick={onDeteleVarible.bind(this,record,item.id,index)} >
+						{item.entity_key}
+					</span>
+				)}
+				<Button size='small' style={{borderRadius:'50%',marginRight: '4px'}} onClick={onAddVarible.bind(this,record)}>+</Button>
+				<Button onClick={onBindDetails.bind(this,record)}>查看详情</Button>
 			</div>
 		);
 	};
@@ -135,6 +151,10 @@ export default function Event() {
 	const onEditVaribleOk = () => {
 		updateParameter({ ...parameter
 		});
+	};
+	
+	const onCloseDrawer=()=>{
+		setShowDrawer(false);
 	};
 
 	return (
@@ -155,7 +175,7 @@ export default function Event() {
 						<Table.Column title="名称" dataIndex="name" width={120} />		            	
 						<Table.Column title="标识符" dataIndex="entity_key" width={120} />		            	
 						<Table.Column title="类型" dataIndex="value_type" width={120} />	
-						<Table.Column title="关联事件变量" cell={renderBind} width={600} />	            	
+						<Table.Column title="关联事件变量" cell={renderBind} width={400} />	            	
 						<Table.Column title="描述" dataIndex="desc" width={600} />		            	
 						<Table.Column title="操作" cell={renderHander} lock='right' width={120} />		            	
 					</Table>
@@ -169,6 +189,24 @@ export default function Event() {
 			</IceContainer>		    
 			<CreateEvent ref={refCE} onOk={onOk} />
 			<EditVarible ref={refEV} onOk={onEditVaribleOk} />
+            <Drawer
+                title={eventName}
+                visible={showDrawer}
+                placement='right'
+                onClose={onCloseDrawer}
+                width={600}
+            >
+				<Table		         	 
+					dataSource={bindVariableData}		          		 
+					hasBorder={false}		          		
+				>		          		
+					<Table.Column title="id" dataIndex="id" lock={bindVariableData.length===0?false:true} width={120} />
+					<Table.Column title="名称" dataIndex="name" width={120} />
+					<Table.Column title="标识符" dataIndex="entity_key" width={120} />
+					<Table.Column title="类型" dataIndex="variable_type" width={120} />
+					<Table.Column title="描述" dataIndex="desc"  width={400} />	          	
+				</Table>
+            </Drawer>
 		</Components.Wrap>
 	);
 }

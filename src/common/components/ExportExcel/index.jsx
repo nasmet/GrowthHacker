@@ -13,19 +13,17 @@ export default function ExportExcel({
 	data = [],
 	meta = [],
 	type = 1,
+	fileName ='新建表格',
 }) {
-	const refDialog = useRef(null);
 	const refVarible = useRef({
-		name: '',
+		name: fileName,
 	});
 	const sheetName = 'sheet';
 
-	const click = () => {
-		refDialog.current.onShow();
-	};
-
-	const onInputChange = e => {
-		refVarible.current.name = e;
+	const onExport = () => {
+		const option = getHandData();
+		const toExcel = new ExportJsonExcel(option);
+		toExcel.saveExcel();
 	};
 
 	const handTableData_1 = () => {
@@ -62,17 +60,9 @@ export default function ExportExcel({
 		return option;
 	}
 
-	const onOk = (success, fail) => {
-		const option = getHandData();
-		const toExcel = new ExportJsonExcel(option);
-		toExcel.saveExcel();
-		success();
-	};
-
 	return (
 		<div>
-			<Button onClick={click} ><Icon type='download' /></Button>
-			<Components.BoardDialog onInputChange={onInputChange} onOk={onOk} ref={refDialog} />
+			<Button onClick={onExport} ><Icon type='download' /></Button>
 		</div>
 	);
 }

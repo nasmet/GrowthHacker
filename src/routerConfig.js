@@ -145,7 +145,13 @@ const routerConfig = [
 				auth: true,
 			}, {
 				id: '1008006',
-				path: '/growthhacker/projectdata/pa/eventanalysis',
+				path: '/growthhacker/projectdata/pa/eventanalysis/new',
+				component: EventAnalysis,
+				exact: true,
+				auth: true,
+			}, {
+				id: '1008004',
+				path: '/growthhacker/projectdata/pa/eventanalysis/details',
 				component: EventAnalysis,
 				exact: true,
 				auth: true,

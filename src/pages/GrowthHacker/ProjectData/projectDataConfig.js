@@ -8,7 +8,7 @@ export default [{
 	path: `${baseUrl}/pa`,
 	sub: [{
 		name: '事件分析',
-		path: `${baseUrl}/pa/eventanalysis`,
+		path: `${baseUrl}/pa/eventanalysis/new`,
 	}, {
 		name: '留存分析',
 		path: `${baseUrl}/pa/retentionanalysis`,

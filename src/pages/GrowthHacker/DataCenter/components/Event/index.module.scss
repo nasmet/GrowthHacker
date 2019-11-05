@@ -5,6 +5,22 @@
 	flex-direction: row;
 	align-items: center;
 }
+.variableWrap{
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	align-items: center;
+}
+.variable{
+ 	margin: 4px;
+ 	padding: 4px 6px;
+ 	background: gray;
+ 	border-radius: 4px;
+ 	color: #fff;
+ 	&:hover{
+ 		background: red;
+ 	}
+}
 .pagination {
   	margin-top: 10px;
   	text-align: right;

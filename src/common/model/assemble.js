@@ -19,6 +19,29 @@ export function assembleEventData(data) {
 	};
 }
 
+export function assembleEventData_1(data) {
+	const dimensions = [];
+	const metrics = [];
+	data.forEach(item => {
+		if (item.type === 'event') {
+			metrics.push({
+				label: item.name,
+				value: `${item.entity_key},${item.id}`,
+			});
+		} else {
+			dimensions.push({
+				label: item.name,
+				value: item.entity_key,
+			});
+		}
+	});
+
+	return {
+		dimensions,
+		metrics,
+	};
+}
+
 export function assembleGroupData(data, all = true) {
 	const groups = [];
 	if (all) {
@@ -64,6 +87,16 @@ export function assembleEventVaribleData(data) {
 		return {
 			label: item.name,
 			value: item.id,
+		}
+	})
+}
+
+export function assembleEventVaribleData_1(data) {
+
+	return data.map(item => {
+		return {
+			label: item.name,
+			value: item.entity_key,
 		}
 	})
 }

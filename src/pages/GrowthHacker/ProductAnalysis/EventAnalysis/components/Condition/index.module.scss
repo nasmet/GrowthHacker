@@ -1,6 +1,10 @@
+.wrap{
+	margin-bottom: 10px;
+	display: flex;
+	align-items: center;
+}
 .field{
-	margin-right: 20px;
 	margin-bottom: 20px;
 	display: flex;
-	flex-direction: column;
+	align-items: center;
 }

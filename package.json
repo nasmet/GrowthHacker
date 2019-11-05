@@ -4,7 +4,7 @@
 	"description": "数据分析系统",
 	"author": "ice-admin@alibaba-inc.com",
 	"dependencies": {
-		"@alifd/next": "^1.15.10",
+		"@alifd/next": "^1.18.11",
 		"@alifd/theme-ice-purple": "^1.0.1",
 		"@antv/data-set": "^0.9.6",
 		"@ice/form": "^0.1.5",
