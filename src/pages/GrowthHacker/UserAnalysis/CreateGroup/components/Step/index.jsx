@@ -1,19 +1,16 @@
 import React, {
 	useState,
 	useEffect,
+	useRef,
 } from 'react';
 import {
 	Input,
 	Button,
-	Message,
 	Loading,
 	Icon,
 	Select,
 	DatePicker,
 } from '@alifd/next';
-import {
-	withRouter,
-} from 'react-router-dom';
 import {
 	Form,
 	Field,
@@ -36,13 +33,18 @@ export default function Filter({
 	const [originData, setOriginData] = useState([]);
 	const [combination, setCombination] = useState('');
 	const [steps, setSteps] = useState([]);
+	const refVariable= useRef({
+		id: 0,
+	});
 
 	useEffect(() => {
-		async function getDataCenter() {
+		async function fetchData() {
 			setLoading(true);
 			try {
-				await api.getDataCenter().then((res) => {
-					assembleEventData(res.event_entities);
+				await api.getDataCenter({
+					type: 'event',
+				}).then((res) => {
+					setMetricData(model.assembleEvent(res.event_entities));
 				})
 
 				await api.getOriginData().then((res) => {
@@ -54,7 +56,7 @@ export default function Filter({
 			setLoading(false);
 		}
 
-		getDataCenter();
+		fetchData();
 
 		return () => {
 			api.cancelRequest();
@@ -65,7 +67,7 @@ export default function Filter({
 		if (originData.length === 0) {
 			return;
 		}
-		setSteps([createStep(0)]);
+		setSteps([createStep()]);
 	}, [metricData, originData]);
 
 	useEffect(() => {
@@ -103,17 +105,11 @@ export default function Filter({
 		const temp = onChangeCombination();
 		setCombination(temp);
 		filterChange(steps, temp);
-	}, [steps, filterChange]);
+	}, [steps]);
 
-	function assembleEventData(data) {
-		const {metrics} = model.assembleEventData(data);
-		setMetricData(metrics);
-	}
-
-	function createData(alias) {
+	function createData() {
 		return {
-			key: Date.now(),
-			alias,
+			key: refVariable.current.id++,
 			values: {
 				flag: 'true,event',
 				id: metricData[0] && metricData[0].value,
@@ -190,26 +186,21 @@ export default function Filter({
 		}
 	}
 
-	function createStep(index) {
-		const alias = opMap[index];
+	function createStep() {
 		return {
-			key: Date.now(),
+			key: refVariable.current.id++,
 			op: 'AND',
-			alias,
-			step: [createData(alias)],
+			step: [createData()],
 			onChangeOp: function() {
 				this.op = this.op === 'AND' ? 'OR' : 'AND';
 				setSteps(pre => [...pre]);
 			},
 			onAddOrFilter: function() {
 				if (this.step.length > 3) {
-					Message.success('目前最多支持4条');
+					model.log('目前最多支持4条');
 					return;
 				}
-				if (this.step.length === 1) {
-					this.step[0].alias = `${alias}1`;
-				}
-				this.step.push(createData(`${alias}${this.step.length+1}`));
+				this.step.push(createData());
 				setSteps(pre => [...pre]);
 			},
 		}
@@ -217,7 +208,7 @@ export default function Filter({
 
 	const onAddAndFilter = () => {
 		if (steps.length > 3) {
-			Message.success('目前最多支持4条');
+			model.log('目前最多支持4条');
 			return;
 		}
 		setSteps((pre) => {
@@ -226,10 +217,24 @@ export default function Filter({
 	}
 
 	const notFoundContent = <span>加载中...</span>;
+		
+	const onDelete=(index,index_1)=>{
+		if(steps.length===1 && steps[0].step.length===1){
+			model.log('第一条规则不能删除！');
+			return;
+		}
+		setSteps(pre=>{
+			if(pre[index].step.length===1){
+				pre.splice(index,1);
+			}else{
+				pre[index].step.splice(index_1,1);
+			}
+			return[...pre];
+		});
+	};
 
-	const renderForm = (item) => {
+	const renderForm = (item,index,index_1,alias,length) => {
 		const {
-			alias,
 			onChange,
 			effects,
 			onVisibleChange,
@@ -237,6 +242,7 @@ export default function Filter({
 			onFocus,
 			key,
 		} = item;
+		item.alias=length===1?alias:`${alias}${index_1+1}`;
 		return (
 			<Form
 				key={key}
@@ -247,19 +253,21 @@ export default function Filter({
 			{formCore=>(
 				<div className={styles.container}>
 					<div className={styles.item}>
-						<span className={styles.name}>{alias}</span>
+						<span className={styles.name}>{item.alias}</span>
 						<Field name='flag'>
-							<Select style={{width:'120px'}} dataSource={firstColumn} />
+							<Select style={{minWidth:'120px'}} dataSource={firstColumn} />
 						</Field>
 						<Field name='id'>
-							<Select style={{width:'200px'}} dataSource={metricData} showSearch />
+							<Select style={{minWidth:'200px'}} dataSource={metricData} showSearch />
 						</Field>
-						<Field name='op' dataSource={rules} component={Select} />
+						<Field name='op'>
+							<Select style={{minWidth:'120px'}} dataSource={rules} showSearch />
+						</Field>
 						<Field name='values'>
-							<Input style={{width:'80px'}} htmlType="number" innerAfter={<span>次</span>} />
+							<Input style={{minWidth:'80px'}} htmlType="number" innerAfter={<span>次</span>} />
 						</Field>
 						<Field visible={false} name='value'>
-							<Select style={{width:'150px'}} dataSource={[]} notFoundContent={notFoundContent} onFocus={onFocus.bind(item,formCore)} />
+							<Select style={{minWidth:'150px'}} dataSource={[]} notFoundContent={notFoundContent} onFocus={onFocus.bind(item,formCore)} />
 						</Field>
 						<Field name='date'>
 							<DatePicker.RangePicker 
@@ -270,6 +278,7 @@ export default function Filter({
 								onOk={onOk.bind(item,formCore)}
 							/>
 						</Field>
+						<Button size='small' style={{marginLeft:'10px',borderRadius:'50%'}} onClick={onDelete.bind(this,index,index_1)}>x</Button>
 					</div>
 				</div>
 			)}
@@ -279,12 +288,13 @@ export default function Filter({
 
 	const renderStep = () => {
 		return steps.map((item, index) => {
+			item.alias = opMap[index];
 			return (
 				<div key={item.key}>
 					<div className={styles.step}>
 						{
-							item.step.map((v) => {
-								return renderForm(v);
+							item.step.map((v, index_1) => {
+								return renderForm(v,index,index_1,item.alias,item.step.length);
 							})
 						}
 						<Button className={styles.filter} onClick={item.onAddOrFilter.bind(item)} >
@@ -300,13 +310,15 @@ export default function Filter({
 
 	return (
 		<Loading visible={loading} inline={false}>
-			<p className={styles.title}>新建分群</p>
-			<div className={styles.combination}>{combination}</div>
+			<div>
+				<Components.Title title='新建分群' />
+				<div className={styles.combination}>{combination}</div>
 				{renderStep()}
-			<Button className={styles.filter} onClick={onAddAndFilter}>
-				<Icon type='add' size='small' className={styles.icon} />
-				<span>AND</span>
-			</Button>
+				<Button className={styles.filter} onClick={onAddAndFilter}>
+					<Icon type='add' size='small' className={styles.icon} />
+					<span>AND</span>
+				</Button>
+			</div>
 		</Loading>
 	);
 }

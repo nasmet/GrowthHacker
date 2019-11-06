@@ -19,47 +19,22 @@ function RetentionAnalysis({
 	location,
 	history,
 }) {
-	let initRequest = false;
-	let initSave = {
-		title: '新建留存分析',
-		desc: '',
-	}
-	let initDate = 'day:0';
-	let initDateFilter = {};
-	let initCondition = {};
-	let initOrders = {};
-	if (location.state && location.state.boardInfo) {
-		const {
-			name,
-			desc,
-			date,
-			segmentation_id,
-			init_event,
-			retention_event,
-			orders,
-		} = location.state.boardInfo;
-		initRequest = true;
-		initSave.title = name;
-		initSave.desc = desc;
-		initSave.disable = false;
-		initDate = date || initDate;
-		initDateFilter = {
-			initTabValue: 'NAN',
-			initCurDateValue: model.transformDate(initDate),
-		};
-		initCondition = {
-			segmentation_id,
-			init_event,
-			retention_event,
-		};
-		initOrders = orders || initOrders;
-	}
+	const {
+		initRequest,
+		initSave,
+		initTitle,
+		initCondition,
+		initDate,
+		initDateFilter,
+		initOrders,
+	} = model.initAnalysisData(3, location);
 
+	const [title, setTitle] = useState(initTitle);
 	const saveRef = useRef(null);
 	const refDialog = useRef(null);
 	const refVariable = useRef(Object.assign({
 		type: 'retention',
-		name: '',
+		name: initTitle,
 		date: initDate,
 		orders: initOrders,
 	}, initCondition));
@@ -76,7 +51,7 @@ function RetentionAnalysis({
 			total = 0,
 	} = response;
 
-	const filterChange = (step) => {
+	const conditionChange = (step) => {
 		const flag = step.length === 0 ? true : false;
 		saveRef.current.setButtonStatus(flag);
 		refVariable.current.values = step;
@@ -97,10 +72,12 @@ function RetentionAnalysis({
 	}
 
 	const onOk = (sucess, fail) => {
-		api.createBoard(assembleParam()).then((res) => {
+		const param = assembleParam();
+		api.createBoard(param).then((res) => {
 			model.log('成功添加到看板');
 			sucess();
-			history.push('/growthhacker/projectdata/db');
+			setTitle(refVariable.current.name);
+			updateParameter(param);
 		}).catch((e) => {
 			model.log(e);
 			fail();
@@ -120,9 +97,7 @@ function RetentionAnalysis({
 	};
 
 	function onRefresh() {
-		updateParameter({ ...assembleParam(),
-			offset: 0,
-		});
+		updateParameter(assembleParam());
 	};
 
 	function assemblingChartStyle(meta) {
@@ -178,24 +153,24 @@ function RetentionAnalysis({
 
 	return (
 		<Components.Wrap>
-			<Components.Save ref={saveRef} {...initSave} onSave={onSave} />
+			<Components.Save ref={saveRef} title={title} {...initSave} onSave={onSave} />
 
 			<IceContainer>
-				<Components.DateFilter filterChange={dateChange} />	
-				<Condition filterChange={filterChange} initValues={initCondition} />
+				<Components.DateFilter filterChange={dateChange} {...initDateFilter} />	
+				<Condition conditionChange={conditionChange} initCondition={initCondition} />
 			</IceContainer>
 
 			<IceContainer style={{minHeight: '600px'}}>	
+				<div className={styles.btnWrap}>					
+					<Components.Refresh onClick={onRefresh} />
+					{data.length > 0 && <Components.ExportExcel fileName={title} data={data} meta={meta} type={2} />}
+				</div>
 				<Components.ChartsDisplay 
 					tableData={data}
 					loading={loading}
 					chartData={assemblingChartData(data, meta)} 
 					chartStyle={assemblingChartStyle(meta)}
 					renderTitle={renderTitle}
-					meta={meta}
-					showBtn
-					onRefresh={onRefresh}
-					type={2}
 				/>
 			</IceContainer>
 

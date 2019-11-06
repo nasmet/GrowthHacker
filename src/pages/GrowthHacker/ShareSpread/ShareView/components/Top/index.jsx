@@ -45,9 +45,13 @@ function Top({
 		}
 	}, []);
 
+	const renderSecondColumn = (value, index, record)=> {
+		return <span className={styles.openId}>{record.wechat_openid}</span>
+	};
+
 	return (
 		<div className={styles.userShareItem}>
-			<p style={{paddingLeft:'20px'}}>{name}</p>
+			<p style={{paddingLeft:'4px'}}>{name}</p>
 			<div className={styles.userShareItemChart}>
 				<Table 
 					loading={loading} 
@@ -56,9 +60,9 @@ function Top({
 					maxBodyHeight={260}
 					fixedHeader
 				>
-					<Table.Column style={{background: 'transparent'}} className={styles.column} title='Top排名' dataIndex='ranking_num' />
-					<Table.Column style={{background: 'transparent'}} className={styles.column} title='openId' dataIndex='wechat_openid' />
-					<Table.Column style={{background: 'transparent'}} className={styles.column} title={title} dataIndex='count' />
+					<Table.Column style={{background: 'transparent'}} className={styles.column} title='Top排名' width={80} dataIndex='ranking_num' />
+					<Table.Column style={{background: 'transparent'}} className={styles.column} title='openId' cell={renderSecondColumn} dataIndex='wechat_openid' />
+					<Table.Column style={{background: 'transparent'}} className={styles.column} title={title} width={80} dataIndex='count' />
 				</Table>
 			</div>
 		</div>

@@ -37,6 +37,7 @@ function CreateGroup({
 		}
 		refVariable.current.steps = step;
 		refVariable.current.expression = expression;
+		console.log(step,expression);
 	};
 
 	const onSave = () => {;
@@ -56,7 +57,7 @@ function CreateGroup({
 				const temp = obj.flag.split(',');
 				obj.flag = temp[0] === 'true' ? true : false;
 				obj.type = temp[1];
-				obj.id = +obj.id;
+				obj.id = obj.id;
 				obj.alias = v.alias;
 				if (obj.type === 'event') {
 					obj.values = [obj.values];

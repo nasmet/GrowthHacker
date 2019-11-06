@@ -19,6 +19,20 @@ export function assembleEventData(data) {
 	};
 }
 
+export function assembleEvent_1(data) {
+	return data.map(item => ({
+		label: item.name,
+		value: item.entity_key,
+	}));
+}
+
+export function assembleEvent(data) {
+	return data.map(item => ({
+		label: item.name,
+		value: item.id,
+	}));
+}
+
 export function assembleEventData_1(data) {
 	const dimensions = [];
 	const metrics = [];

@@ -14,3 +14,11 @@
 .column{
 	font-size: 10px;
 }
+.openId{
+	text-overflow: ellipsis; 
+    white-space: pre-wrap;
+    display: -webkit-box;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 1;
+	overflow: hidden;
+}

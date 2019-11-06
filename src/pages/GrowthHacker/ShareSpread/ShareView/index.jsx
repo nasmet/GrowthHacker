@@ -31,13 +31,6 @@ export default function ShareView() {
 			<Components.DateFilter filterChange={filterChange} />
 			<IceContainer>
 				<Header date={date} ref={headRef} />
-				{/*
-				<div>
-					<p>Top30用户裂变效果图</p>
-					<div className={styles.level}>
-						<Components.BasicColumn data={[]} />
-					</div>
-				</div>*/}
 			</IceContainer>
 			<IceContainer style={{padding:'10px'}}>
 				<span className={styles.secondTitle}>关键用户分享</span>

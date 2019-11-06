@@ -30,20 +30,17 @@ export default function Step({
 	const [steps, setSteps] = useState([]);
 
 	useEffect(() => {
-		async function getDataCenter() {
+		async function fetchData() {
 			setLoading(true);
 			try {
-				await api.getDataCenter().then((res) => {
-					dividingData(res.event_entities);
+				await api.getDataCenter({
+					type: 'event',
+				}).then((res) => {
+					setMetricData(model.assembleEvent(res.event_entities));
 				})
 
 				await api.getOriginData().then((res) => {
-					setOriginData(res.data.map(item => {
-						return {
-							label: item.name,
-							value: item.id,
-						}
-					}));
+					setOriginData(model.assembleOriginData(res.data));
 				})
 			} catch (e) {
 				model.log(e);
@@ -51,7 +48,7 @@ export default function Step({
 			setLoading(false);
 		}
 
-		getDataCenter();
+		fetchData();
 
 		return () => {
 			api.cancelRequest();
@@ -132,7 +129,7 @@ export default function Step({
 			return;
 		}
 		setSteps(assembleSteps());
-	}, [metricData, originData, conditions, condition_expr]);
+	}, [metricData, originData]);
 
 	useEffect(() => {
 		if (steps.length === 0) {
@@ -144,24 +141,6 @@ export default function Step({
 			})
 		})
 	}, [steps]);
-
-	function dividingData(data) {
-		const metrics = [];
-		data.forEach((item) => {
-			const {
-				id,
-				name,
-			} = item;
-			const obj = {
-				label: name,
-				value: id.toString(),
-			};
-			if (item.type === 'event') {
-				metrics.push(obj);
-			}
-		});
-		setMetricData(metrics);
-	}
 
 	const renderForm = (item) => {
 		const {

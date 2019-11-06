@@ -16,8 +16,8 @@ import {
 import styles from './index.module.scss';
 
 export default function Condition({
-	filterChange,
-	initValues,
+	conditionChange,
+	initCondition,
 }) {
 	const [loading,setLoading] = useState(false);
 	const [originData,setOriginData] = useState([]);
@@ -25,46 +25,22 @@ export default function Condition({
 	const [metricData,setMetricData] = useState([]);
 	const [steps,setSteps] = useState([]);
 	
-	useEffect(()=>{
-		filterChange(steps);
-
-	},[steps]);
-
-	useEffect(()=>{
-		if(groupData.length===0){
-			return;
-		}
-		if(initValues.init_event){
-			setSteps([
-				createBehavior({name:'init_event',label:'初始行为是',values:{init_event:initValues.init_event }}),
-				createBehavior({name:'retention_event',label:'后续行为是',values:{retention_event:initValues.retention_event }}),
-				createUserBehavior({values:{segmentation_id:initValues.segmentation_id}})]
-			);
-			return;
-		}
-
-		setSteps([
-			createBehavior({name:'init_event',label:'初始行为是',values:{init_event: metricData[0] && metricData[0].value }}),
-			createBehavior({name:'retention_event',label:'后续行为是',values:{retention_event: metricData[0] && metricData[0].value}}),
-			createUserBehavior({values:{segmentation_id:0}})]
-		);
-	},[metricData,groupData,originData]);
-
 	useEffect(() => {
 		async function fetchData() {
 			setLoading(true);
 			try{
 				await api.getOriginData().then((res) => {
-					const originData = model.assembleOriginData(res.data);
-					setOriginData(originData);
+					setOriginData(model.assembleOriginData(res.data));
 				});
 
-				await api.getDataCenter().then((res) => {
-					assembleEventData(res.event_entities);
+				await api.getDataCenter({
+					type: 'event',
+				}).then((res) => {
+					setMetricData(model.assembleEvent_1(res.event_entities));
 				});
 
 				await api.getUserGroups().then((res) => {
-					assembleGroupData(res.segmentations);
+					setGroupData(model.assembleGroupData(res.segmentations));
 				});
 
 			}catch(e){
@@ -80,15 +56,23 @@ export default function Condition({
 		};
 	}, []);
 
-	function assembleEventData(data) {
-		const {metrics} = model.assembleEventData(data);
-		setMetricData(metrics);
-	}
+	useEffect(()=>{
+		if(groupData.length===0){
+			return;
+		}
+		setSteps([
+			createBehavior({name:'init_event',label:'初始行为是',values:{init_event:initCondition.init_event || (metricData[0] && metricData[0].value)}}),
+			createBehavior({name:'retention_event',label:'后续行为是',values:{retention_event:initCondition.retention_event || (metricData[0] && metricData[0].value) }}),
+			createUserBehavior({values:{segmentation_id:initCondition.segmentation_id}})]
+		);
+	},[metricData,groupData,originData]);
 
-	function assembleGroupData(data) {
-		const groups = model.assembleGroupData(data);
-		setGroupData(groups);
-	}
+	useEffect(()=>{
+		if(steps.length===0){
+			return;
+		}
+		conditionChange(steps);
+	},[steps]);
 
 	const notFoundContent = <span>加载中...</span>;
 
@@ -137,9 +121,8 @@ export default function Condition({
 				api.getOriginDataValues({
 					id: this.values.key,
 				}).then((res) => {
-					const originDataValues = model.assembleOriginDataValues(res.data);
 					formCore.setFieldProps('value', {
-						dataSource: originDataValues,
+						dataSource: model.assembleOriginDataValues(res.data),
 					});
 				}).catch(e=>{
 					console.log(e);

@@ -134,7 +134,7 @@ export default function Event() {
 					</span>
 				)}
 				<Button size='small' style={{borderRadius:'50%',marginRight: '4px'}} onClick={onAddVarible.bind(this,record)}>+</Button>
-				<Button onClick={onBindDetails.bind(this,record)}>查看详情</Button>
+				<Button onClick={onBindDetails.bind(this,record)}>详情</Button>
 			</div>
 		);
 	};

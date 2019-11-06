@@ -77,14 +77,16 @@ function UserGroupDetails({
 			<IceContainer>
 				<Step {...location.state.data} />
 			</IceContainer>
+		
 			<IceContainer>
-				<Table 
-					loading={loading} 
-					dataSource={tableData} 
-					hasBorder={false}
-				>
-					{renderTitle()}
-				</Table>
+				<Loading visible={loading} inline={false}>
+					<Table
+						dataSource={tableData} 
+						hasBorder={false}
+					>
+						{renderTitle()}
+					</Table>
+				</Loading>
 				<Pagination
 					className={styles.pagination}
 					current={curPage}

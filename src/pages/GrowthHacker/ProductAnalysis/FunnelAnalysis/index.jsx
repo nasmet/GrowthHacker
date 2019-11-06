@@ -17,39 +17,15 @@ import DataDisplay from './components/DataDisplay';
 function FunnelAnalysis({
 	location,
 }) {
-	let initRequest = false;
-	let initSave = {};
-	let initTitle = '新建漏斗分析';
-	let initDate = 'day:0';
-	let initDateFilter = {};
-	let initCondition = {
-		steps: [],
-		segmentation_id: 0,
-	};
-	let initOrders = {};
-	if (location.state && location.state.boardInfo) {
-		const {
-			name,
-			desc,
-			date,
-			segmentation_id,
-			steps,
-			orders,
-		} = location.state.boardInfo;
-		initRequest = true;
-		initTitle = name;
-		initSave.disable = false;
-		initDate = date || initDate;
-		initDateFilter = {
-			initTabValue: 'NAN',
-			initCurDateValue: model.transformDate(initDate),
-		};
-		initCondition = {
-			segmentation_id,
-			steps,
-		};
-		initOrders = orders || initOrders;
-	}
+	const {
+		initRequest,
+		initSave,
+		initTitle,
+		initCondition,
+		initDate,
+		initDateFilter,
+		initOrders,
+	} = model.initAnalysisData(2, location);
 
 	const [title, setTitle] = useState(initTitle);
 	const saveRef = useRef(null);
@@ -81,7 +57,7 @@ function FunnelAnalysis({
 	const conditionChange = (steps, values) => {
 		refSteps.current.steps = steps;
 		Object.assign(refVariable.current, values);
-		const flag = steps.length !== 0? false : true;
+		const flag = steps.length !== 0 ? false : true;
 		saveRef.current.setButtonStatus(flag);
 	};
 
@@ -144,7 +120,7 @@ function FunnelAnalysis({
 			}
 		})
 	}
-	
+
 	function onRefresh() {
 		if (refSteps.current.steps === 0) {
 			model.log('步骤不能为空！');

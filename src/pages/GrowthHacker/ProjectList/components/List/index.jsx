@@ -108,7 +108,7 @@ function List({
 						<span>新建项目</span>						
 					</Button>		      		
 				</div>		    	
-			</Loading>		   	
+			</Loading>	   	
 		</Components.Wrap>
 	);
 }

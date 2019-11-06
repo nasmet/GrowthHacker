@@ -32,10 +32,6 @@
 	flex-direction: row;
 	align-items: center;
 }
-.title{
-	font-size: 16px;
-	font-weight: bold;
-}
 .btnWrap{
 	display: flex;
 	flex-direction: row;
@@ -45,8 +41,7 @@
 }
 .combination{
 	margin: 10px 0;
-	display: flex;
-	justify-content: center;
+	text-align: center;
 	font-weight: bold;
 }
 .step{

@@ -1,18 +1,3 @@
-.list{
-	padding: 10px 0;
-	border-bottom: 1px solid #e6e6e6;
-	display: flex;
-	justify-content: space-around;
-}
-.item{
-	display: flex;
-	flex-direction: column;
-}
-.value{
-	margin-bottom: 10px;
-	font-weight: bold;
-	font-size: 16px;
-}
 .secondTitle::after{
 	content: '*';
 	color: red;
@@ -21,35 +6,4 @@
 	min-height: 300px;
 	margin-bottom: 20px;
 	display: flex;
-}
-.userShareItem{
-	flex: 1;
-	margin-right: 10px;
-	border-radius: 10px;
-	background: #fff;
-	display: flex;
-	flex-direction: column;
-}
-.userShareItemValue{
-	display: flex;
-	justify-content: space-around;
-	color: gray;
-	font-size: 12px;
-}
-.userShareItemChart{
-	flex: 1;
-	display: flex;
-	justify-content: center;
-}
-.level{
-	height: 300px;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-}
-.area{
-	height: 400px;
-	display: flex;
-	justify-content: center;
-	align-items: center;
 }

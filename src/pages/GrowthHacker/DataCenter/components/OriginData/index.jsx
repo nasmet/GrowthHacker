@@ -64,7 +64,7 @@ export default  function OriginData() {
 		});
 	};
 
-	const jumpOriginDataDetails = (id, name, value_type) => {
+	const onView = (id, name, value_type) => {
 		setValues({
 			id,
 			name,
@@ -79,10 +79,9 @@ export default  function OriginData() {
 			value_type,
 			name,
 		} = record;
-		console.log(record);
 		return (
 			<div>
-				<Button type='primary' style={{marginRight:'10px'}} onClick={jumpOriginDataDetails.bind(this,id,name,value_type)}> 
+				<Button type='primary' style={{marginRight:'10px'}} onClick={onView.bind(this,id,name,value_type)}> 
 					查看
 				</Button>
 				<Button type='primary' warning onClick={onDeleteOriginData.bind(this,id,index)}> 

@@ -19,44 +19,15 @@ import Condition from './components/Condition';
 function EventAnalysis({
 	location,
 }) {
-	let initRequest = false;
-	let initSave = {};
-	let initTitle = '新建事件分析';
-	let initDate = 'day:0';
-	let initDateFilter = {};
-	let initCondition = {
-		dimensions: [],
-		metrics: [],
-		segmentation_id: 0,
-	};
-	let initOrders = {};
-
-	if (location.state && location.state.boardInfo) {
-		const {
-			name,
-			desc,
-			date,
-			segmentation_id,
-			metrics,
-			dimensions,
-			orders,
-		} = location.state.boardInfo;
-
-		initRequest = true;
-		initTitle = name;
-		initSave.disable = false;
-		initDate = date || initDate;
-		initDateFilter = {
-			initTabValue: 'NAN',
-			initCurDateValue: model.transformDate(initDate),
-		};
-		initCondition = {
-			segmentation_id,
-			dimensions,
-			metrics,
-		};
-		initOrders = orders || initOrders;
-	}
+	const {
+		initRequest,
+		initSave,
+		initTitle,
+		initCondition,
+		initDate,
+		initDateFilter,
+		initOrders,
+	} = model.initAnalysisData(1, location);
 
 	const [title, setTitle] = useState(initTitle);
 	const saveRef = useRef(null);
