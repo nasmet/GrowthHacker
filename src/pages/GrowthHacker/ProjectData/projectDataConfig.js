@@ -28,6 +28,9 @@ export default [{
 	}, {
 		name: '用户画像',
 		path: `${baseUrl}/ua/userportrait`,
+	}, {
+		name: '首页热力图',
+		path: `${baseUrl}/ua/heatmap`,
 	}],
 }, {
 	name: '分享传播',

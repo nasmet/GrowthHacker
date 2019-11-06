@@ -24,6 +24,7 @@ const UserScrutinyDetails = React.lazy(() =>
 import CreateGroup from './pages/GrowthHacker/UserAnalysis/CreateGroup';
 const UserGroupDetails = React.lazy(() =>
 	import ('./pages/GrowthHacker/UserAnalysis/UserGroupDetails'));
+import HeatMap from './pages/GrowthHacker/UserAnalysis/HeatMap';
 import ShareAnalysis from './pages/GrowthHacker/ShareSpread/ShareAnalysis';
 import ShareTrend from './pages/GrowthHacker/ShareSpread/ShareTrend';
 import ShareView from './pages/GrowthHacker/ShareSpread/ShareView';
@@ -277,6 +278,12 @@ const routerConfig = [
 				id: '1008027',
 				path: '/growthhacker/projectdata/ca/groupworth',
 				component: GroupWorth,
+				exact: true,
+				auth: true,
+			}, {
+				id: '1008028',
+				path: '/growthhacker/projectdata/ua/heatmap',
+				component: HeatMap,
 				exact: true,
 				auth: true,
 			}, {

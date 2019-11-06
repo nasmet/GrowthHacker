@@ -131,6 +131,8 @@ export default function Condition({
 			filters: [],
 			onChange: function(e) {
 				Object.assign(this.values, e);
+				this.filters= [];
+				setSteps(pre=>[...pre]);
 			},
 			onFocus: function(formCore) {
 				if (!values.event) {
@@ -232,7 +234,6 @@ export default function Condition({
 				onFocus,
 				onAddFilter,
 				onDeleteFilter,
-				effects,
 			} = item;
 
 			return (

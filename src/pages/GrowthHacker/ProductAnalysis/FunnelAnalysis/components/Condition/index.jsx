@@ -125,6 +125,8 @@ export default function Condition({
 			filters: [],
 			onChange: function(e) {
 				Object.assign(this.values, e);
+				this.filters= [];
+				setSteps(pre=>[...pre]);
 			},
 			onFocus: function(formCore) {
 				if (!values.event) {
@@ -226,7 +228,6 @@ export default function Condition({
 				onFocus,
 				onAddFilter,
 				onDeleteFilter,
-				effects,
 			} = item;
 
 			return (
@@ -252,7 +253,7 @@ export default function Condition({
 			              	<Button size='small' style={{marginLeft:'10px',borderRadius:'50%'}} onClick={onDeleteStep.bind(this,index)}>x</Button>
 		            	</span>
 					</Form>
-					<div style={{marginLeft:'20px',marginTop:'10px'}}>
+					<div style={{marginLeft:'40px',marginTop:'10px'}}>
 						{filters.map((v,index)=>{
 							const {
 								key,

@@ -17,21 +17,21 @@ export default function AdCount() {
 	});
 	const {
 		meta = [],
-		data = [],
+			data = [],
 	} = response;
 
 	const dateChange = (e) => {
-		updateParameter(Object.assign({
+		updateParameter({ ...parameter,
 			date: e,
-		}));
+		});
 	};
 
 	const groupChange = e => {
-		updateParameter(Object.assign({
+		updateParameter({ ...parameter,
 			seg_id: e,
-		}));
+		});
 	};
-	
+
 	const renderTitles = () => {
 		return meta.map((item, index) => {
 			if (index === 0) {

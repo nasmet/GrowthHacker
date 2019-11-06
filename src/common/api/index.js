@@ -267,6 +267,10 @@ export function getGroupWorth(data) {
 	return get(`/projects/${sessionStorage.getItem(config.PROJECTID)}/ads/ltv/segmentations/${id}`, trend);
 }
 
+export function getHeatMap(data) {
+	return get(`/projects/${sessionStorage.getItem(config.PROJECTID)}/heatmap`, data);
+}
+
 /**
  * 千人千面api接口
  * 

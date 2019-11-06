@@ -21,15 +21,15 @@ export default function AdAnalysis() {
 	} = response;
 
 	const dateChange = (e) => {
-		updateParameter(Object.assign({
+		updateParameter({ ...parameter,
 			date: e,
-		}));
+		});
 	};
 
 	const groupChange = e => {
-		updateParameter(Object.assign({
+		updateParameter({ ...parameter,
 			seg_id: e,
-		}));
+		});
 	};
 
 	const renderTwoColumn = (value, index, record) => {

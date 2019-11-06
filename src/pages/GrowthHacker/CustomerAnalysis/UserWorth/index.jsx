@@ -20,20 +20,20 @@ export default function UserWorth() {
 	});
 	const {
 		ltvs = [],
-		total = 0,
+			total = 0,
 	} = response;
 
 	const groupChange = e => {
-		updateParameter(Object.assign({}, parameter, {
+		updateParameter({ ...parameter,
 			seg_id: e,
 			offset: 0,
-		}));
+		});
 	};
 
 	const pageChange = e => {
-		updateParameter(Object.assign({}, parameter, {
+		updateParameter({ ...parameter,
 			offset: (e - 1) * config.LIMIT,
-		}));
+		});
 	};
 
 	return (
