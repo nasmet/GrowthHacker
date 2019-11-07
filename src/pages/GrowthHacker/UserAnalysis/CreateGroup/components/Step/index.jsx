@@ -101,7 +101,7 @@ export default function Filter({
 			item.step.map(v => {
 				v.refForm.store.setValues(v.values);
 			})
-		})
+		});
 		const temp = onChangeCombination();
 		setCombination(temp);
 		filterChange(steps, temp);
@@ -264,7 +264,7 @@ export default function Filter({
 							<Select style={{minWidth:'120px'}} dataSource={rules} showSearch />
 						</Field>
 						<Field name='values'>
-							<Input style={{minWidth:'80px'}} htmlType="number" innerAfter={<span>次</span>} />
+							<Input style={{width:'80px'}} htmlType="number" innerAfter={<span>次</span>} />
 						</Field>
 						<Field visible={false} name='value'>
 							<Select style={{minWidth:'150px'}} dataSource={[]} notFoundContent={notFoundContent} onFocus={onFocus.bind(item,formCore)} />

@@ -1,22 +1,8 @@
-export function assembleEventData(data) {
-	const dimensions = [];
-	const metrics = [];
-	data.forEach(item => {
-		const temp = {
-			label: item.name,
-			value: item.entity_key,
-		};
-		if (item.type === 'event') {
-			metrics.push(temp);
-		} else {
-			dimensions.push(temp);
-		}
-	});
-
-	return {
-		dimensions,
-		metrics,
-	};
+export function assembleEvent(data) {
+	return data.map(item => ({
+		label: item.name,
+		value: item.id,
+	}));
 }
 
 export function assembleEvent_1(data) {
@@ -26,14 +12,14 @@ export function assembleEvent_1(data) {
 	}));
 }
 
-export function assembleEvent(data) {
+export function assembleEvent_2(data) {
 	return data.map(item => ({
 		label: item.name,
-		value: item.id,
+		value: `${item.entity_key},${item.id}`,
 	}));
 }
 
-export function assembleEventData_1(data) {
+export function assembleAllEventData(data) {
 	const dimensions = [];
 	const metrics = [];
 	data.forEach(item => {

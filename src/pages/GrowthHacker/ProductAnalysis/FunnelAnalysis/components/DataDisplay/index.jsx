@@ -11,50 +11,64 @@ export default function DataDisplay({
 	data,
 	loading,
 }) {
-	function constructStep(meta, data) {
-		if (data.length === 0 || meta.length === 0) {
-			return;
-		}
-		const arr = [];
-		for (let i = 1, len = meta.length; i < len; i += 2) {
-			const obj = {
-				name: meta[i],
-				count: data[i]
+	function assembleStep() {
+		const steps = [];
+		for (let i = 1, len = meta.length; i < len; i++) {
+			const temp = {
+				name: meta[i].step_name,
+				count: data[i-1].unique_count,
 			};
-			if (i !== len - 1) obj.rate = data[i + 1];
-			arr.push(obj);
+			if (i !== len - 1) {
+				temp.rate = utils.transformPercent(data[i].percentage);
+			};
+			steps.push(temp);
 		}
 
 		return {
-			totalRate: `${meta[0]}${data[0]*100}%`,
-			steps: arr,
+			totalRate: `${meta[0].step_name}${utils.transformPercent(data[0].percentage)}`,
+			steps,
 		};
 	}
 
-	const renderColumn = (item, value, index, record) => {
+	const renderColumn = (column,value, index, record) => {
 		return (
 			<div className={styles.source}>
-				<span>{record[item+1]}</span>
-				<span style={{color:'#0AA372'}}>{(record[item]*100)}%</span>
+				<span>{record[`unique_count_${column}`]}</span>
+				<span style={{color:'#0AA372'}}>{utils.transformPercent(record[`percentage_${column}`])}</span>
 			</div>
 		);
 	}
 
 	const renderTitle = () => {
-		const arr = [];
-		for (let i = 0, len = meta.length; i < len; i += 2) {
-			arr.push(<Table.Column key={i} title={meta[i]} cell={renderColumn.bind(this, i)} />);
-		}
-		return arr;
+		const len = meta.length;
+		return meta.map((item, index) => {
+			if (index === 0) {
+				return <Table.Column key={index} title={item.step_name} cell={renderColumn.bind(this, index)} />
+			}
+			if (index === len - 1) {
+				return;
+			}
+			return <Table.Column key={index} title={item.step_num} cell={renderColumn.bind(this, index)} />
+		})
+
 	};
+
+	function assembleData(){
+		const temp={};
+		data.forEach((item, index)=>{
+			temp[`unique_count_${index}`]=item.unique_count;
+			temp[`percentage_${index}`]=item.percentage;
+		});
+		return [temp];
+	}
 
 	return (
 		<div>
-			{data.length !==0 ?
-				<Steps  {...constructStep(meta, data[0])} /> : null
+			{
+				data.length!==0 && <Steps  {...assembleStep()} />
 			}
 			<Loading visible={loading} inline={false}>
-				<Table dataSource={data} hasBorder={false} >
+				<Table dataSource={assembleData()} hasBorder={false} >
 				   	{renderTitle()}     		
 				</Table>
 			</Loading>

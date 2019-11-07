@@ -49,7 +49,7 @@ export default function Condition({
 				});
 
 				await api.getDataCenter().then((res) => {
-					assembleEventData(res.event_entities);
+					assembleAllEventData(res.event_entities);
 				});
 			} catch (e) {
 				model.log(e);
@@ -64,11 +64,11 @@ export default function Condition({
 		};
 	}, []);
 
-	function assembleEventData(data) {
+	function assembleAllEventData(data) {
 		const {
 			metrics,
 			dimensions,
-		} = model.assembleEventData_1(data);
+		} = model.assembleAllEventData(data);
 		setEventData(metrics);
 		refForm.current.state.store.setFieldProps('dimensions', {
 			dataSource: dimensions,

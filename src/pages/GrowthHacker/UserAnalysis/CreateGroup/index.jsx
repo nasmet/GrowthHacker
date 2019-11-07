@@ -37,7 +37,6 @@ function CreateGroup({
 		}
 		refVariable.current.steps = step;
 		refVariable.current.expression = expression;
-		console.log(step,expression);
 	};
 
 	const onSave = () => {;

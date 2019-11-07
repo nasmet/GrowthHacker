@@ -48,7 +48,7 @@ export default function Condition({
 				});
 
 				await api.getDataCenter().then((res) => {
-					assembleEventData(res.event_entities);
+					setEventData(model.assembleEvent_2(res.event_entities));
 				});
 			} catch (e) {
 				model.log(e);
@@ -62,14 +62,6 @@ export default function Condition({
 			api.cancelRequest();
 		};
 	}, []);
-
-	function assembleEventData(data) {
-		const {
-			metrics,
-			dimensions,
-		} = model.assembleEventData_1(data);
-		setEventData(metrics);
-	}
 
 	function assembleGroupData(data){
 		const groups=model.assembleGroupData(data);

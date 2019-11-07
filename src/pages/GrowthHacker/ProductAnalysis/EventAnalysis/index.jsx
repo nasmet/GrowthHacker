@@ -199,12 +199,10 @@ function EventAnalysis({
 				<Components.ChartsDisplay
 					tableData={data}
 					loading={loading}
-					meta={meta}
 					chartData={assemblingChartData(data, meta)} 
 					chartStyle={assemblingChartStyle(meta)}
 					renderTitle={renderTitle}
-					onSort={onSort} 
-					onRefresh={onRefresh}
+					onSort={onSort}
 				/>
 				<Pagination
 					className={styles.pagination}

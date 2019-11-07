@@ -23,7 +23,7 @@ export default function Steps({
 						</div>
 						<span>{count}人</span>
 					</div>
-					{index !== maxIndex ?
+					{index !== maxIndex &&
 						<div className={styles.second}>
 							<svg data-step="1" width="100" height="44" xmlns="http://www.w3.org/2000/svg">
 								<g>						    	
@@ -34,8 +34,8 @@ export default function Steps({
 									</g>						       		
 								</g>						      	
 							</svg>						    
-							<span className={styles.rate}>{rate*100}%</span>						 	
-						</div> : null					    
+							<span className={styles.rate}>{rate}</span>						 	
+						</div>					    
 					}
 				</div>
 			)
