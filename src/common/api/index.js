@@ -3,6 +3,8 @@ import {
 	post,
 	put,
 	del,
+	upload,
+	controller,
 	cancelRequestTask,
 } from './base';
 
@@ -10,6 +12,10 @@ import {
  * 数据分析api接口
  * 
  */
+
+export function cancelUpload() {
+	controller.abort();
+}
 
 export function cancelRequest() {
 	cancelRequestTask();
@@ -95,6 +101,10 @@ export function createEvent(data) {
 
 export function getEventDetails(data) {
 	return get(`/event_entities/${data.id}`);
+}
+
+export function importAllEvent(data) {
+	return upload(data);
 }
 
 export function addBindVariables(data) {

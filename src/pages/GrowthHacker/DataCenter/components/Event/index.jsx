@@ -10,7 +10,12 @@ import {
 	Dialog,
 	Loading,
 	Drawer,
+	Upload,
+	Input,
 } from '@alifd/next';
+import {
+	Link,
+} from 'react-router-dom';
 import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
 import CreateEvent from './components/CreateEvent';
@@ -19,9 +24,9 @@ import EditVarible from './components/EditVarible';
 export default function Event() {
 	const refCE = useRef(null);
 	const refEV = useRef(null);
-	const [showDrawer,setShowDrawer] = useState(false);
-	const [eventName,setEventName] = useState('');
-	const [bindVariableData,setBindVariableData] = useState([]);
+	const [showDrawer, setShowDrawer] = useState(false);
+	const [eventName, setEventName] = useState('');
+	const [bindVariableData, setBindVariableData] = useState([]);
 
 	const {
 		parameter,
@@ -53,6 +58,7 @@ export default function Event() {
 		})
 
 		return () => {
+			api.cancelUpload();
 			api.cancelRequest();
 		};
 	}, [])
@@ -118,8 +124,8 @@ export default function Event() {
 			},
 		});
 	};
-	
-	const onBindDetails=record=>{
+
+	const onBindDetails = record => {
 		setEventName(record.name);
 		setBindVariableData(record.bind_variables);
 		setShowDrawer(true);
@@ -152,18 +158,50 @@ export default function Event() {
 		updateParameter({ ...parameter
 		});
 	};
-	
-	const onCloseDrawer=()=>{
+
+	const onCloseDrawer = () => {
 		setShowDrawer(false);
+	};
+
+	const upload = e => {
+		if(!e.file){
+			return;
+		}
+		api.importAllEvent({
+			file: e.file,
+		}).then(res => {
+			model.log('导入成功');
+		}).catch(e => {
+			model.log(e);
+		});
+
+		return {
+			abort() {
+				api.cancelUpload()
+			},
+		};
 	};
 
 	return (
 		<Components.Wrap>
 			<IceContainer>      		
 				<div className={styles.btnWrap}>
-					<Button className={styles.btn} type="secondary" onClick={onCreateEvent}> 
+					<Button type="secondary" onClick={onCreateEvent}> 
 						创建埋点事件
 					</Button>
+					<Button style={{marginLeft: '20px'}}> 
+						<a style={{textDecoration:'none'}} href={config.DOWNLOADURL} download>导出事件和变量</a>
+					</Button>
+					
+				    <Upload
+				    	request={upload}
+			    	>	
+				    	<Button style={{marginLeft: '20px'}}>
+					        导入事件和变量
+			          	</Button>
+				    </Upload>
+				  
+				    {/*<input type="file" id="files" onChange={upload} />*/}
 				</div>
 				
 				<Loading visible={loading} inline={false}>

@@ -13,6 +13,8 @@ export const USERNAME = 'USERNAME';
 export const PROJECTID = 'PROJECTID';
 export const PROJECTNAME = 'PROJECTNAME';
 export const PROJECTIDAPPID = 'PROJECTIDAPPID';
+export const DOWNLOADURL = `${DEVBASEURL}/management/event_entity/export`;
+export const UPLOADURL = `${DEVBASEURL}/management/event_entity/import`;
 export const originRules = [{
 	value: '=',
 	label: '等于',

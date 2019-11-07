@@ -133,19 +133,19 @@ function EventAnalysis({
 		if (values.dimensions.length === 0) {
 			return false
 		}
-		if(steps.length===0){
+		if (steps.length === 0) {
 			return false;
 		}
 		for (let i = 0, len = steps.length; i < len; i++) {
 			if (!steps[i].values.event) {
 				return false
 			}
-			const filters =  steps[i].filters;
+			const filters = steps[i].filters;
 			for (let j = 0, length = filters.length; j < length; j++) {
-				if(!filters[j].values.key){
+				if (!filters[j].values.key) {
 					return false
 				}
-				if(!filters[j].values.value){
+				if (!filters[j].values.value) {
 					return false
 				}
 			}
@@ -194,14 +194,14 @@ function EventAnalysis({
 	}
 
 	function onRefresh() {
-		if(refSteps.current.status){
+		if (refSteps.current.status) {
 			Object.assign(refVariable.current, {
 				metrics: assembleMetrics(refSteps.current.steps)
 			});
 			updateParameter({ ...refVariable.current,
 				offset: 0,
 			});
-		}	
+		}
 	};
 
 	return (

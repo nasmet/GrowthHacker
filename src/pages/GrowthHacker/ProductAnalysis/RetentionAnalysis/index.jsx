@@ -38,6 +38,10 @@ function RetentionAnalysis({
 		date: initDate,
 		orders: initOrders,
 	}, initCondition));
+	const refStep = useRef({
+		steps: [],
+		status: false,
+	});
 
 	const {
 		parameter,
@@ -49,27 +53,7 @@ function RetentionAnalysis({
 		meta = [],
 			data = [],
 			total = 0,
-	} = response;
-
-	const conditionChange = (step) => {
-		const flag = step.length === 0 ? true : false;
-		saveRef.current.setButtonStatus(flag);
-		refVariable.current.values = step;
-	};
-
-	function assembleParam() {
-		if (!refVariable.current.values) {
-			return refVariable.current;
-		}
-		const param = { ...refVariable.current
-		};
-		delete param.values;
-		const values = refVariable.current.values;
-		param.init_event = values[0].values.init_event;
-		param.retention_event = values[1].values.retention_event;
-		param.segmentation_id = values[2].values.segmentation_id;
-		return param;
-	}
+	} = response;	
 
 	const onOk = (sucess, fail) => {
 		const param = assembleParam();
@@ -84,6 +68,20 @@ function RetentionAnalysis({
 		});
 	};
 
+	function getStatus() {
+		if (!refStep.current.steps[0].values.init_event) {
+			return false;
+		}
+		return true;
+	}
+
+	const conditionChange = steps => {
+		refStep.current.steps = steps;
+		refStep.current.status = getStatus();
+		saveRef.current.setButtonStatus(!refStep.current.status);
+		onRefresh();
+	};
+
 	const onInputChange = (e) => {
 		refVariable.current.name = e;
 	};
@@ -94,10 +92,20 @@ function RetentionAnalysis({
 
 	const dateChange = (e) => {
 		refVariable.current.date = e;
+		onRefresh();
 	};
 
 	function onRefresh() {
-		updateParameter(assembleParam());
+		if (!refStep.current.status) {
+			return;
+		}
+		Object.assign(refVariable.current, {
+			init_event: refStep.current.steps[0].values.init_event,
+			retention_event: refStep.current.steps[1].values.retention_event,
+			segmentation_id: refStep.current.steps[2].values.segmentation_id,
+		});
+		updateParameter({ ...refVariable.current
+		});
 	};
 
 	function assemblingChartStyle(meta) {
@@ -147,7 +155,7 @@ function RetentionAnalysis({
 			if (index > 1) {
 				return <Table.Column key={index} title={item} cell={renderColumn.bind(this, index)} width={100} />
 			}
-			return <Table.Column key={index} title={item} dataIndex={index.toString()} lock width={120} />
+			return <Table.Column key={index} title={item} dataIndex={index.toString()} lock={data.length===0?false:true} width={120} />
 		});
 	};
 
@@ -160,11 +168,14 @@ function RetentionAnalysis({
 				<Condition conditionChange={conditionChange} initCondition={initCondition} />
 			</IceContainer>
 
-			<IceContainer style={{minHeight: '600px'}}>	
-				<div className={styles.btnWrap}>					
-					<Components.Refresh onClick={onRefresh} />
-					{data.length > 0 && <Components.ExportExcel fileName={title} data={data} meta={meta} type={2} />}
-				</div>
+			<IceContainer style={{minHeight: '600px'}}>
+				{data.length > 0 &&
+					<div className={styles.btnWrap}>					
+						<Components.Refresh onClick={onRefresh} />
+						<Components.ExportExcel fileName={title} data={data} meta={meta} type={2} />
+					</div>
+				}	
+
 				<Components.ChartsDisplay 
 					tableData={data}
 					loading={loading}

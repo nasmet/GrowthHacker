@@ -35,6 +35,9 @@ axios.interceptors.request.use((configs) => {
 
 // http response 拦截器（所有接收到的请求都要从这儿过一次）
 axios.interceptors.response.use((response) => {
+	if (response.data.code === undefined) {
+		return JSON.stringify(response);
+	}
 	switch (response.data.code) {
 		case 0:
 			return response.data;
@@ -142,6 +145,31 @@ export function del(url, params = {}) {
 			cancelToken: new CancelToken(function executor(c) {
 				cancelRequestTask = c;
 			}),
+		}).then((response) => {
+			resolve(response.data);
+		}, (err) => {
+			if (!err) {
+				return;
+			}
+			reject(err);
+		});
+	});
+}
+
+export const controller = new AbortController();
+const signal = controller.signal;
+
+export function upload(data = {}) {
+	const formData = new FormData();
+	formData.append("file", data.file);
+	return new Promise((resolve, reject) => {
+		fetch(config.UPLOADURL, {
+			signal,
+			method: 'post',
+			headers: {
+				Authorization: sessionStorage.getItem(config.TOKENKEY),
+			},
+			body: formData,
 		}).then((response) => {
 			resolve(response.data);
 		}, (err) => {
