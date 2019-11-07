@@ -42,6 +42,7 @@ function EventAnalysis({
 	}, initCondition));
 	const refSteps = useRef({
 		steps: [],
+		status: false,
 	})
 
 	const {
@@ -124,13 +125,40 @@ function EventAnalysis({
 
 	const dateChange = (e) => {
 		refVariable.current.date = e;
+		onRefresh();
 	};
+
+	// 筛选条件是否可点击状态
+	function getStatus(steps, values) {
+		if (values.dimensions.length === 0) {
+			return false
+		}
+		if(steps.length===0){
+			return false;
+		}
+		for (let i = 0, len = steps.length; i < len; i++) {
+			if (!steps[i].values.event) {
+				return false
+			}
+			const filters =  steps[i].filters;
+			for (let j = 0, length = filters.length; j < length; j++) {
+				if(!filters[j].values.key){
+					return false
+				}
+				if(!filters[j].values.value){
+					return false
+				}
+			}
+		}
+		return true;
+	}
 
 	const conditionChange = (steps, values) => {
 		refSteps.current.steps = steps;
 		Object.assign(refVariable.current, values);
-		const flag = steps.length !== 0 && values.dimensions.length !== 0 ? false : true;
-		saveRef.current.setButtonStatus(flag);
+		refSteps.current.status = getStatus(steps, values);
+		saveRef.current.setButtonStatus(!refSteps.current.status);
+		onRefresh();
 	};
 
 	const onSort = (dataIndex, order) => {
@@ -166,20 +194,14 @@ function EventAnalysis({
 	}
 
 	function onRefresh() {
-		if (refSteps.current.steps === 0) {
-			model.log('事件选择不能为空！');
-			return;
-		}
-		if (refVariable.current.dimensions.length === 0) {
-			model.log('维度选择不能为空！');
-			return;
-		}
-		Object.assign(refVariable.current, {
-			metrics: assembleMetrics(refSteps.current.steps)
-		});
-		updateParameter({ ...refVariable.current,
-			offset: 0,
-		});
+		if(refSteps.current.status){
+			Object.assign(refVariable.current, {
+				metrics: assembleMetrics(refSteps.current.steps)
+			});
+			updateParameter({ ...refVariable.current,
+				offset: 0,
+			});
+		}	
 	};
 
 	return (
@@ -192,10 +214,12 @@ function EventAnalysis({
 			</IceContainer>
 
 			<IceContainer style={{minHeight: '600px'}}>
-				<div className={styles.btnWrap}>
-					<Components.Refresh onClick={onRefresh} />
-					{data.length > 0 && <Components.ExportExcel fileName={title} data={data} meta={meta} type={1} />}
-				</div>
+				{data.length > 0 &&
+					<div className={styles.btnWrap}>
+						<Components.Refresh onClick={onRefresh} />
+						<Components.ExportExcel fileName={title} data={data} meta={meta} type={1} />
+					</div>
+				}
 				<Components.ChartsDisplay
 					tableData={data}
 					loading={loading}

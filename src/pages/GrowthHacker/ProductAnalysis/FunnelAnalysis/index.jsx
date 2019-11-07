@@ -40,6 +40,7 @@ function FunnelAnalysis({
 	}, initCondition));
 	const refSteps = useRef({
 		steps: [],
+		status: false,
 	})
 
 	const {
@@ -53,13 +54,6 @@ function FunnelAnalysis({
 			data = [],
 			total = 0,
 	} = response;
-
-	const conditionChange = (steps, values) => {
-		refSteps.current.steps = steps;
-		Object.assign(refVariable.current, values);
-		const flag = steps.length !== 0 ? false : true;
-		saveRef.current.setButtonStatus(flag);
-	};
 
 	const onOk = (sucess, fail) => {
 		Object.assign(refVariable.current, {
@@ -78,6 +72,36 @@ function FunnelAnalysis({
 		});
 	};
 
+	// 筛选条件是否可点击状态
+	function getStatus(steps) {
+		if(steps.length===0){
+			return false;
+		}
+		for (let i = 0, len = steps.length; i < len; i++) {
+			if (!steps[i].values.event) {
+				return false
+			}
+			const filters = steps[i].filters;
+			for (let j = 0, length = filters.length; j < length; j++) {
+				if (!filters[j].values.key) {
+					return false
+				}
+				if (!filters[j].values.value) {
+					return false
+				}
+			}
+		}
+		return true;
+	}
+
+	const conditionChange = (steps, values) => {
+		refSteps.current.steps = steps;
+		Object.assign(refVariable.current, values);
+		saveRef.current.setButtonStatus(!refSteps.current.status);
+		refSteps.current.status = getStatus(steps);
+		onRefresh();
+	};
+
 	const onInputChange = (e) => {
 		refVariable.current.name = e;
 	};
@@ -88,6 +112,7 @@ function FunnelAnalysis({
 
 	const dateChange = (e) => {
 		refVariable.current.date = e;
+		onRefresh();
 	};
 
 	const onSort = (dataIndex, order) => {
@@ -122,16 +147,14 @@ function FunnelAnalysis({
 	}
 
 	function onRefresh() {
-		if (refSteps.current.steps === 0) {
-			model.log('步骤不能为空！');
-			return;
-		}
-		Object.assign(refVariable.current, {
-			steps: assembleMetrics(refSteps.current.steps)
-		});
-		updateParameter({ ...refVariable.current,
-			offset: 0,
-		});
+		if(refSteps.current.status){
+			Object.assign(refVariable.current, {
+				steps: assembleMetrics(refSteps.current.steps)
+			});
+			updateParameter({ ...refVariable.current,
+				offset: 0,
+			});
+		}	
 	};
 
 	return (
@@ -144,7 +167,6 @@ function FunnelAnalysis({
       		</IceContainer>
 
       		<IceContainer>
-				<Components.Refresh onClick={onRefresh} style={{marginBottom: '10px'}} />
       			<DataDisplay meta={meta} data={data} loading={loading} />
       		</IceContainer>
 

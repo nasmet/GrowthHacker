@@ -64,10 +64,11 @@ export default function DataDisplay({
 
 	return (
 		<div>
-			{
-				data.length!==0 && <Steps  {...assembleStep()} />
-			}
 			<Loading visible={loading} inline={false}>
+				{
+					data.length!==0 && <Steps  {...assembleStep()} />
+				}
+				
 				<Table dataSource={assembleData()} hasBorder={false} >
 				   	{renderTitle()}     		
 				</Table>

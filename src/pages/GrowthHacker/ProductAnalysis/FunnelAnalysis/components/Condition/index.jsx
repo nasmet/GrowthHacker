@@ -37,6 +37,7 @@ export default function Condition({
 			segmentation_id: initCondition.segmentation_id,
 		},
 		id: 0,
+		steps,
 	});
 
 	useEffect(() => {
@@ -105,6 +106,7 @@ export default function Condition({
 	}, [eventData]);
 
 	useEffect(() => {
+		refVariable.current.steps= steps;
 		conditionChange(steps, refVariable.current.values);
 	}, [steps]);
 	
@@ -169,6 +171,7 @@ export default function Condition({
 			values,
 			onChange: function(e) {
 				Object.assign(this.values, e);
+				conditionChange(refVariable.current.steps, refVariable.current.values);
 			},
 		};
 	}
@@ -298,7 +301,7 @@ export default function Condition({
 
 	const formChange = (values) => {
 		Object.assign(refVariable.current.values,values)
-		conditionChange(steps,refVariable.current.values);
+		conditionChange(refVariable.current.steps, refVariable.current.values);
 	};
 
 	return (
