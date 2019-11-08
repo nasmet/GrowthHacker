@@ -74,7 +74,7 @@ function FunnelAnalysis({
 
 	// 筛选条件是否可点击状态
 	function getStatus(steps) {
-		if(steps.length===0){
+		if (steps.length === 0) {
 			return false;
 		}
 		for (let i = 0, len = steps.length; i < len; i++) {
@@ -93,6 +93,18 @@ function FunnelAnalysis({
 		}
 		return true;
 	}
+
+	const onRefresh = utils.debounce(() => {
+		if (refSteps.current.status) {
+			Object.assign(refVariable.current, {
+				steps: assembleMetrics(refSteps.current.steps)
+			});
+			updateParameter({ ...refVariable.current,
+				offset: 0,
+			});
+		}
+	}, 1000);
+
 
 	const conditionChange = (steps, values) => {
 		refSteps.current.steps = steps;
@@ -145,17 +157,6 @@ function FunnelAnalysis({
 			}
 		})
 	}
-
-	function onRefresh() {
-		if(refSteps.current.status){
-			Object.assign(refVariable.current, {
-				steps: assembleMetrics(refSteps.current.steps)
-			});
-			updateParameter({ ...refVariable.current,
-				offset: 0,
-			});
-		}	
-	};
 
 	return (
 		<Components.Wrap>

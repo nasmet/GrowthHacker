@@ -16,9 +16,6 @@ import {
 	Field,
 } from '@ice/form';
 import styles from './index.module.scss';
-import {
-	operators,
-} from './config';
 
 const commonStyle = {
 	minWidth: '200px',
@@ -366,7 +363,7 @@ export default function Condition({
 												<Field name='op'>
 													<Select
 														style={{width:'120px'}} 
-														dataSource={operators}  
+														dataSource={config.operators}  
 													/>
 												</Field>
 												<Field name='value'>

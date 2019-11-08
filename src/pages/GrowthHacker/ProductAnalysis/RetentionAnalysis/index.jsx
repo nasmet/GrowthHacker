@@ -53,7 +53,7 @@ function RetentionAnalysis({
 		meta = [],
 			data = [],
 			total = 0,
-	} = response;	
+	} = response;
 
 	const onOk = (sucess, fail) => {
 		const param = assembleParam();
@@ -75,6 +75,18 @@ function RetentionAnalysis({
 		return true;
 	}
 
+	const onRefresh = utils.debounce(() => {
+		if (refStep.current.status) {
+			Object.assign(refVariable.current, {
+				init_event: refStep.current.steps[0].values.init_event,
+				retention_event: refStep.current.steps[1].values.retention_event,
+				segmentation_id: refStep.current.steps[2].values.segmentation_id,
+			});
+			updateParameter({ ...refVariable.current
+			});
+		}
+	}, 1000);
+
 	const conditionChange = steps => {
 		refStep.current.steps = steps;
 		refStep.current.status = getStatus();
@@ -93,19 +105,6 @@ function RetentionAnalysis({
 	const dateChange = (e) => {
 		refVariable.current.date = e;
 		onRefresh();
-	};
-
-	function onRefresh() {
-		if (!refStep.current.status) {
-			return;
-		}
-		Object.assign(refVariable.current, {
-			init_event: refStep.current.steps[0].values.init_event,
-			retention_event: refStep.current.steps[1].values.retention_event,
-			segmentation_id: refStep.current.steps[2].values.segmentation_id,
-		});
-		updateParameter({ ...refVariable.current
-		});
 	};
 
 	function assemblingChartStyle(meta) {

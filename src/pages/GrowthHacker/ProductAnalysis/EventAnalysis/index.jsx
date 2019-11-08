@@ -153,8 +153,21 @@ function EventAnalysis({
 		return true;
 	}
 
+
+	const onRefresh = utils.debounce(() => {
+		if (refSteps.current.status) {
+			console.log(123);
+			Object.assign(refVariable.current, {
+				metrics: assembleMetrics(refSteps.current.steps)
+			});
+			updateParameter({ ...refVariable.current,
+				offset: 0,
+			});
+		}
+	}, 1000);
+
+
 	const conditionChange = (steps, values) => {
-		console.log(steps);
 		refSteps.current.steps = steps;
 		Object.assign(refVariable.current, values);
 		refSteps.current.status = getStatus(steps, values);
@@ -200,17 +213,6 @@ function EventAnalysis({
 			return obj;
 		})
 	}
-
-	function onRefresh() {
-		if (refSteps.current.status) {
-			Object.assign(refVariable.current, {
-				metrics: assembleMetrics(refSteps.current.steps)
-			});
-			updateParameter({ ...refVariable.current,
-				offset: 0,
-			});
-		}
-	};
 
 	return (
 		<Components.Wrap>
