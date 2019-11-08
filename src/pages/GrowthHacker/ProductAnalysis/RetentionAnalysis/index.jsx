@@ -20,7 +20,6 @@ function RetentionAnalysis({
 	history,
 }) {
 	const {
-		initRequest,
 		initSave,
 		initTitle,
 		initCondition,
@@ -48,7 +47,7 @@ function RetentionAnalysis({
 		response,
 		loading,
 		updateParameter,
-	} = hooks.useRequest(api.getDataBoard, refVariable.current, initRequest);
+	} = hooks.useRequest(api.getDataBoard, refVariable.current, false);
 	const {
 		meta = [],
 			data = [],

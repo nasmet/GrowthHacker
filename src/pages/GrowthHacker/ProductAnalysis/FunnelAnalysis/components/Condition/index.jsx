@@ -123,10 +123,14 @@ export default function Condition({
 			key: refVariable.current.id++,
 			values,
 			filters: [],
-			onChange: function(e) {
+			onChange: function(e) {				
 				Object.assign(this.values, e);
-				this.filters= [];
-				setSteps(pre=>[...pre]);
+				if(this.filters.length!==0){
+					this.filters= [];
+					setSteps(pre=>[...pre]);
+				}else{
+					conditionChange(refVariable.current.steps, refVariable.current.values);
+				}	
 			},
 			onFocus: function(formCore) {
 				if (!values.event) {
@@ -155,11 +159,7 @@ export default function Condition({
 					model.log('最多支持4条过滤！');
 					return;
 				}
-				this.filters.push(createFilter({
-					values: {
-						op: '=',
-					}
-				}));
+				this.filters.push(createFilter({}));
 				setSteps(pre => [...pre]);
 			},
 			onDeleteFilter: function(index) {
@@ -292,13 +292,13 @@ export default function Condition({
 														placeholder= '请选择关联变量'
 													/>
 												</Field>
-												<Field name='op' disabled={true}>
+												<Field name='op' disabled={values.op?false:true}>
 													<Select
 														style={commonStyle} 
 														dataSource={model.allOperators}  
 													/>
 												</Field>
-												<Field name='value' disabled={true}>
+												<Field name='value' disabled={values.value?false:true}>
 													<Input placeholder= '请输入值' />
 												</Field>
 								              	<Button size='small' style={{marginLeft:'10px',borderRadius:'50%'}} onClick={onDeleteFilter.bind(item,index)}>x</Button>

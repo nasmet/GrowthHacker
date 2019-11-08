@@ -59,29 +59,38 @@ export function assembleAllEventData(data) {
 				label: item.name,
 				value: item.entity_key,
 			});
+			const obj = {
+				label: item.name,
+				value: item.entity_key,
+			};
 			if (item.variable_type !== 'string') {
-				const obj = {
-					label: item.name,
-					value: item.entity_key,
-					children: [{
-						label: '总和',
-						value: `${item.entity_key},sum`,
-					}, {
-						label: '均值',
-						value: `${item.entity_key},average`,
-					}, {
-						label: '最大值',
-						value: `${item.entity_key},max`,
-					}, {
-						label: '最小值',
-						value: `${item.entity_key},min`,
-					}, {
-						label: '人均值',
-						value: `${item.entity_key},average_1`,
-					}]
-				};
-				variables.push(obj);
+				obj.children = [{
+					label: '总和',
+					value: `${item.entity_key},sum`,
+				}, {
+					label: '均值',
+					value: `${item.entity_key},average`,
+				}, {
+					label: '最大值',
+					value: `${item.entity_key},max`,
+				}, {
+					label: '最小值',
+					value: `${item.entity_key},min`,
+				}, {
+					label: '人均值',
+					value: `${item.entity_key},unique_avg`,
+				}, {
+					label: '去重数',
+					value: `${item.entity_key},unique`,
+				}]
+
+			} else {
+				obj.children = [{
+					label: '去重数',
+					value: `${item.entity_key},unique`,
+				}]
 			}
+			variables.push(obj);
 		}
 	});
 
@@ -163,29 +172,38 @@ export function assembleEventVaribleData_2(data) {
 		label: '人均次数',
 	}];
 	data.forEach(item => {
+		const obj = {
+			label: item.name,
+			value: item.entity_key,
+		};
 		if (item.variable_type !== 'string') {
-			const obj = {
-				label: item.name,
-				value: item.entity_key,
-				children: [{
-					label: '总和',
-					value: `${item.entity_key},sum`,
-				}, {
-					label: '均值',
-					value: `${item.entity_key},average`,
-				}, {
-					label: '最大值',
-					value: `${item.entity_key},max`,
-				}, {
-					label: '最小值',
-					value: `${item.entity_key},min`,
-				}, {
-					label: '人均值',
-					value: `${item.entity_key},average_1`,
-				}]
-			};
-			temp.push(obj);
+			obj.children = [{
+				label: '总和',
+				value: `${item.entity_key},sum`,
+			}, {
+				label: '均值',
+				value: `${item.entity_key},average`,
+			}, {
+				label: '最大值',
+				value: `${item.entity_key},max`,
+			}, {
+				label: '最小值',
+				value: `${item.entity_key},min`,
+			}, {
+				label: '人均值',
+				value: `${item.entity_key},unique_avg`,
+			}, {
+				label: '去重数',
+				value: `${item.entity_key},unique`,
+			}]
+
+		} else {
+			obj.children = [{
+				label: '去重数',
+				value: `${item.entity_key},unique`,
+			}];
 		}
+		temp.push(obj);
 	})
 	return temp;
 }

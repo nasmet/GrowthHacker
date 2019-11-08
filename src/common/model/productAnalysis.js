@@ -1,5 +1,4 @@
 export function initAnalysisData(type, location) {
-	let initRequest = false;
 	let initSave = {};
 	let initTitle;
 	let initCondition;
@@ -46,7 +45,6 @@ export function initAnalysisData(type, location) {
 			retention_event,
 		} = location.state.boardInfo;
 
-		initRequest = true;
 		initTitle = name;
 		initSave.disable = false;
 		initDate = date || initDate;
@@ -79,7 +77,6 @@ export function initAnalysisData(type, location) {
 		initOrders = orders || initOrders;
 	}
 	return {
-		initRequest,
 		initSave,
 		initTitle,
 		initCondition,

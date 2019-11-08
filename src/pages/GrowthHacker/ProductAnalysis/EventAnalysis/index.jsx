@@ -20,7 +20,6 @@ function EventAnalysis({
 	location,
 }) {
 	const {
-		initRequest,
 		initSave,
 		initTitle,
 		initCondition,
@@ -50,7 +49,7 @@ function EventAnalysis({
 		response,
 		loading,
 		updateParameter,
-	} = hooks.useRequest(api.getDataBoard, refVariable.current, initRequest);
+	} = hooks.useRequest(api.getDataBoard, refVariable.current, false);
 	const {
 		meta = [],
 			data = [],
