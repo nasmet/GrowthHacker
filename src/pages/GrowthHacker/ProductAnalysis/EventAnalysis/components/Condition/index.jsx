@@ -225,6 +225,14 @@ export default function Condition({
 			key: refVariable.current.id++,
 			values,
 			onChange: function(e) {
+				if(!this.values.key){
+					this.refForm.store.setFieldProps('op', {
+						disabled: false,
+					});
+					this.refForm.store.setFieldProps('value', {
+						disabled: false,
+					});
+				}
 				Object.assign(this.values, e);
 				conditionChange(refVariable.current.steps, refVariable.current.values);
 			},
@@ -341,7 +349,8 @@ export default function Condition({
 							
 							return (
 								<div key={key}>
-									<Form										
+									<Form		
+										ref={e=>{v.refForm=e}}								
 										initialValues={values}									
 										onChange={onChange.bind(v)}
 										renderField={({label, component, error}) => (
@@ -360,13 +369,13 @@ export default function Condition({
 														placeholder= '请选择关联变量'
 													/>
 												</Field>
-												<Field name='op'>
+												<Field name='op' disabled={true}>
 													<Select
-														style={{width:'120px'}} 
-														dataSource={config.operators}  
+														style={commonStyle} 
+														dataSource={model.allOperators}  
 													/>
 												</Field>
-												<Field name='value'>
+												<Field name='value' disabled={true}>
 													<Input placeholder= '请输入值' />
 												</Field>
 								              	<Button size='small' style={{marginLeft:'10px',borderRadius:'50%'}} onClick={onDeleteFilter.bind(item,index)}>x</Button>

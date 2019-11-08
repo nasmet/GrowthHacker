@@ -241,7 +241,7 @@ export default function Condition({
 									<Field name='op'>
 										<Select
 											style={{width:'100px'}} 
-											dataSource={config.originRules}  
+											dataSource={model.allOperators}  
 											showSearch
 											notFoundContent={notFoundContent}
 										/>

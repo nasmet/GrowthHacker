@@ -64,6 +64,7 @@ function Aside({
 
 	return (
   		<Nav
+  			style={{width: '240px'}}
     		openMode="single"
     		selectedKeys={[selectedPath]}
     		activeDirection="right"

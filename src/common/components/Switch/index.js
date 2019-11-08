@@ -13,17 +13,14 @@ export default function Switch({
 }) {
 	const [collapse, setCollapse] = useState(false);
 
-	useEffect(() => {
-		onChange && onChange(collapse)
-	}, [collapse])
-
 	return (
 		<div className={styles.wrap}>
     		<Icon
     			className={styles.collapse}
               	type={collapse ? 'arrow-right' : 'arrow-left'}
               	onClick={() => {
-               		setCollapse(pre=>!pre);
+              		onChange(collapse);
+               		setCollapse(pre=>!pre);               		
               	}}
             />
 		</div>

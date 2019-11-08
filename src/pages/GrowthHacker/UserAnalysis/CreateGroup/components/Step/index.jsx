@@ -19,8 +19,6 @@ import moment from 'moment';
 import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
 import {
-	rules,
-	originRules,
 	firstColumn,
 	opMap,
 } from './stepConfig';
@@ -150,12 +148,12 @@ export default function Filter({
 					const flag = formCore.getFieldValue('flag');
 					if (flag=== 'true,event' || flag === 'false, event') {
 						idDataSource = metricData;
-						opDataSource = rules;
+						opDataSource = model.numOperators;
 						visibleValues = true;
 						visibleValue = false;
 					} else {
 						idDataSource = originData;
-						opDataSource = originRules;
+						opDataSource = model.strOperators;
 						visibleValues = false;
 						visibleValue = true;
 					}
@@ -261,7 +259,7 @@ export default function Filter({
 							<Select style={{minWidth:'200px'}} dataSource={metricData} showSearch />
 						</Field>
 						<Field name='op'>
-							<Select style={{minWidth:'120px'}} dataSource={rules} showSearch />
+							<Select style={{minWidth:'120px'}} dataSource={model.numOperators} showSearch />
 						</Field>
 						<Field name='values'>
 							<Input style={{width:'80px'}} htmlType="number" innerAfter={<span>次</span>} />

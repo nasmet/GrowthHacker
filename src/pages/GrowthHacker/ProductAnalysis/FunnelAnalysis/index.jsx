@@ -105,7 +105,6 @@ function FunnelAnalysis({
 		}
 	}, 1000);
 
-
 	const conditionChange = (steps, values) => {
 		refSteps.current.steps = steps;
 		Object.assign(refVariable.current, values);
@@ -151,7 +150,7 @@ function FunnelAnalysis({
 					conditions: filters.map(item => ({
 						key: item.values.key,
 						op: item.values.op,
-						values: [item.values.value],
+						values: item.values.value.split(','),
 					}))
 				},
 			}
