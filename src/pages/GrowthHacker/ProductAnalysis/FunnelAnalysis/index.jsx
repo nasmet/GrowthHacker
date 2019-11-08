@@ -97,8 +97,8 @@ function FunnelAnalysis({
 	const conditionChange = (steps, values) => {
 		refSteps.current.steps = steps;
 		Object.assign(refVariable.current, values);
-		saveRef.current.setButtonStatus(!refSteps.current.status);
 		refSteps.current.status = getStatus(steps);
+		saveRef.current.setButtonStatus(!refSteps.current.status);
 		onRefresh();
 	};
 
@@ -162,7 +162,7 @@ function FunnelAnalysis({
 			<Components.Save ref={saveRef} title={title} {...initSave} onSave={onSave} />
 
 			<IceContainer>
-				<Components.DateFilter filterChange={dateChange} />	
+				<Components.DateFilter filterChange={dateChange} {...initDateFilter} />	
       			<Condition conditionChange={conditionChange} initCondition={initCondition} />
       		</IceContainer>
 

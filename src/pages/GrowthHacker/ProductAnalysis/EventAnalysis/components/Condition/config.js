@@ -23,14 +23,3 @@ export const operators = [{
 	value: 'not like',
 	label: '不包含',
 }];
-
-export const variables = [{
-	value: 'counter',
-	label: '总次数',
-}, {
-	value: 'unique',
-	label: '用户数',
-}, {
-	value: 'average',
-	label: '人均次数',
-}]

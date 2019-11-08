@@ -17,7 +17,6 @@ import {
 import styles from './index.module.scss';
 import {
 	operators,
-	variables,
 } from './config';
 
 const commonStyle = {
@@ -30,6 +29,7 @@ export default function Condition({
 }) {
 	const [loading, setLoading] = useState(false);
 	const [eventData, setEventData] = useState([]);
+	const [dimensionData, setDimensionData] = useState([]);
 	const [steps, setSteps] = useState([]);
 	const refForm = useRef(null);
 	const refVariable= useRef({
@@ -49,7 +49,7 @@ export default function Condition({
 				});
 
 				await api.getDataCenter().then((res) => {
-					setEventData(model.assembleEvent_2(res.event_entities));
+					assembleAllEventData(res.event_entities);
 				});
 			} catch (e) {
 				model.log(e);
@@ -63,6 +63,15 @@ export default function Condition({
 			api.cancelRequest();
 		};
 	}, []);
+	
+	function assembleAllEventData(data){
+		const {
+			dimensions,
+			metrics,
+		} = model.assembleAllEventData_1(data);
+		setDimensionData(dimensions);
+		setEventData(metrics);
+	}
 
 	function assembleGroupData(data){
 		const groups=model.assembleGroupData(data);
@@ -103,7 +112,7 @@ export default function Condition({
 		}else{
 			setSteps(assembleSteps());
 		}
-	}, [eventData]);
+	}, [eventData,dimensionData]);
 
 	useEffect(() => {
 		refVariable.current.steps= steps;
@@ -272,7 +281,7 @@ export default function Condition({
 													<Select
 														onFocus={onFocus.bind(item,formCore)}
 														style={commonStyle} 
-														dataSource={[]}  
+														dataSource={dimensionData}  
 														showSearch
 														placeholder= '请选择关联变量'
 													/>

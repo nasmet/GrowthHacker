@@ -154,6 +154,7 @@ function EventAnalysis({
 	}
 
 	const conditionChange = (steps, values) => {
+		console.log(steps);
 		refSteps.current.steps = steps;
 		Object.assign(refVariable.current, values);
 		refSteps.current.status = getStatus(steps, values);
@@ -177,8 +178,7 @@ function EventAnalysis({
 				filters,
 			} = item
 			const temp = values.event.split(',');
-			return {
-				aggregator: values.aggregator,
+			const obj = {
 				event_id: +temp[1],
 				event_key: temp[0],
 				filter: {
@@ -190,6 +190,14 @@ function EventAnalysis({
 					}))
 				},
 			}
+			if (values.aggregator.indexOf(',') === -1) {
+				obj.aggregator = values.aggregator;
+			} else {
+				const temp_1 = values.aggregator.split(',');
+				obj.aggregator = temp_1[1];
+				obj.field = temp_1[0];
+			}
+			return obj;
 		})
 	}
 

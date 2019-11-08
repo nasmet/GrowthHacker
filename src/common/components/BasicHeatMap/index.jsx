@@ -26,6 +26,7 @@ export default function BasicHeatMap({
 	src,
 }) {
 	const pos = `${x}*${y}`;
+
 	return (
 		data.length !== 0 ?
 		<Chart

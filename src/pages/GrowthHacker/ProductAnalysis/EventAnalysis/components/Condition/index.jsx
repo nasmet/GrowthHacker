@@ -9,6 +9,7 @@ import {
 	Loading,
 	Select,
 	Input,
+	CascaderSelect,
 } from '@alifd/next';
 import {
 	Form,
@@ -17,7 +18,6 @@ import {
 import styles from './index.module.scss';
 import {
 	operators,
-	variables,
 } from './config';
 
 const commonStyle = {
@@ -30,6 +30,8 @@ export default function Condition({
 }) {
 	const [loading, setLoading] = useState(false);
 	const [eventData, setEventData] = useState([]);
+	const [dimensionData, setDimensionData] = useState([]);
+	const [variableData, setVariableData] = useState([]);
 	const [steps, setSteps] = useState([]);
 	const refForm = useRef(null);
 	const refVariable= useRef({
@@ -38,7 +40,7 @@ export default function Condition({
 			dimensions: initCondition.dimensions,
 		},
 		id: 0,
-		steps,
+		steps:[],
 	});
 
 	useEffect(() => {
@@ -69,7 +71,10 @@ export default function Condition({
 		const {
 			metrics,
 			dimensions,
+			variables
 		} = model.assembleAllEventData(data);
+		setDimensionData(dimensions);
+		setVariableData(variables);
 		setEventData(metrics);
 		refForm.current.state.store.setFieldProps('dimensions', {
 			dataSource: dimensions,
@@ -89,11 +94,16 @@ export default function Condition({
 		return initCondition.metrics.map(item=>{
 			const {
 				aggregator,
+				field,
 				event_id,
 				event_key,
 				filter,
 			} = item;
-			const step = createStep({event:`${event_key},${event_id}`,aggregator});
+			let temp = aggregator;
+			if(field){
+				temp =`${field},${aggregator}`;  
+			}
+			const step = createStep({event:`${event_key},${event_id}`,aggregator: temp});
 			step.filters = filter.conditions.map(item=>(
 				createFilter({
 					values: {	
@@ -116,7 +126,7 @@ export default function Condition({
 		}else{
 			setSteps(assembleSteps());
 		}
-	}, [eventData]);
+	}, [variableData,dimensionData,eventData]);
 
 	useEffect(() => {
 		refVariable.current.steps = steps;
@@ -125,16 +135,25 @@ export default function Condition({
 	
 	function createStep(values = {
 		event: eventData[0] && eventData[0].value,
-		aggregator: variables[0].value,
+		aggregator: variableData[0] && variableData[0].value,
 	}) {
 		return {
 			key: refVariable.current.id++,
 			values,
 			filters: [],
 			onChange: function(e) {
+				if(e.event!==this.values.event){
+					this.dataSource = null;
+					this.refForm.store.setFieldProps('aggregator', {
+						dataSource: variableData,
+					});
+					this.refForm.store.setFieldValue('aggregator',variableData[0].value);
+					if(this.filters.length!==0){
+						this.filters= [];
+						setSteps(pre=>[...pre]);
+					}				
+				}
 				Object.assign(this.values, e);
-				this.filters= [];
-				setSteps(pre=>[...pre]);
 			},
 			onFocus: function(formCore) {
 				if (!values.event) {
@@ -156,6 +175,31 @@ export default function Condition({
 					formCore.setFieldProps('key', {
 						notFoundContent: notFoundContent(2),
 					});
+				});
+			},
+			onFocus_1: function(formCore) {
+				if(this.dataSource){
+					return;
+				}
+				if (!values.event) {
+					return;
+				}
+				formCore.setFieldProps('aggregator', {
+					notFoundContent: notFoundContent(1),
+				});
+				api.getEventDetails({
+					id: values.event.split(',')[1],
+				}).then((res) => {
+					this.dataSource = model.assembleEventVaribleData_2(res.bind_variables);
+					formCore.setFieldProps('aggregator', {
+						dataSource: this.dataSource,
+						notFoundContent: notFoundContent(3),
+					});
+				}).catch(e=>{
+					formCore.setFieldProps('aggregator', {
+						notFoundContent: notFoundContent(2),
+					});
+					console.error(e);
 				});
 			},
 			onAddFilter: function(e) {
@@ -226,6 +270,10 @@ export default function Condition({
 			return [...pre];
 		})
 	};
+	
+	const displayRender=labelPath=>{
+		return <span>{labelPath.join('')}</span>;
+	};
 
 	const renderStep = () => {
 		return steps.map((item, index) => {
@@ -235,6 +283,7 @@ export default function Condition({
 				onChange,
 				filters,
 				onFocus,
+				onFocus_1,
 				onAddFilter,
 				onDeleteFilter,
 			} = item;
@@ -243,11 +292,14 @@ export default function Condition({
 				<div key={key} style={{marginBottom:'20px',borderBottom:'1px solid #e6e6e6'}}>
 					<Form 
 						initialValues={values}
+						ref={e=>{item.refForm=e}}
 						onChange={onChange.bind(item)}
 						renderField={({label, component, error}) => (
 			           		<span>{component}</span>
 				        )}
 					>
+					{formCore=>(
+						<div>
 						<Field name='event'>
 							<Select
 								style={commonStyle} 
@@ -256,18 +308,31 @@ export default function Condition({
 							/>
 						</Field>
 						<span style={{marginLeft: '10px',marginRight: '10px'}}>的</span>
-						<Field name='aggregator'>
+						{/*<Field name='aggregator'>
 							<Select
 								style={{minWidth:'120px'}} 
 								dataSource={variables}  
 								showSearch
 							/>
-						</Field>
+						</Field>*/}
+
+						<Field name='aggregator' >
+				 			<CascaderSelect 
+				 				style={commonStyle} 
+				 				listStyle={{ width: '150px'}} 
+				 				dataSource={variableData} 				 			
+				 				displayRender={displayRender}
+				 				onFocus={onFocus_1.bind(item,formCore)}
+				 				showSearch
+		 				/>
+				 		</Field> 		
 			            <span style={{marginLeft: '20px'}}>
 			              	<Button size='small' style={{marginRight:'4px',borderRadius:'50%'}} onClick={onAddFilter.bind(item)}>+</Button>
 			              	<span>筛选条件</span>
 			              	<Button size='small' style={{marginLeft:'10px',borderRadius:'50%'}} onClick={onDeleteStep.bind(this,index)}>x</Button>
 		            	</span>
+		            	</div>
+		            )}
 					</Form>
 					<div style={{marginLeft:'20px',marginTop:'10px'}}>
 						{filters.map((v,index)=>{
@@ -293,7 +358,7 @@ export default function Condition({
 													<Select
 														onFocus={onFocus.bind(item,formCore)}
 														style={commonStyle} 
-														dataSource={[]}  
+														dataSource={dimensionData}  
 														showSearch
 														placeholder= '请选择关联变量'
 													/>

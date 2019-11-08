@@ -31,7 +31,7 @@ export default function HeatMap() {
 	const boundary_2 = createBoundary(0, height);
 	const boundary_3 = createBoundary(width, 0);
 	const boundary_4 = createBoundary(width, height);
-	
+		
 	const {
 		parameter,
 		response,

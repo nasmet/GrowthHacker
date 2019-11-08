@@ -12,14 +12,7 @@ export function assembleEvent_1(data) {
 	}));
 }
 
-export function assembleEvent_2(data) {
-	return data.map(item => ({
-		label: item.name,
-		value: `${item.entity_key},${item.id}`,
-	}));
-}
-
-export function assembleAllEventData(data) {
+export function assembleAllEventData_1(data) {
 	const dimensions = [];
 	const metrics = [];
 	data.forEach(item => {
@@ -39,6 +32,63 @@ export function assembleAllEventData(data) {
 	return {
 		dimensions,
 		metrics,
+	};
+}
+
+export function assembleAllEventData(data) {
+	const dimensions = [];
+	const metrics = [];
+	const variables = [{
+		value: 'counter',
+		label: '总次数',
+	}, {
+		value: 'unique',
+		label: '用户数',
+	}, {
+		value: 'average',
+		label: '人均次数',
+	}];
+	data.forEach(item => {
+		if (item.type === 'event') {
+			metrics.push({
+				label: item.name,
+				value: `${item.entity_key},${item.id}`,
+			});
+		} else {
+			dimensions.push({
+				label: item.name,
+				value: item.entity_key,
+			});
+			if (item.variable_type !== 'string') {
+				const obj = {
+					label: item.name,
+					value: item.entity_key,
+					children: [{
+						label: '总和',
+						value: `${item.entity_key},sum`,
+					}, {
+						label: '均值',
+						value: `${item.entity_key},average`,
+					}, {
+						label: '最大值',
+						value: `${item.entity_key},max`,
+					}, {
+						label: '最小值',
+						value: `${item.entity_key},min`,
+					}, {
+						label: '人均值',
+						value: `${item.entity_key},average_1`,
+					}]
+				};
+				variables.push(obj);
+			}
+		}
+	});
+
+	return {
+		dimensions,
+		metrics,
+		variables,
 	};
 }
 
@@ -99,4 +149,43 @@ export function assembleEventVaribleData_1(data) {
 			value: item.entity_key,
 		}
 	})
+}
+
+export function assembleEventVaribleData_2(data) {
+	const temp = [{
+		value: 'counter',
+		label: '总次数',
+	}, {
+		value: 'unique',
+		label: '用户数',
+	}, {
+		value: 'average',
+		label: '人均次数',
+	}];
+	data.forEach(item => {
+		if (item.variable_type !== 'string') {
+			const obj = {
+				label: item.name,
+				value: item.entity_key,
+				children: [{
+					label: '总和',
+					value: `${item.entity_key},sum`,
+				}, {
+					label: '均值',
+					value: `${item.entity_key},average`,
+				}, {
+					label: '最大值',
+					value: `${item.entity_key},max`,
+				}, {
+					label: '最小值',
+					value: `${item.entity_key},min`,
+				}, {
+					label: '人均值',
+					value: `${item.entity_key},average_1`,
+				}]
+			};
+			temp.push(obj);
+		}
+	})
+	return temp;
 }
