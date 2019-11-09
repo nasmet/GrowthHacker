@@ -2,11 +2,13 @@ import React from 'react';
 import {
 	Tab,
 } from '@alifd/next';
-import dataCenterConfig from './dataCenterConfig';
+import {
+	tabs,
+} from './config';
 
 export default function DataCenter() {
 	const renderTab = () => {
-		return dataCenterConfig.map((item) => {
+		return tabs.map((item) => {
 			const {
 				key,
 				tab,

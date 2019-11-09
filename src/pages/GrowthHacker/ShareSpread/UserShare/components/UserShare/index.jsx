@@ -1,5 +1,4 @@
 import React, {
-	useState,
 	useEffect,
 } from 'react';
 import {
@@ -14,34 +13,34 @@ export default function UserShare({
 	type,
 	date,
 }) {
-	const [loading, setLoading] = useState(false);
-	const [tableData, setTableData] = useState([]);
-	const [curPage, setCurPage] = useState(1);
-	const [count, setCount] = useState(0);
+	const {
+		response,
+		loading,
+		updateParameter,
+		parameter,
+	} = hooks.useRequest(api.getUserShare, {
+		tab: type,
+		date,
+		limit: config.LIMIT,
+		offset: 0,
+	}, false);
+
+	const {
+		total = [],
+			data = [],
+	} = response;
+
 
 	useEffect(() => {
-		function getUserShare() {
-			setLoading(true);
-			api.getUserShare({
-				tab: type,
-				date,
-				limit: config.LIMIT,
-				offset: (curPage - 1) * config.LIMIT,
-			}).then((res) => {
-				setCount(res.total);
-				setTableData(res.data);
-			}).catch((e) => {
-				model.log(e);
-			}).finally(() => {
-				setLoading(false);
-			});
-		}
-
-		getUserShare();
-	}, [date, curPage, type]);
+		updateParameter({ ...parameter,
+			date,
+		});
+	}, [date]);
 
 	const pageChange = (e) => {
-		setCurPage(e);
+		updateParameter({ ...parameter,
+			offset: (e - 1) * config.LIMIT,
+		});
 	};
 
 	const renderFiveColumn = (value, index, record) => {
@@ -49,10 +48,10 @@ export default function UserShare({
 	};
 
 	return (
-		<div className={styles.content}>
+		<Components.Wrap>
 			<IceContainer>
 				<Loading visible={loading} inline={false}>
-					<Table dataSource={tableData} hasBorder={false} >
+					<Table dataSource={data} hasBorder={false} >
 						<Table.Column title='用户' dataIndex='wechat_openid' />
 						<Table.Column title='分享次数' dataIndex='share_count' />
 						<Table.Column title='回流量' dataIndex='share_open_count' />
@@ -62,11 +61,10 @@ export default function UserShare({
 				</Loading>
 				<Pagination
 					className={styles.pagination}
-					current={curPage}
-					total={count}
+					total={total}
 					onChange={pageChange}
 				/>
 			</IceContainer>
-		</div>
+		</Components.Wrap>
 	);
 }

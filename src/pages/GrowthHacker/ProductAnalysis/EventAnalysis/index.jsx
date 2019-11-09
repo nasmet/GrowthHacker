@@ -59,9 +59,6 @@ function EventAnalysis({
 	} = response;
 
 	const onOk = (success, fail) => {
-		Object.assign(refVariable.current, {
-			metrics: assembleMetrics(refSteps.current.steps)
-		});
 		api.createBoard(refVariable.current).then((res) => {
 			refVariable.current.chartId = res.id;
 			model.log(`已保存看板${refVariable.current.name}`);

@@ -1,6 +1,6 @@
 const baseUrl = '/growthhacker/projectdata';
 
-export default [{
+export const navs = [{
 	name: '数据看板',
 	path: `${baseUrl}/db`,
 }, {

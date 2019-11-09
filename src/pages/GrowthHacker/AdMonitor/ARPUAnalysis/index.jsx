@@ -4,7 +4,7 @@ import {
 } from '@alifd/next';
 import {
 	tabs,
-} from './arpuConfig';
+} from './config';
 
 export default function ARPUAnalysis() {
 	const renderTab = () => {

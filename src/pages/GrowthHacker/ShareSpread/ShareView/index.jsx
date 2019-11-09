@@ -6,7 +6,6 @@ import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
 import Top from './components/Top';
 import ShareDistribute from './components/ShareDistribute';
-import AreaDistribute from './components/AreaDistribute';
 import Header from '../Header';
 
 export default function ShareView() {

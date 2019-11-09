@@ -57,17 +57,11 @@ function FunnelAnalysis({
 	} = response;
 
 	const onOk = (sucess, fail) => {
-		Object.assign(refVariable.current, {
-			steps: assembleMetrics(refSteps.current.steps)
-		});
 		api.createBoard(refVariable.current).then((res) => {
 			refVariable.current.chartId = res.id;
 			model.log('成功添加到看板');
 			sucess();
 			setTitle(refVariable.current.name);
-			updateParameter({ ...refVariable.current,
-				offset: 0,
-			});
 		}).catch((e) => {
 			model.log(e);
 			fail();

@@ -7,7 +7,6 @@ import React, {
 import {
 	Loading,
 } from '@alifd/next';
-import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
 
 function ShareDistribute({

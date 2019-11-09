@@ -2,7 +2,7 @@ import Event from './components/Event';
 import EventVarible from './components/EventVarible';
 import OriginData from './components/OriginData';
 
-export default [{
+export const tabs = [{
 	key: 'event',
 	tab: '埋点事件',
 	Component: Event,

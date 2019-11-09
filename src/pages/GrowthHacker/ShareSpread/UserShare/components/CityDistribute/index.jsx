@@ -1,5 +1,4 @@
 import React, {
-	useState,
 	useEffect,
 } from 'react';
 import {
@@ -20,37 +19,39 @@ export default function CityDistribute({
 		color: 'event',
 	};
 
-	const [loading, setLoading] = useState(false);
-	const [tableData, setTableData] = useState([]);
-	const [chartData, setChartData] = useState([]);
-	const [curPage, setCurPage] = useState(1);
-	const [count, setCount] = useState(0);
+	const {
+		response,
+		loading,
+		updateParameter,
+		parameter,
+	} = hooks.useRequest(api.getUserShare, {
+		tab: type,
+		date,
+		limit: config.LIMIT,
+		offset: 0,
+	}, false);
+
+	const {
+		total = [],
+			data = [],
+	} = response;
+
 
 	useEffect(() => {
-		function getUserShare() {
-			setLoading(true);
-			api.getUserShare({
-				tab: type,
-				date,
-				limit: config.LIMIT,
-				offset: (curPage - 1) * config.LIMIT,
-			}).then((res) => {
-				setChartData(assembleChartData(res.data));
-				setCount(res.total);
-				setTableData(res.data);
-			}).catch((e) => {
-				model.log(e);
-			}).finally(() => {
-				setLoading(false);
-			});
-		}
+		updateParameter({ ...parameter,
+			date,
+		});
+	}, [date]);
 
-		getUserShare();
-	}, [date, curPage, type]);
+	const pageChange = (e) => {
+		updateParameter({ ...parameter,
+			offset: (e - 1) * config.LIMIT,
+		});
+	};
 
-	function assembleChartData(arg) {
+	function assembleChartData() {
 		const temp = [];
-		arg.map((item) => {
+		data.map((item) => {
 			const {
 				city,
 				new_count,
@@ -88,10 +89,6 @@ export default function CityDistribute({
 		return temp;
 	}
 
-	const pageChange = (e) => {
-		setCurPage(e);
-	};
-
 	const renderFiveColumn = (value, index, record) => {
 		return `${utils.transformPercent(record.share_reflux_ratio)}`;
 	};
@@ -100,8 +97,8 @@ export default function CityDistribute({
 		<Components.Wrap>
 			<Loading visible={loading} inline={false}>					
 				<IceContainer>
-					<Components.BasicColumn data={chartData} {...chartStyle} forceFit />
-					<Table dataSource={tableData} hasBorder={false}>
+					<Components.BasicColumn data={assembleChartData()} {...chartStyle} forceFit />
+					<Table dataSource={data} hasBorder={false}>
 						<Table.Column title='城市' dataIndex='city' />
 						<Table.Column title='分享人数' dataIndex='share_user_count' />
 						<Table.Column title='分享次数' dataIndex='share_count' />
@@ -111,8 +108,7 @@ export default function CityDistribute({
 					</Table>
 					<Pagination
 						className={styles.pagination}
-						current={curPage}
-						total={count}
+						total={total}
 						onChange={pageChange}
 					/>
 				</IceContainer>

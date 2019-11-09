@@ -9,7 +9,9 @@ import {
 	Link,
 } from 'react-router-dom';
 import styles from './index.module.scss';
-import projectDataConfig from './projectDataConfig';
+import {
+	navs,
+} from './config';
 
 const word = (name) => {
 	return (
@@ -57,7 +59,7 @@ function ProjectData({
         		type='secondary'
         		header={header}
       		>
-        		{projectDataConfig.map(traversing)}
+        		{navs.map(traversing)}
       		</Nav>
       		{children}
     	</Components.Wrap>
