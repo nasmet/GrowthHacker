@@ -11,7 +11,7 @@ import {
 	withRouter,
 } from 'react-router-dom';
 import styles from './index.module.scss';
-import Step from './components/Step';
+import Condition from './components/Condition';
 
 function CreateGroup({
 	history,
@@ -30,13 +30,31 @@ function CreateGroup({
 		};
 	}, []);
 
-	const filterChange = (step, expression) => {
-		const flag = expression ? false : true;
-		if (flag !== disabled) {
-			setDisabled(flag);
+	function getStatus() {
+		const steps = refVariable.current.steps;
+		for (let i = 0, len = steps.length; i < len; i++) {
+			for (let j = 0, length = steps[i].step.length; j < length; j++) {
+				const values = steps[i].step[j].values;
+				if(values.flag === 'true,event' || values.flag === 'false,event'){
+					if(values.values===''){
+						return false;
+					}
+				}else{
+					if(values.value===''){
+						return false;
+					}
+				}
+			}
+		}
+		return true;
+	}
+
+	const conditionChange = (step, expression) => {
+		if (expression) {
+			refVariable.current.expression = expression;
 		}
 		refVariable.current.steps = step;
-		refVariable.current.expression = expression;
+		setDisabled(!getStatus());
 	};
 
 	const onSave = () => {;
@@ -97,7 +115,7 @@ function CreateGroup({
 	return (
 		<div className={styles.wrap}>
       		<div className={styles.leftContent}>
-      			<Step filterChange={filterChange} />
+      			<Condition conditionChange={conditionChange} />
       		</div>
       		<div className={styles.rightContent}>
       			<div className={styles.btnWrap}>

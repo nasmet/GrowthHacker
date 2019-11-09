@@ -21,18 +21,19 @@ import styles from './index.module.scss';
 import {
 	firstColumn,
 	opMap,
-} from './stepConfig';
+} from './config';
 
-export default function Filter({
-	filterChange,
+export default function Condition({
+	conditionChange,
 }) {
 	const [loading, setLoading] = useState(false);
 	const [metricData, setMetricData] = useState([]);
 	const [originData, setOriginData] = useState([]);
 	const [combination, setCombination] = useState('');
 	const [steps, setSteps] = useState([]);
-	const refVariable= useRef({
+	const refVariable = useRef({
 		id: 0,
+		steps: [],
 	});
 
 	useEffect(() => {
@@ -102,7 +103,8 @@ export default function Filter({
 		});
 		const temp = onChangeCombination();
 		setCombination(temp);
-		filterChange(steps, temp);
+		refVariable.current.steps = steps;
+		conditionChange(steps, temp);
 	}, [steps]);
 
 	function createData() {
@@ -128,6 +130,7 @@ export default function Filter({
 			},
 			onChange: function(e) {
 				this.values = e;
+				conditionChange(refVariable.current.steps);
 			},
 			onFocus: function(formCore) {
 				if (!formCore.getFieldValue('id')) {
@@ -146,7 +149,7 @@ export default function Filter({
 				handler: function(formCore) {
 					let visibleValues, visibleValue, idDataSource, opDataSource;
 					const flag = formCore.getFieldValue('flag');
-					if (flag=== 'true,event' || flag === 'false, event') {
+					if (flag=== 'true,event' || flag === 'false,event') {
 						idDataSource = metricData;
 						opDataSource = model.numOperators;
 						visibleValues = true;
@@ -171,11 +174,11 @@ export default function Filter({
 						visible: visibleValue,
 					});
 				},
-			},{
+			}, {
 				field: 'id',
-				handler: function(formCore){
+				handler: function(formCore) {
 					const flag = formCore.getFieldValue('flag');
-					if (flag=== 'true,event' || flag === 'false, event') {
+					if (flag === 'true,event' || flag === 'false, event') {
 						return;
 					}
 					formCore.setFieldValue('value', '');
@@ -215,23 +218,23 @@ export default function Filter({
 	}
 
 	const notFoundContent = <span>加载中...</span>;
-		
-	const onDelete=(index,index_1)=>{
-		if(steps.length===1 && steps[0].step.length===1){
+
+	const onDelete = (index, index_1) => {
+		if (steps.length === 1 && steps[0].step.length === 1) {
 			model.log('第一条规则不能删除！');
 			return;
 		}
-		setSteps(pre=>{
-			if(pre[index].step.length===1){
-				pre.splice(index,1);
-			}else{
-				pre[index].step.splice(index_1,1);
+		setSteps(pre => {
+			if (pre[index].step.length === 1) {
+				pre.splice(index, 1);
+			} else {
+				pre[index].step.splice(index_1, 1);
 			}
-			return[...pre];
+			return [...pre];
 		});
 	};
 
-	const renderForm = (item,index,index_1,alias,length) => {
+	const renderForm = (item, index, index_1, alias, length) => {
 		const {
 			onChange,
 			effects,
@@ -240,7 +243,7 @@ export default function Filter({
 			onFocus,
 			key,
 		} = item;
-		item.alias=length===1?alias:`${alias}${index_1+1}`;
+		item.alias = length === 1 ? alias : `${alias}${index_1+1}`;
 		return (
 			<Form
 				key={key}

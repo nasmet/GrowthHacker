@@ -20,6 +20,7 @@ function EventAnalysis({
 	location,
 }) {
 	const {
+		chartId,
 		initSave,
 		initTitle,
 		initCondition,
@@ -32,6 +33,7 @@ function EventAnalysis({
 	const saveRef = useRef(null);
 	const refDialog = useRef(null);
 	const refVariable = useRef(Object.assign({
+		chartId,
 		type: 'dashboard',
 		name: initTitle,
 		date: initDate,
@@ -42,7 +44,7 @@ function EventAnalysis({
 	const refSteps = useRef({
 		steps: [],
 		status: false,
-	})
+	});
 
 	const {
 		parameter,
@@ -61,11 +63,9 @@ function EventAnalysis({
 			metrics: assembleMetrics(refSteps.current.steps)
 		});
 		api.createBoard(refVariable.current).then((res) => {
+			refVariable.current.chartId = res.id;
 			model.log(`已保存看板${refVariable.current.name}`);
 			setTitle(refVariable.current.name);
-			updateParameter({ ...refVariable.current,
-				offset: 0,
-			});
 			success();
 		}).catch((e) => {
 			model.log(e);
@@ -77,8 +77,20 @@ function EventAnalysis({
 		refVariable.current.name = e;
 	};
 
+	function modifyBoard() {
+		api.modifyBoard(refVariable.current).then((res) => {
+			model.log(`已保存看板${refVariable.current.name}`);
+		}).catch((e) => {
+			model.log(e);
+		})
+	}
+
 	const onSave = () => {
-		refDialog.current.onShow();
+		if (!refVariable.current.chartId) {
+			refDialog.current.onShow();
+			return;
+		}
+		modifyBoard();
 	};
 
 	function assemblingChartStyle(meta) {

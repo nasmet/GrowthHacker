@@ -139,8 +139,9 @@ export default function Condition({
 			values,
 			filters: [],
 			onChange: function(e) {
+				const event = this.values.event;
 				Object.assign(this.values, e);
-				if(e.event!==this.values.event){
+				if(e.event!==event){
 					this.dataSource = null;
 					this.refForm.store.setFieldProps('aggregator', {
 						dataSource: variableData,

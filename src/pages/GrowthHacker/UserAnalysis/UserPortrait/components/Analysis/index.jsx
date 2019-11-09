@@ -5,26 +5,24 @@ import {
 	Tab,
 } from '@alifd/next';
 import IceContainer from '@icedesign/container';
-import {
-	tabs,
-} from './modelAnalysisConfig';
+import DataDisplay from './components/DataDisplay';
 
-export default function ModelAnalysis() {
-	const refTab = useRef({
-		curKey: 'phone_brand',
-		date: 'day:0',
-	});
+export default function AreaAnalysis({
+	tabs,
+	initValue,
+	request,
+}) {
+	const refTab = useRef(initValue);
 
 	const renderTab = (e) => {
 		return tabs.map((item) => {
 			const {
 				tab,
 				key,
-				Component,
 			} = item;
 			return (
-				<Tab.Item key={key} title={tab}>
-					<Component ref={e=>{refTab.current[key] = e}} type={key} request={api.getPortraitModel} date={refTab.current.date} />
+				<Tab.Item key={key} title={tab} >
+					<DataDisplay ref={e=>{refTab.current[key] = e}} type={key} request={request} date={refTab.current.date} />
 				</Tab.Item>
 			);
 		});
@@ -43,13 +41,13 @@ export default function ModelAnalysis() {
 			<Components.DateFilter filterChange={filterChange} />
 		    <IceContainer>
 			  	<Tab 
-	  				defaultActiveKey={refTab.current.curKey} 
+	  				defaultActiveKey={refTab.current.curKey}
 	  				size="small"
-	  				onChange={onChange}  
+	  				onChange={onChange} 
 		  		>
 		  			{renderTab()}
 			    </Tab>
 		    </IceContainer>
-     	</Components.Wrap>
+	    </Components.Wrap>
 	);
 }

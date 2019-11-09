@@ -37,11 +37,11 @@ function UserScrutiny({
 			data = [],
 	} = response;
 
-	const jumpUserDetails = (e) => {
+	const jump = record => {
 		history.push({
 			pathname: '/growthhacker/projectdata/ua/userscrutinydetails',
 			state: {
-				id: e,
+				record,
 			}
 		});
 	};
@@ -49,7 +49,7 @@ function UserScrutiny({
 	const renderFirstCell = (value, index, record) => {
 		const val = record[1] || '';
 		return (
-			<span className={styles.user} onClick={jumpUserDetails.bind(this,val)}>{val}</span>
+			<span className={styles.user} onClick={jump.bind(this, record)}>{val}</span>
 		);
 	};
 

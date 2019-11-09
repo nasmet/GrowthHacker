@@ -1,9 +1,9 @@
 import React, {
 	useState,
-	useEffect,
 } from 'react';
 import {
 	Tab,
+	Loading,
 } from '@alifd/next';
 import {
 	withRouter,
@@ -13,38 +13,31 @@ import styles from './index.module.scss';
 import UserDetails from './components/UserDetails';
 import {
 	tabs,
-} from './userScrutinyDetailsConfig';
+} from './config';
 
 function UserScrutinyDetails({
 	location,
 }) {
-	const id = location.state.id;
+	const record = location.state.record;
+	const openId = record[1];
+	const [type, setType] = useState('all');
 
-	const [eventInfo, setEventInfo] = useState([]);
-	const [chartData, setChartData] = useState([]);
-	const [loading, setLoading] = useState(false);
-	const [chartStyle, setChartStyle] = useState({});
+	const {
+		response,
+		loading,
+	} = hooks.useRequest(api.getUserScrutinyEventsBar, {
+		openId,
+		trend: {
+			tab: 'all',
+		},
+	});
+	const {
+		bars = [],
+	} = response;
 
-	function getUserScrutinyEventsBar() {
-		setLoading(true);
-		api.getUserScrutinyEventsBar({
-			openId: id,
-			trend: {
-				tab: 'all',
-			},
-		}).then((res) => {
-			setChartData(res.bars);
-			creatChartStyle();
-		}).catch((e) => {
-			model.log(e);
-		}).finally(() => {
-			setLoading(false);
-		});
-	}
-
-	function creatChartStyle(y = 'all') {
+	function setChartStyle(type = 'all') {
 		let name = null;
-		switch (y) {
+		switch (type) {
 			case 'all':
 				name = '全部事件'
 				break;
@@ -56,28 +49,20 @@ function UserScrutinyDetails({
 				break;
 		}
 
-		setChartStyle({
+		return {
 			x: 'date',
-			y,
+			y: type,
 			cols: {
 				'date': {
 					type: 'timeCat',
 				},
-				[y]: {
+				[type]: {
 					alias: name,
 				}
 			},
 			height: 200,
-		});
+		}
 	}
-
-	useEffect(() => {
-		getUserScrutinyEventsBar();
-
-		return () => {
-			api.cancelRequest();
-		};
-	}, []);
 
 	const renderTab = () => {
 		return tabs.map((item) => {
@@ -90,7 +75,7 @@ function UserScrutinyDetails({
 				<Tab.Item key={key} title={tab} >
           			<Components.Wrap>
             			<Component 
-            				openId={id} 
+            				openId={openId} 
             				tab={key} 
             			/>
           			</Components.Wrap>
@@ -100,22 +85,23 @@ function UserScrutinyDetails({
 	};
 
 	const onTabChange = (e) => {
-		creatChartStyle(e);
+		setType(e);
 	};
 
 	return (
 		<div className={styles.wrap}>
-      		<div className={styles.leftContent}>
-  				<Components.Title title='用户细查详情' />
+      		<div className={styles.leftContent}>  				
       			<IceContainer>
-      				<Components.BasicColumn data={chartData} {...chartStyle} forceFit />
+      				<Loading visible={loading} inline={false}>
+      					<Components.BasicColumn data={bars} {...setChartStyle(type)} forceFit />
+      				</Loading>
 				</IceContainer>
       			<Tab defaultActiveKey="all" onChange={onTabChange}>
 		      		{renderTab()}
 		      	</Tab>
       		</div>
       		<div className={styles.rightContent}>
-      			<UserDetails openId={id} />
+      			<UserDetails record={record} />
       		</div>
     	</div>
 	);

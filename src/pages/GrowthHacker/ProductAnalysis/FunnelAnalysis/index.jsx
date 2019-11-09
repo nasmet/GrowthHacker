@@ -18,6 +18,7 @@ function FunnelAnalysis({
 	location,
 }) {
 	const {
+		chartId,
 		initSave,
 		initTitle,
 		initCondition,
@@ -30,6 +31,7 @@ function FunnelAnalysis({
 	const saveRef = useRef(null);
 	const refDialog = useRef(null);
 	const refVariable = useRef(Object.assign({
+		chartId,
 		type: 'funnel',
 		name: initTitle,
 		date: initDate,
@@ -47,7 +49,7 @@ function FunnelAnalysis({
 		response,
 		loading,
 		updateParameter,
-	} = hooks.useRequest(api.getDataBoard, refVariable.current,false);
+	} = hooks.useRequest(api.getDataBoard, refVariable.current, false);
 	const {
 		meta = [],
 			data = [],
@@ -59,6 +61,7 @@ function FunnelAnalysis({
 			steps: assembleMetrics(refSteps.current.steps)
 		});
 		api.createBoard(refVariable.current).then((res) => {
+			refVariable.current.chartId = res.id;
 			model.log('成功添加到看板');
 			sucess();
 			setTitle(refVariable.current.name);
@@ -116,8 +119,20 @@ function FunnelAnalysis({
 		refVariable.current.name = e;
 	};
 
+	function modifyBoard() {
+		api.modifyBoard(refVariable.current).then((res) => {
+			model.log(`已保存看板${refVariable.current.name}`);
+		}).catch((e) => {
+			model.log(e);
+		})
+	}
+
 	const onSave = () => {
-		refDialog.current.onShow();
+		if (!refVariable.current.chartId) {
+			refDialog.current.onShow();
+			return;
+		}
+		modifyBoard();
 	};
 
 	const dateChange = (e) => {

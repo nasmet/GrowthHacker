@@ -1,26 +1,10 @@
-.info{
-	flex: 1;
+.wrap{
+	padding: 10px;
 	background: #fff;
-}
-.first{
-	height: 60px;
-	border-bottom: 1px solid #e6e6e6;
-	padding-left: 10px;
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-}
-.city{
-	margin-bottom: 4px;
 }
 .name{
 	width: 80px;
 }
 .value{
 	font-weight: bold;
-}
-.second{
-	padding: 10px;
-	display: flex;
-	flex-direction: column;
 }

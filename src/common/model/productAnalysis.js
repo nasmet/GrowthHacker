@@ -2,6 +2,7 @@ export function initAnalysisData(type, location) {
 	let initSave = {};
 	let initTitle;
 	let initCondition;
+	let chartId = '';
 	switch (type) {
 		case 1:
 			initTitle = '新建事件分析';
@@ -33,6 +34,7 @@ export function initAnalysisData(type, location) {
 
 	if (location.state && location.state.boardInfo) {
 		const {
+			id,
 			name,
 			desc,
 			date,
@@ -44,7 +46,7 @@ export function initAnalysisData(type, location) {
 			init_event,
 			retention_event,
 		} = location.state.boardInfo;
-
+		chartId = id;
 		initTitle = name;
 		initSave.disable = false;
 		initDate = date || initDate;
@@ -77,6 +79,7 @@ export function initAnalysisData(type, location) {
 		initOrders = orders || initOrders;
 	}
 	return {
+		chartId,
 		initSave,
 		initTitle,
 		initCondition,
