@@ -42,10 +42,7 @@ export function createProject(data) {
 }
 
 export function deleteProject(data) {
-	const {
-		id,
-	} = data;
-	return del(`/projects/${id}`);
+	return del(`/projects/${data.id}`);
 }
 
 export function getDataCenter(data) {
@@ -61,7 +58,7 @@ export function createOriginData(data) {
 }
 
 export function deleteOriginData(data) {
-	return del(`/metadatas/${data.id}`, data);
+	return del(`/metadatas/${data.id}`);
 }
 
 export function getOriginDataValues(data) {
@@ -89,10 +86,7 @@ export function deleteOriginDataValues(data) {
 }
 
 export function deleteEvent(data) {
-	const {
-		id,
-	} = data;
-	return del(`/event_entities/${id}`, data);
+	return del(`/event_entities/${data.id}`);
 }
 
 export function createEvent(data) {
@@ -136,10 +130,7 @@ export function modifyBoard(data) {
 }
 
 export function deleteBoard(data) {
-	const {
-		id,
-	} = data;
-	return del(`/projects/${sessionStorage.getItem(config.PROJECTID)}/charts/${id}`);
+	return del(`/projects/${sessionStorage.getItem(config.PROJECTID)}/charts/${data.id}`);
 }
 
 export function getDataBoard(data) {
@@ -163,10 +154,7 @@ export function getUserScrutiny(data) {
 }
 
 export function getUserScrutinyDetails(data) {
-	const {
-		openId,
-	} = data;
-	return get(`/projects/${sessionStorage.getItem(config.PROJECTID)}/insights/segmentations/latest/users/${openId}`);
+	return get(`/projects/${sessionStorage.getItem(config.PROJECTID)}/insights/segmentations/latest/users/${data.openId}`);
 }
 
 export function getUserScrutinyEvents(data) {
@@ -194,10 +182,7 @@ export function getUserGroups() {
 }
 
 export function deleteUserGroup(data) {
-	const {
-		id,
-	} = data;
-	return del(`/projects/${sessionStorage.getItem(config.PROJECTID)}/segmentations/${id}`);
+	return del(`/projects/${sessionStorage.getItem(config.PROJECTID)}/segmentations/${data.id}`);
 }
 
 export function getUserGroupDetails(data) {

@@ -128,99 +128,13 @@ function RuleDetails({
 			}
 			return steps;
 		}
-
-		// function assembleSteps() {
-		// 	const steps = [];
-		// 	let step = [];
-		// 	const opChars = [];
-		// 	const valueChars = [];
-		// 	const arr = expr.split(' ');
-		// 	let transformConditions = [];
-		// 	try {
-		// 		transformConditions = JSON.parse(conditions);
-		// 	} catch (e) {
-		// 		console.error(e);
-		// 	}
-
-		// 	function findCondition(alias) {
-		// 		for (let item of transformConditions) {
-		// 			if (item.alias === alias) {
-		// 				return item;
-		// 			}
-		// 		}
-		// 		return null;
-		// 	}
-
-		// 	function createStep(alias) {
-		// 		const item = findCondition(alias);
-		// 		const values = { ...item,
-		// 			op: '=',
-		// 		};
-		// 		delete values['alias'];
-		// 		let idData = [];
-		// 		if (values.type === 'label') {
-		// 			idData = tagData;
-		// 		} else {
-		// 			idData = groupData;
-		// 		}
-		// 		step.push({
-		// 			values,
-		// 			alias,
-		// 			idData,
-		// 		});
-		// 	}
-
-		// 	function addStep(opChar) {
-		// 		steps.push({
-		// 			op: opChar && opChar.toUpperCase(),
-		// 			step,
-		// 		});
-		// 		step = [];
-		// 	}
-
-		// 	arr.forEach(item => {
-		// 		if (item === 'and' || item === 'or' || item.includes('(') || item.includes(')')) {
-		// 			opChars.push(item);
-		// 		} else {
-		// 			valueChars.push(item);
-		// 		}
-		// 	});
-
-		// 	while (opChars.length > 0) {
-		// 		const opChar = opChars.shift();
-		// 		if (opChar === 'and' || opChar === 'or') {
-		// 			const valueChar = valueChars.shift();
-		// 			createStep(valueChar)
-		// 			addStep(opChar);
-		// 			step = [];
-		// 		} else if (opChar.includes('(')) {
-		// 			createStep(opChar.split('(')[1]);
-		// 			while (opChars.length > 0) {
-		// 				const opChar = opChars.shift();
-		// 				if (opChar.includes(')')) {
-		// 					createStep(opChar.split(')')[0]);
-		// 					addStep(opChars.shift());
-		// 					step = [];
-		// 					break;
-		// 				}
-		// 			}
-		// 		}
-		// 	}
-
-		// 	if (valueChars.length > 0) {
-		// 		createStep(valueChars[0]);
-		// 		addStep('and');
-		// 	}
-
-		// 	return steps;
-		// }
-
+		
 		if (groupData.length === 0) {
 			return;
 		}
 
 		setSteps(assembleSteps());
-	}, [tagData, groupData, conditions, expr]);
+	}, [tagData, groupData]);
 
 	const renderForm = (item) => {
 		const {

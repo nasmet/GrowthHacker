@@ -26,7 +26,7 @@ export default function UserShare({
 	}, false);
 
 	const {
-		total = [],
+		total = 0,
 			data = [],
 	} = response;
 

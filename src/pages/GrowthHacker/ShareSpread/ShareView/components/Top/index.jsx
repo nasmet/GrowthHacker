@@ -1,6 +1,4 @@
 import React, {
-	useState,
-	useEffect,
 	forwardRef,
 	useImperativeHandle,
 } from 'react';
@@ -15,37 +13,28 @@ function Top({
 	date,
 	name,
 }, ref) {
-	const [loading, setLoading] = useState(false);
-	const [tableData, setTableData] = useState([]);
-
 	useImperativeHandle(ref, () => ({
-		update: (e) => {
-			getTop(e);
+		update: date => {
+			updateParameter({ ...parameter,
+				date,
+			});
 		},
 	}));
 
-	function getTop(date) {
-		setLoading(true);
-		request({
-			date,
-		}).then((res) => {
-			setTableData(res.users);
-		}).catch((e) => {
-			model.log(e);
-		}).finally(() => {
-			setLoading(false);
-		});
-	}
+	const {
+		response,
+		loading,
+		updateParameter,
+		parameter,
+	} = hooks.useRequest(request, {
+		date,
+	});
 
-	useEffect(() => {
-		getTop(date);
+	const {
+		users = [],
+	} = response;
 
-		return () => {
-			api.cancelRequest();
-		}
-	}, []);
-
-	const renderSecondColumn = (value, index, record)=> {
+	const renderSecondColumn = (value, index, record) => {
 		return <span className={styles.openId}>{record.wechat_openid}</span>
 	};
 
@@ -55,7 +44,7 @@ function Top({
 			<div className={styles.userShareItemChart}>
 				<Table 
 					loading={loading} 
-					dataSource={tableData} 
+					dataSource={users} 
 					hasBorder={false}
 					maxBodyHeight={260}
 					fixedHeader

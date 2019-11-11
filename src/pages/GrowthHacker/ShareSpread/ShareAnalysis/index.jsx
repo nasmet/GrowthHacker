@@ -1,6 +1,5 @@
 import React, {
 	useState,
-	useEffect,
 } from 'react';
 import {
 	Input,
@@ -11,51 +10,42 @@ import {
 import IceContainer from '@icedesign/container';
 
 export default function ShareAnalysis() {
-	const [loading, setLoading] = useState(false);
-	const [tableData, setTableData] = useState([]);
-	const [date, setDate] = useState('day:0');
-	const [search, setSearch] = useState('');
 	const [emptyContent, setEmptyContent] = useState(1);
 
-	useEffect(() => {
-		function getShareAnalysis() {
-			setLoading(true);
-			api.getShareAnalysis({
-				date,
-				name: search,
-			}).then((res) => {
-				setEmptyContent(search ? 0 : 1);
-				setTableData(res.data);
-			}).catch((e) => {
-				model.log(e);
-			}).finally(() => {
-				setLoading(false);
-			});
-		}
+	const {
+		response,
+		loading,
+		updateParameter,
+		parameter,
+	} = hooks.useRequest(api.getShareAnalysis, {
+		date: 'day:0',
+		name: '',
+	});
+	const {
+		data = [],
+	} = response;
 
-		getShareAnalysis();
-
-		return () => {
-			api.cancelRequest();
-		};
-	}, [date, search]);
-
-	const filterChange = (e) => {
-		setDate(e);
+	const dateChange = date => {
+		updateParameter({ ...parameter,
+			date,
+		});
 	};
 
 	const renderFiveColumn = (value, index, record) => {
 		return `${utils.transformPercent(record.share_reflux_ratio)}`;
 	};
 
-	const onInputChange = (e) => {
-		setSearch(e);
+	const onInputChange = e => {
+		updateParameter({ ...parameter,
+			name: e,
+		});
+		setEmptyContent(e ? 0 : 1);
 	};
 
 	return (
 		<Components.Wrap>
 			<Components.Title title='分享触发分析' />
-			<Components.DateFilter filterChange={filterChange} />
+			<Components.DateFilter filterChange={dateChange} />
 			<p>
 				<Input 
 					hasClear 
@@ -67,7 +57,7 @@ export default function ShareAnalysis() {
 			<IceContainer>
 				<Loading visible={loading} inline={false}>
 					<Table 
-						dataSource={tableData} 
+						dataSource={data} 
 						hasBorder={false}
 						emptyContent={<span>{emptyContent?'暂无数据':'查询结果为空'}</span>}
 					>

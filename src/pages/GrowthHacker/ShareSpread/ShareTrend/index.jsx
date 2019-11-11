@@ -1,6 +1,4 @@
 import React, {
-	useState,
-	useEffect,
 	useRef,
 } from 'react';
 import {
@@ -13,24 +11,16 @@ import styles from './index.module.scss';
 import Header from '../Header';
 
 export default function ShareTrend() {
-	const refVarible = useRef({
-		date: 'day:0',
-		curPage: 1,
-	});
 	const headRef = useRef(null);
-	const [loading, setLoading] = useState(false);
-	const [tableData, setTableData] = useState([]);
-	const [count, setCount] = useState(0);
-	const [chartData, setChartData] = useState([]);
 	const chartStyle = {
 		x: 'time',
 		y: 'count',
 		color: 'event',
 	};
 
-	function assembleChartData(arg) {
+	function assembleChartData() {
 		const temp = [];
-		arg.map((item) => {
+		share_overview.forEach((item) => {
 			const {
 				new_count,
 				share_count,
@@ -69,44 +59,32 @@ export default function ShareTrend() {
 		return temp;
 	}
 
-	function getShareTrend() {
-		setLoading(true);
-		api.getShareTrend({
-			date: refVarible.current.date,
-			limit: config.LIMIT,
-			offset: (refVarible.current.curPage - 1) * config.LIMIT,
-		}).then((res) => {
-			const {
-				share_overview,
-				total,
-			} = res;
-			setTableData(share_overview);
-			setCount(total);
-			setChartData(assembleChartData(share_overview));
-		}).catch((e) => {
-			model.log(e);
-		}).finally(() => {
-			setLoading(false);
-		});
-	}
+	const {
+		response,
+		loading,
+		updateParameter,
+		parameter,
+	} = hooks.useRequest(api.getShareAnalysis, {
+		date: 'day:0',
+		limit: config.LIMIT,
+		offset: 0,
+	});
+	const {
+		share_overview = [],
+			total = 0,
+	} = response;
 
-	useEffect(() => {
-
-		getShareTrend();
-
-		return () => {
-			api.cancelRequest();
-		};
-	}, []);
-	const filterChange = (e) => {
-		refVarible.current.date = e;
-		getShareTrend();
-		headRef.current.update(e);
+	const dateChange = date => {
+		updateParameter({ ...parameter,
+			date,
+		})
+		headRef.current.update(date);
 	};
 
-	const pageChange = (e) => {
-		refVarible.current.curPage = e;
-		getShareTrend();
+	const pageChange = e => {
+		updateParameter({ ...parameter,
+			offset: (e - 1) * config.LIMIT,
+		})
 	};
 
 	const renderFirstColumn = (value, index, record) => {
@@ -131,13 +109,13 @@ export default function ShareTrend() {
 	return (
 		<Components.Wrap>
 			<Components.Title title='分享趋势' />
-			<Components.DateFilter filterChange={filterChange} />
+			<Components.DateFilter filterChange={dateChange} />
 			<IceContainer>
-				<Header date={refVarible.current.date} ref={headRef} />
+				<Header ref={headRef} />
 				<Loading visible={loading} inline={false}>
-					<Components.BasicColumn data={chartData} {...chartStyle} forceFit />
+					<Components.BasicColumn data={assembleChartData()} {...chartStyle} forceFit />
 					<Table 
-						dataSource={tableData} 
+						dataSource={share_overview} 
 						hasBorder={false}
 					>
 						<Table.Column title='日期' cell={renderFirstColumn} />
@@ -150,7 +128,7 @@ export default function ShareTrend() {
 				</Loading>
 				<Pagination
 					className={styles.pagination}
-					total={count}
+					total={total}
 					onChange={pageChange}
 				/>
 			</IceContainer>

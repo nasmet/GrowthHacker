@@ -1,6 +1,4 @@
 import React, {
-	useState,
-	useEffect,
 	forwardRef,
 	useImperativeHandle,
 } from 'react';
@@ -10,52 +8,31 @@ import {
 import styles from './index.module.scss';
 
 function Header({
-	date,
+	date = 'day:0',
 }, ref) {
-	const [loading, setLoading] = useState(false);
-	const [userCount, setUserCount] = useState(0);
-	const [count, setCount] = useState(0);
-	const [newCount, setNewCount] = useState(0);
-	const [openCount, setOpenCount] = useState(0);
-	const [rate, setRate] = useState(0);
-
 	useImperativeHandle(ref, () => ({
-		update: (e) => {
-			getShareHeader(e);
+		update: date => {
+			updateParameter({ ...parameter,
+				date,
+			});
 		},
 	}));
 
-	function getShareHeader(date) {
-		setLoading(true);
-		api.getShareHeader({
-			date,
-		}).then((res) => {
-			const {
-				new_count,
-				share_count,
-				share_open_count,
-				share_reflux_ratio,
-				share_user_count,
-			} = res;
-			setNewCount(new_count);
-			setCount(share_count);
-			setOpenCount(share_open_count);
-			setRate(utils.transformPercent(share_reflux_ratio));
-			setUserCount(share_user_count);
-		}).catch((e) => {
-			model.log(e);
-		}).finally(() => {
-			setLoading(false);
-		});
-	}
-
-	useEffect(() => {
-		getShareHeader(date);
-
-		return () => {
-			api.cancelRequest();
-		};
-	}, []);
+	const {
+		response,
+		loading,
+		updateParameter,
+		parameter,
+	} = hooks.useRequest(api.getShareHeader, {
+		date,
+	});
+	const {
+		new_count = 0,
+			share_count = 0,
+			share_open_count = 0,
+			share_reflux_ratio = 0,
+			share_user_count = 0,
+	} = response;
 
 	const renderItem = (name, value) => {
 		return (
@@ -69,11 +46,11 @@ function Header({
 	return (
 		<Loading visible={loading} inline={false}>
 			<div className={styles.list}>
-				{renderItem('分享人数',userCount)}
-				{renderItem('分享次数',count)}
-				{renderItem('回流量',openCount)}
-				{renderItem('分享回流比',rate)}
-				{renderItem('分享新增',newCount)}
+				{renderItem('分享人数',share_user_count)}
+				{renderItem('分享次数',share_count)}
+				{renderItem('回流量',share_open_count)}
+				{renderItem('分享回流比',share_reflux_ratio)}
+				{renderItem('分享新增',new_count)}
 			</div>
 		</Loading>
 	);

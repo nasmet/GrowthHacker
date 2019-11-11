@@ -32,7 +32,7 @@ export default function CityDistribute({
 	}, false);
 
 	const {
-		total = [],
+		total = 0,
 			data = [],
 	} = response;
 

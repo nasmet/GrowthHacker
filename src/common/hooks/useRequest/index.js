@@ -24,12 +24,13 @@ export default function useRequest(request, param = {}, init = true) {
 		}).finally(() => {
 			setLoading(false);
 		})
+	}, [parameter]);
 
+	useEffect(() => {
 		return () => {
 			api.cancelRequest();
 		};
-	}, [parameter]);
-
+	}, []);
 
 	function updateParameter(param) {
 		setParameter(param);

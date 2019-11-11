@@ -26,14 +26,14 @@ export default function UserShare() {
 		});
 	};
 
-	const filterChange = (e) => {
+	const dateChange = (e) => {
 		setDate(e);
 	};
 
 	return (
 		<Components.Wrap>
 			<Components.Title title='用户分享' />
-			<Components.DateFilter filterChange={filterChange} />
+			<Components.DateFilter filterChange={dateChange} />
 			<Tab defaultActiveKey="user">
 	    		{renderTab()}
 	  		</Tab>
