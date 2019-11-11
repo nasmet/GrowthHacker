@@ -37,40 +37,39 @@ function List({
 		projects = [],
 	} = response;
 
-	const jumpProjectData = (e) => {
-		sessionStorage.setItem(config.PROJECTID, e.id);
-		sessionStorage.setItem(config.PROJECTNAME, e.name);
-		sessionStorage.setItem(config.PROJECTAPPID, e.appid);
+	const onJump = ({
+		id,
+		name,
+		appid,
+	}) => {
+		sessionStorage.setItem(config.PROJECTID, id);
+		sessionStorage.setItem(config.PROJECTNAME, name);
+		sessionStorage.setItem(config.PROJECTAPPID, appid);
 		jump();
 	};
-
-	function deleteProject(id, index) {
-		showLoading();
-		api.deleteProject({
-			id,
-		}).then(() => {
-			projects.splice(index, 1);
-			model.log('删除成功');
-		}).catch((e) => {
-			model.log(e);
-		}).finally(() => {
-			closeLoading();
-		});
-	}
 
 	const onDeleteProject = (id, index, e) => {
 		e.stopPropagation();
 		Dialog.confirm({
 			content: '确定删除吗？',
 			onOk: () => {
-				deleteProject(id, index);
+				showLoading();
+				api.deleteProject({
+					id,
+				}).then(() => {
+					projects.splice(index, 1);
+				}).catch((e) => {
+					model.log(e);
+				}).finally(() => {
+					closeLoading();
+				});
 			},
 		});
 	}
 
 	const renderItem = (name, value) => {
 		return (
-			<div style={{display:'flex'}}>
+			<div style={{display: 'flex'}}>
 				<span className={styles.name}>{name}</span>
 				<span className={styles.value}>{value}</span>
 			</div>
@@ -87,7 +86,7 @@ function List({
 				desc,
 			} = item;
 			return (
-				<Button type='primary' className={styles.item} key={id} style={btnStyle} onClick={jumpProjectData.bind(this,item)}>
+				<Button type='primary' className={styles.item} key={id} style={btnStyle} onClick={onJump.bind(this,item)}>
 					{renderItem('名称：',name)}
 					{renderItem('域名：',domain_name)}
 					{renderItem('类型：',type)}
