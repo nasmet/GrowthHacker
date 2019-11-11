@@ -6,7 +6,7 @@ moment.locale('zh-cn');
 import '@alifd/next/reset.scss';
 import router from './router';
 import utils from './common/utils/index';
-import * as api from './common/api/index';
+import api from './common/api/index';
 import model from './common/model/index';
 import * as config from './common/config';
 import Components from './common/components/index';

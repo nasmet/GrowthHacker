@@ -54,7 +54,7 @@ axios.interceptors.response.use((response) => {
 });
 
 const CancelToken = axios.CancelToken;
-export let cancelRequestTask = () => {};
+let cancelRequestTask = () => {};
 
 /**
  * fetch 请求方法
@@ -179,4 +179,12 @@ export function upload(data = {}) {
 			reject(err);
 		});
 	});
+}
+
+export function cancelUpload() {
+	controller.abort();
+}
+
+export function cancelRequest() {
+	cancelRequestTask();
 }
