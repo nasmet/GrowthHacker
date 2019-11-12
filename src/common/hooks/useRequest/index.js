@@ -7,31 +7,32 @@ import React, {
 export default function useRequest(request, param = {}, init = true) {
 	const [response, setResponse] = useState({});
 	const [loading, setLoading] = useState(false);
-	const [parameter, setParameter] = useState(param);
 	const refVarible = useRef({
-		initRun: init,
+		param,
 	});
-	useEffect(() => {
-		if (!refVarible.current.initRun) {
-			refVarible.current.initRun = true;
-			return;
-		}
+
+	function fetchData(param) {
 		setLoading(true);
-		request(parameter).then(res => {
+		request(param).then(res => {
 			setResponse(res);
 		}).catch(e => {
 			model.log(e);
 		}).finally(() => {
 			setLoading(false);
 		})
-	}, [parameter]);
+	}
 
 	useEffect(() => {
+		if (init) {
+			fetchData(param);
+		}
+
 		return api.cancelRequest;
 	}, []);
 
 	function updateParameter(param) {
-		setParameter(param);
+		refVarible.current.param = param;
+		fetchData(param);
 	}
 
 	function showLoading() {
@@ -48,7 +49,7 @@ export default function useRequest(request, param = {}, init = true) {
 	}
 
 	return {
-		parameter,
+		parameter: refVarible.current.param,
 		response,
 		updateResponse,
 		loading,

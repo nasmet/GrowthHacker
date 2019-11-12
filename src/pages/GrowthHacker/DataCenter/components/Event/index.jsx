@@ -58,11 +58,10 @@ export default function Event() {
 		});
 	}, [])
 
-
 	const pageChange = e => {
-		updateParameter(Object.assign({}, parameter, {
+		updateParameter({ ...parameter,
 			offset: (e - 1) * config.LIMIT,
-		}));
+		});
 	};
 
 	const onDeleteEvent = (id, index) => {
@@ -157,7 +156,7 @@ export default function Event() {
 	};
 
 	const upload = e => {
-		if(!e.file){
+		if (!e.file) {
 			return;
 		}
 		api.importAllEvent({
@@ -193,8 +192,6 @@ export default function Event() {
 					        导入事件和变量
 			          	</Button>
 				    </Upload>
-				  
-				    {/*<input type="file" id="files" onChange={upload} />*/}
 				</div>
 				
 				<Loading visible={loading} inline={false}>
