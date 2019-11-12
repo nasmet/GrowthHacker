@@ -11,12 +11,13 @@ import moment from 'moment';
 import styles from './index.module.scss';
 import {
 	dateTypes,
-} from './dateFilterConfig';
+} from './config';
 
 export default function DateFilter({
 	filterChange,
 	initTabValue = '0',
 	initCurDateValue = [moment(), moment()],
+	showTime = false
 }) {
 	const [dateValue, setDateValue] = useState([]);
 	const [curDateValue, setCurDateValue] = useState(initCurDateValue);
@@ -88,22 +89,26 @@ export default function DateFilter({
 
 	return (
 		<div className={styles.wrap}>
-  			<DatePicker.RangePicker 
-  				onChange={onDateChange}
-  				value={dateValue}
-  				onOk={onOk}
-  				disabledDate={model.disabledDate}
-  				onVisibleChange={onVisibleChange}
-  			/>
-  			<Tab 
-  				className={styles.tabWrap}
-  				activeKey={tabValue} 
-  				shape="capsule" 
-  				size="small" 
-  				onChange={dateTabChange}
-  			>
-	      		{renderDateTab()}
-	      	</Tab>
+			<div>
+	  			<DatePicker.RangePicker	  				
+	  				showTime={showTime} 
+	  				onChange={onDateChange}
+	  				value={dateValue}
+	  				onOk={onOk}
+	  				disabledDate={model.disabledDate}
+	  				onVisibleChange={onVisibleChange}
+	  			/>
+  			</div>
+  			<div className={styles.tabWrap}>
+	  			<Tab 	  				
+	  				activeKey={tabValue} 
+	  				shape="capsule" 
+	  				size="small" 
+	  				onChange={dateTabChange}
+	  			>
+		      		{renderDateTab()}
+		      	</Tab>
+	      	</div>
 	    </div>
 	);
 }

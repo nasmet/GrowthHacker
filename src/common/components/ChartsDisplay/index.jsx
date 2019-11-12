@@ -1,6 +1,4 @@
-import React, {
-	useEffect
-} from 'react';
+import React from 'react';
 import {
 	Tab,
 	Table,
@@ -8,7 +6,9 @@ import {
 } from '@alifd/next';
 import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
-import chartTypes from './chartsDisplayConfig';
+import {
+	tabs,
+} from './config';
 
 export default function ChartsDisplay({
 	tableData,
@@ -49,7 +49,7 @@ export default function ChartsDisplay({
 	};
 
 	const renderTab = () => {
-		return chartTypes.map((item) => {
+		return tabs.map((item) => {
 			const {
 				name,
 				key,

@@ -1,4 +1,4 @@
-export default [{
+export const tabs = [{
 	key: '0',
 	name: '表格'
 }, {

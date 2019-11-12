@@ -95,7 +95,7 @@ function UserScrutiny({
 					hasClear 
 					hint='search' 
 					placeholder="请输入openID" 
-					onChange={utils.debounce(onInputChange, 500)}
+					onChange={utils.debounce(onInputChange, 1000)}
 				/>
 				<Loading visible={loading} inline={false}>
 					<Table 
