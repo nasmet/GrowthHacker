@@ -55,12 +55,7 @@ export default function Event() {
 			refEV.current.setVaribleData(variableData);
 		}).catch(e => {
 			console.error(e);
-		})
-
-		return () => {
-			api.cancelUpload();
-			api.cancelRequest();
-		};
+		});
 	}, [])
 
 
@@ -80,7 +75,6 @@ export default function Event() {
 				}).then(() => {
 					event_entities.splice(index, 1);
 					updateResponse();
-					model.log('删除成功');
 				}).catch((e) => {
 					model.log(e);
 				}).finally(() => {
@@ -115,7 +109,6 @@ export default function Event() {
 				}).then(() => {
 					record.bind_variables.splice(index, 1);
 					updateResponse();
-					model.log('删除成功');
 				}).catch((e) => {
 					model.log(e);
 				}).finally(() => {

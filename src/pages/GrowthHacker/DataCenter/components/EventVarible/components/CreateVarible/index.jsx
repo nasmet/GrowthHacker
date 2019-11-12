@@ -33,12 +33,6 @@ function CreateBuriedPoint({
 		},
 	}));
 
-	useEffect(() => {
-		return () => {
-			api.cancelRequest();
-		};
-	}, []);
-
 	const onSubmit = (e) => {
 		setLoading(true);
 		api.createEvent({ ...e,

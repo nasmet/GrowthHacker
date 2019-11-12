@@ -27,9 +27,7 @@ export default function useRequest(request, param = {}, init = true) {
 	}, [parameter]);
 
 	useEffect(() => {
-		return () => {
-			api.cancelRequest();
-		};
+		return api.cancelRequest;
 	}, []);
 
 	function updateParameter(param) {

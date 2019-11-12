@@ -23,6 +23,7 @@ axios.interceptors.request.use((configs) => {
 	configs.data = JSON.stringify(configs.data);
 	configs.headers = {
 		'Content-Type': 'application/json',
+		Accept: 'application/json',
 	};
 	const token = sessionStorage.getItem(config.TOKENKEY);
 	if (token) {
@@ -35,9 +36,6 @@ axios.interceptors.request.use((configs) => {
 
 // http response 拦截器（所有接收到的请求都要从这儿过一次）
 axios.interceptors.response.use((response) => {
-	if (response.data.code === undefined) {
-		return JSON.stringify(response);
-	}
 	switch (response.data.code) {
 		case 0:
 			return response.data;

@@ -25,9 +25,7 @@ function CreateGroup({
 	});
 
 	useEffect(() => {
-		return () => {
-			api.cancelRequest();
-		};
+		return api.cancelRequest;
 	}, []);
 
 	function getStatus() {
@@ -35,12 +33,12 @@ function CreateGroup({
 		for (let i = 0, len = steps.length; i < len; i++) {
 			for (let j = 0, length = steps[i].step.length; j < length; j++) {
 				const values = steps[i].step[j].values;
-				if(values.flag === 'true,event' || values.flag === 'false,event'){
-					if(values.values===''){
+				if (values.flag === 'true,event' || values.flag === 'false,event') {
+					if (values.values === '') {
 						return false;
 					}
-				}else{
-					if(values.value===''){
+				} else {
+					if (values.value === '') {
 						return false;
 					}
 				}

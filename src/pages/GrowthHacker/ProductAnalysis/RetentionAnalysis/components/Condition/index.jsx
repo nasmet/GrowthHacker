@@ -57,10 +57,6 @@ export default function Condition({
 		}
 
 		fetchData();
-
-		return () => {
-			api.cancelRequest();
-		};
 	}, []);
 
 	useEffect(()=>{

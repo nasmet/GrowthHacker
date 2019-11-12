@@ -48,10 +48,6 @@ function CreateOriginData({
 		}).catch((e) => {
 			model.log(e);
 		});
-
-		return () => {
-			api.cancelRequest();
-		};
 	}, [show]);
 
 	const onFocus = (formCore) => {

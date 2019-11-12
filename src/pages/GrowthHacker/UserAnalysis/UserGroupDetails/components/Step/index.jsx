@@ -49,10 +49,6 @@ export default function Step({
 		}
 
 		fetchData();
-
-		return () => {
-			api.cancelRequest();
-		};
 	}, []);
 
 	useEffect(() => {

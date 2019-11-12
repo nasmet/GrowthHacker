@@ -58,10 +58,6 @@ export default function Condition({
 		}
 
 		fetchData();
-
-		return () => {
-			api.cancelRequest();
-		};
 	}, []);
 
 	function assembleAllEventData(data) {

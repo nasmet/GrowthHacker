@@ -34,12 +34,6 @@ function CreateProject({
 		}
 	}));
 
-	useEffect(() => {
-		return () => {
-			api.cancelRequest();
-		};
-	}, []);
-
 	const onSubmit = (e) => {
 		setLoading(true);
 		api.createProject(e).then((res) => {

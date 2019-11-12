@@ -1,8 +1,4 @@
-import React, {
-	Component,
-	useState,
-	useEffect,
-} from 'react';
+import React from 'react';
 import {
 	Loading,
 	Pagination,
@@ -21,67 +17,58 @@ function UserGroupDetails({
 	const {
 		id,
 		name,
+		conditions,
+		condition_expr,
 	} = location.state.data;
 
-	const [curPage, setCurPage] = useState(1);
-	const [count, setCount] = useState(0);
-	const [loading, setLoading] = useState(false);
-	const [titles, setTitles] = useState([]);
-	const [tableData, setTableData] = useState([]);
+	const {
+		parameter,
+		response,
+		loading,
+		updateParameter,
+	} = hooks.useRequest(api.getUserGroupDetails, {
+		id,
+		trend: {
+			limit: config.LIMIT,
+			offset: 0,
+		},
+	});
+	const {
+		total = 0,
+			meta = [],
+			data = [],
+	} = response;
 
-	useEffect(() => {
-		function getUserGroupDetails() {
-			setLoading(true);
-			api.getUserGroupDetails({
-				id,
-				trend: {
-					limit: config.LIMIT,
-					offset: (curPage - 1) * config.LIMIT,
-				},
-			}).then((res) => {
-				const {
-					data,
-					meta,
-					total,
-				} = res;
-				setCount(total);
-				setTitles(meta);
-				setTableData(data);
-			}).catch((e) => {
-				model.log(e);
-			}).finally(() => {
-				setLoading(false);
-			});
-		}
-
-		getUserGroupDetails();
-
-		return () => {
-			api.cancelRequest();
-		};
-	}, [curPage, id]);
+	const renderThreeColumn = (value, index, record) => {
+		return <span>{utils.formatUnix(record[2],'Y-M-D h:m:s')}</span>;
+	};
 
 	const renderTitle = () => {
-		return titles.map((item, index) => {
+		return meta.map((item, index) => {
+			if (index === 2) {
+				return <Table.Column key={index} title={item} cell={renderThreeColumn} />
+			}
 			return <Table.Column key={index} title={item} dataIndex={index.toString()} />
 		});
 	};
 
-	const pageChange = (e) => {
-		setCurPage(e);
+	const pageChange = e => {
+		parameter.trend.offset = (e - 1) * config.LIMIT;
+		updateParameter({ ...parameter
+		});
 	};
 
 	return (
 		<Components.Wrap>
 			<Components.Title title={name} />
 			<IceContainer>
-				<Step {...location.state.data} />
+				<Step conditions={conditions} condition_expr={condition_expr} />
 			</IceContainer>
 		
 			<IceContainer>
 				<Loading visible={loading} inline={false}>
 					<Table
-						dataSource={tableData} 
+						dataSource={data} 
 						hasBorder={false}
 					>
 						{renderTitle()}
@@ -89,8 +76,7 @@ function UserGroupDetails({
 				</Loading>
 				<Pagination
 					className={styles.pagination}
-					current={curPage}
-					total={count}
+					total={total}
 					onChange={pageChange}
 				/>
 			</IceContainer>
