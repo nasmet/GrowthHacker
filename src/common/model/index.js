@@ -7,6 +7,7 @@ import reversePoland from './reversePoland';
 import * as assemble from './assemble';
 import * as productAnalysis from './productAnalysis';
 import * as operator from './operator';
+import traverse from './traverse';
 
 export default Object.assign({
 	history,
@@ -15,4 +16,5 @@ export default Object.assign({
 	transformDate,
 	sql,
 	reversePoland,
+	traverse,
 }, assemble, productAnalysis, operator)

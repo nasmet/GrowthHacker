@@ -1,53 +1,15 @@
-import React, {
-	Component,
-} from 'react';
+import React from 'react';
 import {
 	Nav,
 } from '@alifd/next';
 import {
 	withRouter,
-	Link,
 } from 'react-router-dom';
 import FoundationSymbol from '@icedesign/foundation-symbol';
 import {
 	asideMenuConfig,
 } from '../../menuConfig';
 import styles from './index.module.scss';
-
-const word = (name) => {
-	return (
-		<span className="ice-menu-item-text">
-      		{name}
-    	</span>
-	);
-};
-
-const icon = (url) => {
-	return (
-		url ? <FoundationSymbol size="small" type={url} /> : null
-	);
-};
-
-const traversing = function fn(nav) {
-	if (nav.auth && !nav.auth()) {
-		return;
-	}
-	if (nav.sub && utils.isArray(nav.sub)) {
-		return (
-			<Nav.SubNav key={nav.path} label={word(nav.name)} icon={icon(nav.icon)}>
-        		{nav.sub.map(fn)}
-      		</Nav.SubNav>
-		);
-	}
-	return (
-		<Nav.Item key={nav.path}>
-      		<Link to={nav.path} className="ice-menu-link">
-        		{icon(nav.icon)}
-        		{word(nav.name)}
-      		</Link>
-   		</Nav.Item>
-	);
-};
 
 function Aside({
 	location,
@@ -72,7 +34,7 @@ function Aside({
     		type='primary'
 			header={header}
   		>
-    		{asideMenuConfig.map(traversing)}
+    		{asideMenuConfig.map(model.traverse)}
   		</Nav>
 	);
 }
