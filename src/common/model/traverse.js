@@ -9,7 +9,7 @@ import {
 export default function fn(nav) {
 	if (nav.sub && utils.isArray(nav.sub)) {
 		return (
-			<Nav.SubNav key={nav.path} selectable label={word(nav.name)}>
+			<Nav.SubNav key={nav.path} label={word(nav.name)}>
         		{nav.sub.map(fn)}
       		</Nav.SubNav>
 		);
