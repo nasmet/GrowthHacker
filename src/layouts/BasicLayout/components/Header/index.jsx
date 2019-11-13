@@ -1,60 +1,30 @@
-import React, {
-	Component,
-} from 'react';
-import {
-	withRouter,
-	Link,
-} from 'react-router-dom';
+import React from 'react';
 import {
 	Nav,
 } from '@alifd/next';
-import './index.scss';
 import {
 	headerMenuConfig,
-} from '../../menuConfig';
+} from '../../config';
 
-const word = (name) => {
-	return (
-		<span className="ice-menu-item-text">
-      		{name()}
-    	</span>
-	);
-};
-
-const traversing = function fn(nav) {
-	if (nav.sub && utils.isArray(nav.sub)) {
-		return (
-			<Nav.SubNav key={nav.path} selectable style={{color: nav.color}} label={word(nav.name)}>
-        		{nav.sub.map(fn)}
-      		</Nav.SubNav>
-		);
-	}
+export default function Header() {
+	const style={
+	  	width: '100%',
+	    padding: '0 20px',
+	  	display: 'flex',
+	  	alignItems: 'center',
+	  	justifyContent: 'flex-end',
+	};
 
 	return (
-		<Nav.Item key={nav.path}>
-      		<Link to={nav.path} onClick={nav.onClick} className="ice-menu-link">
-        		{word(nav.name)}
-      		</Link>
-   		</Nav.Item>
-	);
-};
-
-function Header({
-	history,
-}) {
-	return (
-		<div className="header-container">
+		<div style={style}>
     		<Nav
       			direction="hoz"
       			triggerType="hover"
       			type='primary'
     		>
-      			{
-        			headerMenuConfig.map(traversing)
-     		 	}
+      			{headerMenuConfig.map(model.traverse)}        			
     		</Nav>
     	</div>
 	);
 }
 
-export default withRouter(Header);

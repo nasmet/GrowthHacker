@@ -26,7 +26,6 @@ const headerMenuConfig = [{
 const asideMenuConfig = [{
 	name: '数据分析',
 	path: '/growthhacker',
-	icon: '',
 	sub: [{
 		name: '项目列表',
 		path: '/growthhacker/projectlist',
@@ -38,7 +37,6 @@ const asideMenuConfig = [{
 }, {
 	name: '千人千面',
 	path: '/thousandfaces',
-	icon: '',
 	auth: () => sessionStorage.getItem(config.PROJECTID),
 	sub: [{
 		name: '标签库',

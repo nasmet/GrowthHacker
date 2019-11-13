@@ -3,17 +3,10 @@ import {
 	Nav,
 } from '@alifd/next';
 import {
-	withRouter,
-} from 'react-router-dom';
-import FoundationSymbol from '@icedesign/foundation-symbol';
-import {
 	asideMenuConfig,
-} from '../../menuConfig';
-import styles from './index.module.scss';
+} from '../../config';
 
-function Aside({
-	location,
-}) {
+export default function Aside() {
 	const {
 		pathname,
 	} = location;
@@ -22,7 +15,7 @@ function Aside({
 	const regex = /^\/[a-zA-Z]+/;
 	const value = regex.exec(pathname);
 	const path = value ? value[0] : '/growthhacker';
-	const header = <span className={styles.fusion}>增长黑客</span>;
+	const header = <span style={{marginLeft: '40px',fontSize: '20px'}}>增长黑客</span>;
 
 	return (
   		<Nav
@@ -38,5 +31,3 @@ function Aside({
   		</Nav>
 	);
 }
-
-export default withRouter(Aside);

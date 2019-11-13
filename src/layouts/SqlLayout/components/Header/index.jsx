@@ -8,7 +8,7 @@ import {
 import styles from './index.module.scss';
 import {
 	headerMenuConfig,
-} from '../../menuConfig';
+} from '../../config';
 
 export default function Header() {
 	return (
@@ -19,17 +19,7 @@ export default function Header() {
 	  			defaultSelectedKeys={['/sql/queryeditor']}
 	  			header={<span style={{margin:'0 20px'}}>SQL Query</span>}
 			>
-	  			{
-	    			headerMenuConfig.map((nav, index) => {
-	      				return (
-	        				<Nav.Item key={nav.path}>
-	          					<Link to={nav.path}>
-					        		<span>{nav.name}</span>
-					      		</Link>
-	        				</Nav.Item>
-	      				);
-	    			})
-	 		 	}
+	  			{headerMenuConfig.map(model.traverse)}
 			</Nav>
 			<div className={styles.right}>
 				<Link style={{textDecoration:'none'}} to='/growthhacker/projectlist'>
