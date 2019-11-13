@@ -1,30 +1,34 @@
 import React, {
-	forwardRef,
-	useImperativeHandle,
+	useContext,
+	useEffect,
 } from 'react';
 import {
 	Button,
 	Icon,
 	Loading,
 	Dialog,
+	Animate,
 } from '@alifd/next';
+import {
+	withRouter,
+} from 'react-router-dom';
 import styles from './index.module.scss';
+import {
+	Context,
+} from '../../index';
+
+const btnStyle = {
+	padding: '10px',
+	borderRadius: '10px',
+};
 
 function List({
-	createProject,
-	jump,
-}, ref) {
-	const btnStyle = {
-		padding: '10px',
-		borderRadius: '10px',
-	};
-
-	useImperativeHandle(ref, () => ({
-		addProject: (e) => {
-			projects.splice(0, 0, e);
-			updateResponse();
-		},
-	}));
+	history,
+}) {
+	const {
+		dispatch,
+		state,
+	} = useContext(Context);
 
 	const {
 		response,
@@ -37,6 +41,16 @@ function List({
 		projects = [],
 	} = response;
 
+	useEffect(() => {
+		if (projects.length === 0) {
+			return;
+		}
+		dispatch({
+			type: 'update',
+			projects,
+		});
+	}, [response]);
+
 	const onJump = ({
 		id,
 		name,
@@ -45,7 +59,7 @@ function List({
 		sessionStorage.setItem(config.PROJECTID, id);
 		sessionStorage.setItem(config.PROJECTNAME, name);
 		sessionStorage.setItem(config.PROJECTAPPID, appid);
-		jump();
+		history.push('/growthhacker/projectdata');
 	};
 
 	const onDeleteProject = (id, index, e) => {
@@ -57,7 +71,10 @@ function List({
 				api.deleteProject({
 					id,
 				}).then(() => {
-					projects.splice(index, 1);
+					dispatch({
+						type: 'remove',
+						index,
+					});
 				}).catch((e) => {
 					model.log(e);
 				}).finally(() => {
@@ -77,7 +94,7 @@ function List({
 	};
 
 	const renderList = () => {
-		return projects.map((item, index) => {
+		return state.projects.map((item, index) => {
 			const {
 				id,
 				name,
@@ -97,19 +114,27 @@ function List({
 		});
 	};
 
+	const onCreate = () => {
+		dispatch({
+			type: 'open',
+		});
+	};
+
 	return (
 		<Components.Wrap>
-			<Loading visible={loading} inline={false}>
+			<Loading visible={loading} inline={false}>			
 				<div className={styles.wrap}>
-					{renderList()}
-					<Button className={styles.create} style={btnStyle} onClick={createProject}>
+					<Animate className={styles.wrap} animationAppear={false} animation="fade" singleMode={false}>						
+						{renderList()}						
+					</Animate>
+					<Button className={styles.create} style={btnStyle} onClick={onCreate}>
 						<Icon type='add' style={{marginRight: '4px'}} />
 						<span>新建项目</span>						
 					</Button>		      		
-				</div>		    	
+				</div>			    	
 			</Loading>	   	
 		</Components.Wrap>
 	);
 }
 
-export default forwardRef(List);
+export default withRouter(List);

@@ -1,36 +1,23 @@
 import React, {
-	useRef,
+	useReducer,
+	createContext,
 } from 'react';
-import {
-	withRouter,
-} from 'react-router-dom';
 import List from './components/List';
 import CreateProject from './components/CreateProject';
+import reducer from './reducer';
 
-function ProjectList({
-	history,
-}) {
-	const refCP = useRef(null);
-	const refList = useRef(null);
+export const Context = createContext();
 
-	const createProject = () => {
-		refCP.current.onShow();
-	};
-
-	const addProject = (e) => {
-		refList.current.addProject(e);
-	};
-
-	const jump = () => {
-		history.push('/growthhacker/projectdata');
-	};
+export default function ProjectList() {
+	const [state, dispatch] = useReducer(reducer, {
+		show: false,
+		projects: [],
+	});
 
 	return (
-		<div>
-			<List createProject={createProject} jump={jump} ref={refList} />
-	    	<CreateProject addProject={addProject} ref={refCP} />
-    	</div>
+		<Context.Provider value={{state,dispatch}}>
+			<List />
+	    	<CreateProject />
+    	</Context.Provider>
 	);
 }
-
-export default withRouter(ProjectList);

@@ -4,20 +4,21 @@ import {
 	Loading,
 	Icon,
 	Dialog,
+	Animate,
 } from '@alifd/next';
 import {
 	withRouter,
 } from 'react-router-dom';
 import styles from './index.module.scss';
 
+const btnStyle = {
+	padding: '10px',
+	borderRadius: '10px',
+};
+
 function DataBoard({
 	history,
 }) {
-	const btnStyle = {
-		padding: '10px',
-		borderRadius: '10px',
-	};
-
 	const {
 		response,
 		loading,
@@ -65,7 +66,6 @@ function DataBoard({
 			id,
 		}).then(() => {
 			charts.splice(index, 1);
-			model.log('删除成功');
 		}).catch((e) => {
 			model.log(e);
 		}).finally(() => {
@@ -102,9 +102,9 @@ function DataBoard({
 	return (
 		<Loading visible={loading} inline={false}>
 			<Components.Wrap>			
-				<div className={styles.wrap}>				
+				<Animate className={styles.wrap} animationAppear={false} animation="fade" singleMode={false}>				
 					{renderList()}					
-				</div>
+				</Animate>
 				{charts.length === 0 && <Components.NotData style={{height:'200px'}} />}      		
 			</Components.Wrap> 	   		
 		</Loading>

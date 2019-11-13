@@ -1,9 +1,6 @@
 import React, {
-	Component,
 	useState,
-	useEffect,
-	forwardRef,
-	useImperativeHandle,
+	useContext,
 } from 'react';
 import {
 	Input,
@@ -17,32 +14,39 @@ import {
 	Field,
 } from '@ice/form';
 import styles from './index.module.scss';
+import {
+	Context,
+} from '../../index';
 
-function CreateProject({
-	addProject,
-}, ref) {
-	const message = [{
-		required: true,
-		message: '必填',
-	}];
+const message = [{
+	required: true,
+	message: '必填',
+}];
+
+export default function CreateProject() {
+	const {
+		state,
+		dispatch,
+	} = useContext(Context);
+	const {
+		show,
+	} = state;
 	const [loading, setLoading] = useState(false);
-	const [show, setShow] = useState(false);
-
-	useImperativeHandle(ref, () => ({
-		onShow: () => {
-			setShow(true);
-		}
-	}));
 
 	const onSubmit = (e) => {
 		setLoading(true);
 		api.createProject(e).then((res) => {
-			addProject({
-				id: res.id,
-				...e,
-			});
 			setLoading(false);
-			setShow(false);
+			dispatch({
+				type: 'close',
+			});
+			dispatch({
+				type: 'add',
+				project: {
+					id: res.id,
+					...e,
+				}
+			});
 		}).catch((e) => {
 			model.log(e);
 			setLoading(false);
@@ -54,7 +58,9 @@ function CreateProject({
 	};
 
 	const onClose = () => {
-		setShow(false);
+		dispatch({
+			type: 'close',
+		});
 	};
 
 	const renderField = (name, placeholder) => {
@@ -119,5 +125,3 @@ function CreateProject({
    		</Dialog>
 	);
 }
-
-export default forwardRef(CreateProject);
