@@ -20,11 +20,6 @@ import styles from './index.module.scss';
 function CreateEvent({
 	onOk,
 }, ref) {
-	const message = [{
-		required: true,
-		message: '必填',
-	}];
-
 	const [loading, setLoading] = useState(false);
 	const [show, setShow] = useState(false);
 	const [varibleData, setVaribleData] = useState([]);
@@ -71,10 +66,10 @@ function CreateEvent({
 				<Form
 					onSubmit={onSubmit}      				 
 					rules={{  					
-						name: message,
-						key: message,
-						value_type: message,
-						bind_variables: message,
+						name: model.rule,
+						key: model.rule,
+						value_type: model.rule,
+						bind_variables: model.rule,
 					}}
 					renderField={({component, error}) => (
 						<div className={styles.field}>

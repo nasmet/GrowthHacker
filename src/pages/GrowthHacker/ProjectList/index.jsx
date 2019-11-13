@@ -1,23 +1,16 @@
-import React, {
-	useReducer,
-	createContext,
-} from 'react';
+import React from 'react';
 import List from './components/List';
 import CreateProject from './components/CreateProject';
 import reducer from './reducer';
 
-export const Context = createContext();
-
-export default function ProjectList() {
-	const [state, dispatch] = useReducer(reducer, {
-		show: false,
-		projects: [],
-	});
-
+export default function ProjectList() {	
 	return (
-		<Context.Provider value={{state,dispatch}}>
+		<model.Provider reducer={reducer} initialState={{
+			show: false,
+			projects: [],
+		}}>
 			<List />
 	    	<CreateProject />
-    	</Context.Provider>
+    	</model.Provider>
 	);
 }

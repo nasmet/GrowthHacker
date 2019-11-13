@@ -1,5 +1,4 @@
 import React, {
-	useContext,
 	useEffect,
 } from 'react';
 import {
@@ -13,9 +12,6 @@ import {
 	withRouter,
 } from 'react-router-dom';
 import styles from './index.module.scss';
-import {
-	Context,
-} from '../../index';
 
 const btnStyle = {
 	padding: '10px',
@@ -28,7 +24,7 @@ function List({
 	const {
 		dispatch,
 		state,
-	} = useContext(Context);
+	} = model.useContextValue();
 
 	const {
 		response,

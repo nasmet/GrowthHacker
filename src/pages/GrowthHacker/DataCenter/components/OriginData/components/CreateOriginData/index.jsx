@@ -21,10 +21,6 @@ import styles from './index.module.scss';
 function CreateOriginData({
 	onOk,
 }, ref) {
-	const message = [{
-		required: true,
-		message: '必填',
-	}];
 	const [show, setShow] = useState(false);
 	const [loading, setLoading] = useState(false);
 	const formRef = useRef(null);
@@ -99,11 +95,11 @@ function CreateOriginData({
 					onSubmit={onSubmit}
 					ref={formRef} 
 					rules={{
-						name:  message,
-						key:   message,
-						table_name:   message,
-						column_name:  message,
-						value_type:   message,
+						name:  model.rule,
+						key:   model.rules,
+						table_name:   model.rule,
+						column_name:  model.rule,
+						value_type:   model.rule,
 					}}
 					renderField={({component, error}) => (
 						<div className={styles.field}>

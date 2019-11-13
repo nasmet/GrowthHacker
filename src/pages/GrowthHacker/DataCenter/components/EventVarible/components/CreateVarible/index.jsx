@@ -20,10 +20,6 @@ import styles from './index.module.scss';
 function CreateBuriedPoint({
 	onOk,
 }, ref) {
-	const message = [{
-		required: true,
-		message: '必填',
-	}];
 	const [loading, setLoading] = useState(false);
 	const [show, setShow] = useState(false);
 
@@ -67,9 +63,9 @@ function CreateBuriedPoint({
 				<Form
 					onSubmit={onSubmit}      				 
 					rules={{  					
-						name: message,
-						key: message,
-						variable_type: message,
+						name: model.rule,
+						key: model.rule,
+						variable_type: model.rule,
 					}}
 					renderField={({component, error}) => (
 						<div className={styles.field}>

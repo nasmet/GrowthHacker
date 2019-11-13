@@ -1,6 +1,5 @@
 import React, {
 	useState,
-	useContext,
 } from 'react';
 import {
 	Input,
@@ -14,23 +13,13 @@ import {
 	Field,
 } from '@ice/form';
 import styles from './index.module.scss';
-import {
-	Context,
-} from '../../index';
-
-const message = [{
-	required: true,
-	message: '必填',
-}];
 
 export default function CreateProject() {
 	const {
 		state,
 		dispatch,
-	} = useContext(Context);
-	const {
-		show,
-	} = state;
+	} = model.useContextValue();
+
 	const [loading, setLoading] = useState(false);
 
 	const onSubmit = (e) => {
@@ -78,7 +67,7 @@ export default function CreateProject() {
 	return (
 		<Dialog 
 	   		autoFocus
-	      	visible={show} 
+	      	visible={state.show} 
 	      	onClose={onClose}
 	      	footer={false}
 	    >
@@ -86,10 +75,10 @@ export default function CreateProject() {
 	  			<Form
 	  				onSubmit={onSubmit} 
 					rules={{
-					    name: message,
-					    type: message,
-					    appid: message,
-					    domain_name: message,
+					    name: model.rule,
+					    type: model.rule,
+					    appid: model.rule,
+					    domain_name: model.rule,
 					}}
 					renderField={({label, component, error}) => (
 		            	<div className={styles.field}>

@@ -8,6 +8,8 @@ import * as assemble from './assemble';
 import * as productAnalysis from './product-analysis';
 import * as operator from './operator';
 import traverse from './traverse';
+import * as context from './context';
+import * as rules from './rules';
 
 export default Object.assign({
 	history,
@@ -17,4 +19,4 @@ export default Object.assign({
 	sql,
 	reversePoland,
 	traverse,
-}, assemble, productAnalysis, operator)
+}, assemble, productAnalysis, operator, context, rules)

@@ -21,11 +21,6 @@ import styles from './index.module.scss';
 function EditVarible({
 	onOk,
 }, ref) {
-	const message = [{
-		required: true,
-		message: '必填',
-	}];
-
 	const [loading, setLoading] = useState(false);
 	const [show, setShow] = useState(false);
 	const [data, setData] = useState([]);
@@ -42,7 +37,7 @@ function EditVarible({
 			selected.forEach(v => {
 				temp.forEach(item => {
 					if (v.id === item.value) {
-						item.disabled= true;
+						item.disabled = true;
 					}
 				})
 			})
@@ -106,7 +101,7 @@ function EditVarible({
 						</div>
 					)}
 					rules={{  					
-						bind_variables: message,
+						bind_variables: model.rule,
 					}}
 				>      			
 					<div>
