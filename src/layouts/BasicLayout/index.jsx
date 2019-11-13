@@ -52,7 +52,6 @@ export default function BasicLayout({
 		<Layout className="ice-design-layout" fixable>
 	      	<Layout.Aside type='primary'>
 	      		<Animate 
-	      			animationAppear={false}
 	      			animation="expand"
                     beforeEnter={beforeEnter}
                     onEnter={onEnter}

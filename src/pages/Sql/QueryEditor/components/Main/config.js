@@ -5,7 +5,7 @@ import Column from './components/Column';
 import Result from './components/Result';
 import Graph from './components/Graph';
 
-const routers = [{
+export const tabs = [{
 	key: 'recentquery',
 	tab: '最近查询',
 	component: RecentQuery,
@@ -30,5 +30,3 @@ const routers = [{
 	tab: '图表',
 	component: Graph,
 }];
-
-export default routers;

@@ -1,31 +1,18 @@
 import React, {
-	Component,
 	useState,
 	useEffect,
-	useRef,
-	useContext,
-	useCallback,
-	useMemo,
 } from 'react';
 import {
 	Input,
 	Button,
 	Tab,
-	Table,
-	Message,
 	Loading,
-	Pagination,
 } from '@alifd/next';
-import {
-	withRouter,
-} from 'react-router-dom';
 import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
-import mainConfig from './mainConfig';
-
-const {
-	Item,
-} = Tab;
+import {
+	tabs,
+} from './config';
 
 export default function Main({
 	query,
@@ -61,7 +48,7 @@ export default function Main({
 
 	const handleSql = () => {
 		if (!value) {
-			Message.success('内容不能为空！');
+			model.log('内容不能为空！');
 			return;
 		}
 		setLoading(true);
@@ -112,16 +99,16 @@ export default function Main({
 	};
 
 	const rendTab = () => {
-		return mainConfig.map((item) => {
+		return tabs.map((item) => {
 			const Content = item.component;
 			const {
 				key,
 				tab,
 			} = item;
 			return (
-				<Item key={key} title={tab} >
+				<Tab.Item key={key} title={tab} >
             		<Content sql={transferData(key)} />
-        		</Item>
+        		</Tab.Item>
 			);
 		});
 	};

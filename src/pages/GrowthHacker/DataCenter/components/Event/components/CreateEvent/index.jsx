@@ -43,7 +43,6 @@ function CreateEvent({
 		api.createEvent({ ...e,
 			entity_type: 'event',
 		}).then((res) => {
-			model.log('创建成功');
 			onOk(res.event_entity);
 			setLoading(false);
 			setShow(false);

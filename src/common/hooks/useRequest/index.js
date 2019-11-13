@@ -4,7 +4,7 @@ import React, {
 	useRef,
 } from 'react';
 
-export default function useRequest(request, param = {}, init = true) {
+export default function useRequest(request, param = {}, firstRequest = true) {
 	const [response, setResponse] = useState({});
 	const [loading, setLoading] = useState(false);
 	const refVarible = useRef({
@@ -23,7 +23,7 @@ export default function useRequest(request, param = {}, init = true) {
 	}
 
 	useEffect(() => {
-		if (init) {
+		if (firstRequest) {
 			fetchData(param);
 		}
 

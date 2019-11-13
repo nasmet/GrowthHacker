@@ -1,7 +1,7 @@
 import RecentlySavedQuery from './components/RecentlySavedQuery';
 import RecentlyRunQuery from './components/RecentlyRunQuery';
 
-const tab = [{
+export const tabs = [{
 	key: 'recentlysavedquery',
 	tab: '最近保存的查询',
 	component: RecentlySavedQuery,
@@ -10,5 +10,3 @@ const tab = [{
 	tab: '最近运行的查询',
 	component: RecentlyRunQuery,
 }];
-
-export default tab;

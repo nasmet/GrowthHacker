@@ -151,7 +151,6 @@ export function assembleEventVaribleData(data) {
 }
 
 export function assembleEventVaribleData_1(data) {
-
 	return data.map(item => {
 		return {
 			label: item.name,

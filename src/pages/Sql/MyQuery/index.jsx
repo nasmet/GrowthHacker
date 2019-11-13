@@ -9,7 +9,9 @@ import {
 } from '@alifd/next';
 import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
-import myQueryConfig from './myQueryConfig';
+import {
+	tabs,
+} from './config';
 
 export default function MyQuery() {
 	const [saveQueryCount, setSaveQueryCount] = useState(0);
@@ -31,7 +33,7 @@ export default function MyQuery() {
 	}
 
 	const rendTab = () => {
-		return myQueryConfig.map((item) => {
+		return tabs.map((item) => {
 			const Content = item.component;
 			const {
 				key,

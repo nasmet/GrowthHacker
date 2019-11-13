@@ -3,7 +3,6 @@ import React, {
 } from 'react';
 import Layout from '@icedesign/layout';
 import Header from './components/Header';
-import './index.scss';
 
 export default function SqlLayout({
 	children,

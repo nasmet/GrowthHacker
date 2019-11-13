@@ -2,7 +2,6 @@
  * 定义应用路由
  */
 import React, {
-	Component,
 	useEffect,
 	Suspense,
 } from 'react';
