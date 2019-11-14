@@ -23,13 +23,12 @@ const RouteIntercept = ({
 	children,
 	history,
 }) => {
-	useEffect(() => {
-		const token = sessionStorage.getItem(config.TOKENKEY);
-		if (!token) {
-			history.push('/user/login');
-		}
-	}, []);
-
+	const token = sessionStorage.getItem(config.TOKENKEY);
+	if (!token) {
+		history.push('/user/login');
+		return null;
+	}
+	
 	return (
 		<div>{children}</div>
 	);
@@ -73,13 +72,15 @@ const traversing = function fn(route) {
 			<Route key={id} path={path} render={(props)=>{
 				return(
 					<RouteComponent {...props}>
-	                    <Switch>
-	                      	{
-	                      		children.map((routeChild) => {
-	                         		return fn(routeChild);
-	                        	})
-	                      	}
-	                      </Switch>
+						<Suspense fallback={<Loading inline={false} visible={true} tip='资源加载中' />}>
+		                    <Switch>
+		                      	{
+		                      		children.map((routeChild) => {
+		                         		return fn(routeChild);
+		                        	})
+		                      	}
+		                      </Switch>
+	                      </Suspense>
 	                </RouteComponent>
 				);
 			}} />

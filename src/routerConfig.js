@@ -4,49 +4,80 @@
 import React from 'react';
 
 import BasicLayout from './layouts/BasicLayout';
-import SqlLayout from './layouts/SqlLayout';
+const SqlLayout = React.lazy(() =>
+	import ('./layouts/SqlLayout'));
 
-import ProjectList from './pages/GrowthHacker/ProjectList';
-import ProjectData from './pages/GrowthHacker/ProjectData';
-import DataBoard from './pages/GrowthHacker/DataBoard';
+// 数据分析
+const ProjectList = React.lazy(() =>
+	import ('./pages/GrowthHacker/ProjectList'));
+const ProjectData = React.lazy(() =>
+	import ('./pages/GrowthHacker/ProjectData'));
+const DataBoard = React.lazy(() =>
+	import ('./pages/GrowthHacker/DataBoard'));
 const DistributeDetails = React.lazy(() =>
 	import ('./pages/GrowthHacker/DataBoardDetails/DistributeDetails'));
 const LevelDetails = React.lazy(() =>
 	import ('./pages/GrowthHacker/DataBoardDetails/LevelDetails'));
-import EventAnalysis from './pages/GrowthHacker/ProductAnalysis/EventAnalysis';
-import RetentionAnalysis from './pages/GrowthHacker/ProductAnalysis/RetentionAnalysis';
-import FunnelAnalysis from './pages/GrowthHacker/ProductAnalysis/FunnelAnalysis';
-import UserGroup from './pages/GrowthHacker/UserAnalysis/UserGroup';
-import UserScrutiny from './pages/GrowthHacker/UserAnalysis/UserScrutiny';
-import UserPortrait from './pages/GrowthHacker/UserAnalysis/UserPortrait';
-const UserScrutinyDetails = React.lazy(() =>
-	import ('./pages/GrowthHacker/UserAnalysis/UserScrutinyDetails'));
-import CreateGroup from './pages/GrowthHacker/UserAnalysis/CreateGroup';
+const EventAnalysis = React.lazy(() =>
+	import ('./pages/GrowthHacker/ProductAnalysis/EventAnalysis'));
+const RetentionAnalysis = React.lazy(() =>
+	import ('./pages/GrowthHacker/ProductAnalysis/RetentionAnalysis'));
+const FunnelAnalysis = React.lazy(() =>
+	import ('./pages/GrowthHacker/ProductAnalysis/FunnelAnalysis'));
+const UserGroup = React.lazy(() =>
+	import ('./pages/GrowthHacker/UserAnalysis/UserGroup'));
+const CreateGroup = React.lazy(() =>
+	import ('./pages/GrowthHacker/UserAnalysis/CreateGroup'));
 const UserGroupDetails = React.lazy(() =>
 	import ('./pages/GrowthHacker/UserAnalysis/UserGroupDetails'));
-import HeatMap from './pages/GrowthHacker/UserAnalysis/HeatMap';
-import ShareAnalysis from './pages/GrowthHacker/ShareSpread/ShareAnalysis';
-import ShareTrend from './pages/GrowthHacker/ShareSpread/ShareTrend';
-import ShareView from './pages/GrowthHacker/ShareSpread/ShareView';
-import UserShare from './pages/GrowthHacker/ShareSpread/UserShare';
-import AdAnalysis from './pages/GrowthHacker/AdMonitor/AdAnalysis';
-import AdCount from './pages/GrowthHacker/AdMonitor/AdCount';
-import ARPUAnalysis from './pages/GrowthHacker/AdMonitor/ARPUAnalysis';
-import UserWorth from './pages/GrowthHacker/CustomerAnalysis/UserWorth';
-import GroupWorth from './pages/GrowthHacker/CustomerAnalysis/GroupWorth';
-import DataCenter from './pages/GrowthHacker/DataCenter';
-import NewEvent from './pages/GrowthHacker/NewEvent';
+const UserScrutiny = React.lazy(() =>
+	import ('./pages/GrowthHacker/UserAnalysis/UserScrutiny'));
+const UserScrutinyDetails = React.lazy(() =>
+	import ('./pages/GrowthHacker/UserAnalysis/UserScrutinyDetails'));
+const UserPortrait = React.lazy(() =>
+	import ('./pages/GrowthHacker/UserAnalysis/UserPortrait'));
+const HeatMap = React.lazy(() =>
+	import ('./pages/GrowthHacker/UserAnalysis/HeatMap'));
+const ShareAnalysis = React.lazy(() =>
+	import ('./pages/GrowthHacker/ShareSpread/ShareAnalysis'));
+const ShareTrend = React.lazy(() =>
+	import ('./pages/GrowthHacker/ShareSpread/ShareTrend'));
+const ShareView = React.lazy(() =>
+	import ('./pages/GrowthHacker/ShareSpread/ShareView'));
+const UserShare = React.lazy(() =>
+	import ('./pages/GrowthHacker/ShareSpread/UserShare'));
+const AdAnalysis = React.lazy(() =>
+	import ('./pages/GrowthHacker/AdMonitor/AdAnalysis'));
+const AdCount = React.lazy(() =>
+	import ('./pages/GrowthHacker/AdMonitor/AdCount'));
+const ARPUAnalysis = React.lazy(() =>
+	import ('./pages/GrowthHacker/AdMonitor/ARPUAnalysis'));
+const UserWorth = React.lazy(() =>
+	import ('./pages/GrowthHacker/CustomerAnalysis/UserWorth'));
+const GroupWorth = React.lazy(() =>
+	import ('./pages/GrowthHacker/CustomerAnalysis/GroupWorth'));
+const DataCenter = React.lazy(() =>
+	import ('./pages/GrowthHacker/DataCenter'));
+const NewEvent = React.lazy(() =>
+	import ('./pages/GrowthHacker/NewEvent'));
 
-import UserTag from './pages/ThousandFaces/UserTag';
-import Strategy from './pages/ThousandFaces/Strategy';
-import Plan from './pages/ThousandFaces/Plan';
-import Rule from './pages/ThousandFaces/Rule';
+// 千人千面
+const UserTag = React.lazy(() =>
+	import ('./pages/ThousandFaces/UserTag'));
+const Strategy = React.lazy(() =>
+	import ('./pages/ThousandFaces/Strategy'));
+const Plan = React.lazy(() =>
+	import ('./pages/ThousandFaces/Plan'));
+const Rule = React.lazy(() =>
+	import ('./pages/ThousandFaces/Rule'));
 const CreateRule = React.lazy(() =>
 	import ('./pages/ThousandFaces/CreateRule'));
-import TagLibrary from './pages/ThousandFaces/TagLibrary';
 const RuleDetails = React.lazy(() =>
 	import ('./pages/ThousandFaces/RuleDetails'));
+const TagLibrary = React.lazy(() =>
+	import ('./pages/ThousandFaces/TagLibrary'));
 
+// sql
 const QueryEditor = React.lazy(() =>
 	import ('./pages/Sql/QueryEditor'));
 const MyQuery = React.lazy(() =>
@@ -57,8 +88,6 @@ const HistoryRecord = React.lazy(() =>
 	import ('./pages/Sql/HistoryRecord'));
 
 import UserLogin from './pages/UserLogin';
-const UserRegister = React.lazy(() =>
-	import ('./pages/UserRegister'));
 
 import NotFound from './common/components/NotFound';
 
@@ -68,10 +97,6 @@ const routerConfig = [
 		id: '30001',
 		path: '/user/login',
 		component: UserLogin,
-	}, {
-		id: '40001',
-		path: '/user/register',
-		component: UserRegister,
 	}, {
 		id: '20001',
 		path: '/sql',
