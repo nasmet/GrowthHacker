@@ -33,6 +33,9 @@ function CreateGroup({
 		for (let i = 0, len = steps.length; i < len; i++) {
 			for (let j = 0, length = steps[i].step.length; j < length; j++) {
 				const values = steps[i].step[j].values;
+				if (!values.id) {
+					return false;
+				}
 				if (values.flag === 'true,event' || values.flag === 'false,event') {
 					if (values.values === '') {
 						return false;

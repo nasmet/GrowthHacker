@@ -100,7 +100,7 @@ export default function DateFilter({
 	  			/>
   			</div>
   			<div className={styles.tabWrap}>
-	  			<Tab 	  				
+	  			<Tab 			
 	  				activeKey={tabValue} 
 	  				shape="capsule" 
 	  				size="small" 
