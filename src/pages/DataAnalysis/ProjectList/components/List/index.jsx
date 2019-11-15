@@ -55,7 +55,7 @@ function List({
 		sessionStorage.setItem(config.PROJECTID, id);
 		sessionStorage.setItem(config.PROJECTNAME, name);
 		sessionStorage.setItem(config.PROJECTAPPID, appid);
-		history.push('/growthhacker/projectdata');
+		history.push('/dataanalysis/projectdata');
 	};
 
 	const onDeleteProject = (id, index, e) => {

@@ -2,10 +2,10 @@ import {
 	cancelRequest,
 	cancelUpload,
 } from './base';
-import growthhacker from './growthhacker/index';
+import dataanalysis from './dataanalysis/index';
 import * as thousandfaces from './thousandfaces/index';
 
 export default Object.assign({}, {
 	cancelRequest,
 	cancelUpload,
-}, growthhacker, thousandfaces);
+}, dataanalysis, thousandfaces);

@@ -27,7 +27,7 @@ function ProjectData({
         		direction="hoz"
         		triggerType="hover"
         		selectedKeys={[path]}
-        		defaultSelectedKeys={['/growthhacker/projectdata/db']} 
+        		defaultSelectedKeys={['/dataanalysis/projectdata/db']} 
         		type='secondary'
         		header={header}
       		>

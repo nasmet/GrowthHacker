@@ -14,7 +14,7 @@ export default function Aside() {
 	const selectedPath = `/${arr[1]}/${arr[2]}`;
 	const regex = /^\/[a-zA-Z]+/;
 	const value = regex.exec(pathname);
-	const path = value ? value[0] : '/growthhacker';
+	const path = value ? value[0] : '/dataanalysis';
 	const header = <span style={{marginLeft: '40px',fontSize: '20px'}}>增长黑客</span>;
 
 	return (

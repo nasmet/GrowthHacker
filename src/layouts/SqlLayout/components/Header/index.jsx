@@ -22,7 +22,7 @@ export default function Header() {
 	  			{headerMenuConfig.map(model.traverse)}
 			</Nav>
 			<div className={styles.right}>
-				<Link style={{textDecoration:'none'}} to='/growthhacker/projectlist'>
+				<Link style={{textDecoration:'none'}} to='/dataanalysis/projectlist'>
 					<span style={{color: '#fff'}}>返回项目列表</span>
 				</Link>
 			</div>

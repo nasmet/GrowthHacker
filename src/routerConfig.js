@@ -9,57 +9,57 @@ const SqlLayout = React.lazy(() =>
 
 // 数据分析
 const ProjectList = React.lazy(() =>
-	import ('./pages/GrowthHacker/ProjectList'));
+	import ('./pages/DataAnalysis/ProjectList'));
 const ProjectData = React.lazy(() =>
-	import ('./pages/GrowthHacker/ProjectData'));
+	import ('./pages/DataAnalysis/ProjectData'));
 const DataBoard = React.lazy(() =>
-	import ('./pages/GrowthHacker/DataBoard'));
+	import ('./pages/DataAnalysis/DataBoard'));
 const DistributeDetails = React.lazy(() =>
-	import ('./pages/GrowthHacker/DataBoardDetails/DistributeDetails'));
+	import ('./pages/DataAnalysis/DataBoardDetails/DistributeDetails'));
 const LevelDetails = React.lazy(() =>
-	import ('./pages/GrowthHacker/DataBoardDetails/LevelDetails'));
+	import ('./pages/DataAnalysis/DataBoardDetails/LevelDetails'));
 const EventAnalysis = React.lazy(() =>
-	import ('./pages/GrowthHacker/ProductAnalysis/EventAnalysis'));
+	import ('./pages/DataAnalysis/ProductAnalysis/EventAnalysis'));
 const RetentionAnalysis = React.lazy(() =>
-	import ('./pages/GrowthHacker/ProductAnalysis/RetentionAnalysis'));
+	import ('./pages/DataAnalysis/ProductAnalysis/RetentionAnalysis'));
 const FunnelAnalysis = React.lazy(() =>
-	import ('./pages/GrowthHacker/ProductAnalysis/FunnelAnalysis'));
+	import ('./pages/DataAnalysis/ProductAnalysis/FunnelAnalysis'));
 const UserGroup = React.lazy(() =>
-	import ('./pages/GrowthHacker/UserAnalysis/UserGroup'));
+	import ('./pages/DataAnalysis/UserAnalysis/UserGroup'));
 const CreateGroup = React.lazy(() =>
-	import ('./pages/GrowthHacker/UserAnalysis/CreateGroup'));
+	import ('./pages/DataAnalysis/UserAnalysis/CreateGroup'));
 const UserGroupDetails = React.lazy(() =>
-	import ('./pages/GrowthHacker/UserAnalysis/UserGroupDetails'));
+	import ('./pages/DataAnalysis/UserAnalysis/UserGroupDetails'));
 const UserScrutiny = React.lazy(() =>
-	import ('./pages/GrowthHacker/UserAnalysis/UserScrutiny'));
+	import ('./pages/DataAnalysis/UserAnalysis/UserScrutiny'));
 const UserScrutinyDetails = React.lazy(() =>
-	import ('./pages/GrowthHacker/UserAnalysis/UserScrutinyDetails'));
+	import ('./pages/DataAnalysis/UserAnalysis/UserScrutinyDetails'));
 const UserPortrait = React.lazy(() =>
-	import ('./pages/GrowthHacker/UserAnalysis/UserPortrait'));
+	import ('./pages/DataAnalysis/UserAnalysis/UserPortrait'));
 const HeatMap = React.lazy(() =>
-	import ('./pages/GrowthHacker/UserAnalysis/HeatMap'));
+	import ('./pages/DataAnalysis/UserAnalysis/HeatMap'));
 const ShareAnalysis = React.lazy(() =>
-	import ('./pages/GrowthHacker/ShareSpread/ShareAnalysis'));
+	import ('./pages/DataAnalysis/ShareSpread/ShareAnalysis'));
 const ShareTrend = React.lazy(() =>
-	import ('./pages/GrowthHacker/ShareSpread/ShareTrend'));
+	import ('./pages/DataAnalysis/ShareSpread/ShareTrend'));
 const ShareView = React.lazy(() =>
-	import ('./pages/GrowthHacker/ShareSpread/ShareView'));
+	import ('./pages/DataAnalysis/ShareSpread/ShareView'));
 const UserShare = React.lazy(() =>
-	import ('./pages/GrowthHacker/ShareSpread/UserShare'));
+	import ('./pages/DataAnalysis/ShareSpread/UserShare'));
 const AdAnalysis = React.lazy(() =>
-	import ('./pages/GrowthHacker/AdMonitor/AdAnalysis'));
+	import ('./pages/DataAnalysis/AdMonitor/AdAnalysis'));
 const AdCount = React.lazy(() =>
-	import ('./pages/GrowthHacker/AdMonitor/AdCount'));
+	import ('./pages/DataAnalysis/AdMonitor/AdCount'));
 const ARPUAnalysis = React.lazy(() =>
-	import ('./pages/GrowthHacker/AdMonitor/ARPUAnalysis'));
+	import ('./pages/DataAnalysis/AdMonitor/ARPUAnalysis'));
 const UserWorth = React.lazy(() =>
-	import ('./pages/GrowthHacker/CustomerAnalysis/UserWorth'));
+	import ('./pages/DataAnalysis/CustomerAnalysis/UserWorth'));
 const GroupWorth = React.lazy(() =>
-	import ('./pages/GrowthHacker/CustomerAnalysis/GroupWorth'));
+	import ('./pages/DataAnalysis/CustomerAnalysis/GroupWorth'));
 const DataCenter = React.lazy(() =>
-	import ('./pages/GrowthHacker/DataCenter'));
+	import ('./pages/DataAnalysis/DataCenter'));
 const NewEvent = React.lazy(() =>
-	import ('./pages/GrowthHacker/NewEvent'));
+	import ('./pages/DataAnalysis/NewEvent'));
 
 // 千人千面
 const UserTag = React.lazy(() =>
@@ -141,181 +141,181 @@ const routerConfig = [
 		component: BasicLayout,
 		children: [{
 			id: '1007',
-			path: '/growthhacker/projectlist',
+			path: '/dataanalysis/projectlist',
 			component: ProjectList,
 			exact: true,
 			auth: true,
 		}, {
 			id: '1008',
-			path: '/growthhacker/projectdata',
+			path: '/dataanalysis/projectdata',
 			component: ProjectData,
 			children: [{
 				id: '1008002',
-				path: '/growthhacker/projectdata/pa/distributedetails',
+				path: '/dataanalysis/projectdata/pa/distributedetails',
 				component: DistributeDetails,
 				exact: true,
 				auth: true,
 			}, {
 				id: '1008003',
-				path: '/growthhacker/projectdata/pa/leveldetails',
+				path: '/dataanalysis/projectdata/pa/leveldetails',
 				component: LevelDetails,
 				exact: true,
 				auth: true,
 			}, {
 				id: '1008005',
-				path: '/growthhacker/projectdata/db',
+				path: '/dataanalysis/projectdata/db',
 				component: DataBoard,
 				exact: true,
 				auth: true,
 			}, {
 				id: '1008006',
-				path: '/growthhacker/projectdata/pa/eventanalysis/new',
+				path: '/dataanalysis/projectdata/pa/eventanalysis/new',
 				component: EventAnalysis,
 				exact: true,
 				auth: true,
 			}, {
 				id: '1008004',
-				path: '/growthhacker/projectdata/pa/eventanalysis/details',
+				path: '/dataanalysis/projectdata/pa/eventanalysis/details',
 				component: EventAnalysis,
 				exact: true,
 				auth: true,
 			}, {
 				id: '1008007',
-				path: '/growthhacker/projectdata/pa/retentionanalysis/new',
+				path: '/dataanalysis/projectdata/pa/retentionanalysis/new',
 				component: RetentionAnalysis,
 				exact: true,
 				auth: true,
 			}, {
 				id: '1008000',
-				path: '/growthhacker/projectdata/pa/retentionanalysis/details',
+				path: '/dataanalysis/projectdata/pa/retentionanalysis/details',
 				component: RetentionAnalysis,
 				exact: true,
 				auth: true,
 			}, {
 				id: '1008008',
-				path: '/growthhacker/projectdata/pa/funnelanalysis/new',
+				path: '/dataanalysis/projectdata/pa/funnelanalysis/new',
 				component: FunnelAnalysis,
 				exact: true,
 				auth: true,
 			}, {
 				id: '1008001',
-				path: '/growthhacker/projectdata/pa/funnelanalysis/details',
+				path: '/dataanalysis/projectdata/pa/funnelanalysis/details',
 				component: FunnelAnalysis,
 				exact: true,
 				auth: true,
 			}, {
 				id: '1008009',
-				path: '/growthhacker/projectdata/ua/usergroup',
+				path: '/dataanalysis/projectdata/ua/usergroup',
 				component: UserGroup,
 				exact: true,
 				auth: true,
 			}, {
 				id: '1008010',
-				path: '/growthhacker/projectdata/ua/userscrutiny',
+				path: '/dataanalysis/projectdata/ua/userscrutiny',
 				component: UserScrutiny,
 				exact: true,
 				auth: true,
 			}, {
 				id: '1008011',
-				path: '/growthhacker/projectdata/ua/userportrait',
+				path: '/dataanalysis/projectdata/ua/userportrait',
 				component: UserPortrait,
 				exact: true,
 				auth: true,
 			}, {
 				id: '1008012',
-				path: '/growthhacker/projectdata/ua/userscrutinydetails',
+				path: '/dataanalysis/projectdata/ua/userscrutinydetails',
 				component: UserScrutinyDetails,
 				exact: true,
 				auth: true,
 			}, {
 				id: '1008013',
-				path: '/growthhacker/projectdata/ua/creategroup',
+				path: '/dataanalysis/projectdata/ua/creategroup',
 				component: CreateGroup,
 				exact: true,
 				auth: true,
 			}, {
 				id: '1008014',
-				path: '/growthhacker/projectdata/ua/usergroupdetails',
+				path: '/dataanalysis/projectdata/ua/usergroupdetails',
 				component: UserGroupDetails,
 				exact: true,
 				auth: true,
 			}, {
 				id: '1008015',
-				path: '/growthhacker/projectdata/dc',
+				path: '/dataanalysis/projectdata/dc',
 				component: DataCenter,
 				exact: true,
 				auth: true,
 			}, {
 				id: '1008016',
-				path: '/growthhacker/projectdata/fs/shareanalysis',
+				path: '/dataanalysis/projectdata/fs/shareanalysis',
 				component: ShareAnalysis,
 				exact: true,
 				auth: true,
 			}, {
 				id: '1008018',
-				path: '/growthhacker/projectdata/fs/sharetrend',
+				path: '/dataanalysis/projectdata/fs/sharetrend',
 				component: ShareTrend,
 				exact: true,
 				auth: true,
 			}, {
 				id: '1008019',
-				path: '/growthhacker/projectdata/fs/shareview',
+				path: '/dataanalysis/projectdata/fs/shareview',
 				component: ShareView,
 				exact: true,
 				auth: true,
 			}, {
 				id: '1008020',
-				path: '/growthhacker/projectdata/fs/usershare',
+				path: '/dataanalysis/projectdata/fs/usershare',
 				component: UserShare,
 				exact: true,
 				auth: true,
 			}, , {
 				id: '1008021',
-				path: '/growthhacker/projectdata/ad/adcount',
+				path: '/dataanalysis/projectdata/ad/adcount',
 				component: AdCount,
 				exact: true,
 				auth: true,
 			}, {
 				id: '1008022',
-				path: '/growthhacker/projectdata/ad/adanalysis',
+				path: '/dataanalysis/projectdata/ad/adanalysis',
 				component: AdAnalysis,
 				exact: true,
 				auth: true,
 			}, {
 				id: '1008023',
-				path: '/growthhacker/projectdata/ad/arpuanalysis',
+				path: '/dataanalysis/projectdata/ad/arpuanalysis',
 				component: ARPUAnalysis,
 				exact: true,
 				auth: true,
 			}, {
 				id: '1008025',
-				path: '/growthhacker/projectdata/newevent',
+				path: '/dataanalysis/projectdata/newevent',
 				component: NewEvent,
 				exact: true,
 				auth: true,
 			}, {
 				id: '1008026',
-				path: '/growthhacker/projectdata/ca/userworth',
+				path: '/dataanalysis/projectdata/ca/userworth',
 				component: UserWorth,
 				exact: true,
 				auth: true,
 			}, {
 				id: '1008027',
-				path: '/growthhacker/projectdata/ca/groupworth',
+				path: '/dataanalysis/projectdata/ca/groupworth',
 				component: GroupWorth,
 				exact: true,
 				auth: true,
 			}, {
 				id: '1008028',
-				path: '/growthhacker/projectdata/ua/heatmap',
+				path: '/dataanalysis/projectdata/ua/heatmap',
 				component: HeatMap,
 				exact: true,
 				auth: true,
 			}, {
 				id: '10080000',
-				path: '/growthhacker/projectdata',
+				path: '/dataanalysis/projectdata',
 				// 重定向
-				redirect: '/growthhacker/projectdata/db',
+				redirect: '/dataanalysis/projectdata/db',
 			}, {
 				id: '10080001',
 				// 404 没有匹配到的路由
@@ -367,7 +367,7 @@ const routerConfig = [
 			id: '10000',
 			path: '/',
 			// 重定向
-			redirect: '/growthhacker/projectlist',
+			redirect: '/dataanalysis/projectlist',
 		}, {
 			id: '10001',
 			// 404 没有匹配到的路由

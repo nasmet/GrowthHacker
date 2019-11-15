@@ -1,4 +1,4 @@
-const baseUrl = '/growthhacker/projectdata';
+const baseUrl = '/dataanalysis/projectdata';
 
 export const navs = [{
 	name: '数据看板',

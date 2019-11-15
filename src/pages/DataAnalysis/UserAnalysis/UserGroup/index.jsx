@@ -26,7 +26,7 @@ function UserGroup({
 	} = response;
 
 	const onCreateGroup = () => {
-		history.push('/growthhacker/projectdata/ua/creategroup');
+		history.push('/dataanalysis/projectdata/ua/creategroup');
 	};
 
 	const onDeleteGroup = (id, index) => {
@@ -51,7 +51,7 @@ function UserGroup({
 
 	const jumpUserGroupDetails = (record) => {
 		history.push({
-			pathname: '/growthhacker/projectdata/ua/usergroupdetails',
+			pathname: '/dataanalysis/projectdata/ua/usergroupdetails',
 			state: {
 				data: record,
 			}

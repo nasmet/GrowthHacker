@@ -37,19 +37,19 @@ function DataBoard({
 		switch (type) {
 			case 'active_user':
 			case 'distribute':
-				pathname = '/growthhacker/projectdata/pa/distributedetails';
+				pathname = '/dataanalysis/projectdata/pa/distributedetails';
 				break;
 			case 'retention':
-				pathname = '/growthhacker/projectdata/pa/retentionanalysis/details';
+				pathname = '/dataanalysis/projectdata/pa/retentionanalysis/details';
 				break;
 			case 'funnel':
-				pathname = '/growthhacker/projectdata/pa/funnelanalysis/details';
+				pathname = '/dataanalysis/projectdata/pa/funnelanalysis/details';
 				break;
 			case 'analysis':
-				pathname = '/growthhacker/projectdata/pa/leveldetails';
+				pathname = '/dataanalysis/projectdata/pa/leveldetails';
 				break;
 			case 'dashboard':
-				pathname = '/growthhacker/projectdata/pa/eventanalysis/details';
+				pathname = '/dataanalysis/projectdata/pa/eventanalysis/details';
 				break;
 		}
 		history.push({

@@ -39,7 +39,7 @@ function UserScrutiny({
 
 	const jump = record => {
 		history.push({
-			pathname: '/growthhacker/projectdata/ua/userscrutinydetails',
+			pathname: '/dataanalysis/projectdata/ua/userscrutinydetails',
 			state: {
 				record,
 			}

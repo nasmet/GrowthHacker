@@ -25,13 +25,13 @@ const headerMenuConfig = [{
 
 const asideMenuConfig = [{
 	name: '数据分析',
-	path: '/growthhacker',
+	path: '/dataanalysis',
 	sub: [{
 		name: '项目列表',
-		path: '/growthhacker/projectlist',
+		path: '/dataanalysis/projectlist',
 	}, {
 		name: '项目数据',
-		path: '/growthhacker/projectdata',
+		path: '/dataanalysis/projectdata',
 		auth: () => sessionStorage.getItem(config.PROJECTID),
 	}],
 }, {
