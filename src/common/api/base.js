@@ -8,9 +8,9 @@ switch (process.env.NODE_ENV) {
 	case 'development':
 		baseURL = config.DEVBASEURL;
 		break;
-	case 'production':
-		baseURL = config.BUILDBASEURL;
-		break;
+	// case 'production':
+	// 	baseURL = config.BUILDBASEURL;
+	// 	break;
 	default:
 		baseURL = config.TESTBASEURL;
 		break;
