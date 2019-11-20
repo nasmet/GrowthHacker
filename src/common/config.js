@@ -12,6 +12,6 @@ export const PASSWORD = 'PASSWORD';
 export const USERNAME = 'USERNAME';
 export const PROJECTID = 'PROJECTID';
 export const PROJECTNAME = 'PROJECTNAME';
-export const PROJECTIDAPPID = 'PROJECTIDAPPID';
+export const PROJECTAPPID = 'PROJECTAPPID';
 export const DOWNLOADURL = `${DEVBASEURL}/management/event_entity/export`;
 export const UPLOADURL = `${DEVBASEURL}/management/event_entity/import`;

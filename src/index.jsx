@@ -11,6 +11,7 @@ import model from './common/model/index';
 import * as config from './common/config';
 import Components from './common/components/index';
 import hooks from './common/hooks/index';
+import lib from './common/lib/index';
 
 const ICE_CONTAINER = document.getElementById('ice-container');
 if (!ICE_CONTAINER) {
@@ -23,5 +24,6 @@ window.model = model;
 window.config = config;
 window.Components = Components;
 window.hooks = hooks;
+window.lib = lib;
 
 ReactDOM.render(router, ICE_CONTAINER);

@@ -34,7 +34,7 @@ function UserLogin({
 			setValues({
 				flag: true,
 				username,
-				password,
+				password: lib.decrypt(password),
 			});
 		}
 	}, []);
@@ -52,12 +52,12 @@ function UserLogin({
 		}).then((res) => {
 			if (flag) {
 				localStorage.setItem(config.ACCOUNT, username);
-				localStorage.setItem(config.PASSWORD, password);
+				localStorage.setItem(config.PASSWORD, lib.encrypt(password));
 			} else {
 				localStorage.removeItem(config.ACCOUNT);
 				localStorage.removeItem(config.PASSWORD);
 			}
-			sessionStorage.setItem(config.TOKENKEY, res.token);
+			sessionStorage.setItem(config.TOKENKEY, lib.encrypt(res.token));
 			sessionStorage.setItem(config.USERNAME, username);
 			history.push('/');
 		}).catch(e => {
