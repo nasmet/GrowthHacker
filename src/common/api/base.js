@@ -165,7 +165,7 @@ export function upload(data = {}) {
 			signal,
 			method: 'post',
 			headers: {
-				Authorization: sessionStorage.getItem(config.TOKENKEY),
+				Authorization: lib.decrypt(sessionStorage.getItem(config.TOKENKEY)),
 			},
 			body: formData,
 		}).then((response) => {
