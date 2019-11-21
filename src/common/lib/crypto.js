@@ -4,37 +4,22 @@ const key = CryptoJS.enc.Utf8.parse("1234567890000000"); //16位
 const iv = CryptoJS.enc.Utf8.parse("1234567890000000");
 
 //aes加密
-export function encrypt(word) {
-  let encrypted = "";
-  if (typeof word == "string") {
-    const srcs = CryptoJS.enc.Utf8.parse(word);
-    encrypted = CryptoJS.AES.encrypt(srcs, key, {
-      iv: iv,
-      mode: CryptoJS.mode.CBC,
-      padding: CryptoJS.pad.Pkcs7
-    });
-  } else if (typeof word == "object") {
-    //对象格式的转成json字符串
-    const data = JSON.stringify(word);
-    const srcs = CryptoJS.enc.Utf8.parse(data);
-    encrypted = CryptoJS.AES.encrypt(srcs, key, {
-      iv: iv,
-      mode: CryptoJS.mode.CBC,
-      padding: CryptoJS.pad.Pkcs7
-    });
-  }
-  return encrypted.ciphertext.toString();
+export function encrypt(data) {
+	const srcs = CryptoJS.enc.Utf8.parse(data);
+	const encrypted = CryptoJS.AES.encrypt(srcs, key, {
+		iv,
+		mode: CryptoJS.mode.ECB,
+		padding: CryptoJS.pad.Pkcs7
+	});
+	return encrypted.toString();
 }
 
-// aes解密
-export function decrypt(word) {
-  const encryptedHexStr = CryptoJS.enc.Hex.parse(word);
-  const srcs = CryptoJS.enc.Base64.stringify(encryptedHexStr);
-  const decrypt = CryptoJS.AES.decrypt(srcs, key, {
-    iv: iv,
-    mode: CryptoJS.mode.CBC,
-    padding: CryptoJS.pad.Pkcs7
-  });
-  const decryptedStr = decrypt.toString(CryptoJS.enc.Utf8);
-  return decryptedStr.toString();
+//aes解密
+export function decrypt(data, type = 'string') {
+	const decrypt = CryptoJS.AES.decrypt(data, key, {
+		iv,
+		mode: CryptoJS.mode.ECB,
+		padding: CryptoJS.pad.Pkcs7
+	});
+	return CryptoJS.enc.Utf8.stringify(decrypt).toString();
 }

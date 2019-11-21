@@ -44,7 +44,7 @@ export default function UserDetails({
 			<p>
 				<span className={styles.name}>设备使用情况：</span>
 			</p>
-			<Components.BasicPercentSector data={devices} {...chartStyle}  />
+			<Components.BasicSector data={devices} {...chartStyle}  />
   		</div>
 	);
 }

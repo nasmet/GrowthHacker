@@ -1,7 +1,6 @@
 import BasicColumn from './BasicColumn';
 import BasicPolyline from './BasicPolyline';
 import BasicSector from './BasicSector';
-import BasicPercentSector from './BasicPercentSector';
 import BasicHeatMap from './BasicHeatMap';
 import NotFound from './NotFound';
 import DateFilter from './DateFilter';
@@ -20,7 +19,6 @@ export default {
 	BasicColumn,
 	BasicPolyline,
 	BasicSector,
-	BasicPercentSector,
 	BasicHeatMap,
 	NotFound,
 	DateFilter,

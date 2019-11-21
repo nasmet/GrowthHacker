@@ -13,11 +13,6 @@ import Components from './common/components/index';
 import hooks from './common/hooks/index';
 import lib from './common/lib/index';
 
-const ICE_CONTAINER = document.getElementById('ice-container');
-if (!ICE_CONTAINER) {
-	throw new Error('当前页面不存在 <div id="ice-container"></div> 节点.');
-}
-
 window.utils = utils;
 window.api = api;
 window.model = model;
@@ -26,4 +21,4 @@ window.Components = Components;
 window.hooks = hooks;
 window.lib = lib;
 
-ReactDOM.render(router, ICE_CONTAINER);
+ReactDOM.render(router, document.getElementById('ice-container'));

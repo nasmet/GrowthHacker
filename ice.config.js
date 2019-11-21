@@ -10,7 +10,7 @@ module.exports = {
 		}],
 		['ice-plugin-moment-locales', {
 			locales: ['zh-cn'],
-		}],
+		}]
 	],
 	externals: {
 		'bizcharts': 'BizCharts',
