@@ -45,6 +45,10 @@ export default function ARPUData() {
 		});
 	};
 
+	const onRefresh = () => {
+		updateParameter(parameter);
+	};
+
 	return (
 		<Components.Wrap>
 			<IceContainer>
@@ -52,6 +56,10 @@ export default function ARPUData() {
 				<Components.GroupFilter filterChange={groupChange} />
 			</IceContainer>   	   		
 			<IceContainer>
+				<div className='table-update-btns'>					
+					<Components.Refresh onClick={onRefresh} />
+					{data.length > 0 && <Components.ExportExcel fileName='ARPU数据' data={data} meta={meta} type={4} />}
+				</div>
 				<Loading visible={loading} inline={false}>
 					<Table dataSource={data} hasBorder={false} fixedHeader maxBodyHeight={400} >
 						{renderTitles()}

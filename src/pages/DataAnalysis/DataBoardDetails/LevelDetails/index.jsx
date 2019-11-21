@@ -67,9 +67,9 @@ function LevelDetails({
 	const renderTitle = () => {
 		return meta.map((item, index) => {
 			if (index === 3 || index === 6) {
-				return <Table.Column key={index} title={item} cell={renderColumn.bind(this, index)} />
+				return <Table.Column key={index} title={item} cell={renderColumn.bind(this, index)} sortable />
 			}
-			return <Table.Column key={index} title={item} dataIndex={index.toString()} />
+			return <Table.Column key={index} title={item} dataIndex={index.toString()} sortable />
 		});
 	};
 
@@ -80,6 +80,14 @@ function LevelDetails({
 		}));
 	};
 
+	const onRefresh = () => {
+		updateParameter({...parameter});
+	};
+
+	const onSort = (dataIndex, order) => {
+		onRefresh();
+	};
+
 	return (
 		<Components.Wrap>
 			<Components.Title title={boardInfo.name} desc={boardInfo.desc} />
@@ -87,7 +95,12 @@ function LevelDetails({
 				<Components.DateFilter initTabValue='NAN' initCurDateValue={model.transformDate(boardInfo.date)} filterChange={filterChange} />	
 			</IceContainer>
 			<IceContainer> 
+				<div className='table-update-btns'>					
+					<Components.Refresh onClick={onRefresh} />
+					{data.length > 0 && <Components.ExportExcel fileName={boardInfo.name} data={data} meta={meta} type={4} />}
+				</div>
 				<Components.ChartsDisplay 
+					onSort={onSort}
 					tableData={data}
 					loading={loading}
 					chartData={assemblingChartData(data, meta)} 

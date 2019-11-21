@@ -12,7 +12,6 @@ import {
 	withRouter,
 } from 'react-router-dom';
 import IceContainer from '@icedesign/container';
-import styles from './index.module.scss';
 import Condition from './components/Condition';
 
 function RetentionAnalysis({
@@ -180,13 +179,10 @@ function RetentionAnalysis({
 			</IceContainer>
 
 			<IceContainer style={{minHeight: '600px'}}>
-				{data.length > 0 &&
-					<div className={styles.btnWrap}>					
-						<Components.Refresh onClick={onRefresh} />
-						<Components.ExportExcel fileName={title} data={data} meta={meta} type={2} />
-					</div>
-				}	
-
+				<div className='table-update-btns'>					
+					<Components.Refresh onClick={onRefresh} />
+					{data.length > 0 && <Components.ExportExcel fileName={title} data={data} meta={meta} type={2} />}
+				</div>
 				<Components.ChartsDisplay 
 					tableData={data}
 					loading={loading}

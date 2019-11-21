@@ -41,6 +41,10 @@ export default function AdCount() {
 		});
 	};
 
+	const onRefresh = () => {
+		updateParameter(parameter);
+	};
+
 	return (
 		<Components.Wrap>
 			<Components.Title title='生命周期广告次数' desc='统计每天的新用户在1、2、3、7、14、30的广告累计点击次数' />
@@ -49,6 +53,10 @@ export default function AdCount() {
 				<Components.GroupFilter filterChange={groupChange} />
 			</IceContainer>
 			<IceContainer>
+				<div className='table-update-btns'>					
+					<Components.Refresh onClick={onRefresh} />
+					{data.length > 0 && <Components.ExportExcel fileName='生命周期广告次数' data={data} meta={meta} type={4} />}
+				</div>
 				<Loading visible={loading} inline={false}>
 					<Table dataSource={data} hasBorder={false} fixedHeader maxBodyHeight={400} >
 						{renderTitles()}

@@ -175,6 +175,10 @@ function FunnelAnalysis({
       		</IceContainer>
 
       		<IceContainer>
+      			<div className='table-update-btns'>
+					<Components.Refresh onClick={onRefresh} />
+					{data.length > 0 && <Components.ExportExcel fileName={title} data={data} meta={meta} type={3} />}
+				</div>
       			<DataDisplay meta={meta} data={data} loading={loading} />
       		</IceContainer>
 

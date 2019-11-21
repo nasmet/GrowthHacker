@@ -17,7 +17,7 @@ export default function AdAnalysis() {
 	});
 	const {
 		meta = [],
-		data = [],
+			data = [],
 	} = response;
 
 	const dateChange = (e) => {
@@ -52,6 +52,10 @@ export default function AdAnalysis() {
 		});
 	};
 
+	const onRefresh = () => {
+		updateParameter(parameter);
+	};
+
 	return (
 		<Components.Wrap>
 			<Components.Title title='付费率分析' desc='用户数量，用户占活跃用户比例，平均用户总游戏时长' />
@@ -60,6 +64,10 @@ export default function AdAnalysis() {
 				<Components.GroupFilter filterChange={groupChange} />	
 			</IceContainer>
 			<IceContainer>
+				<div className='table-update-btns'>					
+					<Components.Refresh onClick={onRefresh} />
+					{data.length > 0 && <Components.ExportExcel fileName='付费率分析' data={data} meta={meta} type={4} />}
+				</div>
 				<Loading visible={loading} inline={false}>
 					<Table dataSource={data} hasBorder={false} fixedHeader maxBodyHeight={400} >
 						{renderTitles()}

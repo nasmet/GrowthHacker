@@ -38,6 +38,10 @@ export default function AdRate() {
 		});
 	};
 
+	const onRefresh = () => {
+		updateParameter(parameter);
+	};
+
 	return (
 		<Components.Wrap>
 			<IceContainer>
@@ -45,6 +49,10 @@ export default function AdRate() {
 				<Components.GroupFilter filterChange={groupChange} />
 			</IceContainer>  		
 			<IceContainer>
+				<div className='table-update-btns'>					
+					<Components.Refresh onClick={onRefresh} />
+					{data.length > 0 && <Components.ExportExcel fileName='广告点击率' data={data} meta={meta} type={4} />}
+				</div>
 				<Loading visible={loading} inline={false}>
 					<Table dataSource={data} hasBorder={false} fixedHeader maxBodyHeight={400} >
 						{renderTitles()}

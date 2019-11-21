@@ -229,12 +229,10 @@ function EventAnalysis({
 			</IceContainer>
 
 			<IceContainer style={{minHeight: '600px'}}>
-				{data.length > 0 &&
-					<div className={styles.btnWrap}>
-						<Components.Refresh onClick={onRefresh} />
-						<Components.ExportExcel fileName={title} data={data} meta={meta} type={1} />
-					</div>
-				}
+				<div className='table-update-btns'>
+					<Components.Refresh onClick={onRefresh} />
+					{data.length > 0 && <Components.ExportExcel fileName={title} data={data} meta={meta} type={1} />}
+				</div>
 				<Components.ChartsDisplay
 					tableData={data}
 					loading={loading}
