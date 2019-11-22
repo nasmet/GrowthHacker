@@ -31,11 +31,19 @@ export default function NewEvent() {
 		updateParameter(parameter);
 	};
 
+	const handleData = () => {
+		return {
+			sheetHeader: columns,
+			sheetData: data,
+		};
+	};
+
 	return (
 		<Components.Wrap>
 			<IceContainer>
 				<div className='table-update-btns'>					
 					<Components.Refresh onClick={onRefresh} />
+					{data.length > 0 && <Components.ExportExcel fileName='最新打点事件' handle={handleData} />}
 				</div>
 				<Loading visible={loading} inline={false}>
 					<Table dataSource={data} hasBorder={false}>

@@ -38,8 +38,15 @@ export default function AdCount() {
 		});
 	};
 
-	const onRefresh=()=>{
+	const onRefresh = () => {
 		updateParameter(parameter);
+	};
+
+	const handleData = () => {
+		return {
+			sheetHeader: meta,
+			sheetData: data,
+		};
 	};
 
 	return (
@@ -51,7 +58,7 @@ export default function AdCount() {
 			<IceContainer>
 				<div className='table-update-btns'>					
 					<Components.Refresh onClick={onRefresh} />
-					{data.length > 0 && <Components.ExportExcel fileName='每日看广告次数' data={data} meta={meta} type={4} />}
+					{data.length > 0 && <Components.ExportExcel fileName='每日看广告次数' handle={handleData} />}
 				</div>
 				<Loading visible={loading} inline={false}>
 					<Table dataSource={data} hasBorder={false} fixedHeader maxBodyHeight={400}>

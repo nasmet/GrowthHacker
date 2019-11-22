@@ -1,5 +1,6 @@
 import React, {
 	useRef,
+	useMemo,
 } from 'react';
 import {
 	Table,
@@ -18,7 +19,22 @@ export default function ShareTrend() {
 		color: 'event',
 	};
 
-	function assembleChartData() {
+	const {
+		response,
+		loading,
+		updateParameter,
+		parameter,
+	} = hooks.useRequest(api.getShareTrend, {
+		date: 'day:0',
+		limit: config.LIMIT,
+		offset: 0,
+	});
+	const {
+		share_overview = [],
+			total = 0,
+	} = response;
+
+	const assembleChartData = useMemo(() => {
 		const temp = [];
 		share_overview.forEach((item) => {
 			const {
@@ -30,6 +46,7 @@ export default function ShareTrend() {
 				time_range,
 			} = item;
 			const time = formatTime(time_range);
+
 			temp.push({
 				time,
 				event: '分享人数',
@@ -57,22 +74,24 @@ export default function ShareTrend() {
 			});
 		});
 		return temp;
-	}
+	}, [share_overview]);
 
-	const {
-		response,
-		loading,
-		updateParameter,
-		parameter,
-	} = hooks.useRequest(api.getShareAnalysis, {
-		date: 'day:0',
-		limit: config.LIMIT,
-		offset: 0,
-	});
-	const {
-		share_overview = [],
-			total = 0,
-	} = response;
+	const assembleCols = useMemo(() => {
+		if (share_overview.length === 0) {
+			return {};
+		}
+		const time_range = share_overview[0].time_range;
+		const start = time_range.from;
+		const end = time_range.to;
+		if (end - start > 3600) {
+			return {
+				time: {
+					type: 'timeCat',
+				},
+			};
+		}
+		return {};
+	}, [share_overview]);
 
 	const dateChange = date => {
 		updateParameter({ ...parameter,
@@ -91,11 +110,11 @@ export default function ShareTrend() {
 		return <span>{formatTime(record.time_range)}</span>;
 	};
 
-	function formatTime(arg) {
-		const start = arg.from;
-		const end = arg.to;
+	function formatTime(time_range) {
+		const start = time_range.from;
+		const end = time_range.to;
 		if (end - start > 3600) {
-			return `日期:${utils.formatUnix(start, 'Y-M-D')}`;
+			return utils.formatUnix(start, 'Y-M-D');
 		}
 		const formatStart = utils.formatUnix(start, 'h:m');
 		const formatEnd = utils.formatUnix(end, 'h:m');
@@ -106,10 +125,21 @@ export default function ShareTrend() {
 		return `${utils.transformPercent(record.share_reflux_ratio)}`;
 	};
 
-	const meta = ['日期', '分享人数', '分享次数', '回流量', '分享回流比', '分享新增'];
-
 	const onRefresh = () => {
 		updateParameter(parameter);
+	};
+
+
+	const handleData = () => {
+		return {
+			sheetHeader: ['日期', '分享人数', '分享次数', '回流量', '分享回流比', '分享新增'],
+			sheetData: share_overview.map(item => {
+				return {
+					...item,
+					time_range: formatTime(item.time_range),
+				};
+			}),
+		};
 	};
 
 	return (
@@ -119,9 +149,10 @@ export default function ShareTrend() {
 			<IceContainer>
 				<Header ref={headRef} />
 				<Loading visible={loading} inline={false}>
-					<Components.BasicColumn data={assembleChartData()} {...chartStyle} forceFit />
+					<Components.BasicColumn data={assembleChartData} {...chartStyle} cols={assembleCols} forceFit />
 					<div className='table-update-btns'>					
 						<Components.Refresh onClick={onRefresh} />
+						{share_overview.length > 0 && <Components.ExportExcel fileName='分享趋势' handle={handleData} />}
 					</div>
 					<Table 
 						dataSource={share_overview} 

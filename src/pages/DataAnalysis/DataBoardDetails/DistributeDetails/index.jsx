@@ -101,11 +101,18 @@ function DistributeDetails({
 			}
 		}));
 	};
-	
-	const onRefresh=()=>{
+
+	const onRefresh = () => {
 		updateParameter(parameter);
 	};
-	
+
+	const handleData = () => {
+		return {
+			sheetHeader: meta,
+			sheetData: data,
+		};
+	};
+
 	return (
 		<Components.Wrap>
 			<Components.Title title={boardInfo.name} desc={boardInfo.desc} />
@@ -113,7 +120,7 @@ function DistributeDetails({
 			<IceContainer>
 				<div className='table-update-btns'>					
 					<Components.Refresh onClick={onRefresh} />
-					{data.length > 0 && <Components.ExportExcel fileName={boardInfo.name} data={data} meta={meta} type={4} />}
+					{data.length > 0 && <Components.ExportExcel fileName={boardInfo.name} handle={handleData} />}
 				</div>
 				<Components.ChartsDisplay 
 					tableData={assemblingTableData(data||[])}

@@ -174,26 +174,47 @@ export default function Event() {
 		};
 	};
 
+	const onRefresh = () => {
+		updateParameter(parameter);
+	};
+
+	const handleData = () => {
+		return {
+			sheetHeader: ["id", "名称", "标识符", "类型", "关联事件变量", "描述"],
+			sheetData: event_entities.map(item => [
+				item.id,
+				item.name,
+				item.entity_key,
+				item.value_type,
+				item.bind_variables.map(item => item.entity_key).join(', '),
+				item.desc,
+			]),
+		}
+	};
+
 	return (
 		<Components.Wrap>
-			<IceContainer>      		
-				<div className={styles.btnWrap}>
-					<Button type="secondary" onClick={onCreateEvent}> 
-						创建埋点事件
-					</Button>
-					<Button style={{marginLeft: '20px'}}> 
-						<a style={{textDecoration:'none'}} href={config.DOWNLOADURL} download>导出事件和变量</a>
-					</Button>
-					
-				    <Upload
-				    	request={upload}
-			    	>	
-				    	<Button style={{marginLeft: '20px'}}>
-					        导入事件和变量
-			          	</Button>
-				    </Upload>
-				</div>
+			<div className={styles.btnWrap}>
+				<Button type="secondary" onClick={onCreateEvent}> 
+					创建埋点事件
+				</Button>
+				<Button style={{marginLeft: 'auto'}}> 
+					<a style={{textDecoration:'none'}} href={config.DOWNLOADURL} download>导出事件和变量</a>
+				</Button>
 				
+			    <Upload
+			    	request={upload}
+		    	>	
+			    	<Button style={{marginLeft: '20px'}}>
+				        导入事件和变量
+		          	</Button>
+			    </Upload>
+			</div>
+			<IceContainer>      		
+				<div className='table-update-btns'>					
+					<Components.Refresh onClick={onRefresh} />
+					{event_entities.length > 0 && <Components.ExportExcel fileName='埋点事件' handle={handleData} />}
+				</div>
 				<Loading visible={loading} inline={false}>
 					<Table		         	 
 						dataSource={event_entities}		          		 

@@ -15,7 +15,7 @@ import styles from './index.module.scss';
 import CreateOriginData from './components/CreateOriginData';
 import OriginDataDetails from './components/OriginDataDetails';
 
-export default  function OriginData() {
+export default function OriginData() {
 	const [showDrawer, setShowDrawer] = useState(false);
 	const [values, setValues] = useState({});
 	const refDialog = useRef(null);
@@ -104,15 +104,35 @@ export default  function OriginData() {
 		setShowDrawer(false);
 	};
 
+	const onRefresh = () => {
+		updateParameter(parameter);
+	};
+
+	const handleData = () => {
+		return {
+			sheetHeader: ["id", "名称", "标识符", "类型", "描述"],
+			sheetData: data.map(item => [
+				item.id,
+				item.name,
+				item.key,
+				item.value_type,
+				item.desc,
+			]),
+		}
+	};
+
 	return (
 		<Components.Wrap>
+			<div className={styles.btnWrap}>
+				<Button className={styles.btn} type="secondary" onClick={onCreateOriginData}> 
+					创建元数据
+				</Button>
+			</div>
 			<IceContainer>
-				<div className={styles.btnWrap}>
-					<Button className={styles.btn} type="secondary" onClick={onCreateOriginData}> 
-						创建元数据
-					</Button>
+				<div className='table-update-btns'>					
+					<Components.Refresh onClick={onRefresh} />
+					{data.length > 0 && <Components.ExportExcel fileName='元数据' handle={handleData} />}
 				</div>
-				
 				<Loading visible={loading} inline={false}>
 					<Table 
 						dataSource={data} 

@@ -54,10 +54,19 @@ export default function Template({
 		updateParameter({ ...parameter
 		});
 	};
-	
-	const onRefresh=()=>{
+
+	const onRefresh = () => {
 		updateParameter(parameter);
 	}
+
+	const handleData = () => {
+		return {
+			sheetHeader: ['事件名称', '事件标识符', '事件时间'],
+			sheetData: events.map(item=>{
+				return [item.name,item.event,utils.formatUnix(item.created_at,'Y-M-D h:m:s')];
+			}),
+		};
+	};
 
 	return (
 		<div>
@@ -72,6 +81,7 @@ export default function Template({
 			<IceContainer>	
 				<div className='table-update-btns'>					
 					<Components.Refresh onClick={onRefresh} />
+					{events.length > 0 && <Components.ExportExcel fileName='用户细查详情' handle={handleData} />}
 				</div>			
 				<Loading visible={loading} inline={false}>
 		      		<Table 

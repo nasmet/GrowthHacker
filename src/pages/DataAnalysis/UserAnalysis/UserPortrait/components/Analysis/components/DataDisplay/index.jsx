@@ -75,9 +75,16 @@ function Template({
 	const onSelectChange = (e) => {
 		setIndex(e);
 	};
-	
-	const onRefresh=()=>{
+
+	const onRefresh = () => {
 		updateParameter(parameter);
+	};
+
+	const handleData = () => {
+		return {
+			sheetHeader: meta,
+			sheetData: data,
+		};
 	};
 
 	return (
@@ -94,7 +101,7 @@ function Template({
 				<Components.BasicSector data={assembleChartData()} {...chartStyle} />
 				<div className='table-update-btns'>					
 					<Components.Refresh onClick={onRefresh} />
-					{data.length > 0 && <Components.ExportExcel fileName={name} data={data} meta={meta} type={4} />}
+					{data.length > 0 && <Components.ExportExcel fileName={name} handle={handleData} />}
 				</div>
 				<Table 
 					dataSource={data} 

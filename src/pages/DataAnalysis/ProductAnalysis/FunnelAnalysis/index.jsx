@@ -165,6 +165,23 @@ function FunnelAnalysis({
 		})
 	}
 
+	const handleData = () => {
+		const sheetHeader = meta.map((item, index) => {
+			if (index === 0) {
+				return item.step_name;
+			}
+			if (index === meta.length - 1) {
+				return '';
+			}
+			return item.step_num;
+		});
+		const temp = data.map(item => `${item.unique_count}\n${utils.transformPercent(item.percentage)}`);
+		return {
+			sheetHeader,
+			sheetData: [temp],
+		};
+	};
+
 	return (
 		<Components.Wrap>
 			<Components.Save ref={saveRef} title={title} {...initSave} onSave={onSave} />
@@ -177,7 +194,7 @@ function FunnelAnalysis({
       		<IceContainer>
       			<div className='table-update-btns'>
 					<Components.Refresh onClick={onRefresh} />
-					{data.length > 0 && <Components.ExportExcel fileName={title} data={data} meta={meta} type={3} />}
+					{data.length > 0 && <Components.ExportExcel fileName={title} handle={handleData} />}
 				</div>
       			<DataDisplay meta={meta} data={data} loading={loading} />
       		</IceContainer>

@@ -169,6 +169,22 @@ function RetentionAnalysis({
 		});
 	};
 
+	const handleData = () => {
+		const arr = [0, 1];
+		const sheetData = data.map(item => {
+			return item.map((v, index) => {
+				if (arr.includes(index)) {
+					return v;
+				}
+				return `${v}\n${item[1]===0?'0.00%':utils.transformPercent(v/item[1])}`;
+			});
+		});
+		return {
+			sheetHeader: meta,
+			sheetData,
+		};
+	};
+
 	return (
 		<Components.Wrap>
 			<Components.Save ref={saveRef} title={title} {...initSave} onSave={onSave} />
@@ -181,7 +197,7 @@ function RetentionAnalysis({
 			<IceContainer style={{minHeight: '600px'}}>
 				<div className='table-update-btns'>					
 					<Components.Refresh onClick={onRefresh} />
-					{data.length > 0 && <Components.ExportExcel fileName={title} data={data} meta={meta} type={2} />}
+					{data.length > 0 && <Components.ExportExcel fileName={title} handle={handleData} />}
 				</div>
 				<Components.ChartsDisplay 
 					tableData={data}

@@ -97,6 +97,16 @@ export default function CityDistribute({
 		updateParameter(parameter);
 	};
 
+	const handleData = () => {
+		return {
+			sheetHeader: ['城市', '分享人数', '分享次数', '回流量', '回流量占比', '分享新增'],
+			sheetData: data.map(item =>
+				[item.city, item.share_user_count, item.share_count, item.share_open_count,
+					utils.transformPercent(item.share_reflux_ratio), item.new_count
+				]),
+		}
+	};
+
 	return (
 		<Components.Wrap>
 			<Loading visible={loading} inline={false}>					
@@ -104,8 +114,9 @@ export default function CityDistribute({
 					<Components.BasicColumn data={assembleChartData()} {...chartStyle} forceFit />
 					<div className='table-update-btns'>					
 						<Components.Refresh onClick={onRefresh} />
+						{data.length > 0 && <Components.ExportExcel fileName='城市分布' handle={handleData} />}
 					</div>
-					<Table dataSource={data} hasBorder={false}>
+					<Table dataSource={data} hasBorder={false}>						
 						<Table.Column title='城市' dataIndex='city' />
 						<Table.Column title='分享人数' dataIndex='share_user_count' />
 						<Table.Column title='分享次数' dataIndex='share_count' />

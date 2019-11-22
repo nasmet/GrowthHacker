@@ -55,6 +55,13 @@ export default function GroupWorth() {
 		getGroupWorth();
 	};
 
+	const handleData = () => {
+		return {
+			sheetHeader: ['广告点击次数', '分享新增用户数', '分享次数', '分享回流数'],
+			sheetData: tableData,
+		};
+	};
+
 	return (
 		<Components.Wrap>
 			<Components.Title title='分群用户价值评估' />
@@ -65,6 +72,7 @@ export default function GroupWorth() {
 			<IceContainer>
 				<div className='table-update-btns'>					
 					<Components.Refresh onClick={onRefresh} />
+					{tableData.length > 0 && <Components.ExportExcel fileName='分群用户价值评估' handle={handleData} />}
 				</div>
 				<Loading visible={loading} inline={false}>
 					<Table dataSource={tableData} hasBorder={false} >

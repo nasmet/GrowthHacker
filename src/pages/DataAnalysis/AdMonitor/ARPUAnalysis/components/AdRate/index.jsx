@@ -42,6 +42,13 @@ export default function AdRate() {
 		updateParameter(parameter);
 	};
 
+	const handleData = () => {
+		return {
+			sheetHeader: meta,
+			sheetData: data,
+		};
+	};
+
 	return (
 		<Components.Wrap>
 			<IceContainer>
@@ -51,7 +58,7 @@ export default function AdRate() {
 			<IceContainer>
 				<div className='table-update-btns'>					
 					<Components.Refresh onClick={onRefresh} />
-					{data.length > 0 && <Components.ExportExcel fileName='广告点击率' data={data} meta={meta} type={4} />}
+					{data.length > 0 && <Components.ExportExcel fileName='广告点击率' handle={handleData} />}
 				</div>
 				<Loading visible={loading} inline={false}>
 					<Table dataSource={data} hasBorder={false} fixedHeader maxBodyHeight={400} >

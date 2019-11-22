@@ -14,14 +14,14 @@ export default function ShareView() {
 	const shareRef = useRef(null);
 	const newRef = useRef(null);
 	const openRef = useRef(null);
-	const distributeRef = useRef(null);
+	// const distributeRef = useRef(null);
 
 	const filterChange = (e) => {
 		headRef.current.update(e);
 		shareRef.current.update(e);
 		newRef.current.update(e);
 		openRef.current.update(e);
-		distributeRef.current.update(e);
+		// distributeRef.current.update(e);
 	};
 
 	return (
@@ -39,12 +39,12 @@ export default function ShareView() {
 				<Top name='Top10 影响力用户' title='回流量' request={api.getTop10Open} date={date} ref={openRef} />
 				<Top name='Top10 贡献用户' title='分享新增' request={api.getTop10New} date={date} ref={newRef} />
 			</div>
-			<IceContainer style={{padding:'10px'}}>
+			{/*<IceContainer style={{padding:'10px'}}>
 				<span className={styles.secondTitle}>分享人群分布</span>
 			</IceContainer>
 			<div className={styles.userShare}>
 				<ShareDistribute name='分享对象分布'	request={api.getShareDistribute} date={date} ref={distributeRef} />
-			</div>
+			</div>*/}
     	</Components.Wrap>
 	);
 }

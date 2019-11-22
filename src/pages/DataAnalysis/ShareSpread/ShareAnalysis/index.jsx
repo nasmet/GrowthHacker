@@ -46,6 +46,34 @@ export default function ShareAnalysis() {
 		updateParameter(parameter);
 	};
 
+	const handleData = () => {
+		return {
+			sheetHeader: ['日期', '触发名称', '分享人数', '分享次数', '分享回流量', '分享回流比', '分享新增'],
+			sheetData: data.map(item => {
+				return {
+					...item,
+					share_reflux_ratio: utils.transformPercent(item.share_reflux_ratio),
+					time_range: formatTime(item.time_range),
+				}
+			}),
+		};
+	};
+
+	function formatTime(time_range) {
+		const start = time_range.from;
+		const end = time_range.to;
+		if (end - start > 3600) {
+			return utils.formatUnix(start, 'Y-M-D');
+		}
+		const formatStart = utils.formatUnix(start, 'h:m');
+		const formatEnd = utils.formatUnix(end, 'h:m');
+		return `${formatStart}-${formatEnd}`;
+	}
+
+	const renderFirstColumn = (value, index, record) => {
+		return <span>{formatTime(record.time_range)}</span>;
+	};
+
 	return (
 		<Components.Wrap>
 			<Components.Title title='分享触发分析' />
@@ -61,6 +89,7 @@ export default function ShareAnalysis() {
 			<IceContainer>
 				<div className='table-update-btns'>					
 					<Components.Refresh onClick={onRefresh} />
+					{data.length > 0 && <Components.ExportExcel fileName='分享触发分析' handle={handleData} />}
 				</div>
 				<Loading visible={loading} inline={false}>
 					<Table 
@@ -68,6 +97,7 @@ export default function ShareAnalysis() {
 						hasBorder={false}
 						emptyContent={<span>{emptyContent?'暂无数据':'查询结果为空'}</span>}
 					>
+						<Table.Column title='日期' cell={renderFirstColumn} />
 						<Table.Column title='触发名称' dataIndex='trigger_name' />
 						<Table.Column title='分享人数' dataIndex='share_user_count' />
 						<Table.Column title='分享次数' dataIndex='share_count' />

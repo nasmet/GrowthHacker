@@ -219,6 +219,13 @@ function EventAnalysis({
 		})
 	}
 
+	const handleData = () => {
+		return {
+			sheetHeader: meta.map(item => item.name),
+			sheetData: data,
+		};
+	}
+
 	return (
 		<Components.Wrap>
 			<Components.Save ref={saveRef} title={title} {...initSave} onSave={onSave} />
@@ -231,7 +238,7 @@ function EventAnalysis({
 			<IceContainer style={{minHeight: '600px'}}>
 				<div className='table-update-btns'>
 					<Components.Refresh onClick={onRefresh} />
-					{data.length > 0 && <Components.ExportExcel fileName={title} data={data} meta={meta} type={1} />}
+					{data.length > 0 && <Components.ExportExcel fileName={title} handle={handleData} />}
 				</div>
 				<Components.ChartsDisplay
 					tableData={data}

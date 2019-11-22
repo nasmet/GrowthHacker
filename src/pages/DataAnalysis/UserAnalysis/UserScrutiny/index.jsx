@@ -85,9 +85,23 @@ function UserScrutiny({
 		}));
 		setEmptyContent(e ? 0 : 1);
 	};
-	
-	const onRefresh=()=>{
+
+	const onRefresh = () => {
 		updateParameter(parameter);
+	};
+
+	const handleData = () => {
+		return {
+			sheetHeader: meta,
+			sheetData: data.map(item => {
+				return item.map((v, index) => {
+					if (index === 3) {
+						return utils.formatUnix(v,'Y-M-D h:m:s');
+					}
+					return v;
+				});
+			}),
+		};
 	};
 
 	return (
@@ -104,7 +118,7 @@ function UserScrutiny({
   			<IceContainer>
 				<div className='table-update-btns'>					
 					<Components.Refresh onClick={onRefresh} />
-					{data.length > 0 && <Components.ExportExcel fileName='用户细查' data={data} meta={meta} type={4} />}
+					{data.length > 0 && <Components.ExportExcel fileName='用户细查' handle={handleData} />}
 				</div>
 				<Loading visible={loading} inline={false}>
 					<Table 

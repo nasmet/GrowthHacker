@@ -20,7 +20,7 @@ export const PROJECTAPPID = 'PROJECTAPPID';
 function getBaseUrl() {
 	switch (process.env.NODE_ENV) {
 		case 'development':
-			return DEVBASEURL;
+			return TESTBASEURL;
 		case 'production':
 			return TESTBASEURL;
 		default:

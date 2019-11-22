@@ -90,7 +90,8 @@ function UserScrutinyDetails({
 
 	return (
 		<div className={styles.wrap}>
-      		<div className={styles.leftContent}>  				
+      		<div className={styles.leftContent}> 
+      			<Components.Title title='用户细查详情' /> 				
       			<IceContainer>
       				<Loading visible={loading} inline={false}>
       					<Components.BasicColumn data={bars} {...setChartStyle(type)} forceFit />

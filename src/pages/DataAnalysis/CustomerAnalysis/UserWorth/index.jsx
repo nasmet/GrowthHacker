@@ -40,15 +40,21 @@ export default function UserWorth() {
 		updateParameter(parameter);
 	};
 
+	const handleData = () => {
+		return {
+			sheetHeader: ['openId', '广告点击次数', '分享新增用户数', '分享次数', '分享回流数'],
+			sheetData: ltvs,
+		}
+	};
+
 	return (
 		<Components.Wrap>
 			<Components.Title title='单用户价值评估' />
-			<IceContainer>
-				<Components.GroupFilter filterChange={groupChange} />
-			</IceContainer>
+			<Components.GroupFilter filterChange={groupChange} />
 			<IceContainer>				
 				<div className='table-update-btns'>					
 					<Components.Refresh onClick={onRefresh} />
+					{ltvs.length > 0 && <Components.ExportExcel fileName='单用户价值评估' handle={handleData} />}
 				</div>
 				<Loading visible={loading} inline={false}>
 					<Table dataSource={ltvs} hasBorder={false} >

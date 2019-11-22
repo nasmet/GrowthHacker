@@ -76,15 +76,35 @@ export default function EventVarible() {
 		updateResponse();
 	};
 
+	const onRefresh = () => {
+		updateParameter(parameter);
+	};
+
+	const handleData = () => {
+		return {
+			sheetHeader: ["id", "名称", "标识符", "类型", "描述"],
+			sheetData: event_entities.map(item => [
+				item.id,
+				item.name,
+				item.entity_key,
+				item.variable_type,
+				item.desc,
+			]),
+		}
+	};
+
 	return (
 		<Components.Wrap>
+			<div className={styles.btnWrap}>
+				<Button className={styles.btn} type="secondary" onClick={onCreate}> 
+					创建事件变量
+				</Button>
+			</div>
 			<IceContainer>
-				<div className={styles.btnWrap}>
-					<Button className={styles.btn} type="secondary" onClick={onCreate}> 
-						创建事件变量
-					</Button>
+				<div className='table-update-btns'>					
+					<Components.Refresh onClick={onRefresh} />
+					{event_entities.length > 0 && <Components.ExportExcel fileName='事件变量' handle={handleData} />}
 				</div>
-				
 				<Loading visible={loading} inline={false}>
 					<Table 
 						dataSource={event_entities} 

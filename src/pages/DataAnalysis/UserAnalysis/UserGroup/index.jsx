@@ -73,7 +73,12 @@ function UserGroup({
 		updateParameter(parameter);
 	};
 
-	console.log(segmentations);
+	const handleData = () => {
+		return {
+			sheetHeader: ['id', '名称'],
+			sheetData: segmentations.map(item => ([item.id, item.name])),
+		};
+	};
 
 	return (
 		<Components.Wrap>
@@ -83,7 +88,8 @@ function UserGroup({
 			</p>
 			<IceContainer>
 				<div className='table-update-btns'>					
-					<Components.Refresh onClick={onRefresh} />				
+					<Components.Refresh onClick={onRefresh} />	
+					{segmentations.length > 0 && <Components.ExportExcel fileName='用户分群列表' handle={handleData} />}			
 				</div>
 				<Loading visible={loading} inline={false}>		
 					<Table 

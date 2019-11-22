@@ -58,8 +58,22 @@ function UserGroupDetails({
 		});
 	};
 
-	const onRefresh=()=>{
+	const onRefresh = () => {
 		updateParameter(parameter);
+	};
+
+	const handleData = () => {
+		return {
+			sheetHeader: meta,
+			sheetData: data.map(item => {
+				return item.map((v, index) => {
+					if (index === 2) {
+						return utils.formatUnix(v,'Y-M-D h:m:s');
+					}
+					return v;
+				})
+			}),
+		}
 	};
 
 	return (
@@ -72,7 +86,7 @@ function UserGroupDetails({
 			<IceContainer>
 				<div className='table-update-btns'>					
 					<Components.Refresh onClick={onRefresh} />
-					{data.length > 0 && <Components.ExportExcel fileName={name} data={data} meta={meta} type={4} />}
+					{data.length > 0 && <Components.ExportExcel fileName={name} handle={handleData} />}
 				</div>
 				<Loading visible={loading} inline={false}>
 					<Table

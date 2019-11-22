@@ -49,6 +49,20 @@ export default function ARPUData() {
 		updateParameter(parameter);
 	};
 
+	const handleData = () => {
+		return {
+			sheetHeader: meta,
+			sheetData: data.map(item => {
+				return item.map((v, index) => {
+					if (index === 6) {
+						return utils.transformPercent(v);
+					}
+					return v;
+				});
+			}),
+		};
+	};
+
 	return (
 		<Components.Wrap>
 			<IceContainer>
@@ -58,7 +72,7 @@ export default function ARPUData() {
 			<IceContainer>
 				<div className='table-update-btns'>					
 					<Components.Refresh onClick={onRefresh} />
-					{data.length > 0 && <Components.ExportExcel fileName='ARPU数据' data={data} meta={meta} type={4} />}
+					{data.length > 0 && <Components.ExportExcel fileName='ARPU数据' handle={handleData} />}
 				</div>
 				<Loading visible={loading} inline={false}>
 					<Table dataSource={data} hasBorder={false} fixedHeader maxBodyHeight={400} >
