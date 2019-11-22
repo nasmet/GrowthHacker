@@ -7,10 +7,11 @@ import {
 import IceContainer from '@icedesign/container';
 import DataDisplay from './components/DataDisplay';
 
-export default function AreaAnalysis({
+export default function Analysis({
 	tabs,
 	initValue,
 	request,
+	name,
 }) {
 	const refTab = useRef(initValue);
 
@@ -22,7 +23,7 @@ export default function AreaAnalysis({
 			} = item;
 			return (
 				<Tab.Item key={key} title={tab} >
-					<DataDisplay ref={e=>{refTab.current[key] = e}} type={key} request={request} date={refTab.current.date} />
+					<DataDisplay ref={e=>{refTab.current[key] = e}} type={key} request={request} date={refTab.current.date} name={`${name}${tab}`} />
 				</Tab.Item>
 			);
 		});

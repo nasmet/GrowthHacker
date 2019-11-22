@@ -3,7 +3,7 @@ import {
 } from '../base';
 
 export function getUserWorth(data) {
-	return get(`/projects/${sessionStorage.getItem(config.PROJECTID)}/ads/ltv/wechat_users`, data);
+	return get(`/projects/${sessionStorage.getItem(config.PROJECTID)}/ads/ltv/users`, data);
 }
 
 export function getGroupWorth(data) {

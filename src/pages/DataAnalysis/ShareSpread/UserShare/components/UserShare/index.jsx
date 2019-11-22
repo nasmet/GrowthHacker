@@ -47,9 +47,16 @@ export default function UserShare({
 		return `${utils.transformPercent(record.share_reflux_ratio)}`;
 	};
 
+	const onRefresh = () => {
+		updateParameter(parameter);
+	};
+
 	return (
 		<Components.Wrap>
 			<IceContainer>
+				<div className='table-update-btns'>					
+					<Components.Refresh onClick={onRefresh} />
+				</div>
 				<Loading visible={loading} inline={false}>
 					<Table dataSource={data} hasBorder={false} >
 						<Table.Column title='用户' dataIndex='wechat_openid' />

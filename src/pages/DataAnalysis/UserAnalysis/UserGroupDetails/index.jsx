@@ -58,6 +58,10 @@ function UserGroupDetails({
 		});
 	};
 
+	const onRefresh=()=>{
+		updateParameter(parameter);
+	};
+
 	return (
 		<Components.Wrap>
 			<Components.Title title={name} />
@@ -66,6 +70,10 @@ function UserGroupDetails({
 			</IceContainer>
 		
 			<IceContainer>
+				<div className='table-update-btns'>					
+					<Components.Refresh onClick={onRefresh} />
+					{data.length > 0 && <Components.ExportExcel fileName={name} data={data} meta={meta} type={4} />}
+				</div>
 				<Loading visible={loading} inline={false}>
 					<Table
 						dataSource={data} 

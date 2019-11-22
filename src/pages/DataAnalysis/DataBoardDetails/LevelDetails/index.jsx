@@ -27,7 +27,7 @@ function LevelDetails({
 		limit: config.LIMIT,
 		type: boardInfo.type,
 	});
-	const {
+	let {
 		meta = [],
 			data = [],
 	} = response;
@@ -73,7 +73,7 @@ function LevelDetails({
 		});
 	};
 
-	const filterChange = (e) => {
+	const dateChange = (e) => {
 		updateParameter(Object.assign(parameter, {
 			date: e,
 			offset: 0,
@@ -81,7 +81,8 @@ function LevelDetails({
 	};
 
 	const onRefresh = () => {
-		updateParameter({...parameter});
+		updateParameter({ ...parameter
+		});
 	};
 
 	const onSort = (dataIndex, order) => {
@@ -91,9 +92,7 @@ function LevelDetails({
 	return (
 		<Components.Wrap>
 			<Components.Title title={boardInfo.name} desc={boardInfo.desc} />
-			<IceContainer>
-				<Components.DateFilter initTabValue='NAN' initCurDateValue={model.transformDate(boardInfo.date)} filterChange={filterChange} />	
-			</IceContainer>
+			<Components.DateFilter initTabValue='NAN' initCurDateValue={model.transformDate(boardInfo.date)} filterChange={dateChange} />	
 			<IceContainer> 
 				<div className='table-update-btns'>					
 					<Components.Refresh onClick={onRefresh} />

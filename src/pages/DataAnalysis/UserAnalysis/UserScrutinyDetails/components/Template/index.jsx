@@ -54,6 +54,10 @@ export default function Template({
 		updateParameter({ ...parameter
 		});
 	};
+	
+	const onRefresh=()=>{
+		updateParameter(parameter);
+	}
 
 	return (
 		<div>
@@ -65,7 +69,10 @@ export default function Template({
 				onChange={utils.debounce(onInputChange, 1000)}
 				style={{marginBottom:'20px'}}
 			/>
-			<IceContainer>				
+			<IceContainer>	
+				<div className='table-update-btns'>					
+					<Components.Refresh onClick={onRefresh} />
+				</div>			
 				<Loading visible={loading} inline={false}>
 		      		<Table 
 						dataSource={events} 

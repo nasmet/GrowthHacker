@@ -18,7 +18,7 @@ export default function NewEvent() {
 
 	const {
 		columns = [],
-		data = [],
+			data = [],
 	} = response;
 
 	const renderTitle = () => {
@@ -27,9 +27,16 @@ export default function NewEvent() {
 		});
 	};
 
+	const onRefresh = () => {
+		updateParameter(parameter);
+	};
+
 	return (
 		<Components.Wrap>
 			<IceContainer>
+				<div className='table-update-btns'>					
+					<Components.Refresh onClick={onRefresh} />
+				</div>
 				<Loading visible={loading} inline={false}>
 					<Table dataSource={data} hasBorder={false}>
 						{renderTitle()}       		

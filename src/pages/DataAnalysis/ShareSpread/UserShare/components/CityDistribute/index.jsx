@@ -93,11 +93,18 @@ export default function CityDistribute({
 		return `${utils.transformPercent(record.share_reflux_ratio)}`;
 	};
 
+	const onRefresh = () => {
+		updateParameter(parameter);
+	};
+
 	return (
 		<Components.Wrap>
 			<Loading visible={loading} inline={false}>					
 				<IceContainer>
 					<Components.BasicColumn data={assembleChartData()} {...chartStyle} forceFit />
+					<div className='table-update-btns'>					
+						<Components.Refresh onClick={onRefresh} />
+					</div>
 					<Table dataSource={data} hasBorder={false}>
 						<Table.Column title='城市' dataIndex='city' />
 						<Table.Column title='分享人数' dataIndex='share_user_count' />

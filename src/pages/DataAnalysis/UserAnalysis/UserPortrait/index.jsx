@@ -17,7 +17,7 @@ export default function UserPortrait() {
 			} = item;
 			return (
 				<Tab.Item key={key} title={tab} >
-        			<Component {...init} request={setRequest(key)} />
+        			<Component {...init} request={setRequest(key)} name={tab} />
         		</Tab.Item>
 			);
 		});

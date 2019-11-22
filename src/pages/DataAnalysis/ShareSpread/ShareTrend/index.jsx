@@ -106,6 +106,12 @@ export default function ShareTrend() {
 		return `${utils.transformPercent(record.share_reflux_ratio)}`;
 	};
 
+	const meta = ['日期', '分享人数', '分享次数', '回流量', '分享回流比', '分享新增'];
+
+	const onRefresh = () => {
+		updateParameter(parameter);
+	};
+
 	return (
 		<Components.Wrap>
 			<Components.Title title='分享趋势' />
@@ -114,6 +120,9 @@ export default function ShareTrend() {
 				<Header ref={headRef} />
 				<Loading visible={loading} inline={false}>
 					<Components.BasicColumn data={assembleChartData()} {...chartStyle} forceFit />
+					<div className='table-update-btns'>					
+						<Components.Refresh onClick={onRefresh} />
+					</div>
 					<Table 
 						dataSource={share_overview} 
 						hasBorder={false}

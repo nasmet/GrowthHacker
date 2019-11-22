@@ -13,6 +13,7 @@ import styles from './index.module.scss';
 
 export default function GroupFilter({
 	filterChange,
+	all = true,
 }) {
 	const refForm = useRef(null);
 
@@ -34,11 +35,14 @@ export default function GroupFilter({
 
 
 	function assembleGroupData(data) {
-		const groups = model.assembleGroupData(data);
+		const groups = model.assembleGroupData(data, all);
 		refForm.current.state.store.setFieldProps('id', {
 			dataSource: groups,
 		});
 		refForm.current.state.store.setFieldValue('id', groups[0].value);
+		if (!all) {
+			filterChange(groups[0].value);
+		}
 	}
 
 	const onChange = (e) => {
@@ -55,16 +59,16 @@ export default function GroupFilter({
 						<span>{label}</span>
 						<span>{component}</span>
 					</div>
-				)
-			} >
-				<Field label='目标用户：' name='id'>
+	)
+} >
+<Field label='目标用户：' name='id'>
 					<Select  
 						style={{minWidth:'200px'}}
 						dataSource={[]} 
 						showSearch
 					/>
-				</Field>
-		 	</Form>  
-	 	</div>
-	);
+				</Field> <
+/Form>   < /
+div >
+);
 }

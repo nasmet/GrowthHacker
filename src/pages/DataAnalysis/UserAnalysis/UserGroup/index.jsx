@@ -20,6 +20,8 @@ function UserGroup({
 		updateResponse,
 		response,
 		loading,
+		updateParameter,
+		parameter,
 	} = hooks.useRequest(api.getUserGroups);
 	const {
 		segmentations = [],
@@ -67,6 +69,12 @@ function UserGroup({
 		);
 	};
 
+	const onRefresh = () => {
+		updateParameter(parameter);
+	};
+
+	console.log(segmentations);
+
 	return (
 		<Components.Wrap>
 			<Components.Title title='用户分群列表' />
@@ -74,6 +82,9 @@ function UserGroup({
 				<Button type='primary' style={{borderRadius:'10px',marginBottom:'20px'}} onClick={onCreateGroup}>新建分群</Button>
 			</p>
 			<IceContainer>
+				<div className='table-update-btns'>					
+					<Components.Refresh onClick={onRefresh} />				
+				</div>
 				<Loading visible={loading} inline={false}>		
 					<Table 
 						dataSource={segmentations} 

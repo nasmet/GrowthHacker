@@ -36,11 +36,20 @@ export default function UserWorth() {
 		});
 	};
 
+	const onRefresh = () => {
+		updateParameter(parameter);
+	};
+
 	return (
 		<Components.Wrap>
 			<Components.Title title='单用户价值评估' />
 			<IceContainer>
 				<Components.GroupFilter filterChange={groupChange} />
+			</IceContainer>
+			<IceContainer>				
+				<div className='table-update-btns'>					
+					<Components.Refresh onClick={onRefresh} />
+				</div>
 				<Loading visible={loading} inline={false}>
 					<Table dataSource={ltvs} hasBorder={false} >
 						<Table.Column title='openId' dataIndex='wechat_openid' />

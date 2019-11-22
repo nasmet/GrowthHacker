@@ -85,18 +85,27 @@ function UserScrutiny({
 		}));
 		setEmptyContent(e ? 0 : 1);
 	};
+	
+	const onRefresh=()=>{
+		updateParameter(parameter);
+	};
 
 	return (
 		<Components.Wrap>
 			<Components.Title title='用户细查' />
-  			<IceContainer>
-  				<Input 
-  					style={{marginBottom:'20px'}}
+			<p>
+				<Input 
 					hasClear 
 					hint='search' 
 					placeholder="请输入openID" 
 					onChange={utils.debounce(onInputChange, 1000)}
 				/>
+			</p>
+  			<IceContainer>
+				<div className='table-update-btns'>					
+					<Components.Refresh onClick={onRefresh} />
+					{data.length > 0 && <Components.ExportExcel fileName='用户细查' data={data} meta={meta} type={4} />}
+				</div>
 				<Loading visible={loading} inline={false}>
 					<Table 
 						dataSource={data} 

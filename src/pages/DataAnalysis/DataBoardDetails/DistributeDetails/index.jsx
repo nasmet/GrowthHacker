@@ -94,7 +94,7 @@ function DistributeDetails({
 		});
 	};
 
-	const filterChange = (e) => {
+	const dateChange = (e) => {
 		updateParameter(utils.deepObject(parameter, {
 			trend: {
 				date: e,
@@ -109,9 +109,7 @@ function DistributeDetails({
 	return (
 		<Components.Wrap>
 			<Components.Title title={boardInfo.name} desc={boardInfo.desc} />
-			<IceContainer>
-				<Components.DateFilter initTabValue='NAN' initCurDateValue={model.transformDate(boardInfo.date)} filterChange={filterChange} />	
-			</IceContainer>
+			<Components.DateFilter initTabValue='NAN' initCurDateValue={model.transformDate(boardInfo.date)} filterChange={dateChange} />	
 			<IceContainer>
 				<div className='table-update-btns'>					
 					<Components.Refresh onClick={onRefresh} />

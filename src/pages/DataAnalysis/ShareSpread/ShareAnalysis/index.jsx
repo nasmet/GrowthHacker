@@ -42,6 +42,10 @@ export default function ShareAnalysis() {
 		setEmptyContent(e ? 0 : 1);
 	};
 
+	const onRefresh = () => {
+		updateParameter(parameter);
+	};
+
 	return (
 		<Components.Wrap>
 			<Components.Title title='分享触发分析' />
@@ -55,6 +59,9 @@ export default function ShareAnalysis() {
 				/>
 			</p>
 			<IceContainer>
+				<div className='table-update-btns'>					
+					<Components.Refresh onClick={onRefresh} />
+				</div>
 				<Loading visible={loading} inline={false}>
 					<Table 
 						dataSource={data} 

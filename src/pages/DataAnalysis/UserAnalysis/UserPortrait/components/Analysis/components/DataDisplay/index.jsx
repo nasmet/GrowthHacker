@@ -16,6 +16,7 @@ function Template({
 	type,
 	request,
 	date,
+	name,
 }, ref) {
 	useImperativeHandle(ref, () => ({
 		update: date => {
@@ -74,6 +75,10 @@ function Template({
 	const onSelectChange = (e) => {
 		setIndex(e);
 	};
+	
+	const onRefresh=()=>{
+		updateParameter(parameter);
+	};
 
 	return (
 		<Components.Wrap>
@@ -87,7 +92,10 @@ function Template({
 			</Select>
 			<Loading visible={loading} inline={false}>
 				<Components.BasicSector data={assembleChartData()} {...chartStyle} />
-
+				<div className='table-update-btns'>					
+					<Components.Refresh onClick={onRefresh} />
+					{data.length > 0 && <Components.ExportExcel fileName={name} data={data} meta={meta} type={4} />}
+				</div>
 				<Table 
 					dataSource={data} 
 					hasBorder={false}

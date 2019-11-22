@@ -16,25 +16,11 @@ import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
 
 export default function GroupWorth() {
-	const refForm = useRef(null);
 	const refVarible = useRef({
 		date: 'day:0',
-		id: 0,
 	});
 	const [loading, setLoading] = useState(false);
 	const [tableData, setTableData] = useState([]);
-
-	function assembleGroupData(data) {
-		const groups = model.assembleGroupData(data, false);
-		refForm.current.state.store.setFieldProps('id', {
-			dataSource: groups,
-		});
-		if (groups.length === 0) {
-			return;
-		}
-		refForm.current.state.store.setFieldValue('id', groups[0].value);
-		refVarible.current.id = groups[0].value;
-	}
 
 	function getGroupWorth() {
 		setLoading(true);
@@ -52,43 +38,20 @@ export default function GroupWorth() {
 		})
 	}
 
-	useEffect(() => {
-		async function fetchData() {
-			setLoading(true);
-			try {
-				await api.getUserGroups().then(res => {
-					assembleGroupData(res.segmentations);
-				});
-
-				await api.getGroupWorth({
-					id: refVarible.current.id,
-					trend: {
-						date: refVarible.current.date,
-					},
-				}).then(res => {
-					setTableData([res]);
-				});
-
-			} catch (e) {
-				model.log(e);
-			}
-			setLoading(false);
-		}
-
-		fetchData();
-
-		return () => {
-			api.cancelRequest();
-		};
-	}, []);
-
 	const dateChange = e => {
+		if (!refVarible.current.id) {
+			return;
+		}
 		refVarible.current.date = e;
 		getGroupWorth();
 	};
 
-	const onFormChange = e => {
-		refVarible.current.date = e.id;
+	const groupChange = e => {
+		refVarible.current.id = e;
+		getGroupWorth();
+	};
+
+	const onRefresh = () => {
 		getGroupWorth();
 	};
 
@@ -97,28 +60,12 @@ export default function GroupWorth() {
 			<Components.Title title='分群用户价值评估' />
 			<IceContainer>
 				<Components.DateFilter filterChange={dateChange} />
-				<div>
-					<Form
-						ref={refForm}
-						onChange={onFormChange}
-						renderField={({label, component}) => (
-							<div>
-								<span>{label}</span>
-								<span>{component}</span>
-							</div>
-						)}
-					>
-						<Field label='目标用户：' name='id'>
-							<Select  
-								style={{minWidth:'200px'}}
-								dataSource={[]} 
-								showSearch
-							/>
-						</Field>
-					</Form>
-				</div>
+				<Components.GroupFilter filterChange={groupChange} all={false} />
 			</IceContainer>
 			<IceContainer>
+				<div className='table-update-btns'>					
+					<Components.Refresh onClick={onRefresh} />
+				</div>
 				<Loading visible={loading} inline={false}>
 					<Table dataSource={tableData} hasBorder={false} >
 						<Table.Column title='广告点击次数' dataIndex='ads_watch_count' />
