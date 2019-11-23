@@ -10,6 +10,7 @@ import * as operator from './operator';
 import traverse from './traverse';
 import * as context from './context';
 import * as rules from './rules';
+import onFire from './onfire';
 
 export default Object.assign({
 	history,
@@ -19,4 +20,5 @@ export default Object.assign({
 	sql,
 	reversePoland,
 	traverse,
+	onFire,
 }, assemble, productAnalysis, operator, context, rules)

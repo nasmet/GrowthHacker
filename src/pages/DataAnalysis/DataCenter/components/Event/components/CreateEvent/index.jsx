@@ -67,7 +67,7 @@ function CreateEvent({
 					onSubmit={onSubmit}      				 
 					rules={{  					
 						name: model.rule,
-						key: model.rule,
+						key: model.identifierRule,
 						value_type: model.rule,
 						bind_variables: model.rule,
 					}}
@@ -88,7 +88,7 @@ function CreateEvent({
 								/>
 							</Field>
 							<Field name='key'>
-							<Input 
+								<Input 
 									className={styles.input} 
 									placeholder='请输入标识符'
 								/>

@@ -96,7 +96,7 @@ function CreateOriginData({
 					ref={formRef} 
 					rules={{
 						name:  model.rule,
-						key:   model.rules,
+						key:   model.identifierRule,
 						table_name:   model.rule,
 						column_name:  model.rule,
 						value_type:   model.rule,

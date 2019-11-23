@@ -64,7 +64,7 @@ function CreateBuriedPoint({
 					onSubmit={onSubmit}      				 
 					rules={{  					
 						name: model.rule,
-						key: model.rule,
+						key:model.identifierRule,
 						variable_type: model.rule,
 					}}
 					renderField={({component, error}) => (

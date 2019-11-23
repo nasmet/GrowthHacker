@@ -27,6 +27,7 @@ export default function Event() {
 	const [showDrawer, setShowDrawer] = useState(false);
 	const [eventName, setEventName] = useState('');
 	const [bindVariableData, setBindVariableData] = useState([]);
+	const [curPage, setCurPage] = useState(1);
 
 	const {
 		parameter,
@@ -47,18 +48,33 @@ export default function Event() {
 	} = response;
 
 	useEffect(() => {
-		api.getDataCenter({
-			type: 'variable',
-		}).then(res => {
-			const variableData = model.assembleEventVaribleData(res.event_entities);
-			refCE.current.updateVaribleData(variableData);
-			refEV.current.setVaribleData(variableData);
-		}).catch(e => {
-			console.error(e);
-		});
+		function getEventVariable() {
+			api.getDataCenter({
+				type: 'variable',
+			}).then(res => {
+				const variableData = model.assembleEventVaribleData(res.event_entities);
+				refCE.current.updateVaribleData(variableData);
+				refEV.current.setVaribleData(variableData);
+			}).catch(e => {
+				console.error(e);
+			});
+		}
+
+		getEventVariable();
+
+		function updateEvent() {
+			getEventVariable();
+		}
+
+		model.onFire.on('updateEvent', updateEvent);
+
+		return () => {
+			model.onFire.off('updateEvent', updateEvent);
+		}
 	}, [])
 
 	const pageChange = e => {
+		setCurPage(e);
 		updateParameter({ ...parameter,
 			offset: (e - 1) * config.LIMIT,
 		});
@@ -72,8 +88,16 @@ export default function Event() {
 				api.deleteEvent({
 					id,
 				}).then(() => {
-					event_entities.splice(index, 1);
-					updateResponse();
+					if (event_entities.length <= 1) {
+						const prePage = curPage - 1 === 0 ? 1 : curPage - 1;
+						updateParameter({
+							...parameter,
+							offset: (prePage - 1) * config.LIMIT,
+						});
+						setCurPage(prePage);
+					} else {
+						updateParameter(parameter);
+					}
 				}).catch((e) => {
 					model.log(e);
 				}).finally(() => {
@@ -142,8 +166,17 @@ export default function Event() {
 	};
 
 	const onOk = (value) => {
-		event_entities.splice(0, 0, value);
-		updateResponse();
+		if (event_entities.length < config.LIMIT) {
+			event_entities.push(value);
+			updateResponse();
+		} else {
+			const nextPage = curPage + 1;
+			updateParameter({
+				...parameter,
+				offset: (nextPage - 1) * config.LIMIT,
+			});
+			setCurPage(nextPage);
+		}
 	};
 
 	const onEditVaribleOk = () => {
@@ -192,6 +225,10 @@ export default function Event() {
 		}
 	};
 
+	const renderFirstColunm = (value, index, record) => {
+		return <span>{ parameter.offset + index+1}</span>;
+	};
+
 	return (
 		<Components.Wrap>
 			<div className={styles.btnWrap}>
@@ -220,7 +257,7 @@ export default function Event() {
 						dataSource={event_entities}		          		 
 						hasBorder={false}		          		
 					>		          		
-						<Table.Column title="id" dataIndex="id" width={80} />		          		
+						<Table.Column title="id" dataIndex="id" cell={renderFirstColunm} width={80} />		          		
 						<Table.Column title="名称" dataIndex="name" width={120} />		            	
 						<Table.Column title="标识符" dataIndex="entity_key" width={120} />		            	
 						<Table.Column title="类型" dataIndex="value_type" width={120} />	
@@ -230,7 +267,8 @@ export default function Event() {
 					</Table>
 				</Loading>	          	
 			
-				<Pagination	          	
+				<Pagination	
+					current={curPage}
 					className={styles.pagination}            	
 					total={total}		            	
 					onChange={pageChange}	            	

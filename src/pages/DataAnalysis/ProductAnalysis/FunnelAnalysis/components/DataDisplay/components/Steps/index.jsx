@@ -25,14 +25,8 @@ export default function Steps({
 					</div>
 					{index !== maxIndex &&
 						<div className={styles.second}>
-							<svg data-step="1" width="100" height="44" xmlns="http://www.w3.org/2000/svg">
-								<g>						    	
-									<g fill="none" fillRule="evenodd">						    	
-										<g fill='#EAEFF4' >						        		
-											<polygon points="18,0 82,0 82,20 100,20 50,44 0,20 18,20 " style={{strokeWidth: 1, stroke: 'rgba(0,0,0,0.12)'}} />						            		
-										</g>						          		
-									</g>						       		
-								</g>						      	
+							<svg data-step="1" width="100" height="44" xmlns="http://www.w3.org/2000/svg">				        		
+								<polygon points="18,0 82,0 82,20 100,20 50,44 0,20 18,20 " style={{fill:'transparent',stroke:'gray',strokeWidth:1}} />			            															      	
 							</svg>						    
 							<span className={styles.rate}>{rate}</span>						 	
 						</div>					    
