@@ -1,5 +1,5 @@
-const DEVHOST = 'http://10.16.117.92:8080';
-const TESTHOST = 'http://10.16.98.212:30010';
+const DEVHOST = 'http://10.16.117.92:30012';
+const TESTHOST = 'http://10.16.98.212:30012';
 const BUILDHOST = 'https://api.dw.cloudmaptech.com';
 const DEVBASEURL = `${DEVHOST}/v1`;
 const TESTBASEURL = `${TESTHOST}/v1`;
@@ -20,7 +20,7 @@ export const PROJECTAPPID = 'PROJECTAPPID';
 function getBaseUrl() {
 	switch (process.env.NODE_ENV) {
 		case 'development':
-			return TESTBASEURL;
+			return DEVBASEURL;
 		case 'production':
 			return TESTBASEURL;
 		default:

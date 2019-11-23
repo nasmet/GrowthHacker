@@ -310,18 +310,10 @@ export default function Condition({
 							/>
 						</Field>
 						<span style={{marginLeft: '10px',marginRight: '10px'}}>的</span>
-						{/*<Field name='aggregator'>
-							<Select
-								style={{minWidth:'120px'}} 
-								dataSource={variables}  
-								showSearch
-							/>
-						</Field>*/}
-
 						<Field name='aggregator' >
 				 			<CascaderSelect 
 				 				style={commonStyle} 
-				 				listStyle={{ width: '150px'}} 
+				 				listStyle={commonStyle} 
 				 				dataSource={variableData} 				 			
 				 				displayRender={displayRender}
 				 				onFocus={onFocus_1.bind(item,formCore)}

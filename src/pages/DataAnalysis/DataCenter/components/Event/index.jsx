@@ -226,7 +226,7 @@ export default function Event() {
 						<Table.Column title="类型" dataIndex="value_type" width={120} />	
 						<Table.Column title="关联事件变量" cell={renderBind} width={400} />	            	
 						<Table.Column title="描述" dataIndex="desc" width={600} />		            	
-						<Table.Column title="操作" cell={renderHander} lock='right' width={120} />		            	
+						<Table.Column title="操作" cell={renderHander} lock={event_entities.length===0?false:'right'} width={120} />		            	
 					</Table>
 				</Loading>	          	
 			
