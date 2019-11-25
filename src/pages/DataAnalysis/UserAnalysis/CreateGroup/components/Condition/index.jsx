@@ -40,14 +40,14 @@ export default function Condition({
 		async function fetchData() {
 			setLoading(true);
 			try {
+				await api.getOriginData().then((res) => {
+					setOriginData(model.assembleOriginData(res.data));
+				})
+
 				await api.getDataCenter({
 					type: 'event',
 				}).then((res) => {
 					setMetricData(model.assembleEvent(res.event_entities));
-				})
-
-				await api.getOriginData().then((res) => {
-					setOriginData(model.assembleOriginData(res.data));
 				})
 			} catch (e) {
 				model.log(e);
@@ -59,7 +59,7 @@ export default function Condition({
 	}, []);
 
 	useEffect(() => {
-		if (originData.length === 0) {
+		if (metricData.length === 0) {
 			return;
 		}
 		setSteps([createStep()]);
@@ -145,7 +145,7 @@ export default function Condition({
 				handler: function(formCore) {
 					let visibleValues, visibleValue, idDataSource, opDataSource;
 					const flag = formCore.getFieldValue('flag');
-					if (flag=== 'true,event' || flag === 'false,event') {
+					if (flag === 'true,event' || flag === 'false,event') {
 						idDataSource = metricData;
 						opDataSource = model.numOperators;
 						visibleValues = true;
@@ -268,6 +268,7 @@ export default function Condition({
 						</Field>
 						<Field name='date'>
 							<DatePicker.RangePicker 
+								size='small'
 								style={{width:'120px'}} 
 								hasClear={false}
 								disabledDate={model.disabledDate} 

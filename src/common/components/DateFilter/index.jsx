@@ -90,7 +90,9 @@ export default function DateFilter({
 	return (
 		<div className={styles.wrap}>
 			<div>
-	  			<DatePicker.RangePicker	  				
+	  			<DatePicker.RangePicker
+	  			 	renderExtraFooter={() => 'extra footer'}
+	  				style={{width: showTime?'350px':'240px'}}	  				
 	  				showTime={showTime} 
 	  				onChange={onDateChange}
 	  				value={dateValue}

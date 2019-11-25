@@ -59,12 +59,13 @@ export default function OriginDataDetails({
 			data.push(value);
 			updateResponse();
 		} else {
-			const nextPage = curPage + 1;
+			const temp = Math.ceil(total / config.LIMIT);
+			const lastPage = total % config.LIMIT === 0 ? temp + 1 : temp;
 			updateParameter({
 				...parameter,
-				offset: (nextPage - 1) * config.LIMIT,
+				offset: (lastPage-1) * config.LIMIT,
 			});
-			setCurPage(nextPage);
+			setCurPage(lastPage);
 		}
 	};
 
