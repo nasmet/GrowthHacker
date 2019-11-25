@@ -53,7 +53,7 @@ export function deleteTags(data) {
 }
 
 export function getUsers(data) {
-	return get('/api/wechat_user', data);
+	return get('/api/user', data);
 }
 
 export function createUserTag(data) {
@@ -61,7 +61,7 @@ export function createUserTag(data) {
 		id,
 		trend,
 	} = data;
-	return post(`/api/wechat_user/${id}/labels`, trend);
+	return post(`/api/user/${id}/labels`, trend);
 }
 
 export function deleteUserTag(data) {
@@ -69,7 +69,7 @@ export function deleteUserTag(data) {
 		openId,
 		labelId,
 	} = data;
-	return del(`/api/wechat_user/${openId}/labels/${labelId}`);
+	return del(`/api/user/${openId}/labels/${labelId}`);
 }
 
 export function createAccount(data) {

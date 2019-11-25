@@ -22,7 +22,7 @@ export default function GroupFilter({
 			api.getUserGroups().then((res) => {
 				assembleGroupData(res.segmentations);
 			}).catch(e => {
-				console.error(e);
+				model.log(e);
 			});
 		}
 

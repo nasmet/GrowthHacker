@@ -119,10 +119,18 @@ function EventAnalysis({
 		return arr;
 	}
 
+	const renderColumn = (column, value, index, record) => {
+		return <span>{record[column]===null?'-':record[column]}</span>
+	};
+
 	const renderTitle = () => {
 		return meta.map((item, index) => {
-			return <Table.Column key={item.id} title={item.name} dataIndex={index.toString()} sortable />
+			if (index === 0) {
+				return <Table.Column key={item.id} title={item.name} dataIndex={index.toString()} sortable />
+			}
+			return <Table.Column key={item.id} title={item.name} dataIndex={index.toString()} cell={renderColumn.bind(this, index)} sortable />
 		});
+
 	};
 
 	const pageChange = (e) => {

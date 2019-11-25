@@ -28,29 +28,31 @@ const RouteIntercept = ({
 		history.push('/user/login');
 		return null;
 	}
-	
+
 	return (
 		<div>{children}</div>
 	);
 };
 
 const RouteItem = (route) => {
-		const {
-			id,
-			redirect,
-			path,
-			component,
-			auth,
-		} = route;
-		const Component = component;
-		if (redirect) {
-			return <Redirect key={id} exact from={path} to={redirect} />;
-		}
-		if (!auth) {
-			return <Route key={id} path={path} render={props=><Component {...props} />} />
-		}
-		return (
-			<Route key={id} path={path} render={props=>{
+	const {
+		id,
+		redirect,
+		path,
+		component,
+		auth,
+	} = route;
+	const Component = component;
+	if (redirect) {
+		return <Redirect key={id} exact from={path} to={redirect} />;
+	}
+	if (!auth) {
+		return <Route key={id} path={path} render={props=><Component {...props} />
+	}
+	/>
+}
+return (
+		<Route key={id} path={path} render={props=>{
 				return (
 					<RouteIntercept {...props}>
 						<Component />
@@ -59,6 +61,8 @@ const RouteItem = (route) => {
 			} />
 	);
 };
+
+const fallback = <Loading style={{top: '50px'}} inline={false} visible={true} tip='资源加载中' />;
 
 const traversing = function fn(route) {
 	const {
@@ -72,7 +76,7 @@ const traversing = function fn(route) {
 			<Route key={id} path={path} render={(props)=>{
 				return(
 					<RouteComponent {...props}>
-						<Suspense fallback={<Loading inline={false} visible={true} tip='资源加载中' />}>
+						<Suspense fallback={fallback}>
 		                    <Switch>
 		                      	{
 		                      		children.map((routeChild) => {
@@ -92,7 +96,7 @@ const traversing = function fn(route) {
 const router = () => {
 	return (
 		<Router history={model.history}>
-			<Suspense fallback={<Loading inline={false} visible={true} tip='资源加载中' />}>
+			<Suspense fallback={fallback}>
 			  	<Switch>
 					{routerConfig.map(traversing)}
 			 	</Switch>

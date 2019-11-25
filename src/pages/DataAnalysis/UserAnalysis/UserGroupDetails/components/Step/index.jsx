@@ -33,15 +33,15 @@ export default function Step({
 		async function fetchData() {
 			setLoading(true);
 			try {
+				await api.getOriginData().then((res) => {
+					setOriginData(model.assembleOriginData(res.data));
+				});
+
 				await api.getDataCenter({
 					type: 'event',
 				}).then((res) => {
 					setMetricData(model.assembleEvent(res.event_entities));
-				})
-
-				await api.getOriginData().then((res) => {
-					setOriginData(model.assembleOriginData(res.data));
-				})
+				});
 			} catch (e) {
 				model.log(e);
 			}
@@ -121,9 +121,11 @@ export default function Step({
 			}
 			return steps;
 		}
-		if (originData.length === 0) {
+
+		if (metricData.length === 0) {
 			return;
 		}
+
 		setSteps(assembleSteps());
 	}, [metricData, originData]);
 

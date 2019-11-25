@@ -77,16 +77,16 @@ export default function OriginDataDetails({
 					id,
 					valueId,
 				}).then((res) => {
-					if (data.length <= 1) {
-						const prePage = curPage - 1 === 0 ? 1 : curPage - 1;
-						updateParameter({
-							...parameter,
-							offset: (prePage - 1) * config.LIMIT,
-						});
-						setCurPage(prePage);
-					} else {
+					if (data.length > 1) {
 						updateParameter(parameter);
+						return;
 					}
+					const prePage = curPage - 1 === 0 ? 1 : curPage - 1;
+					updateParameter({
+						...parameter,
+						offset: (prePage - 1) * config.LIMIT,
+					});
+					setCurPage(prePage);
 				}).catch((e) => {
 					model.log(e);
 				}).finally(() => {
