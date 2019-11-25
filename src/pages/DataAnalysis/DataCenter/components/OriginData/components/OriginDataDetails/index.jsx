@@ -1,5 +1,6 @@
 import React, {
 	useRef,
+	useState,
 } from 'react';
 import {
 	Button,
@@ -21,6 +22,8 @@ export default function OriginDataDetails({
 	value_type,
 }) {
 	const refDialog = useRef(null);
+	const [curPage, setCurPage] = useState(1);
+
 	const {
 		showLoading,
 		closeLoading,
@@ -42,11 +45,9 @@ export default function OriginDataDetails({
 	} = response;
 
 	const pageChange = (e) => {
-		updateParameter(Object.assign({}, parameter, {
-			trend: {
-				offset: (e - 1) * config.LIMIT,
-			}
-		}));
+		setCurPage(e);
+		parameter.trend.offset = (e - 1) * config.LIMIT;
+		updateParameter(parameter);
 	};
 
 	const onCreateOriginDataValue = () => {
@@ -54,8 +55,17 @@ export default function OriginDataDetails({
 	};
 
 	const onOk = (value) => {
-		data.splice(0, 0, value);
-		updateResponse();
+		if (data.length < config.LIMIT) {
+			data.push(value);
+			updateResponse();
+		} else {
+			const nextPage = curPage + 1;
+			updateParameter({
+				...parameter,
+				offset: (nextPage - 1) * config.LIMIT,
+			});
+			setCurPage(nextPage);
+		}
 	};
 
 	const onDeleteOriginDataValue = (valueId, index) => {
@@ -67,9 +77,16 @@ export default function OriginDataDetails({
 					id,
 					valueId,
 				}).then((res) => {
-					data.splice(index, 1);
-					updateResponse();
-					model.log('删除成功');
+					if (data.length <= 1) {
+						const prePage = curPage - 1 === 0 ? 1 : curPage - 1;
+						updateParameter({
+							...parameter,
+							offset: (prePage - 1) * config.LIMIT,
+						});
+						setCurPage(prePage);
+					} else {
+						updateParameter(parameter);
+					}
 				}).catch((e) => {
 					model.log(e);
 				}).finally(() => {
@@ -87,6 +104,10 @@ export default function OriginDataDetails({
 		);
 	};
 
+	const renderFirstColunm = (value, index, record) => {
+		return <span>{ parameter.trend.offset + index+1}</span>;
+	};
+
 	return (
 		<Components.Wrap>
 			<Components.Title title={name} />
@@ -101,12 +122,13 @@ export default function OriginDataDetails({
 		          		dataSource={data} 
 		          		hasBorder={false}
 		          	>	
-		          		<Table.Column title="id" dataIndex="id" />
+		          		<Table.Column title="id" dataIndex="id" cell={renderFirstColunm} />
 		            	<Table.Column title="元数据值" dataIndex="value" />
 		            	<Table.Column title="操作" cell={renderCover} />
 		          	</Table>
 				</Loading>
 	          	<Pagination
+	          		current={curPage}
 	           		className={styles.pagination}
 	            	total={total}
 	            	onChange={pageChange}

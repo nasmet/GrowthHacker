@@ -22,7 +22,7 @@ function getBaseUrl() {
 		case 'development':
 			return DEVBASEURL;
 		case 'production':
-			return BUILDBASEURL;
+			return TESTBASEURL;
 		default:
 			return TESTBASEURL;
 	}

@@ -19,6 +19,7 @@ export default function OriginData() {
 	const [showDrawer, setShowDrawer] = useState(false);
 	const [values, setValues] = useState({});
 	const refDialog = useRef(null);
+	const [curPage, setCurPage] = useState(1);
 
 	const {
 		parameter,
@@ -39,9 +40,11 @@ export default function OriginData() {
 	} = response;
 
 	const pageChange = e => {
-		updateParameter(Object.assign({}, parameter, {
+		setCurPage(e);
+		updateParameter({
+			...parameter,
 			offset: (e - 1) * config.LIMIT,
-		}));
+		});
 	};
 
 	const onDeleteOriginData = (id, index) => {
@@ -52,9 +55,16 @@ export default function OriginData() {
 				api.deleteOriginData({
 					id,
 				}).then(() => {
-					data.splice(index, 1);
-					updateResponse();
-					model.log('删除成功');
+					if (data.length <= 1) {
+						const prePage = curPage - 1 === 0 ? 1 : curPage - 1;
+						updateParameter({
+							...parameter,
+							offset: (prePage - 1) * config.LIMIT,
+						});
+						setCurPage(prePage);
+					} else {
+						updateParameter(parameter);
+					}
 				}).catch((e) => {
 					model.log(e);
 				}).finally(() => {
@@ -96,8 +106,17 @@ export default function OriginData() {
 	};
 
 	const onOk = (value) => {
-		data.splice(0, 0, value);
-		updateResponse();
+		if (data.length < config.LIMIT) {
+			data.push(value);
+			updateResponse();
+		} else {
+			const nextPage = curPage + 1;
+			updateParameter({
+				...parameter,
+				offset: (nextPage - 1) * config.LIMIT,
+			});
+			setCurPage(nextPage);
+		}
 	};
 
 	const onCloseDrawer = () => {
@@ -121,6 +140,10 @@ export default function OriginData() {
 		}
 	};
 
+	const renderFirstColunm = (value, index, record) => {
+		return <span>{ parameter.offset + index+1}</span>;
+	};
+
 	return (
 		<Components.Wrap>
 			<div className={styles.btnWrap}>
@@ -138,7 +161,7 @@ export default function OriginData() {
 						dataSource={data} 
 						hasBorder={false}
 					>	
-						<Table.Column title="id" dataIndex="id" width={120} />
+						<Table.Column title="id" dataIndex="id" cell={renderFirstColunm} width={120} />
 						<Table.Column title="名称" dataIndex="name" width={120} />
 						<Table.Column title="标识符" dataIndex="key" width={120} />
 						<Table.Column title="类型" dataIndex="value_type" width={120} />
@@ -148,6 +171,7 @@ export default function OriginData() {
 				</Loading>
 
 				<Pagination
+					current={curPage}
 					className={styles.pagination}
 					total={total}
 					onChange={pageChange}

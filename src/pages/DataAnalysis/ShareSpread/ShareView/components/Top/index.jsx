@@ -4,6 +4,7 @@ import React, {
 } from 'react';
 import {
 	Table,
+	Balloon,
 } from '@alifd/next';
 import styles from './index.module.scss';
 
@@ -35,7 +36,8 @@ function Top({
 	} = response;
 
 	const renderSecondColumn = (value, index, record) => {
-		return <span className={styles.openId}>{record.wechat_openid}</span>
+		const item = <span className={styles.openId}>{record.wechat_openid}</span>;
+		return <Balloon.Tooltip trigger={item}>{record.wechat_openid}</Balloon.Tooltip>;
 	};
 
 	return (

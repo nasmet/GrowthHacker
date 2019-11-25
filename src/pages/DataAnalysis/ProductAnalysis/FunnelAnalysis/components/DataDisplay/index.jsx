@@ -16,7 +16,7 @@ export default function DataDisplay({
 		for (let i = 1, len = meta.length; i < len; i++) {
 			const temp = {
 				name: meta[i].step_name,
-				count: data[i-1].unique_count,
+				count: data[i - 1].unique_count,
 			};
 			if (i !== len - 1) {
 				temp.rate = utils.transformPercent(data[i].percentage);
@@ -30,7 +30,7 @@ export default function DataDisplay({
 		};
 	}
 
-	const renderColumn = (column,value, index, record) => {
+	const renderColumn = (column, value, index, record) => {
 		return (
 			<div className={styles.source}>
 				<span>{record[`unique_count_${column}`]}</span>
@@ -53,26 +53,24 @@ export default function DataDisplay({
 
 	};
 
-	function assembleData(){
-		const temp={};
-		data.forEach((item, index)=>{
-			temp[`unique_count_${index}`]=item.unique_count;
-			temp[`percentage_${index}`]=item.percentage;
+	function assembleData() {
+		if (data.length === 0) {
+			return data;
+		}
+		const temp = {};
+		data.forEach((item, index) => {
+			temp[`unique_count_${index}`] = item.unique_count;
+			temp[`percentage_${index}`] = item.percentage;
 		});
 		return [temp];
 	}
 
 	return (
-		<div>
-			<Loading visible={loading} inline={false}>
-				{
-					data.length!==0 && <Steps  {...assembleStep()} />
-				}
-				
-				<Table dataSource={assembleData()} hasBorder={false} >
-				   	{renderTitle()}     		
-				</Table>
-			</Loading>
-		</div>
+		<Loading visible={loading} inline={false}>
+			{ data.length===0? <Components.NotData /> : <Steps  {...assembleStep()} /> }
+			<Table dataSource={assembleData()} hasBorder={false} >
+			   	{renderTitle()}     		
+			</Table>
+		</Loading>
 	);
 }
