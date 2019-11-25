@@ -1,6 +1,6 @@
 const DEVHOST = 'http://10.16.117.92:30012';
 const TESTHOST = 'http://10.16.98.212:30012';
-const BUILDHOST = 'https://api.dw.cloudmaptech.com';
+const BUILDHOST = 'https://cms.dw.cloudmaptech.com';
 const DEVBASEURL = `${DEVHOST}/v1`;
 const TESTBASEURL = `${TESTHOST}/v1`;
 const BUILDBASEURL = `${BUILDHOST}/v1`;
@@ -22,7 +22,7 @@ function getBaseUrl() {
 		case 'development':
 			return DEVBASEURL;
 		case 'production':
-			return TESTBASEURL;
+			return BUILDBASEURL;
 		default:
 			return TESTBASEURL;
 	}
