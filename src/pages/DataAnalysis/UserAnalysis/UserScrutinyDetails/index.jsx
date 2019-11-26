@@ -101,9 +101,9 @@ function UserScrutinyDetails({
 		      		{renderTab()}
 		      	</Tab>
       		</div>
-      		<div className={styles.rightContent}>
+      		{/*<div className={styles.rightContent}>
       			<UserDetails record={record} />
-      		</div>
+      		</div>*/}
     	</div>
 	);
 }
