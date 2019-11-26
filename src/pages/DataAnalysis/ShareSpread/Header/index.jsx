@@ -39,7 +39,7 @@ function Header({
 			<div className={styles.item}>
 				<span className={styles.value}>{value}</span>
 				<span>{name}</span>
-			</div>
+			</div>		
 		);
 	}
 
@@ -49,7 +49,7 @@ function Header({
 				{renderItem('分享人数',share_user_count)}
 				{renderItem('分享次数',share_count)}
 				{renderItem('回流量',share_open_count)}
-				{renderItem('分享回流比',share_reflux_ratio)}
+				{renderItem('分享回流比',utils.transformPercent(share_reflux_ratio))}
 				{renderItem('分享新增',new_count)}
 			</div>
 		</Loading>

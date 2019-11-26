@@ -35,6 +35,9 @@ export default function GroupFilter({
 
 
 	function assembleGroupData(data) {
+		if (!all && data.length === 0) {
+			return;
+		}
 		const groups = model.assembleGroupData(data, all);
 		refForm.current.state.store.setFieldProps('id', {
 			dataSource: groups,
@@ -58,16 +61,16 @@ export default function GroupFilter({
 					<div className={styles.field}>
 						<span>{label}</span>
 						<span>{component}</span>
-					</div>)} 
-			>
-				<Field label='目标用户：' name='id'>
+					</div>)
+} >
+<Field label='目标用户：' name='id'>
 					<Select  
 						style={{minWidth:'200px'}}
 						dataSource={[]} 
 						showSearch
 					/>
-				</Field> 
-			</Form>   
-		</div>
-	);
+				</Field> <
+/Form>    < /
+div >
+);
 }
