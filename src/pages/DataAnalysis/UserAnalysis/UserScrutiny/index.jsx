@@ -47,22 +47,20 @@ function UserScrutiny({
 	};
 
 	const renderFirstCell = (value, index, record) => {
-		return <span>{parameter.offset+index+1}</span>;
-	};
-
-	const renderSecondCell = (value, index, record) => {
-		const val = record[1] || '';
+		const val = record[0] || '';
 		return (
 			<span className={styles.user} onClick={jump.bind(this, record)}>{val}</span>
 		);
 	};
 
-	const renderFourCell = (value, index, record) => {
-		const val = record[3] || '';
+	const renderSecondCell = (value, index, record) => {
+		const val = record[1] || '';
 		return (
 			<span>{utils.formatUnix(val,'Y-M-D h:m:s')}</span>
 		);
 	}
+
+	console.log(meta);
 
 	const renderTitle = () => {
 		return meta.map((item, index) => {
@@ -71,9 +69,6 @@ function UserScrutiny({
 			}
 			if (index === 1) {
 				return <Table.Column key={index} title={item} cell={renderSecondCell} />
-			}
-			if (index === 3) {
-				return <Table.Column key={index} title={item} cell={renderFourCell} />
 			}
 			return <Table.Column key={index} title={item} dataIndex={index.toString()} />
 		});
