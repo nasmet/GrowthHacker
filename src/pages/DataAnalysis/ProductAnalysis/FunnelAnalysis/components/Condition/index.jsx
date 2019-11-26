@@ -187,8 +187,8 @@ export default function Condition({
 	}
 
 	const onAddStep = () => {
-		if (steps.length === 4) {
-			model.log('最多选择4个事件！');
+		if (steps.length === 10) {
+			model.log('最多选择10个事件！');
 			return;
 		}
 		setSteps((pre) => {
