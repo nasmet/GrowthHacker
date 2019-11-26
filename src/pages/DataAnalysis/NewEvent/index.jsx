@@ -21,8 +21,15 @@ export default function NewEvent() {
 			data = [],
 	} = response;
 
+	const renderFirstCell = (value, index, record) => {
+		return <span>{index+1}</span>;
+	};
+
 	const renderTitle = () => {
 		return columns.map((item, index) => {
+			if(index===0){
+				return <Table.Column key={index} title={item} cell={renderFirstCell} />
+			}
 			return <Table.Column key={index} title={item} dataIndex={index.toString()}/>
 		});
 	};

@@ -47,6 +47,10 @@ function UserScrutiny({
 	};
 
 	const renderFirstCell = (value, index, record) => {
+		return <span>{parameter.offset+index+1}</span>;
+	};
+
+	const renderSecondCell = (value, index, record) => {
 		const val = record[1] || '';
 		return (
 			<span className={styles.user} onClick={jump.bind(this, record)}>{val}</span>
@@ -62,8 +66,11 @@ function UserScrutiny({
 
 	const renderTitle = () => {
 		return meta.map((item, index) => {
-			if (index === 1) {
+			if (index === 0) {
 				return <Table.Column key={index} title={item} cell={renderFirstCell} />
+			}
+			if (index === 1) {
+				return <Table.Column key={index} title={item} cell={renderSecondCell} />
 			}
 			if (index === 3) {
 				return <Table.Column key={index} title={item} cell={renderFourCell} />
@@ -96,7 +103,7 @@ function UserScrutiny({
 			sheetData: data.map(item => {
 				return item.map((v, index) => {
 					if (index === 3) {
-						return utils.formatUnix(v,'Y-M-D h:m:s');
+						return utils.formatUnix(v, 'Y-M-D h:m:s');
 					}
 					return v;
 				});

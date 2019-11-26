@@ -80,6 +80,10 @@ function UserGroup({
 		};
 	};
 
+	const renderFirstColunm = (value, index, record) => {
+		return <span>{index+1}</span>;
+	};
+
 	return (
 		<Components.Wrap>
 			<Components.Title title='用户分群列表' />
@@ -96,7 +100,7 @@ function UserGroup({
 						dataSource={segmentations} 
 						hasBorder={false}
 					>
-						<Table.Column title='id' dataIndex='id' />
+						<Table.Column title='id' dataIndex='id' cell={renderFirstColunm} />
 						<Table.Column title='名称' dataIndex='name' />
 						<Table.Column title='操作' cell={renderLastCell} />
 					</Table>

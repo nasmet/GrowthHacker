@@ -48,7 +48,7 @@ function Top({
 					loading={loading} 
 					dataSource={users} 
 					hasBorder={false}
-					maxBodyHeight={260}
+					maxBodyHeight={400}
 					fixedHeader
 				>
 					<Table.Column style={{background: 'transparent'}} className={styles.column} title='Top排名' width={80} dataIndex='ranking_num' />
