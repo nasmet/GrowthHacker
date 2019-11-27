@@ -28,6 +28,7 @@ export default function Main({
 		data: [],
 	});
 	const [graphData, setGraphData] = useState([]);
+	const [tab, setTab] = useState("recentquery");
 
 	useEffect(() => {
 		setValue((pre) => {
@@ -37,20 +38,18 @@ export default function Main({
 			return `${query}`;
 		})
 
-		return () => {
-			api.cancelRequest();
-		};
+		return api.cancelRequest;
 	}, [query]);
 
-	const onChange = (e) => {
+	const onInputChange = (e) => {
 		setValue(e);
 	};
 
-	const handleSql = () => {
-		if (!value) {
-			model.log('内容不能为空！');
-			return;
-		}
+	const isExist = value => {
+		return recentQueryData.some(item => item.query === value);
+	};
+
+	function fetchData(value) {
 		setLoading(true);
 		api.getSqlData({
 			query: value,
@@ -59,13 +58,15 @@ export default function Main({
 				columns,
 				data,
 			} = res;
-			setRecentQueryData((pre) => {
-				return [{
-					id: pre.length + '',
-					query: value,
-					time: utils.formatUnix(Date.now() / 1000, 'Y-M-D h:m:s'),
-				}, ...pre];
-			});
+			if (!isExist(value)) {
+				setRecentQueryData((pre) => {
+					return [{
+						id: pre.length + '',
+						query: value,
+						time: utils.formatUnix(Date.now() / 1000, 'Y-M-D h:m:s'),
+					}, ...pre];
+				});
+			}
 			setResultData({
 				titles: columns,
 				data,
@@ -77,6 +78,14 @@ export default function Main({
 		}).finally(() => {
 			setLoading(false);
 		});
+	}
+
+	const handleSql = () => {
+		if (!value) {
+			model.log('内容不能为空！');
+			return;
+		}
+		fetchData(value);
 	};
 
 	const transferData = (key) => {
@@ -107,7 +116,7 @@ export default function Main({
 			} = item;
 			return (
 				<Tab.Item key={key} title={tab} >
-            		<Content sql={transferData(key)} />
+            		<Content sql={transferData(key)} switchResultTab={switchResultTab} />
         		</Tab.Item>
 			);
 		});
@@ -117,11 +126,24 @@ export default function Main({
 		setValue('');
 	};
 
+	const onTabChange = key => {
+		setTab(key);
+	};
+
+	const switchResultTab = e => {
+		setTab('result');
+		if (value === e) {
+			return;
+		}
+		setValue(e);
+		fetchData(e);
+	};
+
 	return (
 		<Loading visible={loading} inline={false}>
 			<Components.Wrap>
 				<IceContainer>
-	      			<Input.TextArea className={styles.input} onChange={onChange} value={value} placeholder="请输入sql语句" aria-label="TextArea" />
+	      			<Input.TextArea className={styles.input} onChange={onInputChange} value={value} placeholder="请输入sql语句" aria-label="TextArea" />
 	      			<div>
 	      				<Button className={styles.btn} type='primary' onClick={handleSql}>执行</Button>
 	      				<Button className={styles.btn} type='primary' onClick={resetSql}>重置</Button>
@@ -129,7 +151,7 @@ export default function Main({
 	      		</IceContainer>
 				
 				<IceContainer>
-		      		<Tab defaultActiveKey="recentquery" >
+		      		<Tab activeKey={tab} onChange={onTabChange} >
 		        		{rendTab()}
 		      		</Tab>
 	      		</IceContainer>
