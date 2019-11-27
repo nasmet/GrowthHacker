@@ -25,7 +25,7 @@ export default function Result({
 		const start = (curPage - 1) * config.LIMIT;
 		const end = start + config.LIMIT;
 		setTableData(data.slice(start, end));
-	}, [curPage])
+	}, [curPage, sql])
 
 	const renderTitle = () => {
 		return titles.map((item, index) => {

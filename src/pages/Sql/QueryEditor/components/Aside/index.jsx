@@ -2,6 +2,7 @@ import React, {
 	Component,
 	useState,
 	useEffect,
+	useRef,
 } from 'react';
 import {
 	Input,
@@ -19,7 +20,9 @@ const {
 export default function Aside({
 	menuSelect,
 }) {
-	const [total, setTotal] = useState([]);
+	const refVariable = useRef({
+		total: [],
+	});
 	const [data, setData] = useState([]);
 	const [loading, setLoading] = useState(false);
 
@@ -33,23 +36,21 @@ export default function Aside({
 				tables,
 			} = res;
 			setData(tables);
-			setTotal(tables);
+			refVariable.current.total = tables;
 		}).catch((e) => {
 			model.log(e);
 		}).finally(() => {
 			setLoading(false);
 		});
 
-		return () => {
-			api.cancelRequest();
-		};
+		return api.cancelRequest;
 	}, []);
 
 	const onInputChange = (e) => {
 		if (!e) {
 			return;
 		}
-		const filterData = total.filter((item) => {
+		const filterData = refVariable.current.total.filter((item) => {
 			return item['name'].indexOf(e) !== -1;
 		});
 		setData(filterData);
