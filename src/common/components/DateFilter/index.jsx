@@ -13,10 +13,23 @@ import {
 	dateTypes,
 } from './config';
 
+const getDate = (num = 1, showTime = false) => {
+	const date = Date.now() - 24 * 60 * 60 * 1000 * num;
+	if (!showTime) {
+		return date;
+	}
+	const {
+		Y,
+		M,
+		D,
+	} = utils.dateMap(date);
+	return `${Y}-${M}-${D}`;
+}
+
 export default function DateFilter({
 	filterChange,
 	initTabValue = '0',
-	initCurDateValue = [moment(), moment()],
+	initCurDateValue = [moment(getDate(0, true)), moment()],
 	showTime = false
 }) {
 	const [dateValue, setDateValue] = useState([]);
@@ -42,28 +55,22 @@ export default function DateFilter({
 		});
 	};
 
-
-	const getDate = (num = 1) => {
-		return Date.now() - 24 * 60 * 60 * 1000 * num;
-	}
-
 	const dateTabChange = (e) => {
-		let startDate = Date.now(),
-			endDate = Date.now();
-
+		let startDate;
+		let endDate = Date.now();
 		switch (e) {
 			case '0':
+				startDate = getDate(0, true);
 				break;
 			case '1':
-				startDate = endDate = getDate();
+				startDate = getDate(1, true);
+				endDate = getDate();
 				break;
 			case '7':
-				startDate = getDate(7);
-				endDate = getDate();
+				startDate = getDate(e - 1, true);
 				break;
 			case '30':
-				startDate = getDate(30);
-				endDate = getDate();
+				startDate = getDate(e - 1, true);
 				break;
 		}
 		setTabValue(e);
@@ -101,7 +108,7 @@ export default function DateFilter({
 	  			/>
   			</div>
   			<div className={styles.tabWrap}>
-	  			<Tab 			
+	  			<Tab 		
 	  				activeKey={tabValue} 
 	  				shape="capsule" 
 	  				size="small" 

@@ -60,8 +60,6 @@ function UserScrutiny({
 		);
 	}
 
-	console.log(meta);
-
 	const renderTitle = () => {
 		return meta.map((item, index) => {
 			if (index === 0) {
