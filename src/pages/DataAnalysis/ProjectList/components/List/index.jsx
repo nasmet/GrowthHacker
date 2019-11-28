@@ -52,9 +52,9 @@ function List({
 		name,
 		appid,
 	}) => {
-		sessionStorage.setItem(config.PROJECTID, id);
-		sessionStorage.setItem(config.PROJECTNAME, name);
-		sessionStorage.setItem(config.PROJECTAPPID, appid);
+		cookies.set(config.PROJECTID, id);
+		cookies.set(config.PROJECTNAME, name);
+		cookies.set(config.PROJECTAPPID, appid);
 		history.push('/dataanalysis/projectdata');
 	};
 

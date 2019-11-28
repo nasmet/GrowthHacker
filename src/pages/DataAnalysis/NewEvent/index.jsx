@@ -6,7 +6,7 @@ import {
 import IceContainer from '@icedesign/container';
 
 export default function NewEvent() {
-	const appid = sessionStorage.getItem(config.PROJECTAPPID);
+	const appid = cookies.get(config.PROJECTAPPID);
 	const {
 		parameter,
 		response,

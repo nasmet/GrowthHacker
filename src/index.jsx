@@ -12,6 +12,7 @@ import * as config from './common/config';
 import Components from './common/components/index';
 import hooks from './common/hooks/index';
 import lib from './common/lib/index';
+import cookies from './common/cookies/index';
 
 window.utils = utils;
 window.api = api;
@@ -20,5 +21,6 @@ window.config = config;
 window.Components = Components;
 window.hooks = hooks;
 window.lib = lib;
+window.cookies = cookies;
 
 ReactDOM.render(router, document.getElementById('ice-container'));

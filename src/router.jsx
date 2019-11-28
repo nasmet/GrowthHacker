@@ -17,13 +17,14 @@ import {
 } from 'react-router-dom';
 import routerConfig from './routerConfig';
 import model from './common/model/index';
+import cookies from './common/cookies/index';
 
 // 全局的路由拦截
 const RouteIntercept = ({
 	children,
 	history,
 }) => {
-	const token = sessionStorage.getItem(config.TOKENKEY);
+	const token = cookies.get(config.TOKENKEY);
 	if (!token) {
 		history.push('/user/login');
 		return null;

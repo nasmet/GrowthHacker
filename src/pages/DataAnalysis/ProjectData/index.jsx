@@ -19,7 +19,7 @@ function ProjectData({
 	} = location;
 	const arr = pathname.split('/');
 	const path = `/${arr[1]}/${arr[2]}/${arr[3]}`;
-	const header = <span className={styles.fusion}>{sessionStorage.getItem('PROJECTNAME')}</span>;
+	const header = <span className={styles.fusion}>{cookies.get('PROJECTNAME')}</span>;
 
 	return (
 		<Components.Wrap>

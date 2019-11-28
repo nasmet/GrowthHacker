@@ -5,15 +5,15 @@ import {
 } from '../base';
 
 export function createUserGroup(data) {
-	return post(`/projects/${sessionStorage.getItem(config.PROJECTID)}/segmentations`, data);
+	return post(`/projects/${cookies.get(config.PROJECTID)}/segmentations`, data);
 }
 
 export function getUserGroups() {
-	return get(`/projects/${sessionStorage.getItem(config.PROJECTID)}/segmentations`);
+	return get(`/projects/${cookies.get(config.PROJECTID)}/segmentations`);
 }
 
 export function deleteUserGroup(data) {
-	return del(`/projects/${sessionStorage.getItem(config.PROJECTID)}/segmentations/${data.id}`);
+	return del(`/projects/${cookies.get(config.PROJECTID)}/segmentations/${data.id}`);
 }
 
 export function getUserGroupDetails(data) {
@@ -21,15 +21,15 @@ export function getUserGroupDetails(data) {
 		id,
 		trend,
 	} = data;
-	return get(`/projects/${sessionStorage.getItem(config.PROJECTID)}/segmentations/${id}/users`, trend);
+	return get(`/projects/${cookies.get(config.PROJECTID)}/segmentations/${id}/users`, trend);
 }
 
 export function getUserScrutiny(data) {
-	return get(`/projects/${sessionStorage.getItem(config.PROJECTID)}/insights/segmentations/latest/users`, data);
+	return get(`/projects/${cookies.get(config.PROJECTID)}/insights/segmentations/latest/users`, data);
 }
 
 export function getUserScrutinyDetails(data) {
-	return get(`/projects/${sessionStorage.getItem(config.PROJECTID)}/insights/segmentations/latest/users/${data.openId}`);
+	return get(`/projects/${cookies.get(config.PROJECTID)}/insights/segmentations/latest/users/${data.openId}`);
 }
 
 export function getUserScrutinyEvents(data) {
@@ -37,7 +37,7 @@ export function getUserScrutinyEvents(data) {
 		openId,
 		trend,
 	} = data;
-	return get(`/projects/${sessionStorage.getItem(config.PROJECTID)}/insights/segmentations/latest/users/${openId}/events`, trend);
+	return get(`/projects/${cookies.get(config.PROJECTID)}/insights/segmentations/latest/users/${openId}/events`, trend);
 }
 
 export function getUserScrutinyEventsBar(data) {
@@ -45,21 +45,21 @@ export function getUserScrutinyEventsBar(data) {
 		openId,
 		trend,
 	} = data;
-	return get(`/projects/${sessionStorage.getItem(config.PROJECTID)}/insights/segmentations/latest/users/${openId}/eventsbar`, trend);
+	return get(`/projects/${cookies.get(config.PROJECTID)}/insights/segmentations/latest/users/${openId}/eventsbar`, trend);
 }
 
 export function getPortraitArea(data) {
-	return get(`/projects/${sessionStorage.getItem(config.PROJECTID)}/portrait/terr`, data);
+	return get(`/projects/${cookies.get(config.PROJECTID)}/portrait/terr`, data);
 }
 
 export function getPortraitModel(data) {
-	return get(`/projects/${sessionStorage.getItem(config.PROJECTID)}/portrait/phone`, data);
+	return get(`/projects/${cookies.get(config.PROJECTID)}/portrait/phone`, data);
 }
 
 export function getPortraitTerminal(data) {
-	return get(`/projects/${sessionStorage.getItem(config.PROJECTID)}/portrait/terminal`, data);
+	return get(`/projects/${cookies.get(config.PROJECTID)}/portrait/terminal`, data);
 }
 
 export function getHeatMap(data) {
-	return get(`/projects/${sessionStorage.getItem(config.PROJECTID)}/heatmap`, data);
+	return get(`/projects/${cookies.get(config.PROJECTID)}/heatmap`, data);
 }

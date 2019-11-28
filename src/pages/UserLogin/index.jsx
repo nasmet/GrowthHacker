@@ -25,9 +25,10 @@ function UserLogin({
 	const [values, setValues] = useState({});
 
 	useEffect(() => {
-		sessionStorage.removeItem(config.PROJECTID);
-		sessionStorage.removeItem(config.TOKENKEY);
-
+		if (cookies.get(config.TOKENKEY)) {
+			history.push('/');
+			return;
+		}
 		const username = localStorage.getItem(config.ACCOUNT);
 		if (username) {
 			const password = localStorage.getItem(config.PASSWORD);
@@ -57,8 +58,8 @@ function UserLogin({
 				localStorage.removeItem(config.ACCOUNT);
 				localStorage.removeItem(config.PASSWORD);
 			}
-			sessionStorage.setItem(config.TOKENKEY, lib.encrypt(res.token));
-			sessionStorage.setItem(config.USERNAME, username);
+			cookies.set(config.TOKENKEY, lib.encrypt(res.token));
+			cookies.set(config.USERNAME, username);
 			history.push('/');
 		}).catch(e => {
 			model.log(e);

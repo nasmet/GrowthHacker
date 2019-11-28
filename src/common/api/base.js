@@ -13,7 +13,7 @@ axios.interceptors.request.use((configs) => {
 		'Content-Type': 'application/json',
 		Accept: 'application/json',
 	};
-	const token = sessionStorage.getItem(config.TOKENKEY);
+	const token = cookies.get(config.TOKENKEY);
 	if (token) {
 		configs.headers.Authorization = lib.decrypt(token);
 	}
@@ -29,6 +29,7 @@ axios.interceptors.response.use((response) => {
 			return response.data;
 		case 20103:
 			setTimeout(() => {
+				cookies.remove(config.TOKENKEY);
 				model.history.push('/user/login');
 			});
 			return Promise.reject(response.data.message);
@@ -153,7 +154,7 @@ export function upload(data = {}) {
 			signal,
 			method: 'post',
 			headers: {
-				Authorization: lib.decrypt(sessionStorage.getItem(config.TOKENKEY)),
+				Authorization: lib.decrypt(cookies.get(config.TOKENKEY)),
 			},
 			body: formData,
 		}).then((response) => {
