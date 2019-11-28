@@ -2,7 +2,6 @@
 import React from "react";
 import ReactDOM from 'react-dom';
 import moment from 'moment';
-moment.locale('zh-cn');
 import '@alifd/next/reset.scss';
 import router from './router';
 import utils from './common/utils/index';
@@ -14,6 +13,7 @@ import hooks from './common/hooks/index';
 import lib from './common/lib/index';
 import cookies from './common/cookies/index';
 
+moment.locale('zh-cn');
 window.utils = utils;
 window.api = api;
 window.model = model;

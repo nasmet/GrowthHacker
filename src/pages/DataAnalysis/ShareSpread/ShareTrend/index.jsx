@@ -1,6 +1,7 @@
 import React, {
 	useRef,
 	useMemo,
+	useState,
 } from 'react';
 import {
 	Table,
@@ -19,6 +20,9 @@ export default function ShareTrend() {
 		color: 'event',
 	};
 
+	const [curPage, setCurPage] = useState(1);
+	const limit = 23;
+
 	const {
 		response,
 		loading,
@@ -26,7 +30,7 @@ export default function ShareTrend() {
 		parameter,
 	} = hooks.useRequest(api.getShareTrend, {
 		date: 'day:0',
-		limit: config.LIMIT,
+		limit,
 		offset: 0,
 	});
 	const {
@@ -65,7 +69,7 @@ export default function ShareTrend() {
 			temp.push({
 				time,
 				event: '分享回流比',
-				count: share_reflux_ratio,
+				count: utils.transformPercent(share_reflux_ratio),
 			});
 			temp.push({
 				time,
@@ -96,14 +100,17 @@ export default function ShareTrend() {
 	const dateChange = date => {
 		updateParameter({ ...parameter,
 			date,
+			offset: 0,
 		})
 		headRef.current.update(date);
+		setCurPage(1);
 	};
 
 	const pageChange = e => {
 		updateParameter({ ...parameter,
-			offset: (e - 1) * config.LIMIT,
-		})
+			offset: (e - 1) * limit,
+		});
+		setCurPage(e);
 	};
 
 	const renderFirstColumn = (value, index, record) => {
@@ -149,7 +156,7 @@ export default function ShareTrend() {
 			<IceContainer>
 				<Header ref={headRef} />
 				<Loading visible={loading} inline={false}>
-					<Components.BasicColumn data={assembleChartData} {...chartStyle} cols={assembleCols} forceFit />
+					<Components.BasicPolyline data={assembleChartData} {...chartStyle}  forceFit />
 					<div className='table-update-btns'>					
 						<Components.Refresh onClick={onRefresh} />
 						{share_overview.length > 0 && <Components.ExportExcel fileName='分享趋势' handle={handleData} />}
@@ -168,6 +175,8 @@ export default function ShareTrend() {
 				</Loading>
 				<Pagination
 					className={styles.pagination}
+					current={curPage}
+					pageSize={limit}
 					total={total}
 					onChange={pageChange}
 				/>

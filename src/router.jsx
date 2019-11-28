@@ -29,7 +29,7 @@ const RouteIntercept = ({
 		history.push('/user/login');
 		return null;
 	}
-
+	
 	return (
 		<div>{children}</div>
 	);
