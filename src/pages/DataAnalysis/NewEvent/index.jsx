@@ -49,6 +49,19 @@ export default function NewEvent() {
 		return <span>{index+1}</span>;
 	};
 
+	const jump = openId => {
+		model.history.push({
+			pathname: '/dataanalysis/projectdata/ua/userscrutinydetails',
+			state: {
+				openId,
+			}
+		});
+	};
+
+	const renderSecondCell = (column, value, index, record) => {
+		return <span style={{cursor:'pointer'}} onClick={jump.bind(this,record[column])}>{record[column]}</span>
+	};
+
 	const renderTitle = () => {
 		if (columns.length === 0) {
 			return null;
@@ -58,6 +71,9 @@ export default function NewEvent() {
 		return newColumns.map((item, index) => {
 			if (index === 0) {
 				return <Table.Column key={index} title={item} cell={renderFirstCell} lock='left' width={80} />
+			}
+			if (index === 2) {
+				return <Table.Column key={index} title={item} width={150} cell={renderSecondCell.bind(this,index)} />
 			}
 			if (index === newColumns.length - 1) {
 				return <Table.Column key={index} title={item} dataIndex={index.toString()} width={400} />

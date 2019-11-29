@@ -37,11 +37,11 @@ function UserScrutiny({
 			data = [],
 	} = response;
 
-	const jump = record => {
+	const jump = openId => {
 		history.push({
 			pathname: '/dataanalysis/projectdata/ua/userscrutinydetails',
 			state: {
-				record,
+				openId,
 			}
 		});
 	};
@@ -49,7 +49,7 @@ function UserScrutiny({
 	const renderFirstCell = (value, index, record) => {
 		const val = record[0] || '';
 		return (
-			<span className={styles.user} onClick={jump.bind(this, record)}>{val}</span>
+			<span className={styles.user} onClick={jump.bind(this, record[1])}>{val}</span>
 		);
 	};
 

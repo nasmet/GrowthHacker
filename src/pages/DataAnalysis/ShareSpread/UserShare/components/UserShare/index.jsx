@@ -78,7 +78,20 @@ export default function UserShare({
 	const renderFirstColumn = (value, index, record) => {
 		return <span>{formatTime(record.time_range)}</span>;
 	};
-	
+
+	const jump = openId => {
+		model.history.push({
+			pathname: '/dataanalysis/projectdata/ua/userscrutinydetails',
+			state: {
+				openId,
+			}
+		});
+	};
+
+	const renderSecondColumn = (value, index, record) => {
+		return <span style={{cursor:'pointer'}} onClick={jump.bind(this,record.wechat_openid)}>{record.wechat_openid}</span>
+	};
+
 	return (
 		<Components.Wrap>
 			<IceContainer>
@@ -89,7 +102,7 @@ export default function UserShare({
 				<Loading visible={loading} inline={false}>
 					<Table dataSource={data} hasBorder={false} >
 						<Table.Column title='日期' cell={renderFirstColumn} />
-						<Table.Column title='用户' dataIndex='wechat_openid' />
+						<Table.Column title='用户' cell={renderSecondColumn} />
 						<Table.Column title='分享次数' dataIndex='share_count' />
 						<Table.Column title='回流量' dataIndex='share_open_count' />
 						<Table.Column title='分享回流比' cell={renderFiveColumn} />

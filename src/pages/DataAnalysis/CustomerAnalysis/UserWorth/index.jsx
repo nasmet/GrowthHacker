@@ -47,6 +47,19 @@ export default function UserWorth() {
 		}
 	};
 
+	const jump = openId => {
+		model.history.push({
+			pathname: '/dataanalysis/projectdata/ua/userscrutinydetails',
+			state: {
+				openId,
+			}
+		});
+	};
+
+	const renderFirstColumn = (value, index, record) => {
+		return <span style={{cursor:'pointer'}} onClick={jump.bind(this,record.wechat_openid)}>{record.wechat_openid}</span>
+	};
+
 	return (
 		<Components.Wrap>
 			<Components.Title title='单用户价值评估' />
@@ -58,7 +71,7 @@ export default function UserWorth() {
 				</div>
 				<Loading visible={loading} inline={false}>
 					<Table dataSource={ltvs} hasBorder={false} >
-						<Table.Column title='openId' dataIndex='wechat_openid' />
+						<Table.Column title='openId' cell={renderFirstColumn} />
 						<Table.Column title='广告点击次数' dataIndex='ads_watch_count' />
 						<Table.Column title='分享新增用户数' dataIndex='new_user_count' />
 						<Table.Column title='分享次数' dataIndex='share_count' />

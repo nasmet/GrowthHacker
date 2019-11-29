@@ -15,9 +15,7 @@ import Template from './components/Template';
 function UserScrutinyDetails({
 	location,
 }) {
-	const record = location.state.record;
-	const openId = record[1];
-
+	const openId = location.state.openId;
 	const {
 		response,
 		loading,
@@ -30,7 +28,7 @@ function UserScrutinyDetails({
 	const {
 		bars = [],
 	} = response;
-	
+
 	function setChartStyle(type = 'all') {
 		let name = null;
 		switch (type) {

@@ -35,8 +35,17 @@ function Top({
 		users = [],
 	} = response;
 
+	const jump = openId => {
+		model.history.push({
+			pathname: '/dataanalysis/projectdata/ua/userscrutinydetails',
+			state: {
+				openId,
+			}
+		});
+	};
+
 	const renderSecondColumn = (value, index, record) => {
-		const item = <span className={styles.openId}>{record.wechat_openid}</span>;
+		const item = <span className={styles.openId} onClick={jump.bind(this, record.wechat_openid)} >{record.wechat_openid}</span>;
 		return <Balloon.Tooltip trigger={item}>{record.wechat_openid}</Balloon.Tooltip>;
 	};
 
