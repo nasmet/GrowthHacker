@@ -21,14 +21,46 @@ export default function NewEvent() {
 			data = [],
 	} = response;
 
+	const shareds = [0, 1, 2, 3, 42];
+	const notRequired = [37, 38, 39, 40, 43, 44];
+
+	function assembleData() {
+		return data.map(item => {
+			const params = {};
+			const temp = [];
+			item.map((v, index) => {
+				if(notRequired.includes(index)){
+					return;
+				}
+				if (shareds.includes(index)) {
+					temp.push(v);
+					return;
+				}
+				if (v) {
+					params[columns[index]] = v;
+				}
+			});
+			temp.push(JSON.stringify(params))
+			return temp;
+		});
+	}
+
 	const renderFirstCell = (value, index, record) => {
 		return <span>{index+1}</span>;
 	};
 
 	const renderTitle = () => {
-		return columns.map((item, index) => {
-			if(index===0){
-				return <Table.Column key={index} title={item} cell={renderFirstCell} lock='left' width={120} />
+		if (columns.length === 0) {
+			return null;
+		}
+		const newColumns = shareds.map(item => columns[item]);
+		newColumns.push('参数列表');
+		return newColumns.map((item, index) => {
+			if (index === 0) {
+				return <Table.Column key={index} title={item} cell={renderFirstCell} lock='left' width={80} />
+			}
+			if (index === newColumns.length - 1) {
+				return <Table.Column key={index} title={item} dataIndex={index.toString()} width={400} />
 			}
 			return <Table.Column key={index} title={item} dataIndex={index.toString()} width={120} />
 		});
@@ -53,8 +85,8 @@ export default function NewEvent() {
 					{data.length > 0 && <Components.ExportExcel fileName='最新打点事件' handle={handleData} />}
 				</div>
 				<Loading visible={loading} inline={false}>
-					<Table dataSource={data} hasBorder={false}>
-						{renderTitle()}       		
+					<Table dataSource={assembleData()} hasBorder={false}>
+						{renderTitle()}   		
 					</Table>
 				</Loading>
 			</IceContainer>

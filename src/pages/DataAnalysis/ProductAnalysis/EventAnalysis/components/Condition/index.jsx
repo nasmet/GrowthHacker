@@ -395,7 +395,7 @@ export default function Condition({
 		conditionChange(refVariable.current.steps, refVariable.current.values);
 	};
 
-	const onDimensionsFocus = () => {
+	const onDimensionsFocus=()=>{
 		const selectedEvent = refVariable.current.steps.map(item => item.values.event);
 		const bindVariables = [];
 		const eventBindVariableCache = refVariable.current.eventBindVariableCache;
@@ -415,14 +415,12 @@ export default function Condition({
 			});
 		});
 
-		// console.log(bindVariables);
-
-		// refForm.current.state.store.setFieldProps('dimensions', {
-		// 	dataSource: [{
-		// 		label: '事件变量',
-		// 		children: dimensions,
-		// 	}],
-		// });
+		refForm.current.state.store.setFieldProps('dimensions', {
+			dataSource: [{
+				label: '事件变量',
+				children: bindVariables,
+			}],
+		});
 	};
 
 	return (
@@ -451,33 +449,23 @@ export default function Condition({
 								style={commonStyle}
 								mode="multiple"
 								onFocus={onDimensionsFocus}
-								onFocus_  
 								showSearch
 							/>
 						</Field>
 					</Form>
-				</div> <
-		div className = {
-			styles.wrap
-		} >
-		<span>事件选择</span> <
-		Button size = 'small'
-		style = {
-			{
-				marginLeft: '4px',
-				borderRadius: '50%'
-			}
-		}
-		onClick = {
-			onAddStep
-		} >
-		+
-		<
-		/Button> < /
-		div > {
-			renderStep()
-		} <
-		/Loading>  < /
-		div >
+				</div> 
+				<div className = {styles.wrap} >
+					<span>事件选择</span> 
+					<Button 
+						size='small' 
+						style={{marginLeft: '4px',borderRadius: '50%'}} 
+						onClick={onAddStep}
+					>
+						+
+					</Button>
+				</div> 
+				{renderStep()}
+			 </Loading> 
+		</div>
 	);
 }
