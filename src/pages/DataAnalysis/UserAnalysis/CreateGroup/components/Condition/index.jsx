@@ -264,7 +264,7 @@ export default function Condition({
 							<Input style={{width:'80px'}} htmlType="number" innerAfter={<span>次</span>} />
 						</Field>
 						<Field visible={false} name='value'>
-							<Select style={{minWidth:'150px'}} dataSource={[]} notFoundContent={notFoundContent} onFocus={onFocus.bind(item,formCore)} />
+							<Select.AutoComplete style={{minWidth:'150px'}} dataSource={[]} notFoundContent={notFoundContent} onFocus={onFocus.bind(item,formCore)} />
 						</Field>
 						<Field name='date'>
 							<DatePicker.RangePicker 
