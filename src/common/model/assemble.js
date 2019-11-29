@@ -15,12 +15,14 @@ export function assembleEvent_1(data) {
 export function assembleAllEventData_1(data) {
 	const dimensions = [];
 	const metrics = [];
+	const eventBindVariableCache = {};
 	data.forEach(item => {
 		if (item.type === 'event') {
 			metrics.push({
 				label: item.name,
 				value: `${item.entity_key},${item.id}`,
 			});
+			eventBindVariableCache[`${item.entity_key},${item.id}`] = item.bind_variables;
 		} else {
 			dimensions.push({
 				label: item.name,
@@ -28,8 +30,8 @@ export function assembleAllEventData_1(data) {
 			});
 		}
 	});
-
 	return {
+		eventBindVariableCache,
 		dimensions,
 		metrics,
 	};
@@ -39,12 +41,14 @@ export function assembleAllEventData(data) {
 	const {
 		dimensions,
 		metrics,
+		eventBindVariableCache,
 	} = assembleAllEventData_1(data);
 
 	return {
 		dimensions,
 		metrics,
 		variables: assembleEventVaribleData_2(dimensions),
+		eventBindVariableCache,
 	};
 }
 

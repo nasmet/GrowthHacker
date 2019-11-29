@@ -38,6 +38,7 @@ export default function Condition({
 		},
 		id: 0,
 		steps: [],
+		eventBindVariableCache: {},
 	});
 
 	useEffect(() => {
@@ -64,13 +65,18 @@ export default function Condition({
 		const {
 			metrics,
 			dimensions,
-			variables
+			variables,
+			eventBindVariableCache,
 		} = model.assembleAllEventData(data);
 		setDimensionData(dimensions);
 		setVariableData(variables);
 		setEventData(metrics);
+		refVariable.current.eventBindVariableCache = eventBindVariableCache;
 		refForm.current.state.store.setFieldProps('dimensions', {
-			dataSource: dimensions,
+			dataSource: [{
+				label: '事件变量',
+				children: dimensions,
+			}],
 		});
 		refForm.current.state.store.setFieldValue('dimensions', initCondition.dimensions);
 	}
@@ -389,6 +395,36 @@ export default function Condition({
 		conditionChange(refVariable.current.steps, refVariable.current.values);
 	};
 
+	const onDimensionsFocus = () => {
+		const selectedEvent = refVariable.current.steps.map(item => item.values.event);
+		const bindVariables = [];
+		const eventBindVariableCache = refVariable.current.eventBindVariableCache;
+		const alreadyAddedID = {};
+		selectedEvent.forEach(event => {
+			if (!eventBindVariableCache[event]) {
+				return;
+			}
+			eventBindVariableCache[event].forEach(item => {
+				if (!alreadyAddedID[item.id]) {
+					bindVariables.push({
+						label: item.name,
+						value: item.entity_key,
+					});
+					alreadyAddedID[item.id] = true;
+				}
+			});
+		});
+
+		// console.log(bindVariables);
+
+		// refForm.current.state.store.setFieldProps('dimensions', {
+		// 	dataSource: [{
+		// 		label: '事件变量',
+		// 		children: dimensions,
+		// 	}],
+		// });
+	};
+
 	return (
 		<div>
 			<Loading visible={loading} inline={false}>
@@ -414,7 +450,8 @@ export default function Condition({
 							<Select  
 								style={commonStyle}
 								mode="multiple"
-								dataSource={[]}  
+								onFocus={onDimensionsFocus}
+								onFocus_  
 								showSearch
 							/>
 						</Field>
@@ -433,11 +470,14 @@ export default function Condition({
 		}
 		onClick = {
 			onAddStep
-		} > + < /Button> < /
+		} >
+		+
+		<
+		/Button> < /
 		div > {
 			renderStep()
 		} <
-		/Loading> < /
+		/Loading>  < /
 		div >
 	);
 }

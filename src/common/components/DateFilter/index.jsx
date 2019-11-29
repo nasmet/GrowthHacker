@@ -1,5 +1,4 @@
 import React, {
-	Component,
 	useState,
 	useEffect,
 } from 'react';
@@ -66,6 +65,10 @@ export default function DateFilter({
 				startDate = model.getStartDate(29);
 				endDate = model.getEndDate();
 				break;
+			default:
+				startDate = model.getStartDate();
+				endDate = model.getEndDate();
+				break;
 		}
 		setTabValue(e);
 		setCurDateValue([moment(startDate), moment(endDate)]);
@@ -99,6 +102,7 @@ export default function DateFilter({
 	  				onOk={onOk}
 	  				disabledDate={model.disabledDate}
 	  				onVisibleChange={onVisibleChange}
+	  				hasClear={false}
 	  			/>
   			</div>
   			<div className={styles.tabWrap}>

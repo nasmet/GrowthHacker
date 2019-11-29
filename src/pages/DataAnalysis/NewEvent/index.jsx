@@ -28,9 +28,9 @@ export default function NewEvent() {
 	const renderTitle = () => {
 		return columns.map((item, index) => {
 			if(index===0){
-				return <Table.Column key={index} title={item} cell={renderFirstCell} />
+				return <Table.Column key={index} title={item} cell={renderFirstCell} lock='left' width={120} />
 			}
-			return <Table.Column key={index} title={item} dataIndex={index.toString()}/>
+			return <Table.Column key={index} title={item} dataIndex={index.toString()} width={120} />
 		});
 	};
 
