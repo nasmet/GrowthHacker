@@ -31,13 +31,13 @@ export default function Condition({
 	const [variableData, setVariableData] = useState([]);
 	const [steps, setSteps] = useState([]);
 	const refForm = useRef(null);
-	const refVariable= useRef({
-		values:{
+	const refVariable = useRef({
+		values: {
 			segmentation_id: initCondition.segmentation_id,
 			dimensions: initCondition.dimensions,
 		},
 		id: 0,
-		steps:[],
+		steps: [],
 	});
 
 	useEffect(() => {
@@ -75,16 +75,16 @@ export default function Condition({
 		refForm.current.state.store.setFieldValue('dimensions', initCondition.dimensions);
 	}
 
-	function assembleGroupData(data){
-		const groups=model.assembleGroupData(data);
+	function assembleGroupData(data) {
+		const groups = model.assembleGroupData(data);
 		refForm.current.state.store.setFieldProps('segmentation_id', {
 			dataSource: groups,
 		});
 		refForm.current.state.store.setFieldValue('segmentation_id', initCondition.segmentation_id);
 	}
-	
-	function assembleSteps(){
-		return initCondition.metrics.map(item=>{
+
+	function assembleSteps() {
+		return initCondition.metrics.map(item => {
 			const {
 				aggregator,
 				field,
@@ -93,13 +93,16 @@ export default function Condition({
 				filter,
 			} = item;
 			let temp = aggregator;
-			if(field){
-				temp =`${field},${aggregator}`;  
+			if (field) {
+				temp = `${field},${aggregator}`;
 			}
-			const step = createStep({event:`${event_key},${event_id}`,aggregator: temp});
-			step.filters = filter.conditions.map(item=>(
+			const step = createStep({
+				event: `${event_key},${event_id}`,
+				aggregator: temp
+			});
+			step.filters = filter.conditions.map(item => (
 				createFilter({
-					values: {	
+					values: {
 						key: item.key,
 						op: item.op,
 						value: item.values[0],
@@ -114,18 +117,18 @@ export default function Condition({
 		if (eventData.length === 0) {
 			return;
 		}
-		if(initCondition.metrics.length===0){
+		if (initCondition.metrics.length === 0) {
 			setSteps([createStep()]);
-		}else{
+		} else {
 			setSteps(assembleSteps());
 		}
-	}, [variableData,dimensionData,eventData]);
+	}, [variableData, dimensionData, eventData]);
 
 	useEffect(() => {
 		refVariable.current.steps = steps;
 		conditionChange(steps, refVariable.current.values);
 	}, [steps]);
-	
+
 	function createStep(values = {
 		event: eventData[0] && eventData[0].value,
 		aggregator: variableData[0] && variableData[0].value,
@@ -137,21 +140,22 @@ export default function Condition({
 			onChange: function(e) {
 				const event = this.values.event;
 				Object.assign(this.values, e);
-				if(e.event!==event){
-					this.dataSource = null;
-					this.refForm.store.setFieldProps('aggregator', {
-						dataSource: variableData,
-					});
-					this.refForm.store.setFieldValue('aggregator',variableData[0].value);
-					if(this.filters.length!==0){
-						this.filters= [];
-						setSteps(pre=>[...pre]);
-					}else{
-						conditionChange(refVariable.current.steps, refVariable.current.values);
-					}				
-				}else{
+				if (e.event === event) {
 					conditionChange(refVariable.current.steps, refVariable.current.values);
+					return;
 				}
+				this.dataSource = null;
+				this.refForm.store.setFieldProps('aggregator', {
+					dataSource: variableData,
+				});
+				this.refForm.store.setFieldValue('aggregator', variableData[0].value);
+
+				if (this.filters.length === 0) {
+					conditionChange(refVariable.current.steps, refVariable.current.values);
+					return;
+				}
+				this.filters = [];
+				setSteps(pre => [...pre]);
 			},
 			onFocus: function(formCore) {
 				if (!values.event) {
@@ -168,7 +172,7 @@ export default function Condition({
 						dataSource: data,
 						notFoundContent: notFoundContent(3),
 					});
-				}).catch(e=>{
+				}).catch(e => {
 					console.error(e);
 					formCore.setFieldProps('key', {
 						notFoundContent: notFoundContent(2),
@@ -176,7 +180,7 @@ export default function Condition({
 				});
 			},
 			onFocus_1: function(formCore) {
-				if(this.dataSource){
+				if (this.dataSource) {
 					return;
 				}
 				if (!values.event) {
@@ -193,7 +197,7 @@ export default function Condition({
 						dataSource: this.dataSource,
 						notFoundContent: notFoundContent(3),
 					});
-				}).catch(e=>{
+				}).catch(e => {
 					formCore.setFieldProps('aggregator', {
 						notFoundContent: notFoundContent(2),
 					});
@@ -222,7 +226,7 @@ export default function Condition({
 			key: refVariable.current.id++,
 			values,
 			onChange: function(e) {
-				if(!this.values.key){
+				if (!this.values.key) {
 					this.refForm.store.setFieldProps('op', {
 						disabled: false,
 					});
@@ -246,34 +250,34 @@ export default function Condition({
 		});
 	};
 
-	const notFoundContent = flag =>{
-		let word= '';
-		switch(flag){
-			case 1: 
-				word='加载中...';
+	const notFoundContent = flag => {
+		let word = '';
+		switch (flag) {
+			case 1:
+				word = '加载中...';
 				break;
-			case 2: 
-				word='获取数据失败';
+			case 2:
+				word = '获取数据失败';
 				break;
-			case 3: 
-				word='没有可用数据';
+			case 3:
+				word = '没有可用数据';
 				break;
-		}	
+		}
 		return <span>{word}</span>;
 	};
-	
-	const onDeleteStep=index=>{
-		if(steps.length===1){
+
+	const onDeleteStep = index => {
+		if (steps.length === 1) {
 			model.log('第一条不支持删除！');
 			return;
 		}
-		setSteps(pre=>{
-			pre.splice(index,1);
+		setSteps(pre => {
+			pre.splice(index, 1);
 			return [...pre];
 		})
 	};
-	
-	const displayRender=labelPath=>{
+
+	const displayRender = labelPath => {
 		return <span>{labelPath.join('')}</span>;
 	};
 
@@ -381,7 +385,7 @@ export default function Condition({
 	};
 
 	const formChange = (values) => {
-		Object.assign(refVariable.current.values,values)
+		Object.assign(refVariable.current.values, values)
 		conditionChange(refVariable.current.steps, refVariable.current.values);
 	};
 
@@ -415,13 +419,25 @@ export default function Condition({
 							/>
 						</Field>
 					</Form>
-				</div>
-				<div className={styles.wrap}>
-					<span>事件选择</span>
-					<Button size='small' style={{marginLeft:'4px',borderRadius:'50%'}} onClick={onAddStep}>+</Button>
-				</div>											
-				{renderStep()}
-			</Loading>
-		</div>
+				</div> <
+		div className = {
+			styles.wrap
+		} >
+		<span>事件选择</span> <
+		Button size = 'small'
+		style = {
+			{
+				marginLeft: '4px',
+				borderRadius: '50%'
+			}
+		}
+		onClick = {
+			onAddStep
+		} > + < /Button> < /
+		div > {
+			renderStep()
+		} <
+		/Loading> < /
+		div >
 	);
 }

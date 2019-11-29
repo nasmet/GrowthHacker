@@ -8,6 +8,9 @@ export const dateTypes = [{
 	key: '7',
 	name: '最近7天',
 }, {
+	key: '14',
+	name: '最近14天',
+}, {
 	key: '30',
 	name: '最近30天',
 }];

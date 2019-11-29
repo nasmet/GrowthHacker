@@ -13,24 +13,11 @@ import {
 	dateTypes,
 } from './config';
 
-const getDate = (num = 1, showTime = false) => {
-	const date = Date.now() - 24 * 60 * 60 * 1000 * num;
-	if (!showTime) {
-		return date;
-	}
-	const {
-		Y,
-		M,
-		D,
-	} = utils.dateMap(date);
-	return `${Y}-${M}-${D}`;
-}
-
 export default function DateFilter({
 	filterChange,
 	initTabValue = '0',
-	initCurDateValue = [moment(getDate(0, true)), moment()],
-	showTime = false
+	initCurDateValue = [moment(model.getStartDate()), moment(model.getEndDate())],
+	showTime = true
 }) {
 	const [dateValue, setDateValue] = useState([]);
 	const [curDateValue, setCurDateValue] = useState(initCurDateValue);
@@ -57,20 +44,27 @@ export default function DateFilter({
 
 	const dateTabChange = (e) => {
 		let startDate;
-		let endDate = Date.now();
+		let endDate;
 		switch (e) {
 			case '0':
-				startDate = getDate(0, true);
+				startDate = model.getStartDate();
+				endDate = model.getEndDate();
 				break;
 			case '1':
-				startDate = getDate(1, true);
-				endDate = getDate();
+				startDate = model.getStartDate(1);
+				endDate = model.getEndDate(1);
 				break;
 			case '7':
-				startDate = getDate(e - 1, true);
+				startDate = model.getStartDate(6);
+				endDate = model.getEndDate();
+				break;
+			case '14':
+				startDate = model.getStartDate(13);
+				endDate = model.getEndDate();
 				break;
 			case '30':
-				startDate = getDate(e - 1, true);
+				startDate = model.getStartDate(29);
+				endDate = model.getEndDate();
 				break;
 		}
 		setTabValue(e);

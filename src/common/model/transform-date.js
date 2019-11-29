@@ -1,8 +1,8 @@
 import moment from 'moment';
 
-export default (originDate) => {
+export function transformDate(originDate) {
 	if (!originDate) {
-		return [moment(), moment()];
+		return [moment(getStartDate()), moment(getEndDate())];
 	}
 	if (originDate.includes('abs')) {
 		const arr = originDate.replace('abs:', '').split(',');
@@ -10,11 +10,22 @@ export default (originDate) => {
 	}
 	if (originDate.includes('day')) {
 		const number = +originDate.replace('day:', '');
-		const start = getDate(number);
-		return [moment(start), moment()];
+		const start = getStartDate(number);
+		const end = getEndDate();
+		return [moment(start), moment(end)];
 	}
 }
 
-function getDate(num = 1) {
-	return Date.now() - 24 * 60 * 60 * 1000 * num;
+export function getStartDate(num = 0) {
+	const date = Date.now() - 24 * 60 * 60 * 1000 * num;
+	const {
+		Y,
+		M,
+		D,
+	} = utils.dateMap(date);
+	return `${Y}-${M}-${D}`;
+}
+
+export function getEndDate(num = 0) {
+	return `${getStartDate(num)} 23:59:59`;
 }
