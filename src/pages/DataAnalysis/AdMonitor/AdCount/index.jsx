@@ -32,12 +32,19 @@ export default function AdCount() {
 		});
 	};
 
+	const renderColumn = (column, value, index, record) => {
+		return <span>{record[1]===0?0:(record[column]/record[1]).toFixed(2)}</span>
+	};
+
 	const renderTitles = () => {
 		return meta.map((item, index) => {
 			if (index === 0) {
 				return <Table.Column key={index} title={item} dataIndex={index.toString()} lock width={120} />;
 			}
-			return <Table.Column key={index} title={item} dataIndex={index.toString()} />;
+			if (index === 1) {
+				return <Table.Column key={index} title={item} dataIndex={index.toString()} />;
+			}
+			return <Table.Column key={index} title={item} cell={renderColumn.bind(this, index)} />;
 		});
 	};
 
