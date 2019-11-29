@@ -29,14 +29,14 @@ export default function NewEvent() {
 			const params = {};
 			const temp = [];
 			item.map((v, index) => {
-				if(notRequired.includes(index)){
+				if (notRequired.includes(index)) {
 					return;
 				}
 				if (shareds.includes(index)) {
 					temp.push(v);
 					return;
 				}
-				if (v) {
+				if (v && v != '0') {
 					params[columns[index]] = v;
 				}
 			});
