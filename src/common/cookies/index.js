@@ -3,7 +3,7 @@ import moment from 'moment';
 
 const cookies = new Cookies();
 const options = {
-	expire: moment().add(1, 'days').valueOf(),
+	expires: new Date(moment().add(1, 'days').valueOf()),
 	path: '/',
 };
 export default {

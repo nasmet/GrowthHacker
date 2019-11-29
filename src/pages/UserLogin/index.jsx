@@ -91,8 +91,8 @@ function UserLogin({
 						<Button className={styles.btn} loading={loading} type='primary' htmlType="submit">登录</Button>
 					</div>
 				</Form>
-			</div> <
-		/div>
+			</div> 
+		</div>
 	);
 }
 
