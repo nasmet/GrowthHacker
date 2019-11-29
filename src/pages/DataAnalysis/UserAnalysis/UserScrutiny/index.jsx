@@ -49,7 +49,7 @@ function UserScrutiny({
 	const renderFirstCell = (value, index, record) => {
 		const val = record[0] || '';
 		return (
-			<span className={styles.user} onClick={jump.bind(this, record[1])}>{val}</span>
+			<span className={styles.user} onClick={jump.bind(this, record[0])}>{val}</span>
 		);
 	};
 
