@@ -6,19 +6,20 @@ import {
 	Input,
 	Loading,
 	Select,
-	DatePicker,
+	CascaderSelect,
 } from '@alifd/next';
 import {
 	Form,
 	Field,
 } from '@ice/form';
-
 import styles from './index.module.scss';
 import {
-	rules,
-	originRules,
 	firstColumn,
 } from './stepConfig';
+
+const commonStyle = {
+	minWidth: '200px',
+};
 
 export default function Step({
 	condition_expr,
@@ -27,6 +28,8 @@ export default function Step({
 	const [loading, setLoading] = useState(false);
 	const [metricData, setMetricData] = useState([]);
 	const [originData, setOriginData] = useState([]);
+	const [dimensionData, setDimensionData] = useState([]);
+	const [variableData, setVariableData] = useState([]);
 	const [steps, setSteps] = useState([]);
 
 	useEffect(() => {
@@ -34,13 +37,11 @@ export default function Step({
 			setLoading(true);
 			try {
 				await api.getOriginData().then((res) => {
-					setOriginData(model.assembleOriginData(res.data));
+					setOriginData(model.assembleOriginData_1(res.data));
 				});
 
-				await api.getDataCenter({
-					type: 'event',
-				}).then((res) => {
-					setMetricData(model.assembleEvent(res.event_entities));
+				await api.getDataCenter().then((res) => {
+					assembleAllEventData(res.event_entities);
 				});
 			} catch (e) {
 				model.log(e);
@@ -50,6 +51,17 @@ export default function Step({
 
 		fetchData();
 	}, []);
+
+	function assembleAllEventData(data) {
+		const {
+			metrics,
+			variables,
+			dimensions
+		} = model.assembleAllEventData_2(data);
+		setVariableData(variables);
+		setMetricData(metrics);
+		setDimensionData(dimensions);
+	}
 
 	useEffect(() => {
 		function assembleSteps() {
@@ -66,28 +78,44 @@ export default function Step({
 
 			function createStep(alias) {
 				const item = findCondition(alias);
-				const values = { ...item,
-					op: '=',
-				};
-				values.date = model.transformDate(values.date);
-				values.flag = `${values.flag},${values.type}`;
-				let idData = [];
-				let opData = [];
-				let valueShow = false;
+				const values ={};
+				values.flag = `${item.flag},${item.type}`;
+				values.date = model.transformDate(item.date);
+				values.id = `${item.event_key},${item.event_id}`;
+				values.op = item.op;
+				let idData = originData;
+				let opData = model.strOperators;
+				let valueShow = true;
 				let valuesShow = false;
-				if (values.type === 'event') {
+				let aggregatorShow = false;
+				let deShow = false;
+				let filters= [];
+				if (item.type === 'event') {
 					idData = metricData;
-					opData = rules;
+					opData = model.numOperators;
 					valuesShow = true;
-					values.values = values.values[0];
+					valueShow = false;
+					deShow = true;
+					aggregatorShow=true;
+					values.values = item.values[0];
+					if(item.field){
+						values.aggregator= `${item.field},${item.aggregator}`;
+					}else{
+						values.aggregator=item.aggregator;
+					}
+					if(item.filter&&item.filter.conditions&&item.filter.conditions.length>0){
+						filters = item.filter.conditions.map(item=>{
+							return {
+								key: `${item.key},${item.id}`,
+								op: item.op,
+								value: item.values[0],
+							}
+						})
+					}
+					
 				} else {
-					opData = originRules;
-					idData = originData;
-					valueShow = true;
-					values.value = values.values[0];
-				}
-				delete values['type'];
-				delete values['alias'];
+					values.value = item.values[0];
+				}			
 				return {
 					alias,
 					step: [{
@@ -97,6 +125,9 @@ export default function Step({
 						opData,
 						valueShow,
 						valuesShow,
+						aggregatorShow,
+						deShow,
+						filters,
 					}],
 				};
 
@@ -125,49 +156,31 @@ export default function Step({
 		if (metricData.length === 0) {
 			return;
 		}
-
 		setSteps(assembleSteps());
-	}, [metricData, originData]);
+	}, [metricData, dimensionData, variableData, originData]);
 
-	useEffect(() => {
-		if (steps.length === 0) {
-			return;
-		}
-		steps.map(item => {
-			item.step.map(v => {
-				v.refForm.store.setValues(v.values, true);
-			})
-		})
-	}, [steps]);
+	const displayRender = labelPath => {
+		return <span>{labelPath.join('')}</span>;
+	};
 
 	const renderForm = (item) => {
 		const {
+			values,
 			alias,
 			idData,
 			opData,
-			values,
 			valueShow,
 			valuesShow,
+			aggregatorShow,
+			deShow,
+			filters,
 		} = item;
+
 		return (
-			<Form
-				key={alias}
-				ref={e=>{item.refForm = e}}
-				effects={[{
-					field: 'id',
-					handler: function(formCore) {
-						api.getOriginDataValues({
-							id: formCore.getFieldValue('id'),
-						}).then((res) => {
-							formCore.setFieldProps('value', {
-								dataSource: res.data.map(item => item.value),
-							});
-							formCore.setFieldValue('value', values.value);
-						});
-					},
-				}]}
-			>	
-				<div className={styles.container}>
+			<div key={alias}>
+				<Form
+					initialValues={values}
+				>	
 					<div className={styles.item}>
 						<span className={styles.name}>{alias}</span>
 						<Field name='flag'>
@@ -176,23 +189,65 @@ export default function Step({
 						<Field name='id'>
 							<Select style={{width:'200px'}} dataSource={idData} showSearch />
 						</Field>
+						<Field name='de' visible={deShow} >
+							<span style={{marginLeft: '10px',marginRight: '10px'}}>的</span>
+						</Field>
+						<Field name='aggregator' visible={aggregatorShow} >
+				 			<CascaderSelect 
+				 				style={commonStyle} 
+				 				listStyle={commonStyle} 
+				 				dataSource={variableData} 				 			
+				 				displayRender={displayRender}
+		 					/>
+		 				</Field>
 						<Field name='op' dataSource={opData} component={Select} />
 						<Field name='values' visible={valuesShow}>
-							<Input style={{width:'80px'}} htmlType="number" innerAfter={<span>次</span>} />
+							<Input style={{width:'80px'}} htmlType="number" />
 						</Field>
 						<Field visible={valueShow} name='value'>
 							<Select style={{width:'150px'}} dataSource={[]} />
 						</Field>
-						<Field name='date'>
-							<DatePicker.RangePicker 
-								style={{width:'120px'}} 
-								hasClear={false}
-								disabledDate={model.disabledDate} 
-							/>
-						</Field>
+						<Components.DateFilter initTabValue = 'NAN' initCurDateValue={values.date} filterChange={()=>{}} />
 					</div>
+				</Form>
+				<div style={{marginLeft:'60px',marginTop:'10px'}}>
+					{filters.map((v,index)=>{						
+						return (
+							<div key={index}>
+								<Form									
+									initialValues={v}									
+									renderField={({label, component, error}) => (
+							        	<span style={{marginRight:'20px'}}>{component}</span>
+							        )}
+							        style={{display:'flex',marginBottom:'10px'}}						        
+								>
+									{formCore=>(
+										<div>
+											<Field name='key'>
+												<Select
+													style={commonStyle} 
+													dataSource={dimensionData}  
+													showSearch
+													placeholder= '请选择关联变量'
+												/>
+											</Field>
+											<Field name='op' disabled={values.op?false:true}>
+												<Select
+													style={commonStyle} 
+													dataSource={model.allOperators}  
+												/>
+											</Field>
+											<Field name='value'>
+												<Input placeholder= '请输入值' />
+											</Field>							    
+										</div>
+									)}
+								</Form>
+							</div> 
+						)
+					})}
 				</div>
-			</Form>
+			</div>
 		);
 	}
 

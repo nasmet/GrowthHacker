@@ -9,13 +9,12 @@ import {
 	Loading,
 	Icon,
 	Select,
-	DatePicker,
+	CascaderSelect,
 } from '@alifd/next';
 import {
 	Form,
 	Field,
 } from '@ice/form';
-import moment from 'moment';
 import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
 import {
@@ -23,12 +22,17 @@ import {
 	opMap,
 } from './config';
 
+const commonStyle = {
+	minWidth: '200px',
+};
+
 export default function Condition({
 	conditionChange,
 }) {
 	const [loading, setLoading] = useState(false);
 	const [metricData, setMetricData] = useState([]);
 	const [originData, setOriginData] = useState([]);
+	const [variableData, setVariableData] = useState([]);
 	const [combination, setCombination] = useState('');
 	const [steps, setSteps] = useState([]);
 	const refVariable = useRef({
@@ -41,14 +45,12 @@ export default function Condition({
 			setLoading(true);
 			try {
 				await api.getOriginData().then((res) => {
-					setOriginData(model.assembleOriginData(res.data));
+					setOriginData(model.assembleOriginData_1(res.data));
 				})
 
-				await api.getDataCenter({
-					type: 'event',
-				}).then((res) => {
-					setMetricData(model.assembleEvent(res.event_entities));
-				})
+				await api.getDataCenter().then((res) => {
+					assembleAllEventData(res.event_entities);
+				});
 			} catch (e) {
 				model.log(e);
 			}
@@ -58,12 +60,22 @@ export default function Condition({
 		fetchData();
 	}, []);
 
+	function assembleAllEventData(data) {
+		const {
+			metrics,
+			variables,
+			dimensions
+		} = model.assembleAllEventData_2(data);
+		setVariableData(variables);
+		setMetricData(metrics);
+	}
+
 	useEffect(() => {
 		if (metricData.length === 0) {
 			return;
 		}
 		setSteps([createStep()]);
-	}, [metricData, originData]);
+	}, [metricData, variableData, originData]);
 
 	useEffect(() => {
 		function onChangeCombination() {
@@ -95,13 +107,29 @@ export default function Condition({
 		steps.map(item => {
 			item.step.map(v => {
 				v.refForm.store.setValues(v.values);
-			})
+			});
 		});
-		const temp = onChangeCombination();
-		setCombination(temp);
+		const expre = onChangeCombination();
+		setCombination(expre);
 		refVariable.current.steps = steps;
-		conditionChange(steps, temp);
+		conditionChange(steps, expre);
 	}, [steps]);
+
+	const notFoundContent = flag => {
+		let word = '';
+		switch (flag) {
+			case 1:
+				word = '加载中...';
+				break;
+			case 2:
+				word = '获取数据失败';
+				break;
+			case 3:
+				word = '没有可用数据';
+				break;
+		}
+		return <span>{word}</span>;
+	};
 
 	function createData() {
 		return {
@@ -112,49 +140,124 @@ export default function Condition({
 				op: '=',
 				values: '1',
 				value: '',
-				date: [moment(), moment()],
+				date: 'day:0',
+				aggregator: variableData[0] && variableData[0].value,
 			},
-			curDate: [moment(), moment()],
-			onVisibleChange: function(formCore, e) {
-				if (!e) {
-					formCore.setFieldValue('date', this.curDate);
-				}
-			},
-			onOk: function(formCore, e) {
-				formCore.setFieldValue('date', e);
-				this.curDate = e;
-			},
+			filters: [],
 			onChange: function(e) {
-				this.values = e;
-				conditionChange(refVariable.current.steps);
-			},
-			onFocus: function(formCore) {
-				if (!formCore.getFieldValue('id')) {
+				const id = this.values.id;
+				Object.assign(this.values, e);					
+				if (e.id===id && e.flag.includes('event')) {
+					conditionChange(refVariable.current.steps);
 					return;
 				}
+				if (this.filters.length === 0) {
+					conditionChange(refVariable.current.steps);
+					return;
+				}
+				this.filters = [];
+				setSteps(pre => [...pre]);
+			},
+			onFocus: function(formCore) {
+				const id= formCore.getFieldValue('id');
+				if (!id) {
+					return;
+				}
+				formCore.setFieldProps('value', {
+					notFoundContent: notFoundContent(1),
+				});
 				api.getOriginDataValues({
-					id: this.values.id,
+					id: id.split(',')[1],
 				}).then((res) => {
 					formCore.setFieldProps('value', {
 						dataSource: model.assembleOriginDataValues(res.data),
+						notFoundContent: notFoundContent(3),
+					});
+				}).catch(e => {
+					formCore.setFieldProps('value', {
+						notFoundContent: notFoundContent(2),
+					});
+					console.error(e);
+				});
+			},
+			dateChange: function(e){
+				this.values.date=e;
+			},
+			onFocus_1: function(formCore) {
+				if (!this.values.id) {
+					return;
+				}
+				formCore.setFieldProps('aggregator', {
+					notFoundContent: notFoundContent(1),
+				});
+				api.getEventDetails({
+					id: this.values.id.split(',')[1],
+				}).then((res) => {
+					formCore.setFieldProps('aggregator', {
+						dataSource: model.assembleEventVaribleData_3(res.bind_variables),
+						notFoundContent: notFoundContent(3),
+					});
+				}).catch(e => {
+					formCore.setFieldProps('aggregator', {
+						notFoundContent: notFoundContent(2),
+					});
+					console.error(e);
+				});
+			},
+			onAddFilter: function(e) {
+				if(!this.values.flag.includes('event')){
+					return;
+				}
+				if (this.filters.length === 4) {
+					model.log('最多支持4条过滤！');
+					return;
+				}
+				this.filters.push(createFilter({}));
+				setSteps(pre => [...pre]);
+			},
+			onDeleteFilter: function(index) {
+				this.filters.splice(index, 1);
+				setSteps(pre => [...pre]);
+			},
+			onFocus_2: function(formCore) {
+				if (!this.values.id) {
+					return;
+				}
+				formCore.setFieldProps('key', {
+					notFoundContent: notFoundContent(1),
+				});
+				api.getEventDetails({
+					id: this.values.id.split(',')[1],
+				}).then((res) => {
+					formCore.setFieldProps('key', {
+						dataSource: model.assembleEventVaribleData_4(res.bind_variables),
+						notFoundContent: notFoundContent(3),
+					});
+				}).catch(e => {
+					console.error(e);
+					formCore.setFieldProps('key', {
+						notFoundContent: notFoundContent(2),
 					});
 				});
 			},
 			effects: [{
 				field: 'flag',
 				handler: function(formCore) {
-					let visibleValues, visibleValue, idDataSource, opDataSource;
+				    let idDataSource = originData;
+					let opDataSource = model.strOperators;
+					let visibleValues = false;
+					let visibleValue = true;
+					let visibleDe = false;
+					let visibleAggregator=false;
 					const flag = formCore.getFieldValue('flag');
-					if (flag === 'true,event' || flag === 'false,event') {
+					const flags= ['true,event','false,event'];
+					if (flags.includes(flag)) {
 						idDataSource = metricData;
 						opDataSource = model.numOperators;
 						visibleValues = true;
 						visibleValue = false;
-					} else {
-						idDataSource = originData;
-						opDataSource = model.strOperators;
-						visibleValues = false;
-						visibleValue = true;
+						visibleDe = true;
+						visibleAggregator=true;
 					}
 					formCore.setFieldProps('id', {
 						dataSource: idDataSource,
@@ -169,12 +272,22 @@ export default function Condition({
 					formCore.setFieldProps('value', {
 						visible: visibleValue,
 					});
+					formCore.setFieldProps('de', {
+						visible: visibleDe,
+					});
+					formCore.setFieldProps('aggregator', {
+						visible: visibleAggregator,
+					});
 				},
 			}, {
 				field: 'id',
 				handler: function(formCore) {
 					const flag = formCore.getFieldValue('flag');
 					if (flag === 'true,event' || flag === 'false, event') {
+						formCore.setFieldProps('aggregator', {
+							dataSource: variableData,
+						});
+						formCore.setFieldValue('aggregator', variableData[0].value);
 						return;
 					}
 					formCore.setFieldValue('value', '');
@@ -203,6 +316,27 @@ export default function Condition({
 		}
 	}
 
+	function createFilter({
+		values = {},
+	}) {
+		return {
+			key: refVariable.current.id++,
+			values,
+			onChange: function(e) {
+				if (!this.values.key) {
+					this.refForm.store.setFieldProps('op', {
+						disabled: false,
+					});
+					this.refForm.store.setFieldProps('value', {
+						disabled: false,
+					});
+				}
+				Object.assign(this.values, e);
+				conditionChange(refVariable.current.steps);
+			},
+		};
+	}
+
 	const onAddAndFilter = () => {
 		if (steps.length > 3) {
 			model.log('目前最多支持4条');
@@ -212,8 +346,6 @@ export default function Condition({
 			return [...pre, createStep(pre.length)];
 		});
 	}
-
-	const notFoundContent = <span>加载中...</span>;
 
 	const onDelete = (index, index_1) => {
 		if (steps.length === 1 && steps[0].step.length === 1) {
@@ -230,25 +362,32 @@ export default function Condition({
 		});
 	};
 
+	const displayRender = labelPath => {
+		return <span>{labelPath.join('')}</span>;
+	};
+
 	const renderForm = (item, index, index_1, alias, length) => {
 		const {
 			onChange,
 			effects,
-			onVisibleChange,
-			onOk,
 			onFocus,
 			key,
+			dateChange,
+			onFocus_1,
+			onAddFilter,
+			onDeleteFilter,
+			filters,
+			onFocus_2,
 		} = item;
 		item.alias = length === 1 ? alias : `${alias}${index_1+1}`;
 		return (
-			<Form
-				key={key}
-				ref={e=>{item.refForm = e}}
-				onChange={onChange.bind(item)}
-				effects={effects}
-			>	
-			{formCore=>(
-				<div className={styles.container}>
+			<div key={key}>
+				<Form
+					ref={e=>{item.refForm = e}}
+					onChange={onChange.bind(item)}
+					effects={effects}
+				>	
+				{formCore=>(
 					<div className={styles.item}>
 						<span className={styles.name}>{item.alias}</span>
 						<Field name='flag'>
@@ -257,30 +396,85 @@ export default function Condition({
 						<Field name='id'>
 							<Select style={{minWidth:'200px'}} dataSource={metricData} showSearch />
 						</Field>
+						<Field name='de' >
+							<span style={{marginLeft: '10px',marginRight: '10px'}}>的</span>
+						</Field>
+						<Field name='aggregator' >
+				 			<CascaderSelect 
+				 				style={commonStyle} 
+				 				listStyle={commonStyle} 
+				 				dataSource={variableData} 				 			
+				 				displayRender={displayRender}
+				 				onFocus={onFocus_1.bind(item,formCore)}
+				 				showSearch
+		 					/>
+				 		</Field> 	
 						<Field name='op'>
 							<Select style={{minWidth:'120px'}} dataSource={model.numOperators} showSearch />
 						</Field>
 						<Field name='values'>
-							<Input style={{width:'80px'}} htmlType="number" innerAfter={<span>次</span>} />
+							<Input style={{width:'80px'}} htmlType="number" />
 						</Field>
 						<Field visible={false} name='value'>
-							<Select.AutoComplete style={{minWidth:'150px'}} dataSource={[]} notFoundContent={notFoundContent} onFocus={onFocus.bind(item,formCore)} />
+							<Select.AutoComplete style={{minWidth:'150px'}} dataSource={[]} onFocus={onFocus.bind(item,formCore)} />
 						</Field>
-						<Field name='date'>
-							<DatePicker.RangePicker 
-								size='small'
-								style={{width:'120px'}} 
-								hasClear={false}
-								disabledDate={model.disabledDate} 
-								onVisibleChange={onVisibleChange.bind(item,formCore)}
-								onOk={onOk.bind(item,formCore)}
-							/>
-						</Field>
-						<Button size='small' style={{marginLeft:'10px',borderRadius:'50%'}} onClick={onDelete.bind(this,index,index_1)}>x</Button>
+						<Components.DateFilter filterChange={dateChange.bind(item)} />
+					  	<span style={{marginLeft: '20px'}}>
+			              	<Button size='small' style={{marginRight:'4px',borderRadius:'50%'}} onClick={onAddFilter.bind(item)}>+</Button>
+			              	<span>筛选条件</span>
+			              	<Button size='small' style={{marginLeft:'10px',borderRadius:'50%'}} onClick={onDelete.bind(this,index,index_1)}>x</Button>
+		            	</span>
 					</div>
+				)}
+				</Form>
+				<div style={{marginLeft:'60px',marginTop:'10px'}}>
+					{filters.map((v,index)=>{
+						const {
+							key,
+							values,
+							onChange,
+						} = v;
+						
+						return (
+							<div key={key}>
+								<Form		
+									ref={e=>{v.refForm=e}}								
+									initialValues={values}									
+									onChange={onChange.bind(v)}
+									renderField={({label, component, error}) => (
+							        	<span style={{marginRight:'20px'}}>{component}</span>
+							        )}
+							        style={{display:'flex',marginBottom:'10px'}}						        
+								>
+									{formCore=>(
+										<div>
+											<Field name='key'>
+												<Select
+													onFocus={onFocus_2.bind(item,formCore)}
+													style={commonStyle} 
+													dataSource={[]}  
+													showSearch
+													placeholder= '请选择关联变量'
+												/>
+											</Field>
+											<Field name='op' disabled={values.op?false:true}>
+												<Select
+													style={commonStyle} 
+													dataSource={model.allOperators}  
+												/>
+											</Field>
+											<Field name='value' disabled={values.value?false:true}>
+												<Input placeholder= '请输入值' />
+											</Field>
+							              	<Button size='small' style={{marginLeft:'10px',borderRadius:'50%'}} onClick={onDeleteFilter.bind(item,index)}>x</Button>
+										</div>
+									)}
+								</Form>
+							</div> 
+						)
+					})}
 				</div>
-			)}
-			</Form>
+			</div>
 		);
 	}
 
@@ -308,15 +502,14 @@ export default function Condition({
 
 	return (
 		<Loading visible={loading} inline={false}>
-			<div>
-				<Components.Title title='新建分群' />
+			<IceContainer>
 				<div className={styles.combination}>{combination}</div>
 				{renderStep()}
 				<Button className={styles.filter} onClick={onAddAndFilter}>
 					<Icon type='add' size='small' className={styles.icon} />
 					<span>AND</span>
 				</Button>
-			</div>
+			</IceContainer>
 		</Loading>
 	);
 }

@@ -1,44 +1,3 @@
-.container{
-	margin-bottom: 10px;
-	padding: 10px 10px;
-}
-.item{
-	display: flex;
-	flex-direction: row;
-	flex-wrap: wrap;
-	align-items: center;
-}
-.name{
-	margin-right: 10px;
-	font-weight: bold;
-}
-.select{
-	width: 120px;
-	margin-right: 10px;
-}
-.filter{
-	display: flex;
-	flex-direction: row;
-	align-items: center;
-	margin-top: 10px;
-	margin-left: 10px;
-	.icon{
-		margin-right: 4px;
-	}
-}
-.filterCondition{
-	margin: 10px 0 0 20px;
-	display: flex;
-	flex-direction: row;
-	align-items: center;
-}
-.btnWrap{
-	display: flex;
-	flex-direction: row;
-	.btn{
-		margin-right: 10px;
-	}
-}
 .combination{
 	margin: 10px 0;
 	text-align: center;
@@ -49,4 +8,26 @@
 	padding: 10px;
 	border: 1px solid #e6e6e6;
 	margin-bottom: 10px;
+}
+.item{
+	margin-bottom: 10px;
+	padding: 10px 10px;
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	align-items: center;
+}
+.name{
+	margin-right: 10px;
+	font-weight: bold;
+}
+.filter{
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	margin-top: 10px;
+	margin-left: 10px;
+	.icon{
+		margin-right: 4px;
+	}
 }

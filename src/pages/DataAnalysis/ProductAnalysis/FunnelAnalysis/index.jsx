@@ -82,6 +82,9 @@ function FunnelAnalysis({
 				if (!filters[j].values.key) {
 					return false
 				}
+				if (!filters[j].values.op) {
+					return false
+				}
 				if (!filters[j].values.value) {
 					return false
 				}

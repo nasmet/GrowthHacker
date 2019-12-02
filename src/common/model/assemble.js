@@ -12,6 +12,32 @@ export function assembleEvent_1(data) {
 	}));
 }
 
+// 分群
+export function assembleAllEventData_2(data) {
+	const dimensions = [];
+	const metrics = [];
+	const variables = [];
+	data.forEach(item => {
+		if (item.type === 'event') {
+			metrics.push({
+				label: item.name,
+				value: `${item.entity_key},${item.id}`,
+			});
+		} else {
+			dimensions.push({
+				label: item.name,
+				value: `${item.entity_key},${item.id}`,
+			});
+			variables.push(item);
+		}
+	});
+	return {
+		variables: assembleEventVaribleData_3(variables),
+		dimensions,
+		metrics,
+	};
+}
+
 export function assembleAllEventData_1(data) {
 	const dimensions = [];
 	const metrics = [];
@@ -79,6 +105,15 @@ export function assembleOriginData(data) {
 	})
 }
 
+export function assembleOriginData_1(data) {
+	return data.map(item => {
+		return {
+			label: item.name,
+			value: `${item.key},${item.id}`,
+		}
+	})
+}
+
 export function assembleOriginDataValues(data) {
 	return data.map(item => item.value);
 }
@@ -106,6 +141,15 @@ export function assembleEventVaribleData_1(data) {
 		return {
 			label: item.name,
 			value: item.entity_key,
+		}
+	})
+}
+
+export function assembleEventVaribleData_4(data) {
+	return data.map(item => {
+		return {
+			label: item.name,
+			value: `${item.entity_key},${item.id}`,
 		}
 	})
 }
@@ -164,12 +208,13 @@ export function assembleEventVaribleData_3(data) {
 		label: '总次数',
 	}];
 	data.forEach(item => {
+		if (item.variable_type === 'string') {
+			return;
+		}
 		const obj = {
 			label: item.name,
 			value: item.entity_key,
-		};
-		if (item.variable_type !== 'string') {
-			obj.children = [{
+			children: [{
 				label: '总和',
 				value: `${item.entity_key},sum`,
 			}, {
@@ -181,8 +226,8 @@ export function assembleEventVaribleData_3(data) {
 			}, {
 				label: '最小值',
 				value: `${item.entity_key},min`,
-			}];
-		}
+			}]
+		};
 		temp.push(obj);
 	})
 	return temp;

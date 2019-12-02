@@ -4,19 +4,10 @@ import React, {
 	useEffect,
 	useRef,
 } from 'react';
-import {
-	Button,
-} from '@alifd/next';
-import {
-	withRouter,
-} from 'react-router-dom';
-import styles from './index.module.scss';
 import Condition from './components/Condition';
 
-function CreateGroup({
-	history,
-}) {
-	const [disabled, setDisabled] = useState(true);
+export default function CreateGroup() {
+	const refSave = useRef(null);
 	const refDialog = useRef(null);
 	const refVariable = useRef({
 		steps: [],
@@ -45,6 +36,18 @@ function CreateGroup({
 						return false;
 					}
 				}
+				const filters = steps[i].step[j].filters;
+				for (let j = 0, length = filters.length; j < length; j++) {
+					if (!filters[j].values.key) {
+						return false
+					}
+					if (!filters[j].values.op) {
+						return false
+					}
+					if (!filters[j].values.value) {
+						return false
+					}
+				}
 			}
 		}
 		return true;
@@ -55,15 +58,11 @@ function CreateGroup({
 			refVariable.current.expression = expression;
 		}
 		refVariable.current.steps = step;
-		setDisabled(!getStatus());
+		refSave.current.setButtonStatus(!getStatus());
 	};
 
 	const onSave = () => {;
 		refDialog.current.onShow();
-	};
-
-	const onCancel = () => {
-		history.goBack();
 	};
 
 	const transformData = (steps) => {
@@ -75,14 +74,40 @@ function CreateGroup({
 				const temp = obj.flag.split(',');
 				obj.flag = temp[0] === 'true' ? true : false;
 				obj.type = temp[1];
-				obj.id = obj.id;
+				const temp_1 = obj.id.split(',');
+				obj.event_id = +temp_1[1];
+				obj.event_key = temp_1[0];
+				delete obj.id;
 				obj.alias = v.alias;
+				obj.filter = {
+					relation: 'and',
+				};
 				if (obj.type === 'event') {
 					obj.values = [obj.values];
+					if (obj.aggregator.indexOf(',') === -1) {
+						obj.field = '';
+					} else {
+						const temp_2 = obj.aggregator.split(',');
+						obj.aggregator = temp_2[1];
+						obj.field = temp_2[0];
+					}
+					const conditions = v.filters.map(item => {
+						const values = item.values;
+						const temp_3 = values.key.split(',');
+						return {
+							id: +temp_3[1],
+							key: temp_3[0],
+							op: values.op,
+							values: [values.value],
+						};
+					});
+					obj.filter.conditions = conditions;
 				} else {
 					obj.values = [obj.value];
+					obj.filter.conditions = [];
+					delete obj.aggregator;
 				}
-				obj.date = `abs:${parseInt(obj.date[0].valueOf()/1000)},${parseInt(obj.date[1].valueOf()/1000)}`;
+				delete obj.value;
 				conditions.push(obj);
 			})
 		});
@@ -95,14 +120,13 @@ function CreateGroup({
 			name,
 			expression,
 		} = refVariable.current;
-
 		api.createUserGroup({
 			condition_expr: expression,
 			name,
 			conditions: transformData(steps),
 		}).then((res) => {
-			model.log('创建成功');
-			history.goBack();
+			model.log(`创建分群${name}成功`);
+			success();
 		}).catch((e) => {
 			model.log(e);
 			fail();
@@ -114,19 +138,10 @@ function CreateGroup({
 	};
 
 	return (
-		<div className={styles.wrap}>
-      		<div className={styles.leftContent}>
-      			<Condition conditionChange={conditionChange} />
-      		</div>
-      		<div className={styles.rightContent}>
-      			<div className={styles.btnWrap}>
-      				<Button onClick={onCancel}>取消</Button>
-      				<Button type='primary' disabled={disabled} onClick={onSave}>保存</Button>
-      			</div>
-      		</div>
+		<Components.Wrap>		
+			<Components.Save ref={refSave} title='新建分群' onSave={onSave} />
+  			<Condition conditionChange={conditionChange} />
       		<Components.BoardDialog onInputChange={onInputChange} onOk={onOk} ref={refDialog} />
-    	</div>
+    	</Components.Wrap>
 	);
 }
-
-export default withRouter(CreateGroup);

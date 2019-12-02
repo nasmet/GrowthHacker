@@ -312,30 +312,30 @@ export default function Condition({
 					>
 					{formCore=>(
 						<div>
-						<Field name='event'>
-							<Select
-								style={commonStyle} 
-								dataSource={eventData}  
-								showSearch
-							/>
-						</Field>
-						<span style={{marginLeft: '10px',marginRight: '10px'}}>的</span>
-						<Field name='aggregator' >
-				 			<CascaderSelect 
-				 				style={commonStyle} 
-				 				listStyle={commonStyle} 
-				 				dataSource={variableData} 				 			
-				 				displayRender={displayRender}
-				 				onFocus={onFocus_1.bind(item,formCore)}
-				 				showSearch
-		 				/>
-				 		</Field> 		
-			            <span style={{marginLeft: '20px'}}>
-			              	<Button size='small' style={{marginRight:'4px',borderRadius:'50%'}} onClick={onAddFilter.bind(item)}>+</Button>
-			              	<span>筛选条件</span>
-			              	<Button size='small' style={{marginLeft:'10px',borderRadius:'50%'}} onClick={onDeleteStep.bind(this,index)}>x</Button>
-		            	</span>
-		            	</div>
+							<Field name='event'>
+								<Select
+									style={commonStyle} 
+									dataSource={eventData}  
+									showSearch
+								/>
+							</Field>
+							<span style={{marginLeft: '10px',marginRight: '10px'}}>的</span>
+							<Field name='aggregator' >
+					 			<CascaderSelect 
+					 				style={commonStyle} 
+					 				listStyle={commonStyle} 
+					 				dataSource={variableData} 				 			
+					 				displayRender={displayRender}
+					 				onFocus={onFocus_1.bind(item,formCore)}
+					 				showSearch
+			 				/>
+					 		</Field> 		
+				            <span style={{marginLeft: '20px'}}>
+				              	<Button size='small' style={{marginRight:'4px',borderRadius:'50%'}} onClick={onAddFilter.bind(item)}>+</Button>
+				              	<span>筛选条件</span>
+				              	<Button size='small' style={{marginLeft:'10px',borderRadius:'50%'}} onClick={onDeleteStep.bind(this,index)}>x</Button>
+			            	</span>
+	            		</div>
 		            )}
 					</Form>
 					<div style={{marginLeft:'20px',marginTop:'10px'}}>
