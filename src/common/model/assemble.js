@@ -1,33 +1,65 @@
-export function assembleEvent(data) {
-	return data.map(item => ({
+function createObj(item) {
+	return {
+		label: item.name,
+		value: `${item.entity_key},${item.id}`,
+	};
+}
+
+function createObj_1(item) {
+	return {
 		label: item.name,
 		value: item.id,
-	}));
+	}
+}
+
+function createObj_2(item) {
+	return {
+		label: item.name,
+		value: item.entity_key,
+	}
 }
 
 export function assembleEvent_1(data) {
-	return data.map(item => ({
-		label: item.name,
-		value: item.entity_key,
-	}));
+	return data.map(item => (createObj_2(item)));
 }
 
-// 分群
+export function assembleEventVaribleData_3(data) {
+	const temp = [{
+		value: 'counter',
+		label: '总次数',
+	}];
+	data.forEach(item => {
+		if (item.variable_type === 'string') {
+			return;
+		}
+		const obj = createObj_2(item);
+		obj.children = [{
+			label: '总和',
+			value: `${item.entity_key},sum`,
+		}, {
+			label: '均值',
+			value: `${item.entity_key},average`,
+		}, {
+			label: '最大值',
+			value: `${item.entity_key},max`,
+		}, {
+			label: '最小值',
+			value: `${item.entity_key},min`,
+		}];
+		temp.push(obj);
+	})
+	return temp;
+}
+
 export function assembleAllEventData_2(data) {
 	const dimensions = [];
 	const metrics = [];
 	const variables = [];
 	data.forEach(item => {
 		if (item.type === 'event') {
-			metrics.push({
-				label: item.name,
-				value: `${item.entity_key},${item.id}`,
-			});
+			metrics.push(createObj(item));
 		} else {
-			dimensions.push({
-				label: item.name,
-				value: `${item.entity_key},${item.id}`,
-			});
+			dimensions.push(createObj(item));
 			variables.push(item);
 		}
 	});
@@ -41,39 +73,37 @@ export function assembleAllEventData_2(data) {
 export function assembleAllEventData_1(data) {
 	const dimensions = [];
 	const metrics = [];
-	const eventBindVariableCache = {};
 	data.forEach(item => {
 		if (item.type === 'event') {
-			metrics.push({
-				label: item.name,
-				value: `${item.entity_key},${item.id}`,
-			});
-			eventBindVariableCache[`${item.entity_key},${item.id}`] = item.bind_variables;
+			metrics.push(createObj(item));
 		} else {
-			dimensions.push({
-				label: item.name,
-				value: item.entity_key,
-			});
+			dimensions.push(createObj_2(item));
 		}
 	});
 	return {
-		eventBindVariableCache,
 		dimensions,
 		metrics,
 	};
 }
 
 export function assembleAllEventData(data) {
-	const {
-		dimensions,
-		metrics,
-		eventBindVariableCache,
-	} = assembleAllEventData_1(data);
-
+	const dimensions = [];
+	const metrics = [];
+	const eventBindVariableCache = {};
+	const variables = [];
+	data.forEach(item => {
+		if (item.type === 'event') {
+			metrics.push(createObj(item));
+			eventBindVariableCache[`${item.entity_key},${item.id}`] = item.bind_variables;
+		} else {
+			dimensions.push(createObj_2(item));
+			variables.push(item);
+		}
+	});
 	return {
 		dimensions,
 		metrics,
-		variables: assembleEventVaribleData_2(dimensions),
+		variables: assembleEventVaribleData_2(variables),
 		eventBindVariableCache,
 	};
 }
@@ -87,22 +117,14 @@ export function assembleGroupData(data, all = true) {
 		});
 	}
 	data.forEach(item => {
-		groups.push({
-			label: item.name,
-			value: item.id,
-		})
+		groups.push(createObj_1(item));
 	});
 
 	return groups;
 }
 
 export function assembleOriginData(data) {
-	return data.map(item => {
-		return {
-			label: item.name,
-			value: item.id,
-		}
-	})
+	return data.map(item => (createObj_1(item)));
 }
 
 export function assembleOriginData_1(data) {
@@ -114,44 +136,33 @@ export function assembleOriginData_1(data) {
 	})
 }
 
+export function assembleOriginData_2(data) {
+	return data.map(item => {
+		return {
+			label: item.name,
+			value: item.key,
+		}
+	})
+}
+
 export function assembleOriginDataValues(data) {
 	return data.map(item => item.value);
 }
 
 export function assembleTagData(data) {
-	return data.map(item => {
-		return {
-			label: item.name,
-			value: item.id,
-		}
-	})
+	return data.map(item => (createObj_1(item)));
 }
 
 export function assembleEventVaribleData(data) {
-	return data.map(item => {
-		return {
-			label: item.name,
-			value: item.id,
-		}
-	})
+	return data.map(item => (createObj_1(item)));
 }
 
 export function assembleEventVaribleData_1(data) {
-	return data.map(item => {
-		return {
-			label: item.name,
-			value: item.entity_key,
-		}
-	})
+	return data.map(item => (createObj_2(item)));
 }
 
 export function assembleEventVaribleData_4(data) {
-	return data.map(item => {
-		return {
-			label: item.name,
-			value: `${item.entity_key},${item.id}`,
-		}
-	})
+	return data.map(item => (createObj(item)));
 }
 
 export function assembleEventVaribleData_2(data) {
@@ -166,10 +177,7 @@ export function assembleEventVaribleData_2(data) {
 		label: '人均次数',
 	}];
 	data.forEach(item => {
-		const obj = {
-			label: item.name,
-			value: item.entity_key,
-		};
+		const obj = createObj(item);
 		if (item.variable_type !== 'string') {
 			obj.children = [{
 				label: '总和',
@@ -197,37 +205,6 @@ export function assembleEventVaribleData_2(data) {
 				value: `${item.entity_key},unique`,
 			}];
 		}
-		temp.push(obj);
-	})
-	return temp;
-}
-
-export function assembleEventVaribleData_3(data) {
-	const temp = [{
-		value: 'counter',
-		label: '总次数',
-	}];
-	data.forEach(item => {
-		if (item.variable_type === 'string') {
-			return;
-		}
-		const obj = {
-			label: item.name,
-			value: item.entity_key,
-			children: [{
-				label: '总和',
-				value: `${item.entity_key},sum`,
-			}, {
-				label: '均值',
-				value: `${item.entity_key},average`,
-			}, {
-				label: '最大值',
-				value: `${item.entity_key},max`,
-			}, {
-				label: '最小值',
-				value: `${item.entity_key},min`,
-			}]
-		};
 		temp.push(obj);
 	})
 	return temp;
