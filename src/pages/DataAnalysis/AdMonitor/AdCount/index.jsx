@@ -33,6 +33,9 @@ export default function AdCount() {
 	};
 
 	const renderColumn = (column, value, index, record) => {
+		if(record[column]===null){
+			return <span>-</span>;
+		}
 		return <span>{record[1]===0||record[column]===0?0:(record[column]/record[1]).toFixed(2)}</span>
 	};
 
