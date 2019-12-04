@@ -3,16 +3,23 @@ import React, {
 	useState,
 	forwardRef,
 	useImperativeHandle,
+	useRef,
 } from 'react';
 import {
 	Table,
 	Drawer,
 	Button,
+	Dialog,
 } from '@alifd/next';
+import CreateEventVaribleValue from '../../../EventVarible/components/EventVaribleDetails/components/CreateEventVaribleValue';
 
 function BindEventVaribleDetails({
 
 }, ref) {
+	const refDialog = useRef(null);
+	const refVariable = useRef({
+		id: 0,
+	});
 	const [showDrawer, setShowDrawer] = useState(false);
 	const [eventName, setEventName] = useState('');
 	const [bindVariableData, setBindVariableData] = useState([]);
@@ -42,6 +49,7 @@ function BindEventVaribleDetails({
 			name,
 			id,
 		} = record;
+		refVariable.current.id = id;
 		setChildName(name);
 		setShowChildDrawer(true);
 		setLoading(true);
@@ -66,44 +74,90 @@ function BindEventVaribleDetails({
 
 	const onCloseChildDrawer = () => {
 		setShowChildDrawer(false);
+		setChildData([]);
+	};
+
+	const onCreateEventVaribleValue = () => {
+		refDialog.current.onShow();
+	};
+
+	const onOk = (value) => {
+		setChildData(pre=>[...pre,value]);
+	};
+
+	const onDeleteEventVaribleValue = (variableValueId, index) => {
+		Dialog.confirm({
+			content: '确定删除吗？',
+			onOk: () => {
+				setLoading(true);
+				api.deleteEventVariableValue({
+					variableId: refVariable.current.id,
+					variableValueId,
+				}).then((res) => {
+					setChildData(pre=>{
+						pre.splice(index,1);
+						return [...pre];
+					})
+				}).catch((e) => {
+					model.log(e);
+				}).finally(() => {
+					setLoading(false);
+				});
+			},
+		});
+	};
+
+	const renderCover = (value, index, record) => {
+		return (
+			<Button type='primary' warning onClick={onDeleteEventVaribleValue.bind(this,record.id,index)}> 
+				删除
+			</Button>
+		);
 	};
 
 	return (
-		<Drawer
-            title={eventName}
-            visible={showDrawer}
-            placement='right'
-            onClose={onCloseDrawer}
-            width={700}
-        >
-			<Table		         	 
-				dataSource={bindVariableData}		          		 
-				hasBorder={false}		          		
-			>		          		
-				<Table.Column title="id" dataIndex="id" cell={renderFirstColunm} lock={bindVariableData.length===0?false:true} width={120} />
-				<Table.Column title="名称" dataIndex="name" width={120} />
-				<Table.Column title="标识符" dataIndex="entity_key" width={120} />
-				<Table.Column title="类型" dataIndex="variable_type" width={120} />
-				<Table.Column title="描述" dataIndex="desc"  width={400} />
-				<Table.Column title="操作" cell={renderHander} lock={bindVariableData.length===0?false:'right'} width={120} />		  
-			</Table>
+		<div>	
 			<Drawer
-	            title={childName}
-	            visible={showChildDrawer}
+	            title={eventName}
+	            visible={showDrawer}
 	            placement='right'
-	            onClose={onCloseChildDrawer}
-	            width={600}
-        	>
-		   		<Table 
-		   			loading={loading}
-	          		dataSource={childData} 
-	          		hasBorder={false}
-	          	>	
-	          		<Table.Column title="id" dataIndex="id" cell={renderFirstColunm} />
-	            	<Table.Column title="事件变量值" dataIndex="value" />
-	          	</Table>
-		    </Drawer>
-        </Drawer>
+	            onClose={onCloseDrawer}
+	            width={700}
+	        >
+				<Table		         	 
+					dataSource={bindVariableData}		          		 
+					hasBorder={false}		          		
+				>		          		
+					<Table.Column title="id" dataIndex="id" cell={renderFirstColunm} lock={bindVariableData.length===0?false:true} width={120} />
+					<Table.Column title="名称" dataIndex="name" width={120} />
+					<Table.Column title="标识符" dataIndex="entity_key" width={120} />
+					<Table.Column title="类型" dataIndex="variable_type" width={120} />
+					<Table.Column title="描述" dataIndex="desc"  width={400} />
+					<Table.Column title="操作" cell={renderHander} lock={bindVariableData.length===0?false:'right'} width={120} />		  
+				</Table>
+				<Drawer
+		            title={childName}
+		            visible={showChildDrawer}
+		            placement='right'
+		            onClose={onCloseChildDrawer}
+		            width={600}
+	        	>
+	        		<Button style={{marginBottom: '10px'}} type="secondary" onClick={onCreateEventVaribleValue}> 
+						创建事件变量值
+					</Button>
+			   		<Table 
+			   			loading={loading}
+		          		dataSource={childData} 
+		          		hasBorder={false}
+		          	>	
+		          		<Table.Column title="id" dataIndex="id" cell={renderFirstColunm} />
+		            	<Table.Column title="事件变量值" dataIndex="value" />
+		            	<Table.Column title="操作" cell={renderCover} />
+		          	</Table>
+			    </Drawer>
+	        </Drawer>
+	        <CreateEventVaribleValue ref={refDialog} onOk={onOk} id={refVariable.current.id} />
+        </div>
 	);
 }
 
