@@ -35,6 +35,7 @@ export default function Condition({
 		},
 		id: 0,
 		steps,
+		variablesMap: {},
 	});
 
 	useEffect(() => {
@@ -61,9 +62,11 @@ export default function Condition({
 		const {
 			dimensions,
 			metrics,
+			variablesMap,
 		} = model.assembleAllEventData_1(data);
 		setDimensionData(dimensions);
 		setEventData(metrics);
+		refVariable.current.variablesMap = variablesMap;
 	}
 
 	function assembleGroupData(data){
@@ -162,6 +165,21 @@ export default function Condition({
 				this.filters.splice(index, 1);
 				setSteps(pre => [...pre]);
 			},
+			onFocus_1: function(formCore) {
+				const key = formCore.getFieldValue('key');
+				if(!key){
+					return;
+				}
+				api.getEventVariableValues({
+					id: refVariable.current.variablesMap[key],
+				}).then((res) => {
+					formCore.setFieldProps('value', {
+						dataSource: res.enums.map(item=>item.value),
+					});
+				}).catch(e => {
+					console.error(e);
+				});
+			},
 		};
 	}
 
@@ -233,6 +251,7 @@ export default function Condition({
 				onFocus,
 				onAddFilter,
 				onDeleteFilter,
+				onFocus_1,
 			} = item;
 
 			return (
@@ -295,7 +314,7 @@ export default function Condition({
 													/>
 												</Field>
 												<Field name='value' disabled={values.value?false:true}>
-													<Input placeholder= '请输入值' />
+													<Select.AutoComplete style={{minWidth:'120px'}} dataSource={[]} onFocus={onFocus_1.bind(item,formCore)} />
 												</Field>
 								              	<Button size='small' style={{marginLeft:'10px',borderRadius:'50%'}} onClick={onDeleteFilter.bind(item,index)}>x</Button>
 											</div>

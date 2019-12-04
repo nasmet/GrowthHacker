@@ -147,11 +147,9 @@ export default function OriginData() {
 
 	return (
 		<Components.Wrap>
-			<div className={styles.btnWrap}>
-				<Button className={styles.btn} type="secondary" onClick={onCreateOriginData}> 
-					创建元数据
-				</Button>
-			</div>
+			<Button style={{marginBottom: '10px'}} type="secondary" onClick={onCreateOriginData}> 
+				创建元数据
+			</Button>
 			<IceContainer>
 				<div className='table-update-btns'>					
 					<Components.Refresh onClick={onRefresh} />

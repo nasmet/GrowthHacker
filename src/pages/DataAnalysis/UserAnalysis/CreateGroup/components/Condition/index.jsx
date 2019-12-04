@@ -163,20 +163,14 @@ export default function Condition({
 				if (!id) {
 					return;
 				}
-				formCore.setFieldProps('value', {
-					notFoundContent: notFoundContent(1),
-				});
 				api.getOriginDataValues({
 					id: id.split(',')[1],
 				}).then((res) => {
+					console.log(res);
 					formCore.setFieldProps('value', {
 						dataSource: model.assembleOriginDataValues(res.data),
-						notFoundContent: notFoundContent(3),
 					});
 				}).catch(e => {
-					formCore.setFieldProps('value', {
-						notFoundContent: notFoundContent(2),
-					});
 					console.error(e);
 				});
 			},
@@ -240,6 +234,22 @@ export default function Condition({
 					});
 				});
 			},
+			onFocus_3: function(formCore) {
+				const key = formCore.getFieldValue('key');
+				if(!key){
+					return;
+				}
+				api.getEventVariableValues({
+					id: key.split(',')[1],
+				}).then((res) => {
+					formCore.setFieldProps('value', {
+						dataSource: res.enums.map(item=>item.value),
+					});
+				}).catch(e => {
+					console.error(e);
+				});
+			},
+
 			effects: [{
 				field: 'flag',
 				handler: function(formCore) {
@@ -378,6 +388,7 @@ export default function Condition({
 			onDeleteFilter,
 			filters,
 			onFocus_2,
+			onFocus_3,
 		} = item;
 		item.alias = length === 1 ? alias : `${alias}${index_1+1}`;
 		return (
@@ -464,7 +475,7 @@ export default function Condition({
 												/>
 											</Field>
 											<Field name='value' disabled={values.value?false:true}>
-												<Input placeholder= '请输入值' />
+												<Select.AutoComplete style={{minWidth:'120px'}} dataSource={[]} onFocus={onFocus_3.bind(item,formCore)} />
 											</Field>
 							              	<Button size='small' style={{marginLeft:'10px',borderRadius:'50%'}} onClick={onDeleteFilter.bind(item,index)}>x</Button>
 										</div>

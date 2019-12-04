@@ -26,7 +26,7 @@ export default function NewEvent() {
 
 	function assembleData() {
 		return data.map(item => {
-			const params = {};
+			let params = '';
 			const temp = [];
 			item.map((v, index) => {
 				if (notRequired.includes(index)) {
@@ -37,10 +37,15 @@ export default function NewEvent() {
 					return;
 				}
 				if (v && v != '0') {
-					params[columns[index]] = v;
+					params += `${columns[index]}: ${v}，`;
 				}
 			});
-			temp.push(JSON.stringify(params))
+			if (!params) {
+				params = '-';
+			} else {
+				params = params.substr(0, params.length - 1);
+			}
+			temp.push(params);
 			return temp;
 		});
 	}

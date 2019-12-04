@@ -76,3 +76,23 @@ export function deleteBindVariables(data) {
 	} = data;
 	return del(`/event_entities/${eventId}/variables/${variableId}`);
 }
+
+export function getEventVariableValues(data) {
+	return get(`/event_entities/${data.id}/enums`);
+}
+
+export function createEventVariableValue(data) {
+	const {
+		id,
+		trend,
+	} = data;
+	return post(`/event_entities/${id}/enums`, trend);
+}
+
+export function deleteEventVariableValue(data) {
+	const {
+		variableId,
+		variableValueId,
+	} = data;
+	return del(`/event_entities/${variableId}/enums/${variableValueId}`);
+}

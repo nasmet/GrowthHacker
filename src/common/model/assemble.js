@@ -73,16 +73,19 @@ export function assembleAllEventData_2(data) {
 export function assembleAllEventData_1(data) {
 	const dimensions = [];
 	const metrics = [];
+	const variablesMap = {};
 	data.forEach(item => {
 		if (item.type === 'event') {
 			metrics.push(createObj(item));
 		} else {
 			dimensions.push(createObj_2(item));
+			variablesMap[item.entity_key] = item.id;
 		}
 	});
 	return {
 		dimensions,
 		metrics,
+		variablesMap,
 	};
 }
 
@@ -91,6 +94,7 @@ export function assembleAllEventData(data) {
 	const metrics = [];
 	const eventBindVariableCache = {};
 	const variables = [];
+	const variablesMap = {};
 	data.forEach(item => {
 		if (item.type === 'event') {
 			metrics.push(createObj(item));
@@ -98,6 +102,7 @@ export function assembleAllEventData(data) {
 		} else {
 			dimensions.push(createObj_2(item));
 			variables.push(item);
+			variablesMap[item.entity_key] = item.id;
 		}
 	});
 	return {
@@ -105,6 +110,7 @@ export function assembleAllEventData(data) {
 		metrics,
 		variables: assembleEventVaribleData_2(variables),
 		eventBindVariableCache,
+		variablesMap,
 	};
 }
 

@@ -39,12 +39,18 @@ export default function Condition({
 		id: 0,
 		steps: [],
 		eventBindVariableCache: {},
+		originData: [],
+		variablesMap: {},
 	});
 
 	useEffect(() => {
 		async function fetchData() {
 			setLoading(true);
 			try {
+				await api.getOriginData().then((res) => {
+					refVariable.current.originData = model.assembleOriginData_2(res.data);
+				})
+
 				await api.getUserGroups().then((res) => {
 					assembleGroupData(res.segmentations);
 				});
@@ -67,13 +73,18 @@ export default function Condition({
 			dimensions,
 			variables,
 			eventBindVariableCache,
+			variablesMap,
 		} = model.assembleAllEventData(data);
 		setDimensionData(dimensions);
 		setVariableData(variables);
 		setEventData(metrics);
 		refVariable.current.eventBindVariableCache = eventBindVariableCache;
+		refVariable.current.variablesMap = variablesMap;
 		refForm.current.state.store.setFieldProps('dimensions', {
 			dataSource: [{
+				label: '用户变量',
+				children: refVariable.current.originData,
+			},{
 				label: '事件变量',
 				children: dimensions,
 			}],
@@ -210,6 +221,21 @@ export default function Condition({
 					console.error(e);
 				});
 			},
+			onFocus_3: function(formCore) {
+				const key = formCore.getFieldValue('key');
+				if(!key){
+					return;
+				}
+				api.getEventVariableValues({
+					id: refVariable.current.variablesMap[key],
+				}).then((res) => {
+					formCore.setFieldProps('value', {
+						dataSource: res.enums.map(item=>item.value),
+					});
+				}).catch(e => {
+					console.error(e);
+				});
+			},
 			onAddFilter: function(e) {
 				if (this.filters.length === 4) {
 					model.log('最多支持4条过滤！');
@@ -298,6 +324,7 @@ export default function Condition({
 				onFocus_1,
 				onAddFilter,
 				onDeleteFilter,
+				onFocus_3,
 			} = item;
 
 			return (
@@ -375,7 +402,7 @@ export default function Condition({
 													/>
 												</Field>
 												<Field name='value' disabled={values.value?false:true}>
-													<Input placeholder= '请输入值' />
+													<Select.AutoComplete style={{minWidth:'120px'}} dataSource={[]} onFocus={onFocus_3.bind(item,formCore)} />
 												</Field>
 								              	<Button size='small' style={{marginLeft:'10px',borderRadius:'50%'}} onClick={onDeleteFilter.bind(item,index)}>x</Button>
 											</div>
@@ -416,7 +443,12 @@ export default function Condition({
 		});
 
 		refForm.current.state.store.setFieldProps('dimensions', {
-			dataSource: [{
+			dataSource: [
+			// {
+			// 	label: '用户变量',				
+			// 	children: refVariable.current.originData,
+			// },
+			{
 				label: '事件变量',
 				children: bindVariables,
 			}],

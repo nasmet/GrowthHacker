@@ -8,14 +8,18 @@ import {
 	Pagination,
 	Dialog,
 	Loading,
+	Drawer,
 } from '@alifd/next';
 import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
 import CreateVarible from './components/CreateVarible';
+import EventVaribleDetails from './components/EventVaribleDetails';
 
 export default function EventVarible() {
 	const refDialog = useRef(null);
 	const [curPage, setCurPage] = useState(1);
+	const [showDrawer, setShowDrawer] = useState(false);
+	const [values, setValues] = useState({});
 
 	const {
 		parameter,
@@ -69,11 +73,28 @@ export default function EventVarible() {
 		});
 	};
 
+	const onView = record => {
+		const {
+			id,
+			name,
+		} = record;
+		setValues({
+			id,
+			name,
+		});
+		setShowDrawer(true);
+	}
+
 	const renderCover = (value, index, record) => {
 		return (
-			<Button type='primary' warning onClick={onDeleteEventVariable.bind(this, record.id, index)}> 
-				删除
-			</Button>
+			<div>
+				<Button type='primary' style={{marginRight:'10px'}} onClick={onView.bind(this, record)}> 
+					查看
+				</Button>
+				<Button type='primary' warning onClick={onDeleteEventVariable.bind(this, record.id, index)}> 
+					删除
+				</Button>
+			</div>
 		);
 	};
 
@@ -118,13 +139,15 @@ export default function EventVarible() {
 		return <span>{ parameter.offset + index+1}</span>;
 	};
 
+	const onCloseDrawer = () => {
+		setShowDrawer(false);
+	};
+
 	return (
 		<Components.Wrap>
-			<div className={styles.btnWrap}>
-				<Button className={styles.btn} type="secondary" onClick={onCreate}> 
-					创建事件变量
-				</Button>
-			</div>
+			<Button style={{marginBottom: '10px'}} type="secondary" onClick={onCreate}> 
+				创建事件变量
+			</Button>
 			<IceContainer>
 				<div className='table-update-btns'>					
 					<Components.Refresh onClick={onRefresh} />
@@ -140,7 +163,7 @@ export default function EventVarible() {
 						<Table.Column title="标识符" dataIndex="entity_key" width={120} />
 						<Table.Column title="类型" dataIndex="variable_type" width={120} />
 						<Table.Column title="描述" dataIndex="desc" />	
-						<Table.Column title="操作" cell={renderCover} width={120} />
+						<Table.Column title="操作" cell={renderCover} width={240} />
 					</Table>
 				</Loading>
 
@@ -151,7 +174,14 @@ export default function EventVarible() {
 					onChange={pageChange}
 				/>
 			</IceContainer>
-
+            <Drawer
+                visible={showDrawer}
+                placement='right'
+                onClose={onCloseDrawer}
+                width={700}
+            >
+				<EventVaribleDetails {...values} />
+            </Drawer>
 			<CreateVarible ref={refDialog} onOk={onOk} />
 
 		</Components.Wrap>

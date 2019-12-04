@@ -4,9 +4,9 @@ import React, {
 } from 'react';
 import {
 	Table,
-	Balloon,
 } from '@alifd/next';
 import styles from './index.module.scss';
+import IceContainer from '@icedesign/container';
 
 function Top({
 	request,
@@ -45,27 +45,22 @@ function Top({
 	};
 
 	const renderSecondColumn = (value, index, record) => {
-		const item = <span className={styles.openId} onClick={jump.bind(this, record.wechat_openid)} >{record.wechat_openid}</span>;
-		return <Balloon.Tooltip trigger={item}>{record.wechat_openid}</Balloon.Tooltip>;
+		return <span className={styles.openId} onClick={jump.bind(this, record.wechat_openid)} >{record.wechat_openid}</span>;
 	};
 
 	return (
-		<div className={styles.userShareItem}>
-			<p style={{paddingLeft:'4px'}}>{name}</p>
-			<div className={styles.userShareItemChart}>
-				<Table 
-					loading={loading} 
-					dataSource={users} 
-					hasBorder={false}
-					maxBodyHeight={400}
-					fixedHeader
-				>
-					<Table.Column style={{background: 'transparent'}} className={styles.column} title='Top排名' width={80} dataIndex='ranking_num' />
-					<Table.Column style={{background: 'transparent'}} className={styles.column} title='openId' cell={renderSecondColumn} dataIndex='wechat_openid' />
-					<Table.Column style={{background: 'transparent'}} className={styles.column} title={title} width={80} dataIndex='count' />
-				</Table>
-			</div>
-		</div>
+		<IceContainer>				
+			<Components.Title title={name} />
+			<Table 
+				loading={loading} 
+				dataSource={users} 
+				hasBorder={false}
+			>
+				<Table.Column title='Top排名' dataIndex='ranking_num' />
+				<Table.Column title='openId' cell={renderSecondColumn} />
+				<Table.Column title={title} dataIndex='count' />
+			</Table>
+		</IceContainer>	
 	);
 }
 

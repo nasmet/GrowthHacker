@@ -1,3 +1,14 @@
+.combination{
+	display: flex;
+	justify-content: center;
+	font-weight: bold;
+}
+.step{
+	margin: 10px;
+	padding: 10px;
+	border: 1px solid #e6e6e6;
+	margin-bottom: 10px;
+}
 .item{
 	margin-bottom: 10px;
 	padding: 10px 10px;
@@ -9,20 +20,4 @@
 .name{
 	margin-right: 10px;
 	font-weight: bold;
-}
-.select{
-	width: 120px;
-	margin-right: 10px;
-}
-
-.combination{
-	display: flex;
-	justify-content: center;
-	font-weight: bold;
-}
-.step{
-	margin: 10px;
-	padding: 10px;
-	border: 1px solid #e6e6e6;
-	margin-bottom: 10px;
 }

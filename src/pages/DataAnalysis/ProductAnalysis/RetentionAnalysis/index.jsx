@@ -150,11 +150,14 @@ function RetentionAnalysis({
 	}
 
 	const renderColumn = (item, value, index, record) => {
+		if(record[item]===null){
+			return <span>-</span>;
+		}
 		return (
 			<div style={{display: 'flex', flexDirection: 'column'}}>
 				<span>{record[item]}</span>
 				<span style={{color:'#0AA372'}}>
-					{record[1]===0?'0.00%':utils.transformPercent(record[item]/record[1])}
+					{record[1]===0?0:utils.transformPercent(record[item]/record[1])}
 				</span>
 			</div>
 		);
@@ -176,7 +179,7 @@ function RetentionAnalysis({
 				if (arr.includes(index)) {
 					return v;
 				}
-				return `${v}\n${item[1]===0?'0.00%':utils.transformPercent(v/item[1])}`;
+				return `${v}\n${item[1]===0?0:utils.transformPercent(v/item[1])}`;
 			});
 		});
 		return {

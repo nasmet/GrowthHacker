@@ -9,24 +9,19 @@ import {
 	Pagination,
 	Dialog,
 	Loading,
-	Drawer,
 	Upload,
 	Input,
 } from '@alifd/next';
-import {
-	Link,
-} from 'react-router-dom';
 import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
 import CreateEvent from './components/CreateEvent';
 import EditVarible from './components/EditVarible';
+import BindEventVaribleDetails from './components/BindEventVaribleDetails';
 
 export default function Event() {
 	const refCE = useRef(null);
 	const refEV = useRef(null);
-	const [showDrawer, setShowDrawer] = useState(false);
-	const [eventName, setEventName] = useState('');
-	const [bindVariableData, setBindVariableData] = useState([]);
+	const refBEVD = useRef(null);
 	const [curPage, setCurPage] = useState(1);
 
 	const {
@@ -109,11 +104,9 @@ export default function Event() {
 
 	const renderHander = (value, index, record) => {
 		return (
-			<div style={{display: 'flex', flexDirection: 'column'}}>
-				<Button type='primary' style={{marginBottom: '10px'}} warning onClick={onDeleteEvent.bind(this, record.id, index)}> 
-					删除
-				</Button>
-			</div>
+			<Button type='primary' warning onClick={onDeleteEvent.bind(this, record.id, index)}> 
+				删除
+			</Button>
 		);
 	};
 
@@ -138,9 +131,11 @@ export default function Event() {
 	};
 
 	const onBindDetails = record => {
-		setEventName(record.name);
-		setBindVariableData(record.bind_variables);
-		setShowDrawer(true);
+		const {
+			name,
+			bind_variables,
+		} = record;
+		refBEVD.current.onShow(name,bind_variables);
 	};
 
 	const renderBind = (value, index, record) => {
@@ -170,7 +165,7 @@ export default function Event() {
 			const lastPage = total % config.LIMIT === 0 ? temp + 1 : temp;
 			updateParameter({
 				...parameter,
-				offset: (lastPage-1) * config.LIMIT,
+				offset: (lastPage - 1) * config.LIMIT,
 			});
 			setCurPage(lastPage);
 		}
@@ -179,10 +174,6 @@ export default function Event() {
 	const onEditVaribleOk = () => {
 		updateParameter({ ...parameter
 		});
-	};
-
-	const onCloseDrawer = () => {
-		setShowDrawer(false);
 	};
 
 	const upload = e => {
@@ -273,24 +264,7 @@ export default function Event() {
 			</IceContainer>		    
 			<CreateEvent ref={refCE} onOk={onOk} />
 			<EditVarible ref={refEV} onOk={onEditVaribleOk} />
-            <Drawer
-                title={eventName}
-                visible={showDrawer}
-                placement='right'
-                onClose={onCloseDrawer}
-                width={600}
-            >
-				<Table		         	 
-					dataSource={bindVariableData}		          		 
-					hasBorder={false}		          		
-				>		          		
-					<Table.Column title="id" dataIndex="id" lock={bindVariableData.length===0?false:true} width={120} />
-					<Table.Column title="名称" dataIndex="name" width={120} />
-					<Table.Column title="标识符" dataIndex="entity_key" width={120} />
-					<Table.Column title="类型" dataIndex="variable_type" width={120} />
-					<Table.Column title="描述" dataIndex="desc"  width={400} />	          	
-				</Table>
-            </Drawer>
+			<BindEventVaribleDetails ref={refBEVD} />
 		</Components.Wrap>
 	);
 }

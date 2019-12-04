@@ -9,9 +9,6 @@ import {
 	Dialog,
 	Loading,
 } from '@alifd/next';
-import {
-	withRouter,
-} from 'react-router-dom';
 import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
 import CreateOriginDataValue from './components/CreateOriginDataValue';
@@ -113,11 +110,9 @@ export default function OriginDataDetails({
 		<Components.Wrap>
 			<Components.Title title={name} />
 			<IceContainer>
-				<div className={styles.btnWrap}>
-					<Button className={styles.btn} type="secondary" onClick={onCreateOriginDataValue}> 
-						创建元数据值
-					</Button>
-				</div>
+				<Button style={{marginBottom: '10px'}} type="secondary" onClick={onCreateOriginDataValue}> 
+					创建元数据值
+				</Button>
 				<Loading visible={loading} inline={false}>
 		          	<Table 
 		          		dataSource={data} 
