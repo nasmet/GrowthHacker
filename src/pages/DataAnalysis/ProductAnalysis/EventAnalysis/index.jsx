@@ -108,11 +108,11 @@ function EventAnalysis({
 			const value = item[0];
 			const name = meta[0].name;
 			item.forEach((v, index) => {
-				if (index !== 0 && meta[index]) {
+				if (index !== 0 && meta[index] && v!==null) {
 					arr.push({
 						[name]: `${name}${value}`,
 						event: meta[index].name,
-						count: v,
+						count: Math.floor(v*100)/100,
 					})
 				}
 			})
