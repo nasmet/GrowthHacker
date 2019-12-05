@@ -11,6 +11,7 @@ export default function ARPUData() {
 		loading,
 		updateParameter,
 		parameter,
+		updateResponse,
 	} = hooks.useRequest(api.getARPUData, {
 		date: 'day:0',
 		seg_id: 0,
@@ -39,9 +40,9 @@ export default function ARPUData() {
 	const renderTitles = () => {
 		return meta.map((item, index) => {
 			if (index === 6) {
-				return <Table.Column key={index} title={item} cell={renderSixColumn} />;
+				return <Table.Column key={index} title={item} dataIndex={index.toString()} cell={renderSixColumn} sortable />;
 			}
-			return <Table.Column key={index} title={item} dataIndex={index.toString()} />;
+			return <Table.Column key={index} title={item} dataIndex={index.toString()}  sortable={index===0?false:true} />;
 		});
 	};
 
@@ -63,6 +64,13 @@ export default function ARPUData() {
 		};
 	};
 
+	const onSort = (dataIndex, order) => {
+		data.sort((a,b)=>order==='desc'?b[dataIndex]-a[dataIndex]:a[dataIndex]-b[dataIndex]);
+		updateResponse();
+	};
+
+	const maxBodyHeight=document.body.clientHeight-500;
+
 	return (
 		<Components.Wrap>
 			<IceContainer>
@@ -75,7 +83,7 @@ export default function ARPUData() {
 					{data.length > 0 && <Components.ExportExcel fileName='ARPU数据' handle={handleData} />}
 				</div>
 				<Loading visible={loading} inline={false}>
-					<Table dataSource={data} hasBorder={false} fixedHeader maxBodyHeight={400} >
+					<Table dataSource={data} hasBorder={false} fixedHeader maxBodyHeight={maxBodyHeight} onSort={onSort} >
 						{renderTitles()}
 					</Table>
 				</Loading>

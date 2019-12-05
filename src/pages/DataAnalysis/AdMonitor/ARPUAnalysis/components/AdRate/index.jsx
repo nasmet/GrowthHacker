@@ -11,6 +11,7 @@ export default function AdRate() {
 		loading,
 		updateParameter,
 		parameter,
+		updateResponse,
 	} = hooks.useRequest(api.getARPURate, {
 		date: 'day:0',
 		seg_id: 0,
@@ -34,7 +35,7 @@ export default function AdRate() {
 
 	const renderTitles = () => {
 		return meta.map((item, index) => {
-			return <Table.Column key={index} title={item} dataIndex={index.toString()} lock={index>0?false:true} width={index>0?120:140} />;
+			return <Table.Column key={index} title={item} dataIndex={index.toString()} lock={index>0?false:true} width={index>0?120:140} sortable />;
 		});
 	};
 
@@ -49,6 +50,13 @@ export default function AdRate() {
 		};
 	};
 
+	const onSort = (dataIndex, order) => {
+		data.sort((a,b)=>order==='desc'?b[dataIndex]-a[dataIndex]:a[dataIndex]-b[dataIndex]);
+		updateResponse();
+	};
+
+	const maxBodyHeight=document.body.clientHeight-500;
+
 	return (
 		<Components.Wrap>
 			<IceContainer>
@@ -61,7 +69,7 @@ export default function AdRate() {
 					{data.length > 0 && <Components.ExportExcel fileName='广告点击率' handle={handleData} />}
 				</div>
 				<Loading visible={loading} inline={false}>
-					<Table dataSource={data} hasBorder={false} fixedHeader maxBodyHeight={400} >
+					<Table dataSource={data} hasBorder={false} fixedHeader maxBodyHeight={maxBodyHeight} onSort={onSort} >
 						{renderTitles()}
 					</Table>
 				</Loading>

@@ -11,6 +11,7 @@ export default function AdCount() {
 		response,
 		loading,
 		updateParameter,
+		updateResponse,
 	} = hooks.useRequest(api.getAdCount, {
 		date: 'day:0',
 		seg_id: 0,
@@ -45,9 +46,9 @@ export default function AdCount() {
 				return <Table.Column key={index} title={item} dataIndex={index.toString()} lock width={120} />;
 			}
 			if (index === 1) {
-				return <Table.Column key={index} title={item} dataIndex={index.toString()} />;
+				return <Table.Column key={index} title={item} dataIndex={index.toString()} sortable />;
 			}
-			return <Table.Column key={index} title={item} cell={renderColumn.bind(this, index)} />;
+			return <Table.Column key={index} title={item} dataIndex={index.toString()} cell={renderColumn.bind(this, index)} sortable />;
 		});
 	};
 
@@ -62,6 +63,14 @@ export default function AdCount() {
 		};
 	};
 
+	const onSort = (dataIndex, order) => {
+		const cb = dataIndex == 1?a=>a:((a, b)=> b==0||a==0?0:(a/b).toFixed(2));
+		data.sort((a,b)=>order==='desc'?cb(b[dataIndex],b[1])-cb(a[dataIndex],a[1]):cb(a[dataIndex],a[1])-cb(b[dataIndex],b[1]));
+		updateResponse();
+	};
+
+	const maxBodyHeight=document.body.clientHeight-500;
+
 	return (
 		<Components.Wrap>
 			<Components.Title title='生命周期广告次数' desc='统计每天的新用户在1、2、3、7、14、30的广告累计点击次数' />
@@ -75,7 +84,7 @@ export default function AdCount() {
 					{data.length > 0 && <Components.ExportExcel fileName='生命周期广告次数' handle={handleData} />}
 				</div>
 				<Loading visible={loading} inline={false}>
-					<Table dataSource={data} hasBorder={false} fixedHeader maxBodyHeight={400} >
+					<Table dataSource={data} hasBorder={false} fixedHeader maxBodyHeight={maxBodyHeight} onSort={onSort} >
 						{renderTitles()}
 					</Table>
 				</Loading>

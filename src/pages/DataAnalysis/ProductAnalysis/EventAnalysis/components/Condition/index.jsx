@@ -237,8 +237,8 @@ export default function Condition({
 				});
 			},
 			onAddFilter: function(e) {
-				if (this.filters.length === 4) {
-					model.log('最多支持4条过滤！');
+				if (this.filters.length === 10) {
+					model.log('最多支持10条过滤！');
 					return;
 				}
 				this.filters.push(createFilter({}));
@@ -273,8 +273,8 @@ export default function Condition({
 	}
 
 	const onAddStep = () => {
-		if (steps.length === 4) {
-			model.log('最多选择4个事件！');
+		if (steps.length === 10) {
+			model.log('最多选择10个事件！');
 			return;
 		}
 		setSteps((pre) => {

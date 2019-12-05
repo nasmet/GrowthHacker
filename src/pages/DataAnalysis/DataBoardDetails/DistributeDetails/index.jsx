@@ -113,6 +113,8 @@ function DistributeDetails({
 		};
 	};
 
+	const maxBodyHeight=document.body.clientHeight-400;
+
 	return (
 		<Components.Wrap>
 			<Components.Title title={boardInfo.name} desc={boardInfo.desc} />
@@ -128,6 +130,8 @@ function DistributeDetails({
 					chartData={assemblingChartData(data, meta)} 
 					chartStyle={assemblingChartStyle(meta)}
 					renderTitle={renderTitle} 
+					fixedHeader
+					maxBodyHeight={maxBodyHeight}
 				/>
 			</IceContainer>
 		</Components.Wrap>

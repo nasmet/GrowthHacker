@@ -51,6 +51,7 @@ function EventAnalysis({
 		response,
 		loading,
 		updateParameter,
+		updateResponse,
 	} = hooks.useRequest(api.getDataBoard, refVariable.current, false);
 	const {
 		meta = [],
@@ -192,12 +193,8 @@ function EventAnalysis({
 	};
 
 	const onSort = (dataIndex, order) => {
-		refVariable.current.orders = {
-			isDim: meta[dataIndex].is_dim,
-			index: +dataIndex,
-			orderType: order,
-		};
-		onRefresh();
+		data.sort((a,b)=>order==='desc'?b[dataIndex]-a[dataIndex]:a[dataIndex]-b[dataIndex]);
+		updateResponse();
 	};
 
 	function assembleMetrics(steps) {
@@ -258,6 +255,7 @@ function EventAnalysis({
 					chartStyle={assemblingChartStyle(meta)}
 					renderTitle={renderTitle}
 					onSort={onSort}
+					fixedHeader
 				/>
 				<Pagination
 					className={styles.pagination}

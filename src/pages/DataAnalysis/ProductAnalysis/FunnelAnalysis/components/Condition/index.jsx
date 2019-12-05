@@ -154,8 +154,8 @@ export default function Condition({
 				});
 			},
 			onAddFilter: function(e) {
-				if (this.filters.length === 4) {
-					model.log('最多支持4条过滤！');
+				if (this.filters.length === 10) {
+					model.log('最多支持10条过滤！');
 					return;
 				}
 				this.filters.push(createFilter({}));

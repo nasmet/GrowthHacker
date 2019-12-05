@@ -20,6 +20,7 @@ function LevelDetails({
 		response,
 		loading,
 		updateParameter,
+		updateResponse,
 	} = hooks.useRequest(api.getDataBoard, {
 		chart_id: boardInfo.id,
 		date: boardInfo.date,
@@ -86,7 +87,8 @@ function LevelDetails({
 	};
 
 	const onSort = (dataIndex, order) => {
-		onRefresh();
+		data.sort((a,b)=>order==='desc'?b[dataIndex]-a[dataIndex]:a[dataIndex]-b[dataIndex]);
+		updateResponse();
 	};
 
 	const handleData = () => {
@@ -95,6 +97,8 @@ function LevelDetails({
 			sheetData: data,
 		};
 	};
+
+	const maxBodyHeight=document.body.clientHeight-400;
 
 	return (
 		<Components.Wrap>
@@ -113,6 +117,7 @@ function LevelDetails({
 					chartStyle={assemblingChartStyle(meta)}
 					renderTitle={renderTitle} 
 					fixedHeader
+					maxBodyHeight={maxBodyHeight}
 				/>
 			</IceContainer>
 		</Components.Wrap>

@@ -18,13 +18,14 @@ export default function ChartsDisplay({
 	loading,
 	onSort,
 	fixedHeader = false,
+	maxBodyHeight = 400,
 }) {
 	const renderTable = () => {
 		return (
 			<Table 
 				dataSource={tableData} 
 				hasBorder={false}
-				maxBodyHeight={400}
+				maxBodyHeight={maxBodyHeight}
 				fixedHeader={fixedHeader}
 				onSort={onSort}
 			>

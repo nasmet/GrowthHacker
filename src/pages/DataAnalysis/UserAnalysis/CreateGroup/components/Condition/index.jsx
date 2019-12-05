@@ -202,8 +202,8 @@ export default function Condition({
 				if(!this.values.flag.includes('event')){
 					return;
 				}
-				if (this.filters.length === 4) {
-					model.log('最多支持4条过滤！');
+				if (this.filters.length === 10) {
+					model.log('最多支持10条过滤！');
 					return;
 				}
 				this.filters.push(createFilter({}));
@@ -316,8 +316,8 @@ export default function Condition({
 				setSteps(pre => [...pre]);
 			},
 			onAddOrFilter: function() {
-				if (this.step.length > 3) {
-					model.log('目前最多支持4条');
+				if (this.step.length === 10) {
+					model.log('目前最多支持10条');
 					return;
 				}
 				this.step.push(createData());
@@ -348,8 +348,8 @@ export default function Condition({
 	}
 
 	const onAddAndFilter = () => {
-		if (steps.length > 3) {
-			model.log('目前最多支持4条');
+		if (steps.length === 10) {
+			model.log('目前最多支持10条');
 			return;
 		}
 		setSteps((pre) => {
