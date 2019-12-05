@@ -43,8 +43,24 @@ function UserGroupDetails({
 		return <span>{utils.formatUnix(record[2],'Y-M-D h:m:s')}</span>;
 	};
 
+	const jump = openId => {
+		model.history.push({
+			pathname: '/dataanalysis/projectdata/ua/userscrutinydetails',
+			state: {
+				openId,
+			}
+		});
+	};
+
+	const renderFirstColumn = (value, index, record) => {
+		return <span className={styles.openId} onClick={jump.bind(this, record[0])} >{record[0]}</span>;
+	};
+
 	const renderTitle = () => {
 		return meta.map((item, index) => {
+			if (index === 0) {
+				return <Table.Column key={index} title={item} cell={renderFirstColumn} />
+			}
 			if (index === 2) {
 				return <Table.Column key={index} title={item} cell={renderThreeColumn} />
 			}
