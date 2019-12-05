@@ -7,6 +7,7 @@ import React, {
 import Condition from './components/Condition';
 
 export default function CreateGroup() {
+	const [title,setTitle]= useState('新建分群');
 	const refSave = useRef(null);
 	const refDialog = useRef(null);
 	const refVariable = useRef({
@@ -126,6 +127,7 @@ export default function CreateGroup() {
 			conditions: transformData(steps),
 		}).then((res) => {
 			model.log(`创建分群${name}成功`);
+			setTitle(name);
 			success();
 		}).catch((e) => {
 			model.log(e);
@@ -139,7 +141,7 @@ export default function CreateGroup() {
 
 	return (
 		<Components.Wrap>		
-			<Components.Save ref={refSave} title='新建分群' onSave={onSave} />
+			<Components.Save ref={refSave} title={title} onSave={onSave} />
   			<Condition conditionChange={conditionChange} />
       		<Components.BoardDialog onInputChange={onInputChange} onOk={onOk} ref={refDialog} />
     	</Components.Wrap>
