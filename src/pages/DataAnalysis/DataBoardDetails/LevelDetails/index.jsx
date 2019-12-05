@@ -1,9 +1,9 @@
 import React, {
 	useState,
-	useEffect,
 } from 'react';
 import {
 	Table,
+	Pagination,
 } from '@alifd/next';
 import {
 	withRouter,
@@ -32,6 +32,7 @@ function LevelDetails({
 		meta = [],
 			data = [],
 	} = response;
+	const [curPage, setCurPage] = useState(1);
 
 	function assemblingChartStyle(meta) {
 		return {
@@ -87,7 +88,7 @@ function LevelDetails({
 	};
 
 	const onSort = (dataIndex, order) => {
-		data.sort((a,b)=>order==='desc'?b[dataIndex]-a[dataIndex]:a[dataIndex]-b[dataIndex]);
+		data.sort((a, b) => order === 'desc' ? b[dataIndex] - a[dataIndex] : a[dataIndex] - b[dataIndex]);
 		updateResponse();
 	};
 
@@ -98,7 +99,16 @@ function LevelDetails({
 		};
 	};
 
-	const maxBodyHeight=document.body.clientHeight-400;
+	const maxBodyHeight = document.body.clientHeight - 400;
+
+	const pageChange = (e) => {
+		setCurPage(e);
+	};
+
+	function assembleData() {
+		const offset = (curPage - 1) * config.LIMIT;
+		return data.slice(offset, offset + 10);
+	}
 
 	return (
 		<Components.Wrap>
@@ -111,13 +121,19 @@ function LevelDetails({
 				</div>
 				<Components.ChartsDisplay 
 					onSort={onSort}
-					tableData={data}
+					tableData={assembleData()}
 					loading={loading}
-					chartData={assemblingChartData(data, meta)} 
+					chartData={assemblingChartData(assembleData(), meta)} 
 					chartStyle={assemblingChartStyle(meta)}
 					renderTitle={renderTitle} 
 					fixedHeader
 					maxBodyHeight={maxBodyHeight}
+				/>
+				<Pagination
+					current={curPage}
+					className={styles.pagination}
+					total={data.length}
+					onChange={pageChange}
 				/>
 			</IceContainer>
 		</Components.Wrap>
