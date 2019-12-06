@@ -124,12 +124,23 @@ function EventAnalysis({
 		return <span>{record[column]===null?'-':record[column]}</span>
 	};
 
+	const setHeader=(name,filter)=>{
+		return (
+			<div style={{display: 'flex', flexDirection: 'column'}}>
+				<span>{name}</span>
+				{filter.map((item,index)=><span style={{fontSize:'12px',marginLeft:'2px'}} key={index}>{item}</span>)}
+			</div>
+		);
+	}
+
 	const renderTitle = () => {
 		return meta.map((item, index) => {
-			if (index === 0) {
-				return <Table.Column key={item.id} title={item.name} dataIndex={index.toString()} sortable />
-			}
-			return <Table.Column key={item.id} title={item.name} dataIndex={index.toString()} cell={renderColumn.bind(this, index)} sortable />
+			let name = item.name;
+			let filter = [];
+			if(!item.is_dim){
+				filter = item.filter.conditions;
+			} 
+			return <Table.Column key={item.id} title={setHeader(name,filter)} dataIndex={index.toString()} cell={renderColumn.bind(this, index)} sortable />
 		});
 
 	};
@@ -234,6 +245,8 @@ function EventAnalysis({
 		};
 	}
 	
+	console.log(meta);
+
 	return (
 		<Components.Wrap>
 			<Components.Save ref={saveRef} title={title} {...initSave} onSave={onSave} />
