@@ -7,9 +7,5 @@ export function getUserWorth(data) {
 }
 
 export function getGroupWorth(data) {
-	const {
-		trend,
-		id,
-	} = data;
-	return get(`/projects/${cookies.get(config.PROJECTID)}/ads/ltv/segmentations/${id}`, trend);
+	return get(`/projects/${cookies.get(config.PROJECTID)}/ads/ltv/segmentations`, data);
 }

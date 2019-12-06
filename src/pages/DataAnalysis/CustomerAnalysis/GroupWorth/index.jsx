@@ -25,12 +25,10 @@ export default function GroupWorth() {
 	function getGroupWorth() {
 		setLoading(true);
 		api.getGroupWorth({
-			id: refVarible.current.id,
-			trend: {
-				date: refVarible.current.date,
-			},
+			segmentations: refVarible.current.segmentations.join(','),
+			date: refVarible.current.date,
 		}).then(res => {
-			setTableData([res]);
+			setTableData(res.ltvs);
 		}).catch(e => {
 			model.log(e);
 		}).finally(() => {
@@ -39,7 +37,7 @@ export default function GroupWorth() {
 	}
 
 	const dateChange = e => {
-		if (!refVarible.current.id) {
+		if (!refVarible.current.segmentations) {
 			return;
 		}
 		refVarible.current.date = e;
@@ -47,7 +45,10 @@ export default function GroupWorth() {
 	};
 
 	const groupChange = e => {
-		refVarible.current.id = e;
+		if (e.length === 0) {
+			return;
+		}
+		refVarible.current.segmentations = e;
 		getGroupWorth();
 	};
 
@@ -57,9 +58,32 @@ export default function GroupWorth() {
 
 	const handleData = () => {
 		return {
-			sheetHeader: ['广告点击次数', '分享新增用户数', '分享次数', '分享回流数'],
-			sheetData: tableData,
+			sheetHeader: ['目标用户', '用户数', '广告点击人均次数', '分享新增人均用户数', '分享人均次数', '分享人均回流数'],
+			sheetData: tableData.map(item => {
+				const {
+					segmentation_name,
+					user_count,
+					ads_watch_count,
+					new_user_count,
+					share_count,
+					share_open_count,
+				}= item;
+				return [
+					segmentation_name,
+					user_count,
+					ads_watch_count,
+					new_user_count,
+					share_count,
+					share_open_count,
+				]
+			}),
 		};
+	};
+
+	const onSort = (dataIndex, order) => {
+		const data = [...tableData];
+		data.sort((a,b)=>order==='desc'?b[dataIndex]-a[dataIndex]:a[dataIndex]-b[dataIndex]);
+		setTableData(data);
 	};
 
 	return (
@@ -67,7 +91,7 @@ export default function GroupWorth() {
 			<Components.Title title='分群用户价值评估' />
 			<IceContainer>
 				<Components.DateFilter filterChange={dateChange} />
-				<Components.GroupFilter filterChange={groupChange} all={false} />
+				<Components.GroupFilter filterChange={groupChange} all={false} mode='multiple' />
 			</IceContainer>
 			<IceContainer>
 				<div className='table-update-btns'>					
@@ -75,11 +99,13 @@ export default function GroupWorth() {
 					{tableData.length > 0 && <Components.ExportExcel fileName='分群用户价值评估' handle={handleData} />}
 				</div>
 				<Loading visible={loading} inline={false}>
-					<Table dataSource={tableData} hasBorder={false} >
-						<Table.Column title='广告点击次数' dataIndex='ads_watch_count' />
-						<Table.Column title='分享新增用户数' dataIndex='new_user_count' />
-						<Table.Column title='分享次数' dataIndex='share_count' />
-						<Table.Column title='分享回流数' dataIndex='share_open_count' />
+					<Table dataSource={tableData} hasBorder={false} onSort={onSort} >
+						<Table.Column title='目标用户' dataIndex='segmentation_name' />
+						<Table.Column title='用户数' dataIndex='user_count' sortable />
+						<Table.Column title='广告点击人均次数' dataIndex='ads_watch_count' sortable />
+						<Table.Column title='分享新增人均用户数' dataIndex='new_user_count' sortable />
+						<Table.Column title='分享人均次数' dataIndex='share_count' sortable />
+						<Table.Column title='分享人均回流数' dataIndex='share_open_count' sortable />
 					</Table>
 				</Loading>
 			</IceContainer>

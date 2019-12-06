@@ -14,6 +14,7 @@ import styles from './index.module.scss';
 export default function GroupFilter({
 	filterChange,
 	all = true,
+	mode='single'
 }) {
 	const refForm = useRef(null);
 
@@ -42,9 +43,12 @@ export default function GroupFilter({
 		refForm.current.state.store.setFieldProps('id', {
 			dataSource: groups,
 		});
-		refForm.current.state.store.setFieldValue('id', groups[0].value);
 		if (!all) {
-			filterChange(groups[0].value);
+			const value = [groups[0].value];
+			refForm.current.state.store.setFieldValue('id', value);
+			filterChange(value);
+		}else{
+			refForm.current.state.store.setFieldValue('id', groups[0].value);
 		}
 	}
 
@@ -62,15 +66,16 @@ export default function GroupFilter({
 						<span>{label}</span>
 						<span>{component}</span>
 					</div>)
-} >
-<Field label='目标用户：' name='id'>
+			} >
+				<Field label='目标用户：' name='id'>
 					<Select  
 						style={{minWidth:'200px'}}
 						dataSource={[]} 
 						showSearch
+						mode={mode}
 					/>
-				</Field> <
-/Form>    < /
-div >
-);
+				</Field>
+			</Form>    
+		</div>
+	);
 }

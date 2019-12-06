@@ -245,8 +245,6 @@ function EventAnalysis({
 		};
 	}
 	
-	console.log(meta);
-
 	return (
 		<Components.Wrap>
 			<Components.Save ref={saveRef} title={title} {...initSave} onSave={onSave} />
