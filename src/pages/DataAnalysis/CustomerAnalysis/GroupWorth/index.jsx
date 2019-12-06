@@ -63,18 +63,18 @@ export default function GroupWorth() {
 				const {
 					segmentation_name,
 					user_count,
-					ads_watch_count,
-					new_user_count,
-					share_count,
-					share_open_count,
+					avg_ads_watch_count,
+					avg_new_user_count,
+					avg_share_count,
+					avg_share_open_count,
 				}= item;
 				return [
 					segmentation_name,
 					user_count,
-					ads_watch_count,
-					new_user_count,
-					share_count,
-					share_open_count,
+					avg_ads_watch_count,
+					avg_new_user_count,
+					avg_share_count,
+					avg_share_open_count,
 				]
 			}),
 		};
@@ -102,10 +102,10 @@ export default function GroupWorth() {
 					<Table dataSource={tableData} hasBorder={false} onSort={onSort} >
 						<Table.Column title='目标用户' dataIndex='segmentation_name' />
 						<Table.Column title='用户数' dataIndex='user_count' sortable />
-						<Table.Column title='广告点击人均次数' dataIndex='ads_watch_count' sortable />
-						<Table.Column title='分享新增人均用户数' dataIndex='new_user_count' sortable />
-						<Table.Column title='分享人均次数' dataIndex='share_count' sortable />
-						<Table.Column title='分享人均回流数' dataIndex='share_open_count' sortable />
+						<Table.Column title='广告点击人均次数' dataIndex='avg_ads_watch_count' sortable />
+						<Table.Column title='分享新增人均用户数' dataIndex='avg_new_user_count' sortable />
+						<Table.Column title='分享人均次数' dataIndex='avg_share_count' sortable />
+						<Table.Column title='分享人均回流数' dataIndex='avg_share_open_count' sortable />
 					</Table>
 				</Loading>
 			</IceContainer>
