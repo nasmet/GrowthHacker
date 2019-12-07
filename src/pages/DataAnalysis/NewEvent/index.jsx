@@ -22,7 +22,7 @@ export default function NewEvent() {
 	} = response;
 
 	const shareds = [0, 1, 2, 3, 42];
-	const notRequired = [37, 38, 39, 40, 43, 44];
+	const notRequired = [37, 38, 39, 40];
 
 	function assembleData() {
 		return data.map(item => {
@@ -92,9 +92,11 @@ export default function NewEvent() {
 	};
 
 	const handleData = () => {
+		const newColumns = shareds.map(item => columns[item]);
+		newColumns.push('参数列表');
 		return {
-			sheetHeader: columns,
-			sheetData: data,
+			sheetHeader: newColumns,
+			sheetData: assembleData(),
 		};
 	};
 

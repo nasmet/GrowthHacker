@@ -14,6 +14,7 @@ import Save from './Save';
 import ChartsDisplay from './ChartsDisplay';
 import ExportExcel from './ExportExcel';
 import Refresh from './Refresh';
+import PageSizeSelect from './PageSizeSelect';
 
 export default {
 	BasicColumn,
@@ -32,4 +33,5 @@ export default {
 	ChartsDisplay,
 	ExportExcel,
 	Refresh,
+	PageSizeSelect,
 }

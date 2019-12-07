@@ -14,7 +14,8 @@ import styles from './index.module.scss';
 export default function GroupFilter({
 	filterChange,
 	all = true,
-	mode='single'
+	mode='single',
+	onBlur,
 }) {
 	const refForm = useRef(null);
 
@@ -73,6 +74,7 @@ export default function GroupFilter({
 						dataSource={[]} 
 						showSearch
 						mode={mode}
+						onBlur={onBlur}
 					/>
 				</Field>
 			</Form>    

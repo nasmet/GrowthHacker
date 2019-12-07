@@ -23,12 +23,9 @@
 }
 .value{
 	font-size: 12px;
-	text-overflow: ellipsis; 
-    white-space: pre-wrap;
-    display: -webkit-box;
-	-webkit-box-orient: vertical;
-	-webkit-line-clamp: 3;
-	overflow: hidden;
+	font-weight: bold; 
+	text-align: justify;
+	white-space: pre-wrap;
 }
 .close{
 	position: absolute;

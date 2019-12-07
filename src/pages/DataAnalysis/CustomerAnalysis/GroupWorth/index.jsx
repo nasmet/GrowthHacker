@@ -6,18 +6,15 @@ import React, {
 import {
 	Table,
 	Loading,
-	Select,
 } from '@alifd/next';
-import {
-	Form,
-	Field,
-} from '@ice/form';
 import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
 
 export default function GroupWorth() {
 	const refVarible = useRef({
 		date: 'day:0',
+		oldSegmentations: [],
+		segmentations:[],
 	});
 	const [loading, setLoading] = useState(false);
 	const [tableData, setTableData] = useState([]);
@@ -41,20 +38,19 @@ export default function GroupWorth() {
 			return;
 		}
 		refVarible.current.date = e;
-		getGroupWorth();
+		onRefresh();
 	};
 
-	const groupChange = e => {
+	const groupChange = (e) => {
 		if (e.length === 0) {
 			return;
 		}
 		refVarible.current.segmentations = e;
-		getGroupWorth();
 	};
 
-	const onRefresh = () => {
+	const onRefresh = utils.debounce(() => {
 		getGroupWorth();
-	};
+	},500);
 
 	const handleData = () => {
 		return {
@@ -67,7 +63,7 @@ export default function GroupWorth() {
 					avg_new_user_count,
 					avg_share_count,
 					avg_share_open_count,
-				}= item;
+				} = item;
 				return [
 					segmentation_name,
 					user_count,
@@ -82,16 +78,29 @@ export default function GroupWorth() {
 
 	const onSort = (dataIndex, order) => {
 		const data = [...tableData];
-		data.sort((a,b)=>order==='desc'?b[dataIndex]-a[dataIndex]:a[dataIndex]-b[dataIndex]);
+		data.sort((a, b) => order === 'desc' ? b[dataIndex] - a[dataIndex] : a[dataIndex] - b[dataIndex]);
 		setTableData(data);
 	};
+
+	const onBlur=()=>{
+		if(refVarible.current.oldSegmentations===refVarible.current.segmentations){
+			return;
+		}
+		refVarible.current.oldSegmentations = refVarible.current.segmentations;
+		onRefresh();
+	};	
 
 	return (
 		<Components.Wrap>
 			<Components.Title title='分群用户价值评估' />
 			<IceContainer>
 				<Components.DateFilter filterChange={dateChange} />
-				<Components.GroupFilter filterChange={groupChange} all={false} mode='multiple' />
+				<Components.GroupFilter 
+					filterChange={groupChange} 
+					all={false} 
+					mode='multiple' 
+					onBlur={onBlur}
+				/>
 			</IceContainer>
 			<IceContainer>
 				<div className='table-update-btns'>					
