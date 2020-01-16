@@ -3,10 +3,10 @@ pipeline {
     stages {
         stage('build') {
             steps {
-                sh 'npm config set registry https://registry.npm.taobao.org'
-                sh 'npm install -g cnpm --registry=https://registry.npm.taobao.org'
-                sh 'cnpm install'
-                sh 'npm start'
+                sh 'sudo npm config set registry https://registry.npm.taobao.org'
+                sh 'sudo npm install -g cnpm --registry=https://registry.npm.taobao.org'
+                sh 'sudo cnpm install'
+                sh 'sudo npm start'
             }
         }
     }
